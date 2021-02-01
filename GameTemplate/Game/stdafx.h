@@ -3,3 +3,5 @@
 
 #include "MiniEngine.h"
 #include "ExEngine.h"
+
+#include "prefab.h"

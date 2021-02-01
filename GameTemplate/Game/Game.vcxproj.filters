@@ -45,6 +45,9 @@
     <Filter Include="MiniEngine\font">
       <UniqueIdentifier>{0dd42389-4c3e-4926-8685-6cf90e216ab0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\prefab">
+      <UniqueIdentifier>{82a09072-8ac3-42a3-a971-ed3ffaab5a12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -193,6 +196,15 @@
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp">
       <Filter>MiniEngine\font</Filter>
+    </ClCompile>
+    <ClCompile Include="ShowModel.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ShowSprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkinModelRender.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +381,18 @@
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\font\Font.h">
       <Filter>MiniEngine\font</Filter>
+    </ClInclude>
+    <ClInclude Include="ShowModel.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ShowSprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkinModelRender.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="prefab.h">
+      <Filter>ソース ファイル\prefab</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
