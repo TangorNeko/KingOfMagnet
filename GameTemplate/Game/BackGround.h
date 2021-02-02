@@ -1,12 +1,12 @@
 #pragma once
-class ShowModel : public IGameObject
+class BackGround : public IGameObject
 {
-	~ShowModel();
+	~BackGround();
 	bool Start() override;
 	void Update()override;
 
 	Vector3 m_position = { 0.0f,0.0f,0.0f };
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
-	prefab::CDirectionLight* m_lig = nullptr;
 };
+

@@ -18,7 +18,8 @@ namespace prefab
 
 		void Render(RenderContext& rc) override;
 
-		void Init(const char* modelPath,const char* skeletonPath);
+		void Init(const char* modelPath,const char* skeletonPath,void* data = nullptr);
+		void Init(const char* modelPath);
 
 
 		//TODO: アニメーションの追加
@@ -27,6 +28,8 @@ namespace prefab
 		void SetPosition(Vector3 pos);
 		void SetRotation(Quaternion qRot);
 		void SetScale(Vector3 scale);
+
+
 	};
 }
 

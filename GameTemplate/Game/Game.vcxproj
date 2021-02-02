@@ -287,7 +287,10 @@
     <ClCompile Include="..\..\MiniEngine\tkFile\TkmFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="CDirectionLight.cpp" />
     <ClCompile Include="CSkinModelRender.cpp" />
+    <ClCompile Include="CLightManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
@@ -358,7 +361,10 @@
     <ClInclude Include="..\..\MiniEngine\tkFile\TkmFile.h" />
     <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h" />
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="CDirectionLight.h" />
     <ClInclude Include="CSkinModelRender.h" />
+    <ClInclude Include="CLightManager.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="stdafx.h" />

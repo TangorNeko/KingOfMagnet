@@ -2,6 +2,7 @@
 #include "system/system.h"
 
 #include "ShowModel.h"
+#include "BackGround.h"
 
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -21,6 +22,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 
 	NewGO<ShowModel>(0, "model");
+	NewGO<BackGround>(0, "background");
+
+	prefab::CDirectionLight* lig = NewGO<prefab::CDirectionLight>(0,"lig");
+	lig->SetColor({ 0.0f,0.0f,0.0f });
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////

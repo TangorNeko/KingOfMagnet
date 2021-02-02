@@ -8,8 +8,8 @@ namespace prefab
 	/// </summary>
 	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>
 	/// <param name="skeletonPath">スケルトンファイルのパス(.tks)</param>
-	/// TODO:tkmファイルとtksファイルの生成方法によっては拡張子の前だけ入力させてtkmとtksを足す形でも良いかも?
-	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath)
+	/// <param name="buffer">ライトの定数バッファ</param>
+	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath,void* data)
 	{
 		m_skeleton.Init(skeletonPath);
 
@@ -19,11 +19,39 @@ namespace prefab
 
 		initData.m_fxFilePath = "Assets/shader/model.fx";
 
-		initData.m_vsEntryPointFunc = "VSMain";
+		//initData.m_vsEntryPointFunc = "VSMain";
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
 		initData.m_skeleton = &m_skeleton;
+
+		//TODO:引数にして利用者に入力させる必要がありそう。
+		initData.m_modelUpAxis = enModelUpAxisZ;
+
+		if (data != nullptr)
+		{
+			//定数バッファ周りテスト
+			//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
+			initData.m_expandConstantBufferSize = 28;
+
+			initData.m_expandConstantBuffer = data;
+		}
+
+		m_model.Init(initData);
+	}
+
+	//モデルパスだけ版。コピーしてきただけ
+	void CSkinModelRender::Init(const char* modelPath)
+	{
+		ModelInitData initData;
+
+		initData.m_tkmFilePath = modelPath;
+
+		initData.m_fxFilePath = "Assets/shader/model.fx";
+
+		//initData.m_vsEntryPointFunc = "VSMain";
+
+		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
