@@ -13,7 +13,7 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mProj;
 };
 
-struct ligData
+struct DirectionLigData
 {
 	float3 ligDir;
 	float3 ligColor;
@@ -22,7 +22,8 @@ struct ligData
 
 cbuffer DirectionLigCb : register(b1)
 {
-	ligData ligdata[2];
+	DirectionLigData directionLigData[10];
+	int directionLigNum;
 };
 
 ////////////////////////////////////////////////
@@ -160,20 +161,20 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	finalColor.a = 1.0f;
 
 	//ランバート拡散反射
-	for (int i = 0;i < 2;i++)
+	for (int i = 0;i < 5;i++)
 	{
-		float t = dot(psIn.normal, -ligdata[i].ligDir);
+		float t = dot(psIn.normal, -directionLigData[i].ligDir);
 
 		if (t < 0)
 			t = 0;
 
-		float3 diffuseLig = ligdata[i].ligColor * t;
+		float3 diffuseLig = directionLigData[i].ligColor * t;
 
 		//フォン鏡面反射
-		float3 toEye = ligdata[i].eyePos - psIn.worldPos;
+		float3 toEye = directionLigData[i].eyePos - psIn.worldPos;
 		toEye = normalize(toEye);
 
-		float3 refVec = reflect(ligdata[i].ligDir, psIn.normal);
+		float3 refVec = reflect(directionLigData[i].ligDir, psIn.normal);
 
 		t = dot(toEye, refVec);
 		if (t < 0)
@@ -181,14 +182,17 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		t = pow(t, 5.0f);
 
-		float3 specularLig = ligdata[i].ligColor * t;
+		float3 specularLig = directionLigData[i].ligColor * t;
 
-		float3 ambientLig = 0.3f;
+		//float3 ambientLig = 0.3f;
 
-		float3 finalLig = diffuseLig + specularLig + ambientLig;
+		float3 finalLig = diffuseLig + specularLig;// + ambientLig;
 
 		finalColor.xyz +=  finalLig;
 	}
+
+	float3 ambientLig = 0.3f;
+	finalColor.xyz += ambientLig;
 
 	finalColor *= albedoColor;
 

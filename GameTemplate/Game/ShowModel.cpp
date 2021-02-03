@@ -12,10 +12,10 @@ bool ShowModel::Start()
 
 
 	m_lig = NewGO<prefab::CDirectionLight>(0);
-	m_lig->SetDirection({ 1.0f,0.0f,0.0f }, {-1.0f,0.0f,0.0f});
-	m_lig->SetColor({ 0.0f,1.0f,0.0f }, {0.0f,0.0f,1.0f});
+	m_lig->SetDirection({ 1.0f,0.0f,0.0f });
+	m_lig->SetColor({ 1.0f,0.0f,0.0f });
 
-	m_skinModelRender->Init("Assets/modelData/unityChan.tkm", "Assets/modelData/unityChan.tks",m_lig->GetLigData());
+	m_skinModelRender->Init("Assets/modelData/unityChan.tkm", "Assets/modelData/unityChan.tks");
 
 	return true;
 }
@@ -37,6 +37,8 @@ void ShowModel::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
-		//m_lig->SetDirection(m_lig->GetDirecion() * -1);
+		prefab::CDirectionLight* yellowfromside = NewGO<prefab::CDirectionLight>(0);
+		yellowfromside->SetDirection({ -1.0f,0.0f,0.0f });
+		yellowfromside->SetColor({ 1.0f,1.0f,0.0f });
 	}
 }

@@ -9,7 +9,7 @@ namespace prefab
 	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>
 	/// <param name="skeletonPath">スケルトンファイルのパス(.tks)</param>
 	/// <param name="buffer">ライトの定数バッファ</param>
-	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath,void* data)
+	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath)
 	{
 		m_skeleton.Init(skeletonPath);
 
@@ -28,20 +28,17 @@ namespace prefab
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
-		if (data != nullptr)
-		{
-			//定数バッファ周りテスト
-			//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
-			initData.m_expandConstantBufferSize = 96;
-
-			initData.m_expandConstantBuffer = data;
-		}
+	
+		//定数バッファ周りテスト
+		//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
+		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
+		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
 		m_model.Init(initData);
 	}
 
 	//モデルパスだけ版。コピーしてきただけ
-	void CSkinModelRender::Init(const char* modelPath,void* data)
+	void CSkinModelRender::Init(const char* modelPath)
 	{
 		ModelInitData initData;
 
@@ -56,14 +53,10 @@ namespace prefab
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
-		if (data != nullptr)
-		{
-			//定数バッファ周りテスト
-			//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
-			initData.m_expandConstantBufferSize = 32;
-
-			initData.m_expandConstantBuffer = data;
-		}
+		//定数バッファ周りテスト
+		//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
+		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
+		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
 		m_model.Init(initData);
 	}

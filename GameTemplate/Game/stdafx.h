@@ -5,3 +5,4 @@
 #include "ExEngine.h"
 
 #include "prefab.h"
+#include "CLightManager.h"

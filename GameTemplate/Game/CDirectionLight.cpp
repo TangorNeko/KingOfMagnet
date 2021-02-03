@@ -3,6 +3,11 @@
 
 namespace prefab
 {
+	CDirectionLight::~CDirectionLight()
+	{
+		CLightManager::GetInstance()->DirectionLightMinus();
+	}
+
 	bool CDirectionLight::Start()
 	{
 		/*
@@ -17,6 +22,8 @@ namespace prefab
 		ligData.ligDir = { 1.0f,0.0f,0.0f };
 		ligData.ligColor = { 1.0f,1.0f,1.0f };
 		*/
+
+		m_lightNum = CLightManager::GetInstance()->AddDirectionLight(GetLigData());
 
 		return true;
 	}
@@ -47,7 +54,9 @@ namespace prefab
 		auto& RenderContext = g_graphicsEngine->GetRenderContext();
 		RenderContext.SetDescriptorHeap(ds);
 		*/
-		ligData[0].eyePos = g_camera3D->GetPosition();
-		ligData[1].eyePos = g_camera3D->GetPosition();
+
+		dirLigData.eyePos = g_camera3D->GetPosition();
+		
+		CLightManager::GetInstance()->UpdateDirectionLight(m_lightNum,GetLigData());
 	}
 }

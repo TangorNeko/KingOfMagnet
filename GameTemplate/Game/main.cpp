@@ -19,7 +19,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
 	PhysicsWorld::CreateInstance();
+
+	//ライトマネージャーのインスタンスを作成
+	CLightManager::CreateInstance();
 	
+	prefab::CDirectionLight* bluefromup = NewGO<prefab::CDirectionLight>(0);
+	bluefromup->SetDirection({ 0.0f,-1.0f,0.0f });
+	bluefromup->SetColor({ 0.0f,0.0f,1.0f });
+
+	/*
+	prefab::CDirectionLight* greenfromdown = NewGO<prefab::CDirectionLight>(0);
+	greenfromdown->SetDirection({ 0.0f,1.0f,0.0f });
+	greenfromdown->SetColor({ 0.0f,1.0f,0.0f });
+	*/
 
 	NewGO<ShowModel>(0, "model");
 	NewGO<BackGround>(0, "background");
@@ -55,6 +67,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	}
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
+
+	CLightManager::DeleteInstance();
 	return 0;
 }
 
