@@ -8,5 +8,6 @@ class BackGround : public IGameObject
 	Vector3 m_position = { 0.0f,0.0f,0.0f };
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
+	prefab::CPointLight* m_pLig = nullptr;
 };
 

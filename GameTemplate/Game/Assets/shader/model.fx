@@ -13,10 +13,16 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mProj;
 };
 
-cbuffer DirectionLigCb : register(b1)
+struct ligData
 {
 	float3 ligDir;
 	float3 ligColor;
+	float3 eyePos;
+};
+
+cbuffer DirectionLigCb : register(b1)
+{
+	ligData ligdata[2];
 };
 
 ////////////////////////////////////////////////
@@ -39,6 +45,7 @@ struct SPSIn {
 	float4 pos 			: SV_POSITION;	//スクリーン空間でのピクセルの座標。
 	float3 normal		: NORMAL;		//法線
 	float2 uv 			: TEXCOORD0;	//uv座標。
+	float3 worldPos		: TEXCOORD1;
 };
 
 ////////////////////////////////////////////////
@@ -85,6 +92,9 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 		m = mWorld;
 	}
 	psIn.pos = mul(m, vsIn.pos);
+	
+	psIn.worldPos = psIn.pos;
+
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
 	psIn.normal = mul(m, vsIn.normal);
@@ -115,6 +125,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 {
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 
+	/*
+
 	//ランバート拡散反射
 	float t = dot(psIn.normal, -ligDir);
 
@@ -123,10 +135,62 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	float3 diffuseLig = ligColor * t;
 
+	//フォン鏡面反射
+	float3 toEye = eyePos - psIn.worldPos;
+	toEye = normalize(toEye);
+
+	float3 refVec = reflect(ligDir, psIn.normal);
+
+	t = dot(toEye, refVec);
+	if (t < 0)
+		t = 0;
+
+	t = pow(t, 5.0f);
+
+	float3 specularLig = ligColor * t;
+
 	float3 ambientLig = 0.3f;
 
+	float3 finalLig = diffuseLig + ambientLig + specularLig;
 	float4 finalColor = 1.0f;
-	finalColor.xyz = diffuseLig + ambientLig;
-	finalColor.xyz *= albedoColor;
+	finalColor.xyz = albedoColor.xyz * finalLig;
+	*/
+
+	float4 finalColor = 0.0f;
+	finalColor.a = 1.0f;
+
+	//ランバート拡散反射
+	for (int i = 0;i < 2;i++)
+	{
+		float t = dot(psIn.normal, -ligdata[i].ligDir);
+
+		if (t < 0)
+			t = 0;
+
+		float3 diffuseLig = ligdata[i].ligColor * t;
+
+		//フォン鏡面反射
+		float3 toEye = ligdata[i].eyePos - psIn.worldPos;
+		toEye = normalize(toEye);
+
+		float3 refVec = reflect(ligdata[i].ligDir, psIn.normal);
+
+		t = dot(toEye, refVec);
+		if (t < 0)
+			t = 0;
+
+		t = pow(t, 5.0f);
+
+		float3 specularLig = ligdata[i].ligColor * t;
+
+		float3 ambientLig = 0.3f;
+
+		float3 finalLig = diffuseLig + specularLig + ambientLig;
+
+		finalColor.xyz +=  finalLig;
+	}
+
+	finalColor *= albedoColor;
+
 	return finalColor;
 }

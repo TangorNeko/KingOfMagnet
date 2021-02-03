@@ -12,8 +12,8 @@ bool ShowModel::Start()
 
 
 	m_lig = NewGO<prefab::CDirectionLight>(0);
-	m_lig->SetDirection({ 1.0f,0.0f,0.0f });
-	m_lig->SetColor({ 1.0f,1.0f,1.0f });
+	m_lig->SetDirection({ 1.0f,0.0f,0.0f }, {-1.0f,0.0f,0.0f});
+	m_lig->SetColor({ 0.0f,1.0f,0.0f }, {0.0f,0.0f,1.0f});
 
 	m_skinModelRender->Init("Assets/modelData/unityChan.tkm", "Assets/modelData/unityChan.tks",m_lig->GetLigData());
 
@@ -22,12 +22,21 @@ bool ShowModel::Start()
 
 void ShowModel::Update()
 {
-	m_position.z += 0.1f;
+	//m_position.z += 0.1f;
 
+	if (g_pad[0]->IsPress(enButtonB))
+	{
+		m_deg += 1.0f;
+	}
+
+	Quaternion qRot;
+	qRot.SetRotationDeg(Vector3::AxisY, m_deg);
+
+	m_skinModelRender->SetRotation(qRot);
 	m_skinModelRender->SetPosition(m_position);
 
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
-		m_lig->SetDirection({ 0.0f,0.0f,-1.0f });
+		//m_lig->SetDirection(m_lig->GetDirecion() * -1);
 	}
 }

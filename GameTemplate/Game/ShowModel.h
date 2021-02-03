@@ -9,4 +9,5 @@ class ShowModel : public IGameObject
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CDirectionLight* m_lig = nullptr;
+	float m_deg = 0;
 };

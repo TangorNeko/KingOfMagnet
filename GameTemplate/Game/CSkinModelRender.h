@@ -19,7 +19,7 @@ namespace prefab
 		void Render(RenderContext& rc) override;
 
 		void Init(const char* modelPath,const char* skeletonPath,void* data = nullptr);
-		void Init(const char* modelPath);
+		void Init(const char* modelPath,void* data = nullptr);
 
 
 		//TODO: アニメーションの追加

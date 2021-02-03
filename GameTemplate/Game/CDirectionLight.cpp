@@ -47,6 +47,7 @@ namespace prefab
 		auto& RenderContext = g_graphicsEngine->GetRenderContext();
 		RenderContext.SetDescriptorHeap(ds);
 		*/
-
+		ligData[0].eyePos = g_camera3D->GetPosition();
+		ligData[1].eyePos = g_camera3D->GetPosition();
 	}
 }

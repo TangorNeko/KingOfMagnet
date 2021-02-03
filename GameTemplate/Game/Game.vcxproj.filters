@@ -215,6 +215,9 @@
     <ClCompile Include="CLightManager.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
+    <ClCompile Include="CPointLight.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -410,6 +413,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CLightManager.h">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CPointLight.h">
       <Filter>ソース ファイル\prefab</Filter>
     </ClInclude>
   </ItemGroup>

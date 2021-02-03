@@ -289,6 +289,7 @@
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
+    <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSkinModelRender.cpp" />
     <ClCompile Include="CLightManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="CDirectionLight.h" />
+    <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSkinModelRender.h" />
     <ClInclude Include="CLightManager.h" />
     <ClInclude Include="ShowModel.h" />
