@@ -8,19 +8,14 @@ namespace prefab
 		float pad0;
 		Vector3 ligColor;
 		float pad1;
-		Vector3 eyePos;
-		float pad2;
 	};
 
 	class CDirectionLight : public IGameObject
 	{
 	private:
-
-		//ConstantBuffer cb;
-		//DescriptorHeap ds;
 		DirLigData dirLigData;
 
-		int m_lightNum;
+		int m_dirLigNum;
 	public:
 		~CDirectionLight();
 		bool Start();

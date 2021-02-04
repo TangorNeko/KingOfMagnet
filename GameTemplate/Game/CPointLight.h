@@ -2,33 +2,36 @@
 
 namespace prefab
 {
+	struct PointLigData
+	{
+		Vector3 ligPos;
+		float pad;
+		Vector3 ligColor;
+		float ligRange;
+	};
+
 	class CPointLight : public IGameObject
 	{
 	private:
-		struct LigData
-		{
-			Vector3 ligPos;
-			float pad;
-			Vector3 ligColor;
-			float ligRange;
-		};
+		PointLigData pointligData;
 
-		LigData ligData;
+		int m_pointLigNum;
 	public:
+		~CPointLight();
 		bool Start();
 		void Update();
 
 		//定数バッファ周りのテスト
-		LigData* GetLigData() { return &ligData; }
-		int GetLigDataSize() { return sizeof(LigData); }
+		PointLigData* GetLigData() { return &pointligData; }
+		int GetLigDataSize() { return sizeof(PointLigData); }
 
-		void SetPosition(Vector3 pos) { ligData.ligPos = pos; }
-		Vector3 GetPosition() { return ligData.ligPos; }
+		void SetPosition(Vector3 pos) { pointligData.ligPos = pos; }
+		Vector3 GetPosition() { return pointligData.ligPos; }
 
-		void SetColor(Vector3 color) { ligData.ligColor = color; }
-		Vector3 GetColor() { return ligData.ligColor; }
+		void SetColor(Vector3 color) { pointligData.ligColor = color; }
+		Vector3 GetColor() { return pointligData.ligColor; }
 
-		void SetRange(float range) { ligData.ligRange = range; }
-		float GetRange() { return ligData.ligRange; }
+		void SetRange(float range) { pointligData.ligRange = range; }
+		float GetRange() { return pointligData.ligRange; }
 	};
 }

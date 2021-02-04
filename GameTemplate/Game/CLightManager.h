@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "CDirectionLight.h"
+#include "CPointLight.h"
 
 //TODO:ライトを消す時の仕組みができていない。明らかに一方通行
 //削除した際にソートで左につめた後directionLightNumを減らす?
@@ -18,7 +19,10 @@ private:
 	struct LigDatas
 	{
 		prefab::DirLigData directionLightArray[5];
+		prefab::PointLigData pointLightArray[10];
+		Vector3 eyePos;
 		int directionLightNum = 0;
+		int pointLightNum = 0;
 	};
 
 	LigDatas m_ligData;
@@ -42,8 +46,10 @@ public:
 
 	int GetDataSize() { return m_size; }
 
-	int DirectionLightPlus() { return m_ligData.directionLightNum++; }
+	void UpdateEyePos() { m_ligData.eyePos = g_camera3D->GetPosition(); }
 
+	//ディレクションライト用
+	int DirectionLightPlus() { return m_ligData.directionLightNum++; }
 
 	//WARNING:明らかに危険 何番目のライトを消すか把握する必要がある
 	void DirectionLightMinus() {
@@ -65,6 +71,31 @@ public:
 	void UpdateDirectionLight(int directionLightNum, prefab::DirLigData* dirLigData)
 	{
 		m_ligData.directionLightArray[directionLightNum] = *dirLigData;
+	}
+
+	//ポイントライト用
+	int PointLightPlus() { return m_ligData.pointLightNum++; }
+
+	void PointLightMinus()
+	{
+		m_ligData.pointLightNum--;
+		if (m_ligData.pointLightNum < 0)
+			throw;
+	}
+
+	int AddPointLight(prefab::PointLigData* pointLigData)
+	{
+		if (m_ligData.pointLightNum >= 9)
+			throw;
+
+		m_ligData.pointLightArray[m_ligData.pointLightNum] = *pointLigData;
+
+		return PointLightPlus();
+	}
+
+	void UpdatePointLight(int pointLightNum, prefab::PointLigData* pointLigData)
+	{
+		m_ligData.pointLightArray[pointLightNum] = *pointLigData;
 	}
 };
 

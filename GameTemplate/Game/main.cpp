@@ -35,6 +35,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	greenfromdown->SetColor({ 0.0f,1.0f,0.0f });
 	*/
 
+	prefab::CPointLight* bluepointlig = NewGO<prefab::CPointLight>(0);
+	bluepointlig->SetPosition({ 100.0f,5.0f,0.0f });
+	bluepointlig->SetColor({ 0.0f,0.0f,1.0f });
+	bluepointlig->SetRange(100.0f);
+
+	prefab::CPointLight* greenpointlig = NewGO<prefab::CPointLight>(0);
+	greenpointlig->SetPosition({ -75.0f,5.0f,80.0f });
+	greenpointlig->SetColor({ 0.0f,1.0f,0.0f });
+	greenpointlig->SetRange(100.0f);
+
 	NewGO<ShowModel>(0, "model");
 	NewGO<BackGround>(0, "background");
 

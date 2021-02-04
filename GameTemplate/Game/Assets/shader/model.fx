@@ -13,17 +13,27 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mProj;
 };
 
+//ライト用の構造体
 struct DirectionLigData
 {
 	float3 ligDir;
 	float3 ligColor;
-	float3 eyePos;
+};
+
+struct PointLigData
+{
+	float3 ligPos;
+	float3 ligColor;
+	float ligRange;
 };
 
 cbuffer DirectionLigCb : register(b1)
 {
-	DirectionLigData directionLigData[10];
+	DirectionLigData directionLigData[5];
+	PointLigData pointLigData[10];
+	float3 eyePos;
 	int directionLigNum;
+	int pointLigNum;
 };
 
 ////////////////////////////////////////////////
@@ -126,43 +136,14 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 {
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 
-	/*
-
-	//ランバート拡散反射
-	float t = dot(psIn.normal, -ligDir);
-
-	if (t < 0)
-		t = 0;
-
-	float3 diffuseLig = ligColor * t;
-
-	//フォン鏡面反射
-	float3 toEye = eyePos - psIn.worldPos;
-	toEye = normalize(toEye);
-
-	float3 refVec = reflect(ligDir, psIn.normal);
-
-	t = dot(toEye, refVec);
-	if (t < 0)
-		t = 0;
-
-	t = pow(t, 5.0f);
-
-	float3 specularLig = ligColor * t;
-
-	float3 ambientLig = 0.3f;
-
-	float3 finalLig = diffuseLig + ambientLig + specularLig;
-	float4 finalColor = 1.0f;
-	finalColor.xyz = albedoColor.xyz * finalLig;
-	*/
-
 	float4 finalColor = 0.0f;
 	finalColor.a = 1.0f;
 
-	//ランバート拡散反射
-	for (int i = 0;i < 5;i++)
+
+	//ディレクションライト
+	for (int i = 0;i < directionLigNum;i++)
 	{
+		//ランバート拡散反射
 		float t = dot(psIn.normal, -directionLigData[i].ligDir);
 
 		if (t < 0)
@@ -171,7 +152,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		float3 diffuseLig = directionLigData[i].ligColor * t;
 
 		//フォン鏡面反射
-		float3 toEye = directionLigData[i].eyePos - psIn.worldPos;
+		float3 toEye = eyePos - psIn.worldPos;
 		toEye = normalize(toEye);
 
 		float3 refVec = reflect(directionLigData[i].ligDir, psIn.normal);
@@ -187,6 +168,49 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		float3 finalLig = diffuseLig + specularLig;
 
 		finalColor.xyz +=  finalLig;
+	}
+
+	//ポイントライト
+	for (int i = 0; i < pointLigNum; i++)
+	{
+		float3 pointLigDir = psIn.worldPos - pointLigData[i].ligPos;
+		pointLigDir = normalize(pointLigDir);
+
+		//ランバート拡散反射
+		float t = dot(psIn.normal, -pointLigDir);
+		if (t < 0)
+			t = 0;
+
+		float3 diffuseLig = pointLigData[i].ligColor * t;
+
+		//フォン鏡面反射
+		float3 toEye = eyePos - psIn.worldPos;
+		toEye = normalize(toEye);
+
+		float3 refVec = reflect(pointLigDir, psIn.normal);
+
+		t = dot(toEye, refVec);
+		if (t < 0)
+			t = 0;
+
+		t = pow(t, 5.0f);
+
+		float3 specularLig = pointLigData[i].ligColor * t;
+
+		//距離による減衰
+
+		float3 distance = length(psIn.worldPos - pointLigData[i].ligPos);
+
+		float affect = 1.0f - 1.0f / pointLigData[i].ligRange * distance;
+
+		if (affect < 0)
+			affect = 0;
+
+		affect = pow(affect, 3.0f);
+
+		float3 finalLig = diffuseLig * affect + specularLig * affect;
+
+		finalColor.xyz += finalLig;
 	}
 
 	float3 ambientLig = 0.3f;
