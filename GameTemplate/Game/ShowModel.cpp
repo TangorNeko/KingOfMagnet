@@ -10,11 +10,6 @@ bool ShowModel::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-
-	m_lig = NewGO<prefab::CDirectionLight>(0);
-	m_lig->SetDirection({ 1.0f,0.0f,0.0f });
-	m_lig->SetColor({ 1.0f,0.0f,0.0f });
-
 	m_skinModelRender->Init("Assets/modelData/unityChan.tkm", "Assets/modelData/unityChan.tks");
 
 	return true;

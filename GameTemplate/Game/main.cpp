@@ -23,9 +23,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 	
+	/*
 	prefab::CDirectionLight* bluefromup = NewGO<prefab::CDirectionLight>(0);
 	bluefromup->SetDirection({ 0.0f,-1.0f,0.0f });
 	bluefromup->SetColor({ 0.0f,0.0f,1.0f });
+	*/
 
 	/*
 	prefab::CDirectionLight* greenfromdown = NewGO<prefab::CDirectionLight>(0);
@@ -35,11 +37,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	NewGO<ShowModel>(0, "model");
 	NewGO<BackGround>(0, "background");
-
-	/*
-	prefab::CDirectionLight* lig = NewGO<prefab::CDirectionLight>(0,"lig");
-	lig->SetColor({ 0.0f,0.0f,0.0f });
-	*/
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

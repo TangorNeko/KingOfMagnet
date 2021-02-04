@@ -184,9 +184,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		float3 specularLig = directionLigData[i].ligColor * t;
 
-		//float3 ambientLig = 0.3f;
-
-		float3 finalLig = diffuseLig + specularLig;// + ambientLig;
+		float3 finalLig = diffuseLig + specularLig;
 
 		finalColor.xyz +=  finalLig;
 	}

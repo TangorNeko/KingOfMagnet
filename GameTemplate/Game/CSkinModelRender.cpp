@@ -29,8 +29,7 @@ namespace prefab
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
 	
-		//定数バッファ周りテスト
-		//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
+		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
@@ -53,8 +52,7 @@ namespace prefab
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
-		//定数バッファ周りテスト
-		//WARNING:ここに固定の数値を入れるのは危険　sizeを知る仕組みが必要
+		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
