@@ -15,9 +15,10 @@ namespace prefab
 	class CSpotLight : public IGameObject
 	{
 	private:
-		SpotLigData spotLigData;
+		SpotLigData spotLigData;	//スポットライトのデータ
 
-		int m_spotLigNum;
+		int m_spotLigTag;			//スポットライトのタグ(何番目に作られたライト?)
+		//TODO:他のスポットライトを消した時に何番目かが更新されなければいけない
 	public:
 		~CSpotLight();
 		bool Start();

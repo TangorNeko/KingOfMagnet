@@ -13,7 +13,7 @@ namespace prefab
 	bool CPointLight::Start()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
-		m_pointLigNum = CLightManager::GetInstance()->AddPointLight(GetLigData());
+		m_pointLigTag = CLightManager::GetInstance()->AddPointLight(GetLigData());
 
 		return true;
 	}
@@ -22,6 +22,6 @@ namespace prefab
 	void CPointLight::Update()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
-		CLightManager::GetInstance()->UpdatePointLight(m_pointLigNum, GetLigData());
+		CLightManager::GetInstance()->UpdatePointLight(m_pointLigTag, GetLigData());
 	}
 }

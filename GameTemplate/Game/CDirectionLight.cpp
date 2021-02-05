@@ -6,14 +6,14 @@ namespace prefab
 	//ディレクションライトの数を減らした時
 	CDirectionLight::~CDirectionLight()
 	{
-		CLightManager::GetInstance()->DirectionLightMinus();
+		CLightManager::GetInstance()->RemoveDirectionLight(m_dirLigTag);
 	}
 
 	//ディレクションライトの数を増やした時
 	bool CDirectionLight::Start()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
-		m_dirLigNum = CLightManager::GetInstance()->AddDirectionLight(GetLigData());
+		m_dirLigTag = CLightManager::GetInstance()->AddDirectionLight(GetLigData());
 
 		return true;
 	}
@@ -22,6 +22,6 @@ namespace prefab
 	void CDirectionLight::Update()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
-		CLightManager::GetInstance()->UpdateDirectionLight(m_dirLigNum,GetLigData());
+		CLightManager::GetInstance()->UpdateDirectionLight(m_dirLigTag,GetLigData());
 	}
 }

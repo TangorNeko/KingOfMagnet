@@ -13,7 +13,7 @@ namespace prefab
 	bool CSpotLight::Start()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
-		m_spotLigNum = CLightManager::GetInstance()->AddSpotLight(GetLigData());
+		m_spotLigTag = CLightManager::GetInstance()->AddSpotLight(GetLigData());
 
 		return true;
 	}
@@ -22,6 +22,6 @@ namespace prefab
 	void CSpotLight::Update()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
-		CLightManager::GetInstance()->UpdateSpotLight(m_spotLigNum, GetLigData());
+		CLightManager::GetInstance()->UpdateSpotLight(m_spotLigTag, GetLigData());
 	}
 }

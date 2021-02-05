@@ -13,7 +13,7 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mProj;
 };
 
-//ライト用の構造体
+//ライト用の構造体たち
 struct DirectionLigData
 {
 	float3 ligDir;
@@ -38,6 +38,7 @@ struct SpotLigData
 
 cbuffer DirectionLigCb : register(b1)
 {
+	//各配列数はCLightManager.hのMaxLightNumと同じにすること。
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[10];
 	SpotLigData spotLigData[10];

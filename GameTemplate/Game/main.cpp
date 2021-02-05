@@ -29,11 +29,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	bluefromup->SetColor({ 0.0f,0.0f,1.0f });
 	*/
 
-	/*
-	prefab::CDirectionLight* greenfromdown = NewGO<prefab::CDirectionLight>(0);
-	greenfromdown->SetDirection({ 0.0f,1.0f,0.0f });
-	greenfromdown->SetColor({ 0.0f,1.0f,0.0f });
-	*/
+	
+	prefab::CDirectionLight* redfromside = NewGO<prefab::CDirectionLight>(0);
+	redfromside->SetDirection({ 1.0f,0.0f,0.0f });
+	redfromside->SetColor({ 1.0f,0.0f,0.0f });
+	
 
 	prefab::CPointLight* bluepointlig = NewGO<prefab::CPointLight>(0);
 	bluepointlig->SetPosition({ 100.0f,5.0f,0.0f });
@@ -45,7 +45,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	greenpointlig->SetColor({ 0.0f,1.0f,0.0f });
 	greenpointlig->SetRange(100.0f);
 
-	NewGO<ShowModel>(0, "model");
+	ShowModel* showm = NewGO<ShowModel>(0, "model");
 	NewGO<BackGround>(0, "background");
 
 	//////////////////////////////////////
@@ -64,6 +64,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 		
+		if (g_pad[0]->IsTrigger(enButtonA))
+		{
+			DeleteGO(showm);
+		}
+
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 

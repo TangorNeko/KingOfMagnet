@@ -13,9 +13,10 @@ namespace prefab
 	class CDirectionLight : public IGameObject
 	{
 	private:
-		DirLigData dirLigData;
+		DirLigData dirLigData;	//ディレクションライトのデータ
 
-		int m_dirLigNum;
+		int m_dirLigTag;		//ディレクションライトの番号(何番目に作られたライト?)
+		//TODO:他のディレクションライトを消した時に何番目かが更新されなければいけない
 	public:
 		~CDirectionLight();
 		bool Start();
