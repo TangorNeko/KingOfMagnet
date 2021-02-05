@@ -70,6 +70,7 @@ void ShowModel::Update()
 	m_eyePos.z -= g_pad[0]->GetLStickYF();
 
 	g_camera3D->SetPosition(m_eyePos);
+	g_camera3D->SetTarget(m_position);
 
 	for (int i = 0;i < 2;i++)
 	{

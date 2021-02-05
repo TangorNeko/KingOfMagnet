@@ -38,7 +38,7 @@ struct SpotLigData
 
 cbuffer DirectionLigCb : register(b1)
 {
-	//各配列数はCLightManager.hのMaxLightNumと同じにすること。
+	//各配列数はCLightManager.hのMaxLightNumと同じにすること
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[10];
 	SpotLigData spotLigData[10];

@@ -6,6 +6,7 @@
 #include "CPointLight.h"
 #include "CSpotLight.h"
 
+//各ライトの最大数　この数はmodel.fxのライト配列の数と一緒にしなければならない
 const int MaxDirectionLightNum = 5;
 const int MaxPointLightNum = 10;
 const int MaxSpotLightNum = 10;
@@ -37,9 +38,9 @@ private:
 	LigDatas m_ligData;				//ライトのデータ
 	int m_size = sizeof(m_ligData);	//ライトのデータのサイズ
 	
-	int m_dirLigNum = 0;				//次に作られたディレクションライトに付与するタグ番号(これまでに何個ディレクションライトが作られたか)
-	int m_pointLigNum = 0;				//次に作られたポイントライトに付与するタグ番号(これまでに何個ポイントライトが作られたか)
-	int m_spotLigNum = 0;				//次に作られたスポットライトに付与するタグ番号(これまでに何個スポットライトが作られたか)
+	int m_dirLigNum = 0;				//次に作られるディレクションライトに付与するタグ番号(≒これまでに何個ディレクションライトが作られたか)
+	int m_pointLigNum = 0;				//次に作られるポイントライトに付与するタグ番号(≒これまでに何個ポイントライトが作られたか)
+	int m_spotLigNum = 0;				//次に作られるスポットライトに付与するタグ番号(≒これまでに何個スポットライトが作られたか)
 	std::map<int, int> m_dirLigMap;		//ディレクションライトのタグから現在のディレクションライトの位置を返してくれるMap
 	std::map<int, int> m_pointLigMap;	//ポイントライトのタグから現在のポイントライトの位置を返してくれるMap
 	std::map<int, int> m_spotLigMap;	//スポットライトのタグから現在のスポットライトの位置を返してくれるMap
