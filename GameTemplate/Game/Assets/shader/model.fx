@@ -27,13 +27,24 @@ struct PointLigData
 	float ligRange;
 };
 
+struct SpotLigData
+{
+	float3 ligPos;
+	float3 ligColor;
+	float ligRange;
+	float3 ligDir;
+	float ligAngle;
+};
+
 cbuffer DirectionLigCb : register(b1)
 {
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[10];
+	SpotLigData spotLigData[10];
 	float3 eyePos;
 	int directionLigNum;
 	int pointLigNum;
+	int spotLigNum;
 };
 
 ////////////////////////////////////////////////
@@ -197,6 +208,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		float3 specularLig = pointLigData[i].ligColor * t;
 
+		float3 finalLig = diffuseLig + specularLig;
+
 		//距離による減衰
 
 		float3 distance = length(psIn.worldPos - pointLigData[i].ligPos);
@@ -208,7 +221,68 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		affect = pow(affect, 3.0f);
 
-		float3 finalLig = diffuseLig * affect + specularLig * affect;
+		finalLig *= affect;
+
+		finalColor.xyz += finalLig;
+	}
+
+	//スポットライト
+	for (int i = 0; i < spotLigNum; i++)
+	{
+		float3 spotLigDir = psIn.worldPos - spotLigData[i].ligPos;
+		spotLigDir = normalize(spotLigDir);
+
+		//ランバート拡散反射
+		float t = dot(psIn.normal, -spotLigDir);
+		if (t < 0)
+			t = 0;
+
+		float3 diffuseLig = spotLigData[i].ligColor * t;
+
+		//フォン鏡面反射
+		float3 toEye = eyePos - psIn.worldPos;
+		toEye = normalize(toEye);
+
+		float3 refVec = reflect(spotLigDir, psIn.normal);
+
+		t = dot(toEye, refVec);
+		if (t < 0)
+			t = 0;
+
+		t = pow(t, 5.0f);
+
+		float3 specularLig = spotLigData[i].ligColor * t;
+
+		float3 finalLig = diffuseLig + specularLig;
+
+		//距離による減衰
+
+		float3 distance = length(psIn.worldPos - spotLigData[i].ligPos);
+
+		float affect = 1.0f - 1.0f / spotLigData[i].ligRange * distance;
+
+		if (affect < 0)
+			affect = 0;
+
+		affect = pow(affect, 3.0f);
+
+		finalLig *= affect;
+
+		//角度による減衰
+		float3 toGround = psIn.worldPos - spotLigData[i].ligPos;
+		toGround = normalize(toGround);
+
+		float angle = dot(toGround, spotLigData[i].ligDir);
+		
+		angle = acos(angle);
+
+		affect = 1.0f - 1.0f / spotLigData[i].ligAngle * angle;
+		if (affect < 0.0f)
+			affect = 0.0f;
+
+		affect = pow(affect, 0.5f);
+
+		finalLig *= affect;
 
 		finalColor.xyz += finalLig;
 	}

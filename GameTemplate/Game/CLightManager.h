@@ -2,6 +2,11 @@
 #include "stdafx.h"
 #include "CDirectionLight.h"
 #include "CPointLight.h"
+#include "CSpotLight.h"
+
+const int MaxDirectionLightNum = 5;
+const int MaxPointLightNum = 10;
+const int MaxSpotLightNum = 10;
 
 //TODO:ライトを消す時の仕組みができていない。明らかに一方通行
 //削除した際にソートで左につめた後directionLightNumを減らす?
@@ -18,11 +23,13 @@ private:
 	//ライトの情報とライトの数を集めたデータ(定数バッファとしてHLSLに送られる構造体)
 	struct LigDatas
 	{
-		prefab::DirLigData directionLightArray[5];
-		prefab::PointLigData pointLightArray[10];
+		prefab::DirLigData directionLightArray[MaxDirectionLightNum];
+		prefab::PointLigData pointLightArray[MaxPointLightNum];
+		prefab::SpotLigData spotLightArray[MaxSpotLightNum];
 		Vector3 eyePos;
 		int directionLightNum = 0;
 		int pointLightNum = 0;
+		int spotLightNum = 0;
 	};
 
 	LigDatas m_ligData;
@@ -60,7 +67,7 @@ public:
 
 	int AddDirectionLight(prefab::DirLigData* dirLigData)
 	{
-		if (m_ligData.directionLightNum >= 4)
+		if (m_ligData.directionLightNum >= MaxDirectionLightNum)
 			throw;
 
 		m_ligData.directionLightArray[m_ligData.directionLightNum] = *dirLigData;
@@ -85,7 +92,7 @@ public:
 
 	int AddPointLight(prefab::PointLigData* pointLigData)
 	{
-		if (m_ligData.pointLightNum >= 9)
+		if (m_ligData.pointLightNum >= MaxPointLightNum)
 			throw;
 
 		m_ligData.pointLightArray[m_ligData.pointLightNum] = *pointLigData;
@@ -97,5 +104,31 @@ public:
 	{
 		m_ligData.pointLightArray[pointLightNum] = *pointLigData;
 	}
+
+	//スポットライト用
+	int SpotLightPlus() { return m_ligData.spotLightNum++; }
+
+	void SpotLightMinus()
+	{
+		m_ligData.spotLightNum--;
+		if (m_ligData.spotLightNum < 0)
+			throw;
+	}
+
+	int AddSpotLight(prefab::SpotLigData* spotLigData)
+	{
+		if (m_ligData.spotLightNum >= MaxSpotLightNum)
+			throw;
+
+		m_ligData.spotLightArray[m_ligData.spotLightNum] = *spotLigData;
+
+		return SpotLightPlus();
+	}
+
+	void UpdateSpotLight(int spotLightNum, prefab::SpotLigData* spotLigData)
+	{
+		m_ligData.spotLightArray[spotLightNum] = *spotLigData;
+	}
+
 };
 

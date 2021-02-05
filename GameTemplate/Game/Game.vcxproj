@@ -292,6 +292,7 @@
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSkinModelRender.cpp" />
     <ClCompile Include="CLightManager.cpp" />
+    <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
@@ -367,6 +368,7 @@
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSkinModelRender.h" />
     <ClInclude Include="CLightManager.h" />
+    <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="stdafx.h" />

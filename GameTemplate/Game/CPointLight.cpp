@@ -3,11 +3,13 @@
 
 namespace prefab
 {
+	//ポイントライトの数を減らした時
 	CPointLight::~CPointLight()
 	{
 		CLightManager::GetInstance()->PointLightMinus();
 	}
 
+	//ポイントライトの数を増やした時
 	bool CPointLight::Start()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();
@@ -16,6 +18,7 @@ namespace prefab
 		return true;
 	}
 
+	//毎フレームカメラの位置とポイントライトのデータを更新
 	void CPointLight::Update()
 	{
 		CLightManager::GetInstance()->UpdateEyePos();

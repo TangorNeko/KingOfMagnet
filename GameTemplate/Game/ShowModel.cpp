@@ -12,10 +12,14 @@ bool ShowModel::Start()
 
 	m_skinModelRender->Init("Assets/modelData/unityChan.tkm", "Assets/modelData/unityChan.tks");
 
-	redpointlig = NewGO<prefab::CPointLight>(0);
+	redpointlig = NewGO<prefab::CSpotLight>(0);
 	redpointlig->SetPosition(m_ligPos);
-	redpointlig->SetColor({ 1.0f,0.0f,0.0f });
-	redpointlig->SetRange(100.0f);
+	redpointlig->SetColor({ 5.0f,5.0f,5.0f });
+	redpointlig->SetRange(500.0f);
+	Vector3 test = { 1.0f,-1.0f,0.0f };
+	test.Normalize();
+	redpointlig->SetDirection(test);
+	redpointlig->SetAngleDeg(30.0f);
 
 	return true;
 }
