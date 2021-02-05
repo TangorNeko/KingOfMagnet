@@ -64,9 +64,27 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 		
-		if (g_pad[0]->IsTrigger(enButtonA))
+
+		Vector3 pos = bluepointlig->GetPosition();
+
+		if (g_pad[0]->IsPress(enButtonLB3))
 		{
-			DeleteGO(showm);
+			pos.z--;
+		}
+
+		if (g_pad[0]->IsPress(enButtonLB2))
+		{
+			pos.z++;
+		}
+
+		bluepointlig->SetPosition(pos);
+
+
+		if (g_pad[0]->IsTrigger(enButtonX))
+		{
+			ShowModel* showmodel = FindGO<ShowModel>("model");
+			
+			DeleteGO(showmodel);
 		}
 
 		GameObjectManager::GetInstance()->ExecuteUpdate();

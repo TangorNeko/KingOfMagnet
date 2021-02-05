@@ -37,7 +37,7 @@ void ShowModel::Update()
 {
 	m_position.z += 0.1f;
 
-	if (g_pad[0]->IsPress(enButtonB))
+	if (g_pad[0]->IsPress(enButtonY))
 	{
 		m_deg += 1.0f;
 	}
