@@ -11,10 +11,11 @@ const int MaxDirectionLightNum = 5;
 const int MaxPointLightNum = 10;
 const int MaxSpotLightNum = 10;
 
-//TODO:ライトを消す時の仕組みができていない。明らかに一方通行
-//削除した際にソートで左につめた後directionLightNumを減らす?
-//そうするとCDirectionLight側でAddDirectionLightの時に受け取った照明の番号が無効になりそうなので
-//UpdateDirectionLightの時に受け取ったナンバーから更新後のナンバーを渡せたらうれしい。
+//TODO:ライトを作る際最大数以上の時throwするのではなく一番古いライトを消すような処理にする方がよい?
+//勝手に消す(例:一番古いライトタグに対応した数字を-1にし、UpdateLightで-1ならLight.cppでDelete(this)させる)
+//と無効なアドレスに値を入れることになりそうだが
+//データを使わないだけで消さないようにする(例:古いライトタグに対応した数字を-1にするだけ)
+//とそれはそれでメモリの無駄遣いになりそう
 class CLightManager
 {
 private:
@@ -48,7 +49,9 @@ public:
 	static void CreateInstance()
 	{
 		if (!m_instance)
+		{
 			m_instance = new CLightManager;
+		}
 	}
 
 	static void DeleteInstance()
@@ -81,7 +84,9 @@ public:
 
 		//ライトの数が0以下になる時はおかしくなっているのでthrowする(起こり得ないと信じたい)
 		if (m_ligData.directionLightNum < 0)
+		{
 			throw;
+		}
 	}
 
 	//ディレクションライトを追加する
@@ -89,7 +94,9 @@ public:
 	{
 		//ライトの数が最初に決めた数以上ならthrowする(いっぱい作るとふつうに起こる)
 		if (m_ligData.directionLightNum >= MaxDirectionLightNum)
+		{
 			throw;
+		}
 
 		//空きの中で一番先頭位置にデータを格納する
 		m_ligData.directionLightArray[m_ligData.directionLightNum] = *dirLigData;
@@ -140,25 +147,59 @@ public:
 	void PointLightMinus()
 	{
 		m_ligData.pointLightNum--;
+
+		//ライトの数が0以下になる時はおかしくなっているのでthrowする(起こり得ないと信じたい)
 		if (m_ligData.pointLightNum < 0)
+		{
 			throw;
+		}
 	}
 
 	//ポイントライトを追加する
 	int AddPointLight(prefab::PointLigData* pointLigData)
 	{
+		//ライトの数が最初に決めた数以上ならthrowする(いっぱい作るとふつうに起こる)
 		if (m_ligData.pointLightNum >= MaxPointLightNum)
+		{
 			throw;
+		}
 
+		//空きの中で一番先頭位置にデータを格納する
 		m_ligData.pointLightArray[m_ligData.pointLightNum] = *pointLigData;
 
-		return PointLightPlus();
+		//作ったライトのタグ番号とデータの格納位置を関連付ける
+		m_pointLigMap.insert(std::make_pair(m_pointLigNum, m_ligData.pointLightNum));
+
+		//次にライトが入る位置をずらす
+		PointLightPlus();
+
+		//作ったライトのタグ番号を返し、1増やして次のライトの作成に備える
+		return m_pointLigNum++;
+	}
+
+	//ポイントライトを削除する
+	void RemovePointLight(int pointLightTag)
+	{
+		//タグから削除する位置を取得し、削除するライトをソートで一番終端に持っていく
+		for (int i = m_pointLigMap.at(pointLightTag);i < m_ligData.pointLightNum - 1;i++)
+		{
+			std::swap(m_ligData.pointLightArray[i], m_ligData.pointLightArray[i + 1]);
+		}
+
+		//ライトの数を減らすことで空いた位置に次のライトを入れられるようになる
+		PointLightMinus();
+
+		//削除したライト以降のライトの位置番号が一つずつずれたのでタグに対応した位置の番号を1ずつ減らす
+		for (auto i = m_pointLigMap.upper_bound(pointLightTag);i != m_pointLigMap.end();i++)
+		{
+			i->second--;
+		}
 	}
 
 	//ポイントライトの情報を更新する
-	void UpdatePointLight(int pointLightNum, prefab::PointLigData* pointLigData)
+	void UpdatePointLight(int pointLightTag, prefab::PointLigData* pointLigData)
 	{
-		m_ligData.pointLightArray[pointLightNum] = *pointLigData;
+		m_ligData.pointLightArray[m_pointLigMap.at(pointLightTag)] = *pointLigData;
 	}
 
 	//スポットライト用/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,25 +211,59 @@ public:
 	void SpotLightMinus()
 	{
 		m_ligData.spotLightNum--;
+
+		//ライトの数が0以下になる時はおかしくなっているのでthrowする(起こり得ないと信じたい)
 		if (m_ligData.spotLightNum < 0)
+		{
 			throw;
+		}
 	}
 
 	//スポットライトを追加する
 	int AddSpotLight(prefab::SpotLigData* spotLigData)
 	{
+		//ライトの数が最初に決めた数以上ならthrowする(いっぱい作るとふつうに起こる)
 		if (m_ligData.spotLightNum >= MaxSpotLightNum)
+		{
 			throw;
+		}
 
+		//空きの中で一番先頭位置にデータを格納する
 		m_ligData.spotLightArray[m_ligData.spotLightNum] = *spotLigData;
 
-		return SpotLightPlus();
+		//作ったライトのタグ番号とデータの格納位置を関連付ける
+		m_spotLigMap.insert(std::make_pair(m_spotLigNum, m_ligData.spotLightNum));
+
+		//次にライトが入る位置をずらす
+		SpotLightPlus();
+
+		//作ったライトのタグ番号を返し、1増やして次のライト作成に備える
+		return m_spotLigNum++;
+	}
+
+	//スポットライトを削除する
+	void RemoveSpotLight(int spotLightTag)
+	{
+		//タグから削除する位置を取得し、削除するライトをソートで一番終端に持っていく
+		for (int i = m_spotLigMap.at(spotLightTag);i < m_ligData.spotLightNum - 1;i++)
+		{
+			std::swap(m_ligData.spotLightArray[i], m_ligData.spotLightArray[i + 1]);
+		}
+
+		//ライトの数を減らすことで空いた位置に次のライトを入れられるようになる
+		SpotLightMinus();
+
+		//削除したライト以降のライトの位置番号が一つずつずれたのでタグに対応した位置の番号を1ずつ減らす
+		for (auto i = m_spotLigMap.upper_bound(spotLightTag);i != m_spotLigMap.end();i++)
+		{
+			i->second--;
+		}
 	}
 
 	//スポットライトの情報を更新する
-	void UpdateSpotLight(int spotLightNum, prefab::SpotLigData* spotLigData)
+	void UpdateSpotLight(int spotLightTag, prefab::SpotLigData* spotLigData)
 	{
-		m_ligData.spotLightArray[spotLightNum] = *spotLigData;
+		m_ligData.spotLightArray[m_spotLigMap.at(spotLightTag)] = *spotLigData;
 	}
 
 };

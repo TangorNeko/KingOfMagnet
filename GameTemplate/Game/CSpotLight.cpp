@@ -6,7 +6,7 @@ namespace prefab
 	//スポットライトの数を減らした時
 	CSpotLight::~CSpotLight()
 	{
-		CLightManager::GetInstance()->SpotLightMinus();
+		CLightManager::GetInstance()->RemoveSpotLight(m_spotLigTag);
 	}
 
 	//スポットライトの数を増やした時

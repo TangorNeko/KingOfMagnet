@@ -16,7 +16,6 @@ namespace prefab
 		PointLigData pointligData;	//ポイントライトのデータ
 
 		int m_pointLigTag;			//ポイントライトのタグ(何番目に作られたライト?)
-		//TODO:他のポイントライトを消した時に何番目かが更新されなければいけない
 	public:
 		~CPointLight();
 		bool Start();

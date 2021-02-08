@@ -18,7 +18,6 @@ namespace prefab
 		SpotLigData spotLigData;	//スポットライトのデータ
 
 		int m_spotLigTag;			//スポットライトのタグ(何番目に作られたライト?)
-		//TODO:他のスポットライトを消した時に何番目かが更新されなければいけない
 	public:
 		~CSpotLight();
 		bool Start();
@@ -47,11 +46,11 @@ namespace prefab
 		Vector3 GetDirection() { return spotLigData.ligDir; }
 
 		//影響角度の設定と取得(ラジアン単位)
-		void SetAngle(float angle) { spotLigData.ligAngle = angle; }
+		void SetAngle(float angle_rad) { spotLigData.ligAngle = angle_rad; }
 		float GetAngle() { return spotLigData.ligAngle; }
 
 		//影響角度の設定と取得(デグリー単位)
-		void SetAngleDeg(float angle) { spotLigData.ligAngle = Math::DegToRad(angle); }
+		void SetAngleDeg(float angle_deg) { spotLigData.ligAngle = Math::DegToRad(angle_deg); }
 		float GetAngleDeg() { return Math::RadToDeg(spotLigData.ligAngle); }
 	};
 }

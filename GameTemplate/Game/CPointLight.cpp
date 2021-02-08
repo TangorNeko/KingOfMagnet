@@ -6,7 +6,7 @@ namespace prefab
 	//ポイントライトの数を減らした時
 	CPointLight::~CPointLight()
 	{
-		CLightManager::GetInstance()->PointLightMinus();
+		CLightManager::GetInstance()->RemovePointLight(m_pointLigTag);
 	}
 
 	//ポイントライトの数を増やした時
