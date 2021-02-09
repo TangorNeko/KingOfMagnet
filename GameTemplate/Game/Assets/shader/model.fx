@@ -141,6 +141,40 @@ SPSIn VSSkinMain(SVSIn vsIn)
 {
 	return VSMainCore(vsIn, true);
 }
+
+//ランバート拡散反射を計算する。
+float3 CalcLambertDiffuse(float3 ligDir, float3 ligColor,float3 normal )
+{
+	float t = dot(normal, -ligDir);
+	
+	if (t < 0)
+	{
+		t = 0;
+	}
+
+	return ligColor * t;
+}
+
+//フォン鏡面反射を計算する。
+float3 CalcPhongSpecular(float3 ligDir, float3 ligColor, float3 worldPos, float3 normal)
+{
+	float3 toEye = eyePos - worldPos;
+	toEye = normalize(toEye);
+
+	float3 refVec = reflect(ligDir, normal);
+
+	float t = dot(toEye, refVec);
+	
+	if (t < 0)
+	{
+		t = 0;
+	}
+
+	t = pow(t, 5.0f);
+
+	return ligColor * t;
+}
+
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>
@@ -156,26 +190,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	for (int i = 0;i < directionLigNum;i++)
 	{
 		//ランバート拡散反射
-		float t = dot(psIn.normal, -directionLigData[i].ligDir);
-
-		if (t < 0)
-			t = 0;
-
-		float3 diffuseLig = directionLigData[i].ligColor * t;
+		float3 diffuseLig = CalcLambertDiffuse(directionLigData[i].ligDir, directionLigData[i].ligColor,psIn.normal);
 
 		//フォン鏡面反射
-		float3 toEye = eyePos - psIn.worldPos;
-		toEye = normalize(toEye);
-
-		float3 refVec = reflect(directionLigData[i].ligDir, psIn.normal);
-
-		t = dot(toEye, refVec);
-		if (t < 0)
-			t = 0;
-
-		t = pow(t, 5.0f);
-
-		float3 specularLig = directionLigData[i].ligColor * t;
+		float3 specularLig = CalcPhongSpecular(directionLigData[i].ligDir, directionLigData[i].ligColor, psIn.worldPos, psIn.normal);
 
 		float3 finalLig = diffuseLig + specularLig;
 
@@ -189,27 +207,12 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		pointLigDir = normalize(pointLigDir);
 
 		//ランバート拡散反射
-		float t = dot(psIn.normal, -pointLigDir);
-		if (t < 0)
-			t = 0;
-
-		float3 diffuseLig = pointLigData[i].ligColor * t;
+		float3 diffuseLig = CalcLambertDiffuse(pointLigDir, pointLigData[i].ligColor, psIn.normal);
 
 		//フォン鏡面反射
-		float3 toEye = eyePos - psIn.worldPos;
-		toEye = normalize(toEye);
+		float3 specularLig = CalcPhongSpecular(pointLigDir,pointLigData[i].ligColor,psIn.worldPos,psIn.normal);
 
-		float3 refVec = reflect(pointLigDir, psIn.normal);
-
-		t = dot(toEye, refVec);
-		if (t < 0)
-			t = 0;
-
-		t = pow(t, 5.0f);
-
-		float3 specularLig = pointLigData[i].ligColor * t;
-
-		float3 finalLig = diffuseLig + specularLig;
+		float3 finalLig = diffuseLig +specularLig;
 
 		//距離による減衰
 
@@ -234,25 +237,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		spotLigDir = normalize(spotLigDir);
 
 		//ランバート拡散反射
-		float t = dot(psIn.normal, -spotLigDir);
-		if (t < 0)
-			t = 0;
-
-		float3 diffuseLig = spotLigData[i].ligColor * t;
+		float3 diffuseLig = CalcLambertDiffuse(spotLigDir, spotLigData[i].ligColor, psIn.normal);
 
 		//フォン鏡面反射
-		float3 toEye = eyePos - psIn.worldPos;
-		toEye = normalize(toEye);
-
-		float3 refVec = reflect(spotLigDir, psIn.normal);
-
-		t = dot(toEye, refVec);
-		if (t < 0)
-			t = 0;
-
-		t = pow(t, 5.0f);
-
-		float3 specularLig = spotLigData[i].ligColor * t;
+		float3 specularLig = CalcPhongSpecular(spotLigDir, spotLigData[i].ligColor, psIn.worldPos, psIn.normal);
 
 		float3 finalLig = diffuseLig + specularLig;
 
@@ -288,6 +276,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		finalColor.xyz += finalLig;
 	}
 
+	//環境光
 	float3 ambientLig = 0.3f;
 	finalColor.xyz += ambientLig;
 
