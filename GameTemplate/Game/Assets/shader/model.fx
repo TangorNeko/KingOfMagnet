@@ -69,6 +69,7 @@ struct SPSIn {
 	float3 normal		: NORMAL;		//法線
 	float2 uv 			: TEXCOORD0;	//uv座標。
 	float3 worldPos		: TEXCOORD1;
+	float3 normalInView : TEXCOORD2;
 };
 
 ////////////////////////////////////////////////
@@ -121,6 +122,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
 	psIn.normal = mul(m, vsIn.normal);
+
+	psIn.normalInView = mul(mView, psIn.normal);
 
 	psIn.uv = vsIn.uv;
 
@@ -175,6 +178,19 @@ float3 CalcPhongSpecular(float3 ligDir, float3 ligColor, float3 worldPos, float3
 	return ligColor * t;
 }
 
+float3 CalcLimLight(float3 ligDir, float3 ligColor, float3 normalInView,float3 normal)
+{
+	float power1 = 1.0f - max(0.0f, dot(ligDir, normal));
+
+	float power2 = 1.0f - max(0.0f, normalInView.z * -1.0f);
+
+	float limPower = power1 * power2;
+
+	limPower = pow(limPower, 5.0f);
+
+	return ligColor * limPower;
+}
+
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>
@@ -195,6 +211,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		//フォン鏡面反射
 		float3 specularLig = CalcPhongSpecular(directionLigData[i].ligDir, directionLigData[i].ligColor, psIn.worldPos, psIn.normal);
 
+		//リムライト
+		//float3 limLig = CalcLimLight(directionLigData[i].ligDir, directionLigData[i].ligColor, psIn.normalInView, psIn.normal);
+
 		float3 finalLig = diffuseLig + specularLig;
 
 		finalColor.xyz +=  finalLig;
@@ -211,6 +230,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		//フォン鏡面反射
 		float3 specularLig = CalcPhongSpecular(pointLigDir,pointLigData[i].ligColor,psIn.worldPos,psIn.normal);
+
+		//リムライト
+		//float3 limLig = CalcLimLight(pointLigDir, pointLigData[i].ligColor, psIn.normalInView, psIn.normal);
 
 		float3 finalLig = diffuseLig +specularLig;
 
@@ -241,6 +263,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		//フォン鏡面反射
 		float3 specularLig = CalcPhongSpecular(spotLigDir, spotLigData[i].ligColor, psIn.worldPos, psIn.normal);
+
+		//リムライト
+		//float3 limLig = CalcLimLight(spotLigDir, spotLigData[i].ligColor, psIn.normalInView, psIn.normal);
 
 		float3 finalLig = diffuseLig + specularLig;
 
