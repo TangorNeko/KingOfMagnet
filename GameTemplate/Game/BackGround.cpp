@@ -17,12 +17,14 @@ bool BackGround::Start()
 	m_pLig->SetRange(500);
 	*/
 
-	m_skinModelRender->Init("Assets/modelData/bg/bg.tkm");
+	m_skinModelRender->Init("Assets/modelData/Stage.tkm");
+
+	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 
 	return true;
 }
 
 void BackGround::Update()
 {
-
+	m_skinModelRender->SetPosition(m_position);
 }

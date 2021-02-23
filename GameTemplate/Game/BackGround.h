@@ -9,5 +9,6 @@ class BackGround : public IGameObject
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pLig = nullptr;
+	PhysicsStaticObject m_physicsStaticObject;
 };
 

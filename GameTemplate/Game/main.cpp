@@ -22,28 +22,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
-	
-	/*
-	prefab::CDirectionLight* bluefromup = NewGO<prefab::CDirectionLight>(0);
-	bluefromup->SetDirection({ 0.0f,-1.0f,0.0f });
-	bluefromup->SetColor({ 0.0f,0.0f,1.0f });
-	*/
 
-	
 	prefab::CDirectionLight* redfromside = NewGO<prefab::CDirectionLight>(0);
 	redfromside->SetDirection({ 1.0f,0.0f,0.0f });
 	redfromside->SetColor({ 1.0f,0.0f,0.0f });
-	
-
-	prefab::CPointLight* bluepointlig = NewGO<prefab::CPointLight>(0);
-	bluepointlig->SetPosition({ 100.0f,5.0f,0.0f });
-	bluepointlig->SetColor({ 0.0f,0.0f,1.0f });
-	bluepointlig->SetRange(100.0f);
-
-	prefab::CPointLight* greenpointlig = NewGO<prefab::CPointLight>(0);
-	greenpointlig->SetPosition({ -75.0f,5.0f,80.0f });
-	greenpointlig->SetColor({ 0.0f,1.0f,0.0f });
-	greenpointlig->SetRange(100.0f);
 
 	ShowModel* showm = NewGO<ShowModel>(0, "model");
 	NewGO<BackGround>(0, "background");
@@ -64,28 +46,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 		
-
-		Vector3 pos = bluepointlig->GetPosition();
-
-		if (g_pad[0]->IsPress(enButtonLB3))
-		{
-			pos.z--;
-		}
-
-		if (g_pad[0]->IsPress(enButtonLB2))
-		{
-			pos.z++;
-		}
-
-		bluepointlig->SetPosition(pos);
-
-
-		if (g_pad[0]->IsTrigger(enButtonX))
-		{
-			ShowModel* showmodel = FindGO<ShowModel>("model");
-			
-			DeleteGO(showmodel);
-		}
 
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);

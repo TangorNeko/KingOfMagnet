@@ -375,6 +375,14 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\modelData\StageUV.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Assets\modelData\Stage.tkm">
+      <FileType>Document</FileType>
+    </CustomBuild>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

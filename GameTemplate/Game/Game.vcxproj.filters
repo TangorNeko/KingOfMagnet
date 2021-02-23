@@ -48,6 +48,12 @@
     <Filter Include="ソース ファイル\prefab">
       <UniqueIdentifier>{82a09072-8ac3-42a3-a971-ed3ffaab5a12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Assets">
+      <UniqueIdentifier>{61c75069-1f86-4049-9924-1d70d8624b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Assets\modelData">
+      <UniqueIdentifier>{be582d35-47e0-4ddd-840f-cfa8d46913f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -424,5 +430,15 @@
     <ClInclude Include="CSpotLight.h">
       <Filter>ソース ファイル\prefab</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\modelData\StageUV.png">
+      <Filter>ソース ファイル\Assets\modelData</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\modelData\Stage.tkm">
+      <Filter>ソース ファイル\Assets\modelData</Filter>
+    </None>
   </ItemGroup>
 </Project>
