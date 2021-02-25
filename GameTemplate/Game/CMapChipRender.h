@@ -25,9 +25,14 @@ namespace prefab
 		}
 
 	private:
+		//オブジェクトのデータの可変長配列
 		std::vector<const LevelObjectData*> m_renderObjectDatas;
-		prefab::CSkinModelRender* m_modelRender = nullptr;
-		PhysicsStaticObject m_physicsStaticObject;
+
+		//オブジェクトのデータの個数分のSkinModelRender
+		std::vector<prefab::CSkinModelRender*> m_modelRenders;
+
+		//オブジェクトのデータの個数分のPhysicsStaticObject
+		std::vector<PhysicsStaticObject*> m_physicsStaticObjects;
 
 	};
 

@@ -26,6 +26,11 @@ bool ShowModel::Start()
 void ShowModel::Update()
 {
 
+	if (m_playerNum == -1)
+	{
+		return;
+	}
+
 	//移動関連
 	Vector3 front = m_position - g_camera3D->GetPosition();
 	front.y = 0.0f;
@@ -34,24 +39,22 @@ void ShowModel::Update()
 	Vector3 side = Cross(g_vec3AxisY, front);
 
 
-	Vector3 m_moveSpeed = front * g_pad[0]->GetLStickYF() * 5.0f + side * g_pad[0]->GetLStickXF() * 5.0f;
-
-	m_position = m_charaCon.Execute(m_moveSpeed,1.0f);
-	m_skinModelRender->SetPosition(m_position);
+	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 5.0f + side * g_pad[m_playerNum]->GetLStickXF() * 5.0f;
 
 	//攻撃関連
-
+	
 	//通常攻撃
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
 	{
 		Bullet* bullet = NewGO<Bullet>(0, "bullet");
 		bullet->m_position = m_position;
 		bullet->m_position.y += 50;
-		bullet->m_moveSpeed = g_camera3D->GetForward() * 10;
+		bullet->m_moveDirection = g_camera3D->GetForward();
+		bullet->m_velocity = 10.0f;
 	}
 
 	//チャージ
-	if (g_pad[0]->IsPress(enButtonLB2) || g_pad[0]->IsPress(enButtonRB2))
+	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
 	{
 		m_charge += 10.0f;
 
@@ -59,36 +62,53 @@ void ShowModel::Update()
 		{
 			m_charge = 2000.0f;
 		}
+
+		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
 
 	//チャージ確認用
-	m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
+	if (m_charge != 2000.0f) {
+		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
+	}
+	else
+	{
+		m_pointLight->SetColor({ 1.0f,0.0f,0.0f });
+	}
 	m_pointLight->SetPosition(m_position);
 
 	//固有攻撃
-	if (g_pad[0]->IsPress(enButtonB) && m_charge > 1000)
+	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge > 1000)
 	{
 		Bullet* bullet = NewGO<Bullet>(0, "bullet");
 		bullet->m_position = m_position;
 		bullet->m_position.y += 50;
-		bullet->m_moveSpeed = g_camera3D->GetForward() * 50;
+		bullet->m_moveDirection = g_camera3D->GetForward();
+		bullet->m_velocity = 50.0f;
 		m_charge = 0;
 	}
 
+	//移動関連2
+	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+	m_skinModelRender->SetPosition(m_position);
+
+
 	//カメラ関連
-	Vector3 targetPos = m_position;
-	targetPos.y += 50.0f;
+	if (m_playerNum == 0)
+	{
+		Vector3 targetPos = m_position;
+		targetPos.y += 50.0f;
 
-	Quaternion qRotY;
-	qRotY.SetRotationDeg(Vector3::AxisY, g_pad[0]->GetRStickXF());
-	qRotY.Apply(m_toCamera);
+		Quaternion qRotY;
+		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF());
+		qRotY.Apply(m_toCamera);
 
-	Quaternion qRotX;
-	qRotX.SetRotationDeg(side, g_pad[0]->GetRStickYF() * -1);
-	qRotX.Apply(m_toCamera);
+		Quaternion qRotX;
+		qRotX.SetRotationDeg(side, g_pad[m_playerNum]->GetRStickYF() * -1);
+		qRotX.Apply(m_toCamera);
 
-	Vector3 cameraPos = m_position + m_toCamera;
-	//g_camera3D->SetPosition(m_position + m_toCamera);
-	g_camera3D->SetPosition(cameraPos);
-	g_camera3D->SetTarget(targetPos);
+		Vector3 cameraPos = m_position + m_toCamera;
+		//g_camera3D->SetPosition(m_position + m_toCamera);
+		g_camera3D->SetPosition(cameraPos);
+		g_camera3D->SetTarget(targetPos);
+	}
 }

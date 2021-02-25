@@ -11,30 +11,6 @@ namespace prefab
 		}
 	}
 
-	CMapChipRender* CLevel::CreateMapChipRenderOrAddRenderObject(const LevelObjectData& objData)
-	{
-		NameKey nameKey(objData.name);
-
-		auto itFind = m_mapChipRenderPtrs.find(nameKey.GetHashCode());
-		CMapChipRender* pMapChipRender = nullptr;
-
-		if (itFind == m_mapChipRenderPtrs.end())
-		{
-			//登録されていないオブジェクト。
-			auto mapChipRender = NewGO<CMapChipRender>(0);
-			pMapChipRender = mapChipRender;
-			m_mapChipRenderPtrs.insert({ nameKey.GetHashCode(),mapChipRender });
-		}
-		else
-		{
-			//描画すべきオブジェクトのインクリメント
-			pMapChipRender = itFind->second;
-		}
-
-		pMapChipRender->AddRenderObject(objData);
-		return pMapChipRender;
-	}
-
 	bool CLevel::Init(const char* levelFilePath, std::function<bool(LevelObjectData& objectData)> hookFunc)
 	{
 		m_tklFile.Load(levelFilePath);
@@ -168,6 +144,30 @@ namespace prefab
 				m_isInited = true;
 			}
 	);
+	}
+
+	CMapChipRender* CLevel::CreateMapChipRenderOrAddRenderObject(const LevelObjectData& objData)
+	{
+		NameKey nameKey(objData.name);
+
+		auto itFind = m_mapChipRenderPtrs.find(nameKey.GetHashCode());
+		CMapChipRender* pMapChipRender = nullptr;
+
+		if (itFind == m_mapChipRenderPtrs.end())
+		{
+			//登録されていないオブジェクト。
+			auto mapChipRender = NewGO<CMapChipRender>(0);
+			pMapChipRender = mapChipRender;
+			m_mapChipRenderPtrs.insert({ nameKey.GetHashCode(),mapChipRender });
+		}
+		else
+		{
+			//描画すべきオブジェクトのインクリメント
+			pMapChipRender = itFind->second;
+		}
+
+		pMapChipRender->AddRenderObject(objData);
+		return pMapChipRender;
 	}
 
 }
