@@ -12,7 +12,7 @@ bool ShowModel::Start()
 
 	m_skinModelRender->Init("Assets/modelData/Player1.tkm");
 
-	m_charaCon.Init(20.0f, 100.0f, m_position);
+	m_charaCon.Init(10.0f, 50.0f, m_position);
 
 	return true;
 }

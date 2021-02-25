@@ -3,6 +3,7 @@
 
 #include "ShowModel.h"
 #include "BackGround.h"
+#include "CLevel.h"
 
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -28,7 +29,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	redfromside->SetColor({ 1.0f,0.0f,0.0f });
 
 	ShowModel* showm = NewGO<ShowModel>(0, "model");
-	NewGO<BackGround>(0, "background");
+	//NewGO<BackGround>(0, "background");
+
+	prefab::CLevel level;
+	level.Init("Assets/modelData/Test.tkl",nullptr);
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

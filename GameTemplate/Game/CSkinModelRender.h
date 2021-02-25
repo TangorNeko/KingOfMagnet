@@ -28,6 +28,10 @@ namespace prefab
 		void SetPosition(Vector3 pos);
 		void SetRotation(Quaternion qRot);
 		void SetScale(Vector3 scale);
+
+		Vector3 GetPosition() { return m_position; }
+		Quaternion GetRotation() { return m_qRot; }
+		Vector3 GetScale() { return m_scale; }
 		Model& GetModel() { return m_model; }
 	};
 }

@@ -163,7 +163,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -203,7 +203,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -289,10 +289,14 @@
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
+    <ClCompile Include="CLevel.cpp" />
+    <ClCompile Include="CMapChipRender.cpp" />
+    <ClCompile Include="CNameKey.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSkinModelRender.cpp" />
     <ClCompile Include="CLightManager.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
+    <ClCompile Include="CUtil.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
@@ -305,6 +309,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="tklFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ExEngine\ExEngine.h" />
@@ -365,15 +370,20 @@
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="CDirectionLight.h" />
+    <ClInclude Include="CLevel.h" />
+    <ClInclude Include="CMapChipRender.h" />
+    <ClInclude Include="CNameKey.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSkinModelRender.h" />
     <ClInclude Include="CLightManager.h" />
     <ClInclude Include="CSpotLight.h" />
+    <ClInclude Include="CUtil.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
+    <ClInclude Include="tklFile.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\modelData\StageUV.png" />

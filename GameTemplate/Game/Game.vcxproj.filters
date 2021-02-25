@@ -227,6 +227,21 @@
     <ClCompile Include="CSpotLight.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
+    <ClCompile Include="CLevel.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="tklFile.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CMapChipRender.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CNameKey.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CUtil.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -430,6 +445,21 @@
     <ClInclude Include="CSpotLight.h">
       <Filter>ソース ファイル\prefab</Filter>
     </ClInclude>
+    <ClInclude Include="CLevel.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="tklFile.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CMapChipRender.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CNameKey.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CUtil.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\modelData\StageUV.png">
@@ -437,8 +467,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\modelData\Stage.tkm">
-      <Filter>ソース ファイル\Assets\modelData</Filter>
-    </None>
+    <CustomBuild Include="Assets\modelData\Stage.tkm" />
   </ItemGroup>
 </Project>
