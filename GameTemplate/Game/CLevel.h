@@ -10,7 +10,7 @@ namespace prefab
 		Vector3 position = Vector3::Zero;
 		Quaternion rotation = Quaternion::Identity;
 		Vector3 scale = Vector3::One;
-		char* name = nullptr;
+		const char* name = nullptr;
 	};
 
 	class CLevel

@@ -28,11 +28,27 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	redfromside->SetDirection({ 1.0f,0.0f,0.0f });
 	redfromside->SetColor({ 1.0f,0.0f,0.0f });
 
-	ShowModel* showm = NewGO<ShowModel>(0, "model");
-	//NewGO<BackGround>(0, "background");
+	ShowModel* showm = NewGO<ShowModel>(0, "Player1");
+	NewGO<BackGround>(0, "background");
 
+	/*
 	prefab::CLevel level;
-	level.Init("Assets/modelData/Test.tkl",nullptr);
+	level.Init("Assets/modelData/Test.tkl", [](prefab::LevelObjectData& objectData)->bool {
+
+		std::string a = objectData.name;
+		std::string b = "yuka";
+		if (a == b)
+		{
+			ShowModel* showmodel = NewGO<ShowModel>(0, "model");
+			showmodel->m_position = objectData.position;
+
+			return true;
+		}
+
+		return false;
+		});
+		*/
+		
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

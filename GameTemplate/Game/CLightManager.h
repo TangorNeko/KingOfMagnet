@@ -8,8 +8,8 @@
 
 //各ライトの最大数　この数はmodel.fxのライト配列の数と一緒にしなければならない
 const int MaxDirectionLightNum = 5;
-const int MaxPointLightNum = 10;
-const int MaxSpotLightNum = 10;
+const int MaxPointLightNum = 20;
+const int MaxSpotLightNum = 20;
 
 //TODO:ライトを作る際最大数以上の時throwするのではなく一番古いライトを消すような処理にする方がよい?
 //勝手に消す(例:一番古いライトタグに対応した数字を-1にし、UpdateLightで-1ならLight.cppでDelete(this)させる)

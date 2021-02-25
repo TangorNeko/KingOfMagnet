@@ -40,8 +40,8 @@ cbuffer DirectionLigCb : register(b1)
 {
 	//各配列数はCLightManager.hのMaxLightNumと同じにすること
 	DirectionLigData directionLigData[5];
-	PointLigData pointLigData[10];
-	SpotLigData spotLigData[10];
+	PointLigData pointLigData[20];
+	SpotLigData spotLigData[20];
 	float3 eyePos;
 	int directionLigNum;
 	int pointLigNum;

@@ -1,4 +1,5 @@
 #pragma once
+
 class ShowModel : public IGameObject
 {
 	~ShowModel();
@@ -13,6 +14,8 @@ public:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CDirectionLight* yellowfromside = nullptr;
 	prefab::CSpotLight* m_SpotLig[2] = { nullptr };
+	prefab::CPointLight* m_pointLight = nullptr;
 	CharacterController m_charaCon;
+	float m_charge = 0;
 	float m_deg = 0;
 };
