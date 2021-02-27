@@ -37,6 +37,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm2->m_playerNum = 1;
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	NewGO<BackGround>(0, "background");
+	NewGO<ShowSprite>(1, "sprite");
 
 	
 	/*

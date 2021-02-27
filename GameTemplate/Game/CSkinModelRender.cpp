@@ -8,7 +8,6 @@ namespace prefab
 	/// </summary>
 	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>
 	/// <param name="skeletonPath">スケルトンファイルのパス(.tks)</param>
-	/// <param name="buffer">ライトの定数バッファ</param>
 	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath)
 	{
 		m_skeleton.Init(skeletonPath);
@@ -36,7 +35,10 @@ namespace prefab
 		m_model.Init(initData);
 	}
 
-	//モデルパスだけ版。コピーしてきただけ
+	/// <summary>
+	/// モデルの初期化関数。モデルパスだけ版。コピーしてきただけ
+	/// </summary>
+	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>
 	void CSkinModelRender::Init(const char* modelPath)
 	{
 		ModelInitData initData;
