@@ -12,7 +12,6 @@ namespace prefab
 	//ポイントライトの数を増やした時
 	bool CPointLight::Start()
 	{
-		CLightManager::GetInstance()->UpdateEyePos();
 		m_pointLigTag = CLightManager::GetInstance()->AddPointLight(GetLigData());
 
 		return true;
@@ -21,7 +20,6 @@ namespace prefab
 	//毎フレームカメラの位置とポイントライトのデータを更新
 	void CPointLight::Update()
 	{
-		CLightManager::GetInstance()->UpdateEyePos();
 		CLightManager::GetInstance()->UpdatePointLight(m_pointLigTag, GetLigData());
 	}
 }

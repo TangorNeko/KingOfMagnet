@@ -12,41 +12,35 @@ namespace prefab
 	CMapChipRender::~CMapChipRender()
 	{
 		//作成した分だけ消す。
-		for (auto modelRender : m_modelRenders)
-		{
-			DeleteGO(modelRender);
-		}
+		DeleteGO(m_modelRender);
 
+		/*
 		for (auto mphysicsStaticObject : m_physicsStaticObjects)
 		{
 			delete mphysicsStaticObject;
 		}
+		*/
 	}
 
 	void CMapChipRender::Init()
 	{
 
-		for (int i = 0; i < m_renderObjectDatas.size(); i++)
-		{
 			//スキンモデルレンダラーを作成
-			m_modelRenders.push_back(NewGO<prefab::CSkinModelRender>(0));
+			m_modelRender = NewGO<prefab::CSkinModelRender>(0);
 			//ファイルパスを作成。
 			char filepath[256];
-			sprintf_s(filepath, "Assets/modelData/%s.tkm", m_renderObjectDatas[i]->name);
-			m_modelRenders[i]->Init(filepath);
+			sprintf_s(filepath, "Assets/modelData/%s.tkm", m_renderObjectData.name);
+			m_modelRender->Init(filepath);
 
 			//TODO:ポジションが全部同じになっている?もっとバリエーションのあるtklファイルを作成して検証する必要あり。
-			m_modelRenders[i]->SetPosition(m_renderObjectDatas[i]->position);
-			m_modelRenders[i]->SetRotation(m_renderObjectDatas[i]->rotation);
-			m_modelRenders[i]->SetScale(m_renderObjectDatas[i]->scale);
+			m_modelRender->SetPosition(m_renderObjectData.position);
+			m_modelRender->SetRotation(m_renderObjectData.rotation);
+			m_modelRender->SetScale(m_renderObjectData.scale);
 
 			//当たり判定を作成。
-			PhysicsStaticObject* m_physicsStaticObject = new PhysicsStaticObject;
-			m_physicsStaticObject->CreateFromModel(m_modelRenders[i]->GetModel(), m_modelRenders[i]->GetModel().GetWorldMatrix());
-			m_physicsStaticObjects.push_back(m_physicsStaticObject);
+			m_physicsStaticObject.CreateFromModel(m_modelRender->GetModel(), m_modelRender->GetModel().GetWorldMatrix());
 
 			//影(予定)
-		}
 
 	}
 }

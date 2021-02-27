@@ -19,7 +19,7 @@ namespace prefab
 
 		initData.m_fxFilePath = "Assets/shader/model.fx";
 
-		//initData.m_vsEntryPointFunc = "VSMain";
+		initData.m_vsEntryPointFunc = "VSMain";
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
@@ -60,9 +60,9 @@ namespace prefab
 	}
 
 	//TODO:モデルの描画っぽい、Updateのように毎フレーム呼ばれているようだが詳細がわからない
-	void CSkinModelRender::Render(RenderContext& rc)
+	void CSkinModelRender::Render(RenderContext& rc,Camera* camera)
 	{
-		m_model.Draw(rc);
+		m_model.Draw(rc,camera);
 	}
 
 	/// <summary>

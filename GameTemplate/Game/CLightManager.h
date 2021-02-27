@@ -69,7 +69,7 @@ public:
 	int GetDataSize() { return m_size; }
 
 	//カメラのポジションを更新する
-	void UpdateEyePos() { m_ligData.eyePos = g_camera3D->GetPosition(); }
+	void UpdateEyePos(int camNo) { m_ligData.eyePos = g_camera3D[camNo]->GetPosition(); }
 
 	//ディレクションライト用////////////////////////////////////////////////////////////////////////////////////////////////
 	//Mapを使って安全にライトを削除できる仕組みを作ってみた。オブジェクトの削除がうまくいっていないためまだ検証できていない

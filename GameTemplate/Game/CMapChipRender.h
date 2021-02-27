@@ -2,7 +2,13 @@
 
 namespace prefab
 {
-	struct LevelObjectData;
+	struct LevelObjectData
+	{
+		Vector3 position = Vector3::Zero;
+		Quaternion rotation = Quaternion::Identity;
+		Vector3 scale = Vector3::One;
+		const char* name = nullptr;
+	};
 	class CMapChipRender : public IGameObject
 	{
 	public:
@@ -11,28 +17,27 @@ namespace prefab
 
 		void Init();
 
+		/*
 		void QueryRenderObjDatas(std::function<void(const LevelObjectData& objData)> queryFunc)
 		{
-			for (const auto& renderObjectData : m_renderObjectDatas)
-			{
-				queryFunc(*renderObjectData);
-			}
+			queryFunc(m_renderObjectData);
 		}
+		*/
 
-		void AddRenderObject(const LevelObjectData& objData)
+		void AddRenderObject(LevelObjectData objData)
 		{
-			m_renderObjectDatas.push_back(&objData);
+			m_renderObjectData = objData;
 		}
 
 	private:
 		//オブジェクトのデータの可変長配列
-		std::vector<const LevelObjectData*> m_renderObjectDatas;
+		LevelObjectData m_renderObjectData;// = nullptr;
 
 		//オブジェクトのデータの個数分のSkinModelRender
-		std::vector<prefab::CSkinModelRender*> m_modelRenders;
+		prefab::CSkinModelRender* m_modelRender = nullptr;
 
 		//オブジェクトのデータの個数分のPhysicsStaticObject
-		std::vector<PhysicsStaticObject*> m_physicsStaticObjects;
+		PhysicsStaticObject m_physicsStaticObject;
 
 	};
 

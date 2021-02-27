@@ -2,6 +2,7 @@
 #include "system/system.h"
 
 #include "ShowModel.h"
+#include "ShowSprite.h"
 #include "BackGround.h"
 #include "CLevel.h"
 
@@ -34,13 +35,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	ShowModel* showm2 = NewGO<ShowModel>(0, "Player2");
 	showm2->m_position = { 100.0f,0.0f,0.0f };
 	showm2->m_playerNum = 1;
-	//showm->m_position = { 0.0f,0.0f,-500.0f };
+	showm->m_position = { 0.0f,0.0f,-500.0f };
 	NewGO<BackGround>(0, "background");
 
 	
+	/*
 	prefab::CLevel level;
-	level.Init("Assets/modelData/Test.tkl",nullptr);
-	
+	level.Init("Assets/modelData/yuka2.tkl",nullptr);
+	*/
 		
 
 	//////////////////////////////////////
@@ -54,6 +56,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリング開始。
 		g_engine->BeginFrame();
 		
+		prefab::CSpotLight* a = nullptr;
 
 		//////////////////////////////////////
 		//ここから絵を描くコードを記述する。

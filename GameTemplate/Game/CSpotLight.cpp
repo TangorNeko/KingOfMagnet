@@ -12,7 +12,6 @@ namespace prefab
 	//スポットライトの数を増やした時
 	bool CSpotLight::Start()
 	{
-		CLightManager::GetInstance()->UpdateEyePos();
 		m_spotLigTag = CLightManager::GetInstance()->AddSpotLight(GetLigData());
 
 		return true;
@@ -21,7 +20,6 @@ namespace prefab
 	//毎フレームカメラの位置とスポットライトのデータを更新
 	void CSpotLight::Update()
 	{
-		CLightManager::GetInstance()->UpdateEyePos();
 		CLightManager::GetInstance()->UpdateSpotLight(m_spotLigTag, GetLigData());
 	}
 }

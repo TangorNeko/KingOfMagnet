@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "CLevel.h"
-#include "CNameKey.h"
 
 namespace prefab
 {
 	CLevel::~CLevel()
 	{
-		for (auto mapChipRender : m_mapChipRenderPtrs) {
-			DeleteGO(mapChipRender.second);
+		for (auto mapChipRender : m_mapChipRenderPtrs)
+		{
+			DeleteGO(mapChipRender);
 		}
 	}
 
@@ -25,7 +25,6 @@ namespace prefab
 			if (bone->GetParentBoneNo() == 0)
 			{
 				LevelObjectData objData;
-				//Vector3 scale;
 
 				//objDataの各メンバにボーンから値を入れる
 				//座標、回転、拡大率
@@ -35,13 +34,13 @@ namespace prefab
 				objData.name = m_tklFile.m_objects[i].boneName.get();
 
 				//3dsMaxとは軸が違うので、補正を入れる。
-				auto t = objData.position.y;
+				float t = objData.position.y;
 				objData.position.y = objData.position.z;
 				objData.position.z = -t;
 
 				t = objData.rotation.y;
 				objData.rotation.y = objData.rotation.z;
-				objData.position.z = -t;
+				objData.rotation.z = -t;
 
 				std::swap(objData.scale.y, objData.scale.z);
 
@@ -55,17 +54,20 @@ namespace prefab
 
 				if (isHook == false)
 				{
-					//マップチップレンダラーを作成する。
-					CreateMapChipRenderOrAddRenderObject(objData);
+					//マップチップレンダーを作成する。
+					CMapChipRender* pMapChipRender = NewGO<CMapChipRender>(0);
+					//ボーンから取得したオブジェクトのデータを取得
+					pMapChipRender->AddRenderObject(objData);
+					//レベルのマップチップレンダーの可変長配列に追加
+					m_mapChipRenderPtrs.push_back(pMapChipRender);
 				}
 			}
 		}
 
-		//マップチップレンダラーを初期化する
+		//すべてのマップチップレンダーを初期化する
 		for (auto& mapChipRender : m_mapChipRenderPtrs)
 		{
-
-			mapChipRender.second->Init();
+			mapChipRender->Init();
 		}
 		return true;
 	}
@@ -145,29 +147,4 @@ namespace prefab
 			}
 	);
 	}
-
-	CMapChipRender* CLevel::CreateMapChipRenderOrAddRenderObject(const LevelObjectData& objData)
-	{
-		NameKey nameKey(objData.name);
-
-		auto itFind = m_mapChipRenderPtrs.find(nameKey.GetHashCode());
-		CMapChipRender* pMapChipRender = nullptr;
-
-		if (itFind == m_mapChipRenderPtrs.end())
-		{
-			//登録されていないオブジェクト。
-			auto mapChipRender = NewGO<CMapChipRender>(0);
-			pMapChipRender = mapChipRender;
-			m_mapChipRenderPtrs.insert({ nameKey.GetHashCode(),mapChipRender });
-		}
-		else
-		{
-			//描画すべきオブジェクトのインクリメント
-			pMapChipRender = itFind->second;
-		}
-
-		pMapChipRender->AddRenderObject(objData);
-		return pMapChipRender;
-	}
-
 }

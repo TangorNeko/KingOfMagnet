@@ -12,7 +12,6 @@ namespace prefab
 	//ディレクションライトの数を増やした時
 	bool CDirectionLight::Start()
 	{
-		CLightManager::GetInstance()->UpdateEyePos();
 		m_dirLigTag = CLightManager::GetInstance()->AddDirectionLight(GetLigData());
 
 		return true;
@@ -21,7 +20,6 @@ namespace prefab
 	//毎フレームカメラの位置とディレクションライトのデータを更新
 	void CDirectionLight::Update()
 	{
-		CLightManager::GetInstance()->UpdateEyePos();
 		CLightManager::GetInstance()->UpdateDirectionLight(m_dirLigTag,GetLigData());
 	}
 }

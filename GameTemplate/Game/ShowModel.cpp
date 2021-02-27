@@ -15,6 +15,7 @@ bool ShowModel::Start()
 	m_skinModelRender->Init("Assets/modelData/Player1.tkm");
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
+	//g_camera3D->SetViewAngle(g_camera3D->GetViewAngle() / 2);
 
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 0.0f,0.0f,0.0f });
@@ -32,7 +33,7 @@ void ShowModel::Update()
 	}
 
 	//ˆÚ“®ŠÖ˜A
-	Vector3 front = m_position - g_camera3D->GetPosition();
+	Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
 	front.y = 0.0f;
 	front.Normalize();
 
@@ -49,7 +50,9 @@ void ShowModel::Update()
 		Bullet* bullet = NewGO<Bullet>(0, "bullet");
 		bullet->m_position = m_position;
 		bullet->m_position.y += 50;
-		bullet->m_moveDirection = g_camera3D->GetForward();
+		bullet->m_moveDirection = g_camera3D[m_playerNum]->GetForward();
+		bullet->m_moveDirection.y = 0.0f;
+		bullet->m_moveDirection.Normalize();
 		bullet->m_velocity = 10.0f;
 	}
 
@@ -82,7 +85,9 @@ void ShowModel::Update()
 		Bullet* bullet = NewGO<Bullet>(0, "bullet");
 		bullet->m_position = m_position;
 		bullet->m_position.y += 50;
-		bullet->m_moveDirection = g_camera3D->GetForward();
+		bullet->m_moveDirection = g_camera3D[m_playerNum]->GetForward();
+		bullet->m_moveDirection.y = 0.0f;
+		bullet->m_moveDirection.Normalize();
 		bullet->m_velocity = 50.0f;
 		m_charge = 0;
 	}
@@ -93,8 +98,6 @@ void ShowModel::Update()
 
 
 	//ƒJƒƒ‰ŠÖ˜A
-	if (m_playerNum == 0)
-	{
 		Vector3 targetPos = m_position;
 		targetPos.y += 50.0f;
 
@@ -108,7 +111,6 @@ void ShowModel::Update()
 
 		Vector3 cameraPos = m_position + m_toCamera;
 		//g_camera3D->SetPosition(m_position + m_toCamera);
-		g_camera3D->SetPosition(cameraPos);
-		g_camera3D->SetTarget(targetPos);
-	}
+		g_camera3D[m_playerNum]->SetPosition(cameraPos);
+		g_camera3D[m_playerNum]->SetTarget(targetPos);
 }

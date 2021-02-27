@@ -4,15 +4,6 @@
 
 namespace prefab
 {
-	//レベルのオブジェクト一つ一つのデータ
-	struct LevelObjectData
-	{
-		Vector3 position = Vector3::Zero;
-		Quaternion rotation = Quaternion::Identity;
-		Vector3 scale = Vector3::One;
-		const char* name = nullptr;
-	};
-
 	class CLevel
 	{
 	private:
@@ -34,15 +25,12 @@ namespace prefab
 		//ボーンを作ってm_boneに渡す
 		void BuildBone();
 
-		std::map<unsigned int, CMapChipRender*> m_mapChipRenderPtrs;
+		std::list<CMapChipRender*> m_mapChipRenderPtrs;
 	public:
 		~CLevel();
 
 		//レベルの初期化
 		bool Init(const char* levelFilePath,std::function<bool(LevelObjectData& objectData)> hookFunc);
-
-		//
-		CMapChipRender* CreateMapChipRenderOrAddRenderObject(const LevelObjectData& objData);
 	};
 }
 

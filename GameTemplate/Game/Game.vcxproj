@@ -255,6 +255,7 @@
     <ClCompile Include="..\..\MiniEngine\Camera.cpp" />
     <ClCompile Include="..\..\MiniEngine\ConstantBuffer.cpp" />
     <ClCompile Include="..\..\MiniEngine\DescriptorHeap.cpp" />
+    <ClCompile Include="..\..\MiniEngine\font\Font.cpp" />
     <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp" />
     <ClCompile Include="..\..\MiniEngine\GPUBuffer.cpp" />
     <ClCompile Include="..\..\MiniEngine\GraphicsEngine.cpp" />
@@ -292,12 +293,11 @@
     <ClCompile Include="CDirectionLight.cpp" />
     <ClCompile Include="CLevel.cpp" />
     <ClCompile Include="CMapChipRender.cpp" />
-    <ClCompile Include="CNameKey.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSkinModelRender.cpp" />
     <ClCompile Include="CLightManager.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
-    <ClCompile Include="CUtil.cpp" />
+    <ClCompile Include="CSpriteRender.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
@@ -374,12 +374,11 @@
     <ClInclude Include="CDirectionLight.h" />
     <ClInclude Include="CLevel.h" />
     <ClInclude Include="CMapChipRender.h" />
-    <ClInclude Include="CNameKey.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSkinModelRender.h" />
     <ClInclude Include="CLightManager.h" />
     <ClInclude Include="CSpotLight.h" />
-    <ClInclude Include="CUtil.h" />
+    <ClInclude Include="CSpriteRender.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="stdafx.h" />
