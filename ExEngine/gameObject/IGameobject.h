@@ -37,9 +37,9 @@ public:
 		*/
 	virtual void Update() {}
 	/*!
-	 *@brief	•`‰æ
+	 *@brief	ƒJƒƒ‰î•ñ•t‚«•`‰æ
 	*/
-	virtual void Render(RenderContext& renderContext)
+	virtual void Render(RenderContext& renderContext,Camera* camera)
 	{
 		(void)renderContext;
 	}
@@ -95,10 +95,10 @@ public:
 	}
 public:
 
-	void RenderWrapper(RenderContext& renderContext)
+	void RenderWrapper(RenderContext& renderContext,Camera* camera)
 	{
 		if (m_isActive && m_isStart && !m_isDead ) {
-			Render(renderContext);
+			Render(renderContext,camera);
 		}
 	}
 	
