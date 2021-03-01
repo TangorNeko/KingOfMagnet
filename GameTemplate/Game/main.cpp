@@ -29,13 +29,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	redfromside->SetDirection({ 1.0f,0.0f,0.0f });
 	redfromside->SetColor({ 1.0f,0.0f,0.0f });
 
-	ShowModel* showm = NewGO<ShowModel>(0, "Player1");
+	ShowModel* showm = NewGO<ShowModel>(0, "Player");
+	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
+	showm->m_magPower = 2;
 
-	ShowModel* showm2 = NewGO<ShowModel>(0, "Player2");
+	ShowModel* showm2 = NewGO<ShowModel>(0, "Player");
 	showm2->m_position = { 100.0f,0.0f,0.0f };
 	showm2->m_playerNum = 1;
-	showm->m_position = { 0.0f,0.0f,-500.0f };
+	showm2->m_magPower = -2;
+
+
 	NewGO<BackGround>(0, "background");
 	NewGO<ShowSprite>(1, "sprite");
 

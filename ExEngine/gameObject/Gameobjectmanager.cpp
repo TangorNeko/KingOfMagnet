@@ -50,6 +50,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	//レンダラーを変更するならここを改造していくと良い。
 
+	
 	//1P側
 	{
 		D3D12_VIEWPORT viewport;
@@ -71,6 +72,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	
 	
+	
 	//2P側
 	{
 		D3D12_VIEWPORT viewport;
@@ -89,6 +91,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 			}
 		}
 	}
+	
 	
 	
 }

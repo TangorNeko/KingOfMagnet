@@ -23,8 +23,10 @@ void ShowSprite::Update()
 
 void ShowSprite::Render(RenderContext& rc, Camera* camera)
 {
+	/*
 	Font font;
 	font.Begin(rc);
 	font.Draw(L"test", { 0.0f,300.0f }, { 1.0f,1.0f,1.0f,1.0f }, 0.0f, 1.0f, { 0.5f,0.5f });
 	font.End(rc);
+	*/
 }

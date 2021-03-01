@@ -26,21 +26,30 @@ bool ShowModel::Start()
 
 void ShowModel::Update()
 {
-
+	//プレイヤー番号が与えられていなければ何もしない
 	if (m_playerNum == -1)
 	{
 		return;
 	}
 
 	//移動関連
+
+	//カメラの前方向
 	Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
 	front.y = 0.0f;
 	front.Normalize();
+	
+	//カメラの右方向
+	Vector3 right = Cross(g_vec3AxisY, front);
 
-	Vector3 side = Cross(g_vec3AxisY, front);
 
+	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 5.0f + right * g_pad[m_playerNum]->GetLStickXF() * 5.0f;
 
-	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 5.0f + side * g_pad[m_playerNum]->GetLStickXF() * 5.0f;
+	if (m_moveSpeed.Length() != 0)
+	{
+		m_dir = m_moveSpeed;
+		m_dir.Normalize();
+	}
 
 	//攻撃関連
 	
@@ -50,10 +59,11 @@ void ShowModel::Update()
 		Bullet* bullet = NewGO<Bullet>(0, "bullet");
 		bullet->m_position = m_position;
 		bullet->m_position.y += 50;
-		bullet->m_moveDirection = g_camera3D[m_playerNum]->GetForward();
+		bullet->m_moveDirection = m_dir;
 		bullet->m_moveDirection.y = 0.0f;
 		bullet->m_moveDirection.Normalize();
 		bullet->m_velocity = 10.0f;
+		bullet->m_moveSpeed = m_dir * 25.0f;
 	}
 
 	//チャージ
@@ -85,32 +95,35 @@ void ShowModel::Update()
 		Bullet* bullet = NewGO<Bullet>(0, "bullet");
 		bullet->m_position = m_position;
 		bullet->m_position.y += 50;
-		bullet->m_moveDirection = g_camera3D[m_playerNum]->GetForward();
+		bullet->m_moveDirection = m_dir;
 		bullet->m_moveDirection.y = 0.0f;
 		bullet->m_moveDirection.Normalize();
 		bullet->m_velocity = 50.0f;
+		bullet->m_moveSpeed = m_dir * 50.0f;
 		m_charge = 0;
 	}
 
 	//移動関連2
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+	m_magPosition = m_position;
+	m_magPosition.y += 50.0f;
 	m_skinModelRender->SetPosition(m_position);
 
 
 	//カメラ関連
-		Vector3 targetPos = m_position;
-		targetPos.y += 50.0f;
+	Vector3 targetPos = m_position;
+	targetPos.y += 50.0f;
 
-		Quaternion qRotY;
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF());
-		qRotY.Apply(m_toCamera);
+	Quaternion qRotY;
+	qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF());
+	qRotY.Apply(m_toCamera);
 
-		Quaternion qRotX;
-		qRotX.SetRotationDeg(side, g_pad[m_playerNum]->GetRStickYF() * -1);
-		qRotX.Apply(m_toCamera);
+	Quaternion qRotX;
+	qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1);
+	qRotX.Apply(m_toCamera);
 
-		Vector3 cameraPos = m_position + m_toCamera;
-		//g_camera3D->SetPosition(m_position + m_toCamera);
-		g_camera3D[m_playerNum]->SetPosition(cameraPos);
-		g_camera3D[m_playerNum]->SetTarget(targetPos);
+	Vector3 cameraPos = m_position + m_toCamera;
+	//g_camera3D->SetPosition(m_position + m_toCamera);
+	g_camera3D[m_playerNum]->SetPosition(cameraPos);
+	g_camera3D[m_playerNum]->SetTarget(targetPos);
 }
