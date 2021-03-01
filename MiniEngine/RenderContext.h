@@ -13,6 +13,11 @@ namespace raytracing{
 /// </summary>
 class RenderContext {
 public:
+	enum EnStep {
+		eStep_RenderViewport1,	// Render to viweport1,
+		eStep_RenderViewport2,	// Render to viewport2,
+		eStep_RenderShadowMap,	// Render to shadowMap,
+	};
 	/// <summary>
 	/// 初期化。
 	/// </summary>
@@ -21,7 +26,22 @@ public:
 	{
 		m_commandList = commandList;
 	}
-
+	/// <summary>
+	/// Set current render step
+	/// </summary>
+	/// <param name="step"> show EnStep </param>
+	void SetStep(EnStep step) 
+	{
+		m_step = step;
+	}
+	/// <summary>
+	/// Get current render step.
+	/// </summary>
+	/// <returns></returns>
+	EnStep GetRenderStep() const
+	{
+		return m_step;
+	}
 	/// <summary>
 	/// 頂点バッファを設定。
 	/// </summary>
@@ -357,5 +377,6 @@ private:
 	ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];			//ディスクリプタヒープの配列。
 	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };	//定数バッファの配列。
 	Texture* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };			//シェーダーリソースの配列。
+	EnStep m_step = eStep_RenderViewport1;									// render step.
 };
 

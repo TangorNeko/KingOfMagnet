@@ -313,6 +313,11 @@ public:
 		return m_aspect;
 	}
 	/// <summary>
+	/// アスペクト比を設定。
+	/// </summary>
+	/// <param name="splitScreenNum"></param>
+	void SetAspect(int splitScreenNum);
+	/// <summary>
 	/// カメラのコピーを作成。
 	/// </summary>
 	/// <param name="dst"></param>

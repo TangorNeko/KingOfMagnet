@@ -4,9 +4,15 @@ namespace prefab
 {
 	class CSkinModelRender :public IGameObject
 	{
+	public:
+		enum EModel {
+			eModel_View1,
+			eModel_View2,
+			eModel_Num,
+		};
 	private:
 		Skeleton m_skeleton; //スケルトン
-		Model m_model; //モデル
+		Model m_model[eModel_Num]; //モデル
 
 		Vector3 m_position; //座標
 		Quaternion m_qRot; //回転
@@ -32,7 +38,7 @@ namespace prefab
 		Vector3 GetPosition() { return m_position; }
 		Quaternion GetRotation() { return m_qRot; }
 		Vector3 GetScale() { return m_scale; }
-		Model& GetModel() { return m_model; }
+		Model& GetModel(EModel model = eModel_View1) { return m_model[model]; }
 	};
 }
 

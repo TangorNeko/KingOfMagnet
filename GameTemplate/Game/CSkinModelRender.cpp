@@ -32,7 +32,9 @@ namespace prefab
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
-		m_model.Init(initData);
+		for (auto& model : m_model) {
+			model.Init(initData);
+		}
 	}
 
 	/// <summary>
@@ -58,13 +60,21 @@ namespace prefab
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
-		m_model.Init(initData);
+		m_model[eModel_View1].Init(initData);
+		m_model[eModel_View2].Init(initData);
 	}
 
 	//TODO:モデルの描画っぽい、Updateのように毎フレーム呼ばれているようだが詳細がわからない
 	void CSkinModelRender::Render(RenderContext& rc,Camera* camera)
 	{
-		m_model.Draw(rc,camera);
+		switch (rc.GetRenderStep()) {
+		case RenderContext::eStep_RenderViewport1:
+			m_model[eModel_View1].Draw(rc, camera);
+			break;
+		case RenderContext::eStep_RenderViewport2:
+			m_model[eModel_View2].Draw(rc, camera);
+			break;
+		}
 	}
 
 	/// <summary>
@@ -72,8 +82,10 @@ namespace prefab
 	/// </summary>
 	void CSkinModelRender::UpdateModel()
 	{
-		m_model.UpdateWorldMatrix(m_position, m_qRot, m_scale);
-		m_skeleton.Update(m_model.GetWorldMatrix());
+		for (auto& model : m_model) {
+			model.UpdateWorldMatrix(m_position, m_qRot, m_scale);
+			m_skeleton.Update(model.GetWorldMatrix());
+		}
 	}
 
 	/// <summary>

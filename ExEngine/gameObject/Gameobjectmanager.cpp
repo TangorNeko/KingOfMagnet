@@ -50,9 +50,9 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	//レンダラーを変更するならここを改造していくと良い。
 
-	
 	//1P側
 	{
+		rc.SetStep(RenderContext::eStep_RenderViewport1);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
@@ -75,6 +75,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	//2P側
 	{
+		rc.SetStep(RenderContext::eStep_RenderViewport2);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
 		viewport.TopLeftY = 0;

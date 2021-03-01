@@ -9,7 +9,6 @@
 void Camera::Update()
 {
 	//アスペクト比を計算する。
-	m_aspect = (float)g_graphicsEngine->GetFrameBufferWidth()/2 / (float)g_graphicsEngine->GetFrameBufferHeight();
 	if(m_isNeedUpdateProjectionMatrix){
 		if (m_updateProjMatrixFunc == enUpdateProjMatrixFunc_Perspective) {
 			//透視変換行列を計算。
@@ -65,4 +64,9 @@ void Camera::RotateOriginTarget(const Quaternion& qRot)
 	qRot.Apply(toPos);
 	m_position = m_target + toPos;
 	m_isDirty = true;
+}
+
+void Camera::SetAspect(int splitScreenNum)
+{
+	m_aspect = (float)g_graphicsEngine->GetFrameBufferWidth() / (float)g_graphicsEngine->GetFrameBufferHeight() / splitScreenNum;
 }
