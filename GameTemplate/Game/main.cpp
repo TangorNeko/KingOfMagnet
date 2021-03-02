@@ -22,12 +22,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameObjectManager::CreateInstance();
 	PhysicsWorld::CreateInstance();
 
+	//2画面描画モードをON
+	//TODO:最初にタイトルの表示が必要なので後々OFFから始める。
+	GameObjectManager::GetInstance()->Set2ScreenMode(true);
+
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 
 	prefab::CDirectionLight* redfromside = NewGO<prefab::CDirectionLight>(0);
-	redfromside->SetDirection({ 1.0f,0.0f,0.0f });
-	redfromside->SetColor({ 1.0f,0.0f,0.0f });
+	redfromside->SetDirection({ 0.0f,-1.0f,0.0f });
+	redfromside->SetColor({ 0.5f,0.5f,0.5f });
 
 	ShowModel* showm = NewGO<ShowModel>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
@@ -38,6 +42,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm2->m_position = { 100.0f,0.0f,0.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;
+	showm2->m_enemy = showm;
+	
+	showm->m_enemy = showm2;
 
 
 	NewGO<BackGround>(0, "background");

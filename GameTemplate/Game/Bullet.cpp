@@ -27,11 +27,11 @@ void Bullet::Update()
 	QueryGOs<ShowModel>("Player", [this](ShowModel* player)->bool
 		{
 			Vector3 diff = m_position - player->m_magPosition;
-			if (diff.Length() < 600.0f)
+			if (diff.Length() < 1000.0f)
 			{
 				diff.Normalize();
-				m_moveSpeed.x += diff.x * player->m_magPower * 0.5f;// *0.05;
-				m_moveSpeed.z += diff.z * player->m_magPower * 0.5f;// *0.05;
+				m_moveSpeed.x += diff.x * player->m_magPower * 0.1f;// *0.05;
+				m_moveSpeed.z += diff.z * player->m_magPower * 0.1f;// *0.05;
 			}
 			return true;
 		}

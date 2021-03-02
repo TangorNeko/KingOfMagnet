@@ -12,7 +12,6 @@ namespace prefab
 		Vector3 m_scale;
 		Vector2 m_pivot;
 
-		void UpdateModel();
 	public:
 		CSpriteRender() :m_position(Vector3::Zero), m_qRot(Quaternion::Identity), m_scale(Vector3::One), m_pivot({ 0.5f,0.5f }) {}
 

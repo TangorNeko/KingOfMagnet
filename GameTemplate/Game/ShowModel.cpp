@@ -51,6 +51,22 @@ void ShowModel::Update()
 		m_dir.Normalize();
 	}
 
+	//移動アクション
+	if (g_pad[m_playerNum]->IsTrigger(enButtonA) && m_stealthCount == 0)
+	{
+		m_skinModelRender->SetScale({ 0.0f,0.0f,0.0f });
+		m_stealthCount = 50;
+		m_moveSpeed += m_dir * 500.0f;
+	}
+	else
+	{
+		if (--m_stealthCount <= 0)
+		{
+			m_skinModelRender->SetScale({ 1.0f,1.0f,1.0f });
+			m_stealthCount = 0;
+		}
+	}
+
 	//攻撃関連
 	
 	//通常攻撃
@@ -69,7 +85,7 @@ void ShowModel::Update()
 	//チャージ
 	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
 	{
-		m_charge += 10.0f;
+		m_charge += 10.0f - m_magPower * 2.5f;
 
 		if (m_charge > 2000.0f)
 		{
@@ -80,7 +96,7 @@ void ShowModel::Update()
 	}
 
 	//チャージ確認用
-	if (m_charge != 2000.0f) {
+	if (m_charge < 2000.0f) {
 		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
 	}
 	else
@@ -111,19 +127,58 @@ void ShowModel::Update()
 
 
 	//カメラ関連
-	Vector3 targetPos = m_position;
-	targetPos.y += 50.0f;
+	if (g_pad[m_playerNum]->IsTrigger(enButtonRB3))
+	{
+		m_isLock = !m_isLock;
+	}
 
-	Quaternion qRotY;
-	qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF());
-	qRotY.Apply(m_toCamera);
+	if(m_isLock)
+	{ 
+		Vector3 targetPos = m_enemy->m_position;
+		targetPos.y += 50.0f;
 
-	Quaternion qRotX;
-	qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1);
-	qRotX.Apply(m_toCamera);
+		Vector3 toCamera = m_enemy->m_position - m_position;
+		toCamera *= -1.0f;
+		toCamera.Normalize();
+		Vector3 Axis;
+		Axis.Cross(toCamera, Vector3::Up);
+		toCamera *= 140.0f;
 
-	Vector3 cameraPos = m_position + m_toCamera;
-	//g_camera3D->SetPosition(m_position + m_toCamera);
-	g_camera3D[m_playerNum]->SetPosition(cameraPos);
-	g_camera3D[m_playerNum]->SetTarget(targetPos);
+		Quaternion qRot;
+		qRot.SetRotationDeg(Axis, 45.0f);
+		qRot.Apply(toCamera);
+
+
+		g_camera3D[m_playerNum]->SetPosition(m_position + toCamera);
+		g_camera3D[m_playerNum]->SetTarget(m_enemy->m_magPosition);
+	}
+	else
+	{
+		Vector3 targetPos = m_position;
+		targetPos.y += 50.0f;
+
+		Quaternion qRotY;
+		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF());
+		qRotY.Apply(m_toCamera);
+
+		Quaternion qRotX;
+		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1);
+		Vector3 checkToCamera = m_toCamera;
+		qRotX.Apply(checkToCamera);
+		checkToCamera.Normalize();
+		float t = checkToCamera.Dot(Vector3::Up);
+		if (t > 0.99f || t < 0.1f)
+		{
+
+		}
+		else
+		{
+			qRotX.Apply(m_toCamera);
+		}
+
+		Vector3 cameraPos = m_position + m_toCamera;
+		//g_camera3D->SetPosition(m_position + m_toCamera);
+		g_camera3D[m_playerNum]->SetPosition(cameraPos);
+		g_camera3D[m_playerNum]->SetTarget(targetPos);
+	}
 }
