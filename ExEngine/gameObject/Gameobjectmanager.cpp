@@ -50,8 +50,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	//レンダラーを変更するならここを改造していくと良い。
 
-	if (m_2screenMode)
+	if (m_2screenMode)//2画面モード
 	{
+		//2画面のスプライトのアスペクト比に合わせる。
+		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0);
+
 		//1P側
 		{
 			rc.SetStep(RenderContext::eStep_RenderViewport1);
@@ -94,8 +97,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 			}
 		}
 	}
-	else
+	else //1画面モード
 	{
+		//1画面のスプライトのアスペクト比に合わせる。
+		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
+
 		rc.SetStep(RenderContext::eStep_RenderViewport1);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0;
