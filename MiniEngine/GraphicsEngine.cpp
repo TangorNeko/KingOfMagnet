@@ -462,10 +462,6 @@ void GraphicsEngine::BeginRender()
 	const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	m_renderContext.ClearRenderTargetView(m_currentFrameBufferRTVHandle, clearColor);
 	m_renderContext.ClearDepthStencilView(m_currentFrameBufferDSVHandle, 1.0f);
-
-	//todo フォントのテスト。
-	m_fontEngine.BeginDraw(m_renderContext);
-	m_fontEngine.EndDraw(m_renderContext);
 }
 void GraphicsEngine::ChangeRenderTargetToFrameBuffer(RenderContext& rc)
 {
@@ -475,6 +471,8 @@ void GraphicsEngine::EndRender()
 {
 	// レンダリングターゲットへの描き込み完了待ち
 	m_renderContext.WaitUntilFinishDrawingToRenderTarget(m_renderTargets[m_frameIndex]);
+
+	m_directXTKGfxMemroy->Commit(m_commandQueue);
 
 	//レンダリングコンテキストを閉じる。
 	m_renderContext.Close();
@@ -489,6 +487,7 @@ void GraphicsEngine::EndRender()
 	// Present the frame.
 	m_swapChain->Present(1, 0);
 #endif
+	m_directXTKGfxMemroy->GarbageCollect();
 	//描画完了待ち。
 	WaitDraw();
 }

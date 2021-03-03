@@ -16,5 +16,6 @@ public:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pointLight = nullptr;
 	int m_liveCount = 0;
+	int m_parentNo = 0;
 };
 

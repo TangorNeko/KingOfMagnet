@@ -24,6 +24,19 @@ bool Bullet::Start()
 
 void Bullet::Update()
 {
+	if (m_liveCount == 15)
+	{
+		QueryGOs<ShowModel>("Player", [this](ShowModel* player)->bool
+			{
+				if (player->m_playerNum == m_parentNo)
+				{
+					m_velocity += 5.0f * player->m_magPower;
+				}
+				return true;
+			}
+		);
+	}
+	/*
 	QueryGOs<ShowModel>("Player", [this](ShowModel* player)->bool
 		{
 			Vector3 diff = m_position - player->m_magPosition;
@@ -36,8 +49,10 @@ void Bullet::Update()
 			return true;
 		}
 	);
+	*/
 
-	m_position += m_moveSpeed;
+	m_position += m_moveDirection * m_velocity;
+	//m_position += m_moveSpeed;
 
 	m_skinModelRender->SetPosition(m_position);
 	m_pointLight->SetPosition(m_position);

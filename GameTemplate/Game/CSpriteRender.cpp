@@ -31,7 +31,10 @@ namespace prefab
 	//スプライトのドローコール
 	void CSpriteRender::Render(RenderContext& rc, Camera* camera)
 	{
-		m_sprite.Draw(rc);
+		if (m_drawScreen == AllScreen || rc.GetRenderStep() == m_drawScreen)
+		{
+			m_sprite.Draw(rc);
+		}
 	}
 
 	/// <summary>
