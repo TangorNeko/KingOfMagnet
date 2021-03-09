@@ -7,11 +7,13 @@ class ShowModel : public IGameObject
 	void Update()override;
 
 public:
-
+	Quaternion rot;
 	Vector3 m_position = { 0.0f,0.0f,0.0f };
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };
 	Vector3 m_dir = { 0.0f,0.0f,1.0f };
 	Vector3 m_toCamera = { 0.0f,100.0f,-100.0f };
+	Vector3 Scale = { 0.5,0.5,0.5 };	
+
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pointLight = nullptr;
 	CharacterController m_charaCon;

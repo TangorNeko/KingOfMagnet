@@ -12,7 +12,7 @@ bool ShowModel::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-	m_skinModelRender->Init("Assets/modelData/Player1.tkm");
+	m_skinModelRender->Init("Assets/modelData/mage00.tkm","Assets/modelData/mageskel.tks");
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 	//g_camera3D->SetViewAngle(g_camera3D->GetViewAngle() / 2);
@@ -41,8 +41,15 @@ void ShowModel::Update()
 	
 	//カメラの右方向
 	Vector3 right = Cross(g_vec3AxisY, front);
-
-
+	
+	float naiseki = front.Dot(Vector3::AxisZ);//内積
+	float angle = acosf(naiseki);//アークコサイン
+	if (front.x < 0) {
+		angle *= -1;
+	}
+	rot.SetRotation(Vector3::AxisY, angle);
+	m_skinModelRender->SetRotation(rot);
+	
 	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 5.0f + right * g_pad[m_playerNum]->GetLStickXF() * 5.0f;
 
 	if (m_moveSpeed.Length() != 0)
@@ -62,7 +69,7 @@ void ShowModel::Update()
 	{
 		if (--m_stealthCount <= 0)
 		{
-			m_skinModelRender->SetScale({ 1.0f,1.0f,1.0f });
+			m_skinModelRender->SetScale({ Scale });
 			m_stealthCount = 0;
 		}
 	}
@@ -89,11 +96,12 @@ void ShowModel::Update()
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
-			bullet->m_moveDirection = m_dir;
+			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+			//bullet->m_moveDirection = m_dir;
 			bullet->m_moveDirection.y = 0.0f;
 			bullet->m_moveDirection.Normalize();
 			bullet->m_velocity = 25.0f;
-			bullet->m_moveSpeed = m_dir * 25.0f;
+			//bullet->m_moveSpeed = m_dir * 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 	}
@@ -174,11 +182,11 @@ void ShowModel::Update()
 		targetPos.y += 50.0f;
 
 		Quaternion qRotY;
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF());
+		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF()*1.5);
 		qRotY.Apply(m_toCamera);
 
 		Quaternion qRotX;
-		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1);
+		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1.5);
 		Vector3 checkToCamera = m_toCamera;
 		qRotX.Apply(checkToCamera);
 		checkToCamera.Normalize();
