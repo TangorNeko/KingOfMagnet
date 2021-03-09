@@ -12,8 +12,8 @@ Bullet::~Bullet()
 bool Bullet::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/Bullet.tkm");
-	m_skinModelRender->SetScale({ 2.0f, 2.0f, 2.0f });
+	m_skinModelRender->Init("Assets/modelData/syuriken1.tkm");
+	m_skinModelRender->SetScale({ 4.0f, 4.0f, 4.0f });
 
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });

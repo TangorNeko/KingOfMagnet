@@ -132,14 +132,31 @@ void ShowModel::Update()
 	//ŒÅ—LUŒ‚
 	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge > 1000)
 	{
-		Bullet* bullet = NewGO<Bullet>(0, "bullet");
-		bullet->m_position = m_position;
-		bullet->m_position.y += 50;
-		bullet->m_moveDirection = m_dir;
-		bullet->m_moveDirection.y = 0.0f;
-		bullet->m_moveDirection.Normalize();
-		bullet->m_velocity = 50.0f;
-		bullet->m_moveSpeed = m_dir * 50.0f;
+		if (m_isLock)
+		{
+			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+			bullet->m_position = m_position;
+			bullet->m_position.y += 50;
+			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
+			dir.Normalize();
+			bullet->m_moveDirection = dir;
+			bullet->m_velocity = 50.0f;
+			//bullet->m_moveSpeed = dir * 25.0f;
+			bullet->m_parentNo = m_playerNum;
+		}
+		else
+		{
+			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+			bullet->m_position = m_position;
+			bullet->m_position.y += 50;
+			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+			//bullet->m_moveDirection = m_dir;
+			bullet->m_moveDirection.y = 0.0f;
+			bullet->m_moveDirection.Normalize();
+			bullet->m_velocity = 50.0f;
+			//bullet->m_moveSpeed = m_dir * 25.0f;
+			bullet->m_parentNo = m_playerNum;
+		}
 		m_charge = 0;
 	}
 
