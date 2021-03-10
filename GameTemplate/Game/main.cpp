@@ -39,7 +39,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm->m_magPower = 2;
 
 	ShowModel* showm2 = NewGO<ShowModel>(0, "Player");
-	showm2->m_position = { 100.0f,0.0f,0.0f };
+	showm2->m_position = { 0.0f,0.0f,0.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;
 	showm2->m_enemy = showm;
@@ -48,7 +48,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 	NewGO<BackGround>(0, "background");
-	NewGO<ShowSprite>(1, "sprite");
+	//NewGO<ShowSprite>(1, "sprite");
 
 	
 	/*

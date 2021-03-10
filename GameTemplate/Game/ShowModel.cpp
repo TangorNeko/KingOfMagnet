@@ -1,18 +1,20 @@
 #include "stdafx.h"
 #include "ShowModel.h"
 #include "Bullet.h"
+#include <string>
 
 ShowModel::~ShowModel()
 {
 	DeleteGO(m_skinModelRender);
 	DeleteGO(m_pointLight);
+	DeleteGO(m_fontRender);
 }
 
 bool ShowModel::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-	m_skinModelRender->Init("Assets/modelData/mage00.tkm","Assets/modelData/mageskel.tks");
+	m_skinModelRender->Init("Assets/modelData/mage00.tkm", "Assets/modelData/mageskel.tks");
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 	//g_camera3D->SetViewAngle(g_camera3D->GetViewAngle() / 2);
@@ -21,6 +23,9 @@ bool ShowModel::Start()
 	m_pointLight->SetColor({ 0.0f,0.0f,0.0f });
 	m_pointLight->SetRange(300.0f);
 
+	m_fontRender = NewGO<prefab::CFontRender>(1);
+	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
+	m_fontRender->SetPosition({-500.0f, 250.0f});
 	return true;
 }
 
@@ -31,6 +36,21 @@ void ShowModel::Update()
 	{
 		return;
 	}
+
+	//三角形の当たり判定をつくる
+	Vector3 sidePos1 = m_position;
+	sidePos1.y += 60.0f;
+	Vector3 diff = m_enemy->m_position - m_position;
+	diff.Normalize();
+	diff.Cross(Vector3::AxisY);
+	Vector3 sidePos2 = sidePos1;
+	sidePos1 += diff * 15;
+	sidePos2 -= diff * 15;
+
+	m_collider.SetVertex(m_position, sidePos1, sidePos2);
+	
+	//体力、チャージの表示
+	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp) + L"\nCharge:" + std::to_wstring(m_charge/20.0f) + L"%");
 
 	//移動関連
 

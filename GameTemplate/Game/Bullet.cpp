@@ -24,18 +24,8 @@ bool Bullet::Start()
 
 void Bullet::Update()
 {
-	if (m_liveCount == 15)
-	{
-		QueryGOs<ShowModel>("Player", [this](ShowModel* player)->bool
-			{
-				if (player->m_playerNum == m_parentNo)
-				{
-					m_velocity += 5.0f * player->m_magPower;
-				}
-				return true;
-			}
-		);
-	}
+
+
 	/*
 	QueryGOs<ShowModel>("Player", [this](ShowModel* player)->bool
 		{
@@ -50,9 +40,29 @@ void Bullet::Update()
 		}
 	);
 	*/
+	Vector3 oldPos = m_position;
 
 	m_position += m_moveDirection * m_velocity;
 	//m_position += m_moveSpeed;
+
+	QueryGOs<ShowModel>("Player", [this,oldPos](ShowModel* player)->bool
+		{
+			if (m_liveCount == 15 && player->m_playerNum == m_parentNo)
+			{
+				m_velocity += 5.0f * player->m_magPower;
+			}
+
+			Vector3 diff = player->m_magPosition - m_position;
+
+			if (player->m_playerNum != m_parentNo &&player->m_collider.isHit(oldPos, m_position))
+			{
+				player->m_hp -= m_velocity;
+				DeleteGO(this);
+			}
+
+			return true;
+		}
+	);
 
 	m_skinModelRender->SetPosition(m_position);
 	m_pointLight->SetPosition(m_position);

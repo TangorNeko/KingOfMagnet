@@ -312,6 +312,7 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="tklFile.cpp" />
+    <ClCompile Include="TriangleCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ExEngine\ExEngine.h" />
@@ -387,6 +388,7 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
     <ClInclude Include="tklFile.h" />
+    <ClInclude Include="TriangleCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\modelData\StageUV.png" />
