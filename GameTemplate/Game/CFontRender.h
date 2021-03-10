@@ -14,7 +14,7 @@ namespace prefab
 	private:
 		Font m_font;
 
-		const wchar_t* m_text = L"";
+		std::wstring m_text = L"";
 		Vector2 m_position = { 0.0f,0.0f };
 		Vector4 m_color = { 1.0f,1.0f,1.0f,1.0f };
 		float m_rotation = 0.0f;
@@ -25,7 +25,7 @@ namespace prefab
 	public:
 		void Render(RenderContext& rc, Camera* camera) override;
 
-		void SetText(const wchar_t* text) { m_text = text; }
+		void SetText(const std::wstring& text) { m_text = text; }
 
 		void SetPosition(const Vector2& position) { m_position = position; }
 
