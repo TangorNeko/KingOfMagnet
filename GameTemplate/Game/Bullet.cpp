@@ -54,10 +54,19 @@ void Bullet::Update()
 
 			Vector3 diff = player->m_magPosition - m_position;
 
-			if (player->m_playerNum != m_parentNo &&player->m_collider.isHit(oldPos, m_position))
+			if (player->m_playerNum != m_parentNo)
 			{
-				player->m_hp -= m_velocity;
-				DeleteGO(this);
+				if (player->m_collider.isHit(oldPos, m_position))
+				{
+					player->m_hp -= m_velocity * 3;
+					DeleteGO(this);
+				}
+
+				if (player->m_magPower < 0)
+				{
+					diff.Normalize();
+					m_position += diff * 10;
+				}
 			}
 
 			return true;

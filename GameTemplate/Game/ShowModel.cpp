@@ -17,7 +17,6 @@ bool ShowModel::Start()
 	m_skinModelRender->Init("Assets/modelData/mage00.tkm", "Assets/modelData/mageskel.tks");
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
-	//g_camera3D->SetViewAngle(g_camera3D->GetViewAngle() / 2);
 
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 0.0f,0.0f,0.0f });
@@ -25,7 +24,7 @@ bool ShowModel::Start()
 
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
-	m_fontRender->SetPosition({-500.0f, 250.0f});
+	m_fontRender->SetPosition({-625.0f, 350.0f});
 	return true;
 }
 
@@ -37,20 +36,14 @@ void ShowModel::Update()
 		return;
 	}
 
-	//三角形の当たり判定をつくる
-	Vector3 sidePos1 = m_position;
-	sidePos1.y += 60.0f;
-	Vector3 diff = m_enemy->m_position - m_position;
-	diff.Normalize();
-	diff.Cross(Vector3::AxisY);
-	Vector3 sidePos2 = sidePos1;
-	sidePos1 += diff * 15;
-	sidePos2 -= diff * 15;
+	//磁力の変化
+	ChangeMagnetPower();
 
-	m_collider.SetVertex(m_position, sidePos1, sidePos2);
+	//座標に応じて三角形の当たり判定の場所をセット。
+	Collision();
 	
-	//体力、チャージの表示
-	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp) + L"\nCharge:" + std::to_wstring(m_charge/20.0f) + L"%");
+	//体力等ステータスのテキストを表示(後に画像にする。)
+	DisplayStatus();
 
 	//移動関連
 
@@ -74,28 +67,140 @@ void ShowModel::Update()
 
 	if (m_moveSpeed.Length() != 0)
 	{
-		m_dir = m_moveSpeed;
-		m_dir.Normalize();
+		m_characterDirection = m_moveSpeed;
+		m_characterDirection.Normalize();
 	}
 
 	//移動アクション
-	if (g_pad[m_playerNum]->IsTrigger(enButtonA) && m_stealthCount == 0)
+	MoveAction();
+
+
+	//攻撃関連
+	//通常攻撃
+	NormalAttack();
+
+	//チャージ
+	Charge();
+
+	//固有攻撃
+	SpecialAttack();
+
+
+	//移動関連2
+	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+	m_magPosition = m_position;
+	m_magPosition.y += 50.0f;
+	m_skinModelRender->SetPosition(m_position);
+
+	//カメラ関連
+	Camera();
+}
+
+void ShowModel::Collision()
+{
+	//三角形の当たり判定をつくる
+	Vector3 sidePos1 = m_position;
+	sidePos1.y += 60.0f;
+	Vector3 diff = m_enemy->m_position - m_position;
+	diff.Normalize();
+	diff.Cross(Vector3::AxisY);
+	Vector3 sidePos2 = sidePos1;
+	sidePos1 += diff * 30;
+	sidePos2 -= diff * 30;
+
+	m_collider.SetVertex(m_position, sidePos1, sidePos2);
+}
+
+void ShowModel::ChangeMagnetPower()
+{
+	m_timer++;
+	if (m_timer == 600)
+	{
+		if (m_isMagPowerIncreasing)
+		{
+			if (m_magPower == 2)
+			{
+				m_magPower = 1;
+				m_isMagPowerIncreasing = false;
+			}
+			else
+			{
+				m_magPower++;
+			}
+		}
+		else
+		{
+			if (m_magPower == -2)
+			{
+				m_magPower = -1;
+				m_isMagPowerIncreasing = true;
+			}
+			else
+			{
+				m_magPower--;
+			}
+		}
+		m_timer = 0;
+	}
+}
+
+void ShowModel::DisplayStatus()
+{
+	//体力、チャージ、現在の自分の磁力の状態の表示
+	std::wstring powerText;
+	switch (m_magPower)
+	{
+	case -2:
+		powerText = L"引力Lv2";
+		break;
+	case -1:
+		powerText = L"引力Lv1";
+		break;
+	case 0:
+		powerText = L"磁力なし";
+		break;
+	case 1:
+		powerText = L"斥力Lv1";
+		break;
+	case 2:
+		powerText = L"斥力Lv2";
+		break;
+	default:
+		powerText = L"error";
+	}
+
+	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp) 
+		+ L"\nCharge:" + std::to_wstring(m_charge / 20.0f)
+		+ L"%\n磁力:" + powerText
+		+ L"\n移動アクション:"+ std::to_wstring(m_moveActionCount / 60)
+		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60));
+}
+
+void ShowModel::MoveAction()
+{
+	//移動アクション
+	if (g_pad[m_playerNum]->IsTrigger(enButtonA) && m_moveActionCount == 0 && !(g_pad[m_playerNum]->IsPress(enButtonLB2)))
 	{
 		m_skinModelRender->SetScale({ 0.0f,0.0f,0.0f });
-		m_stealthCount = 50;
-		m_moveSpeed += m_dir * 500.0f;
+		m_moveActionCount = 600;
+		m_moveSpeed += m_characterDirection * 500.0f;
 	}
 	else
 	{
-		if (--m_stealthCount <= 0)
+		if (--m_moveActionCount <= 550)
 		{
 			m_skinModelRender->SetScale({ Scale });
-			m_stealthCount = 0;
+		}
+
+		if (m_moveActionCount < 0)
+		{
+			m_moveActionCount = 0;
 		}
 	}
+}
 
-	//攻撃関連
-	
+void ShowModel::NormalAttack()
+{
 	//通常攻撃
 	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
 	{
@@ -108,7 +213,6 @@ void ShowModel::Update()
 			dir.Normalize();
 			bullet->m_moveDirection = dir;
 			bullet->m_velocity = 25.0f;
-			bullet->m_moveSpeed = dir * 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 		else
@@ -117,15 +221,16 @@ void ShowModel::Update()
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
 			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			//bullet->m_moveDirection = m_dir;
 			bullet->m_moveDirection.y = 0.0f;
 			bullet->m_moveDirection.Normalize();
 			bullet->m_velocity = 25.0f;
-			//bullet->m_moveSpeed = m_dir * 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 	}
+}
 
+void ShowModel::Charge()
+{
 	//チャージ
 	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
 	{
@@ -148,7 +253,10 @@ void ShowModel::Update()
 		m_pointLight->SetColor({ 1.0f,0.0f,0.0f });
 	}
 	m_pointLight->SetPosition(m_position);
+}
 
+void ShowModel::SpecialAttack()
+{
 	//固有攻撃
 	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge > 1000)
 	{
@@ -161,7 +269,6 @@ void ShowModel::Update()
 			dir.Normalize();
 			bullet->m_moveDirection = dir;
 			bullet->m_velocity = 50.0f;
-			//bullet->m_moveSpeed = dir * 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 		else
@@ -170,31 +277,25 @@ void ShowModel::Update()
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
 			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			//bullet->m_moveDirection = m_dir;
 			bullet->m_moveDirection.y = 0.0f;
 			bullet->m_moveDirection.Normalize();
 			bullet->m_velocity = 50.0f;
-			//bullet->m_moveSpeed = m_dir * 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 		m_charge = 0;
 	}
+}
 
-	//移動関連2
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
-	m_magPosition = m_position;
-	m_magPosition.y += 50.0f;
-	m_skinModelRender->SetPosition(m_position);
-
-
+void ShowModel::Camera()
+{
 	//カメラ関連
 	if (g_pad[m_playerNum]->IsTrigger(enButtonRB3))
 	{
 		m_isLock = !m_isLock;
 	}
 
-	if(m_isLock)
-	{ 
+	if (m_isLock)
+	{
 		Vector3 targetPos = m_enemy->m_position;
 		targetPos.y += 50.0f;
 
@@ -219,10 +320,11 @@ void ShowModel::Update()
 		targetPos.y += 50.0f;
 
 		Quaternion qRotY;
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF()*1.5);
+		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 1.5);
 		qRotY.Apply(m_toCamera);
 
 		Quaternion qRotX;
+		Vector3 right = g_camera3D[m_playerNum]->GetRight();
 		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1.5);
 		Vector3 checkToCamera = m_toCamera;
 		qRotX.Apply(checkToCamera);
