@@ -42,6 +42,7 @@ public:
 	bool m_isLock = false;//ロックオンしているか。
 	int m_timer = 0;//磁力変化用のタイマー
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
+	bool m_isSceneStop = false;//動けるか動けないか
 public:
 	int GetMagPower() { return m_magPower; }
 	void Damage(int damage);

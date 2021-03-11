@@ -37,66 +37,70 @@ void ShowModel::Update()
 		return;
 	}
 
-	//磁力の変化
-	ChangeMagnetPower();
-
-	//座標に応じて三角形の当たり判定の場所をセット。
-	Collision();
-	
-	//体力等ステータスのテキストを表示(後に画像にする。)
-	DisplayStatus();
-
-	//移動関連
-
-	//カメラの前方向
-	Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
-	front.y = 0.0f;
-	front.Normalize();
-	
-	//カメラの右方向
-	Vector3 right = Cross(g_vec3AxisY, front);
-	
-	float naiseki = front.Dot(Vector3::AxisZ);//内積
-	float angle = acosf(naiseki);//アークコサイン
-	if (front.x < 0) {
-		angle *= -1;
-	}
-	rot.SetRotation(Vector3::AxisY, angle);
-	m_skinModelRender->SetRotation(rot);
-	
-	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
-
-	if (m_moveSpeed.Length() != 0)
+	if (m_isSceneStop == false)
 	{
-		m_characterDirection = m_moveSpeed;
-		m_characterDirection.Normalize();
+
+		//磁力の変化
+		ChangeMagnetPower();
+
+		//座標に応じて三角形の当たり判定の場所をセット。
+		Collision();
+
+		//体力等ステータスのテキストを表示(後に画像にする。)
+		DisplayStatus();
+
+		//移動関連
+
+		//カメラの前方向
+		Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		front.y = 0.0f;
+		front.Normalize();
+
+		//カメラの右方向
+		Vector3 right = Cross(g_vec3AxisY, front);
+
+		float naiseki = front.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(naiseki);//アークコサイン
+		if (front.x < 0) {
+			angle *= -1;
+		}
+		rot.SetRotation(Vector3::AxisY, angle);
+		m_skinModelRender->SetRotation(rot);
+
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
+
+		if (m_moveSpeed.Length() != 0)
+		{
+			m_characterDirection = m_moveSpeed;
+			m_characterDirection.Normalize();
+		}
+
+		//移動アクション
+		MoveAction();
+
+
+		//攻撃関連
+		//通常攻撃
+		NormalAttack();
+
+		//チャージ
+		Charge();
+
+		//固有攻撃
+		SpecialAttack();
+
+
+		//移動関連2
+		m_moveSpeed.y = -2.0f;
+
+		m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+		m_magPosition = m_position;
+		m_magPosition.y += 50.0f;
+		m_skinModelRender->SetPosition(m_position);
+
+		//カメラ関連
+		Camera();
 	}
-
-	//移動アクション
-	MoveAction();
-
-
-	//攻撃関連
-	//通常攻撃
-	NormalAttack();
-
-	//チャージ
-	Charge();
-
-	//固有攻撃
-	SpecialAttack();
-
-
-	//移動関連2
-	m_moveSpeed.y = -2.0f;
-
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
-	m_magPosition = m_position;
-	m_magPosition.y += 50.0f;
-	m_skinModelRender->SetPosition(m_position);
-
-	//カメラ関連
-	Camera();
 }
 
 void ShowModel::Collision()
@@ -363,10 +367,14 @@ void ShowModel::Damage(int damage)
 	{
 		m_hp = 0;
 
+
+		//WARNING:お互いに同タイミングに弾を発射してどちらもHP0になった時おそらくどちらも勝利しどちらも敗北する。
 		Lose();
+		m_isSceneStop = true;
 		m_fontRender->SetColor({0.0f, 0.5f, 1.0f, 1.0f});
 
 		m_enemy->Win();
+		m_enemy->m_isSceneStop = true;
 		m_enemy->m_fontRender->SetColor({ 1.0f,0.2f,0.2f,1.0f });
 	}
 }
