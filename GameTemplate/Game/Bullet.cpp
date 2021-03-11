@@ -13,7 +13,7 @@ bool Bullet::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/syuriken1.tkm");
-	m_skinModelRender->SetScale({ 4.0f, 4.0f, 4.0f });
+	m_skinModelRender->SetScale({ 7.0f, 7.0f, 7.0f });
 
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
@@ -58,14 +58,14 @@ void Bullet::Update()
 			{
 				if (player->m_collider.isHit(oldPos, m_position))
 				{
-					player->m_hp -= m_velocity * 3;
+					player->Damage(m_velocity * 3);
 					DeleteGO(this);
 				}
 
-				if (player->m_magPower < 0)
+				if (player->m_magPower < 0 && diff.Length() < 300.0f)
 				{
 					diff.Normalize();
-					m_position += diff * 10;
+					m_position += diff * player->m_magPower * 3 * -1;
 				}
 			}
 

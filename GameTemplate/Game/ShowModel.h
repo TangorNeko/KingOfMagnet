@@ -23,15 +23,17 @@ public:
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };
 	Vector3 m_toCamera = { 0.0f,100.0f,-100.0f };
-	Vector3 Scale = { 0.5,0.5,0.5 };	
+	Vector3 Scale = { 0.6,0.6,0.6 };	
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pointLight = nullptr;
 	prefab::CFontRender* m_fontRender = nullptr;
+	prefab::CSpriteRender* m_spriteRender = nullptr;
 	CharacterController m_charaCon;
 	TriangleCollider m_collider;
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、なし(0)、引力状態(-1,-2)、斥力状態(1,2)
+	int m_normalAttackCount = 0;
 	int m_moveActionCount = 0;//移動アクションに使うカウント
 	int m_hp = 1000;//体力
 	Vector3 m_magPosition = { 0.0f,0.0f,0.0f };//磁力が出ている原点
@@ -42,5 +44,8 @@ public:
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 public:
 	int GetMagPower() { return m_magPower; }
+	void Damage(int damage);
+	void Win();
+	void Lose();
 	ShowModel* m_enemy = nullptr;
 };

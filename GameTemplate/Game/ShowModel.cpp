@@ -8,6 +8,7 @@ ShowModel::~ShowModel()
 	DeleteGO(m_skinModelRender);
 	DeleteGO(m_pointLight);
 	DeleteGO(m_fontRender);
+	DeleteGO(m_spriteRender);
 }
 
 bool ShowModel::Start()
@@ -63,7 +64,7 @@ void ShowModel::Update()
 	rot.SetRotation(Vector3::AxisY, angle);
 	m_skinModelRender->SetRotation(rot);
 	
-	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 5.0f + right * g_pad[m_playerNum]->GetLStickXF() * 5.0f;
+	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
 
 	if (m_moveSpeed.Length() != 0)
 	{
@@ -87,6 +88,8 @@ void ShowModel::Update()
 
 
 	//ˆÚ“®ŠÖ˜A2
+	m_moveSpeed.y = -2.0f;
+
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
 	m_magPosition = m_position;
 	m_magPosition.y += 50.0f;
@@ -105,8 +108,8 @@ void ShowModel::Collision()
 	diff.Normalize();
 	diff.Cross(Vector3::AxisY);
 	Vector3 sidePos2 = sidePos1;
-	sidePos1 += diff * 30;
-	sidePos2 -= diff * 30;
+	sidePos1 += diff * 40;
+	sidePos2 -= diff * 40;
 
 	m_collider.SetVertex(m_position, sidePos1, sidePos2);
 }
@@ -202,7 +205,12 @@ void ShowModel::MoveAction()
 void ShowModel::NormalAttack()
 {
 	//’ÊíUŒ‚
-	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
+	if (--m_normalAttackCount < 0)
+	{
+		m_normalAttackCount = 0;
+	}
+
+	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1) && m_normalAttackCount == 0)
 	{
 		if (m_isLock)
 		{
@@ -226,6 +234,8 @@ void ShowModel::NormalAttack()
 			bullet->m_velocity = 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
+
+		m_normalAttackCount = 30;
 	}
 }
 
@@ -344,4 +354,33 @@ void ShowModel::Camera()
 		g_camera3D[m_playerNum]->SetPosition(cameraPos);
 		g_camera3D[m_playerNum]->SetTarget(targetPos);
 	}
+}
+
+void ShowModel::Damage(int damage)
+{
+	m_hp -= damage;
+	if (m_hp <= 0)
+	{
+		m_hp = 0;
+
+		Lose();
+		m_fontRender->SetColor({0.0f, 0.5f, 1.0f, 1.0f});
+
+		m_enemy->Win();
+		m_enemy->m_fontRender->SetColor({ 1.0f,0.2f,0.2f,1.0f });
+	}
+}
+
+void ShowModel::Win()
+{
+	m_spriteRender = NewGO<prefab::CSpriteRender>(2);
+	m_spriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_spriteRender->Init("Assets/Image/Syouri.dds",256,256);
+}
+
+void ShowModel::Lose()
+{
+	m_spriteRender = NewGO<prefab::CSpriteRender>(2);
+	m_spriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_spriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
 }
