@@ -24,26 +24,9 @@ bool Bullet::Start()
 
 void Bullet::Update()
 {
-
-
-	/*
-	QueryGOs<ShowModel>("Player", [this](ShowModel* player)->bool
-		{
-			Vector3 diff = m_position - player->m_magPosition;
-			if (diff.Length() < 1000.0f)
-			{
-				diff.Normalize();
-				m_moveSpeed.x += diff.x * player->m_magPower * 0.1f;// *0.05;
-				m_moveSpeed.z += diff.z * player->m_magPower * 0.1f;// *0.05;
-			}
-			return true;
-		}
-	);
-	*/
 	Vector3 oldPos = m_position;
 
 	m_position += m_moveDirection * m_velocity;
-	//m_position += m_moveSpeed;
 
 	QueryGOs<ShowModel>("Player", [this,oldPos](ShowModel* player)->bool
 		{
@@ -62,10 +45,21 @@ void Bullet::Update()
 					DeleteGO(this);
 				}
 
-				if (player->m_magPower < 0 && diff.Length() < 300.0f)
+				if (diff.Length() < 500.0f)
 				{
-					diff.Normalize();
-					m_position += diff * player->m_magPower * 3 * -1;
+					if (player->m_magPower < 0)
+					{
+						Vector3 toPlayer = diff;
+						toPlayer.Normalize();
+						m_position += toPlayer * player->m_magPower * 3 * -1;
+					}
+
+
+					if (m_isAffectedFromEnemyPower == false)
+					{
+						//m_velocity -= player->m_magPower;
+						m_isAffectedFromEnemyPower = true;
+					}
 				}
 			}
 

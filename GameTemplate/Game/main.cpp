@@ -39,10 +39,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm->m_magPower = 2;
 
 	ShowModel* showm2 = NewGO<ShowModel>(0, "Player");
-	showm2->m_position = { 0.0f,0.0f,0.0f };
+	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;
 	showm2->m_enemy = showm;
+	showm2->m_toCamera = { 0.0f,100.0f,100.0f };
 	
 	showm->m_enemy = showm2;
 

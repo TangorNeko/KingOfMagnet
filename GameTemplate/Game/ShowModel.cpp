@@ -159,28 +159,33 @@ void ShowModel::DisplayStatus()
 	{
 	case -2:
 		powerText = L"引力Lv2";
+		m_fontRender->SetColor({ 0.0f,0.0f,1.0f,1.0f });
 		break;
 	case -1:
 		powerText = L"引力Lv1";
+		m_fontRender->SetColor({ 0.0f,0.5f,1.0f,1.0f });
 		break;
 	case 0:
 		powerText = L"磁力なし";
+		m_fontRender->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		break;
 	case 1:
 		powerText = L"斥力Lv1";
+		m_fontRender->SetColor({ 1.0f,0.4f,0.4f,1.0f });
 		break;
 	case 2:
 		powerText = L"斥力Lv2";
+		m_fontRender->SetColor({ 1.0f,0.0f,0.0f,1.0f });
 		break;
 	default:
 		powerText = L"error";
 	}
 
 	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp) 
-		+ L"\nCharge:" + std::to_wstring(m_charge / 20.0f)
-		+ L"%\n磁力:" + powerText
-		+ L"\n移動アクション:"+ std::to_wstring(m_moveActionCount / 60)
-		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60));
+		+ L"\nCharge:" + std::to_wstring(m_charge / 10.0f)
+		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60)
+		+ L"　　　　　　　　  移動アクション:" + std::to_wstring(m_moveActionCount / 60));
 }
 
 void ShowModel::MoveAction()
@@ -250,16 +255,16 @@ void ShowModel::Charge()
 	{
 		m_charge += 10.0f - m_magPower * 2.5f;
 
-		if (m_charge > 2000.0f)
+		if (m_charge > 1000.0f)
 		{
-			m_charge = 2000.0f;
+			m_charge = 1000.0f;
 		}
 
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
 
 	//チャージ確認用
-	if (m_charge < 2000.0f) {
+	if (m_charge < 1000.0f) {
 		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
 	}
 	else
@@ -272,7 +277,7 @@ void ShowModel::Charge()
 void ShowModel::SpecialAttack()
 {
 	//固有攻撃
-	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge > 1000)
+	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge >= 1000)
 	{
 		if (m_isLock)
 		{

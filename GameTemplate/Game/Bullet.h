@@ -19,5 +19,6 @@ public:
 	prefab::CPointLight* m_pointLight = nullptr;
 	int m_liveCount = 0;
 	int m_parentNo = 0;
+	bool m_isAffectedFromEnemyPower = false;
 };
 
