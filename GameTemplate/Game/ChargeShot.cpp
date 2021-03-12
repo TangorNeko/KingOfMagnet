@@ -1,18 +1,17 @@
 #include "stdafx.h"
-#include "Bullet.h"
+#include "ChargeShot.h"
 #include "ShowModel.h"
 
-
-Bullet::~Bullet()
+ChargeShot::~ChargeShot()
 {
 	DeleteGO(m_skinModelRender);
 	DeleteGO(m_pointLight);
 }
 
-bool Bullet::Start()
+bool ChargeShot::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/syuriken1.tkm");
+	m_skinModelRender->Init("Assets/modelData/Bullet2.tkm");
 	m_skinModelRender->SetScale({ 7.0f, 7.0f, 7.0f });
 
 	m_pointLight = NewGO<prefab::CPointLight>(0);
@@ -22,13 +21,13 @@ bool Bullet::Start()
 	return true;
 }
 
-void Bullet::Update()
+void ChargeShot::Update()
 {
 	Vector3 oldPos = m_position;
 
 	m_position += m_moveDirection * m_velocity;
 
-	QueryGOs<ShowModel>("Player", [this,oldPos](ShowModel* player)->bool
+	QueryGOs<ShowModel>("Player", [this, oldPos](ShowModel* player)->bool
 		{
 			if (m_liveCount == 15 && player->m_playerNum == m_parentNo)
 			{
@@ -41,7 +40,7 @@ void Bullet::Update()
 			{
 				if (player->m_collider.isHit(oldPos, m_position))
 				{
-					player->Damage(m_velocity);
+					player->Damage(m_velocity * 5);
 					DeleteGO(this);
 				}
 
@@ -51,7 +50,7 @@ void Bullet::Update()
 					{
 						Vector3 toPlayer = diff;
 						toPlayer.Normalize();
-						m_position += toPlayer * player->m_magPower * 3 * -1;
+						m_position += toPlayer * player->m_magPower * 4 * -1;
 					}
 
 

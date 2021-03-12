@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ShowModel.h"
 #include "Bullet.h"
+#include "ChargeShot.h"
 #include <string>
 
 ShowModel::~ShowModel()
@@ -281,25 +282,25 @@ void ShowModel::SpecialAttack()
 	{
 		if (m_isLock)
 		{
-			Bullet* bullet = NewGO<Bullet>(0, "bullet");
-			bullet->m_position = m_position;
-			bullet->m_position.y += 50;
+			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
+			chargeshot->m_position = m_position;
+			chargeshot->m_position.y += 50;
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
 			dir.Normalize();
-			bullet->m_moveDirection = dir;
-			bullet->m_velocity = 50.0f;
-			bullet->m_parentNo = m_playerNum;
+			chargeshot->m_moveDirection = dir;
+			chargeshot->m_velocity = 50.0f;
+			chargeshot->m_parentNo = m_playerNum;
 		}
 		else
 		{
-			Bullet* bullet = NewGO<Bullet>(0, "bullet");
-			bullet->m_position = m_position;
-			bullet->m_position.y += 50;
-			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			bullet->m_moveDirection.y = 0.0f;
-			bullet->m_moveDirection.Normalize();
-			bullet->m_velocity = 50.0f;
-			bullet->m_parentNo = m_playerNum;
+			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
+			chargeshot->m_position = m_position;
+			chargeshot->m_position.y += 50;
+			chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+			chargeshot->m_moveDirection.y = 0.0f;
+			chargeshot->m_moveDirection.Normalize();
+			chargeshot->m_velocity = 50.0f;
+			chargeshot->m_parentNo = m_playerNum;
 		}
 		m_charge = 0;
 	}
@@ -376,11 +377,9 @@ void ShowModel::Damage(int damage)
 		//WARNING:‚¨ŒÝ‚¢‚É“¯ƒ^ƒCƒ~ƒ“ƒO‚É’e‚ð”­ŽË‚µ‚Ä‚Ç‚¿‚ç‚àHP0‚É‚È‚Á‚½Žž‚¨‚»‚ç‚­‚Ç‚¿‚ç‚àŸ—˜‚µ‚Ç‚¿‚ç‚à”s–k‚·‚éB
 		Lose();
 		m_isSceneStop = true;
-		m_fontRender->SetColor({0.0f, 0.5f, 1.0f, 1.0f});
 
 		m_enemy->Win();
 		m_enemy->m_isSceneStop = true;
-		m_enemy->m_fontRender->SetColor({ 1.0f,0.2f,0.2f,1.0f });
 	}
 }
 
