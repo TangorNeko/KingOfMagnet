@@ -292,6 +292,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
     <ClCompile Include="CFontRender.cpp" />
+    <ClCompile Include="ChargeShot.cpp" />
     <ClCompile Include="CLevel.cpp" />
     <ClCompile Include="CMapChipRender.cpp" />
     <ClCompile Include="CPointLight.cpp" />
@@ -375,6 +376,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CDirectionLight.h" />
     <ClInclude Include="CFontRender.h" />
+    <ClInclude Include="ChargeShot.h" />
     <ClInclude Include="CLevel.h" />
     <ClInclude Include="CMapChipRender.h" />
     <ClInclude Include="CPointLight.h" />

@@ -21,7 +21,7 @@ bool TriangleCollider::isHit(const Vector3& start, const Vector3& end)
 	toEnd.Normalize();
 
 	//“àÏ‚ÌŒ‹‰Ê‚ª0ˆÈã‚È‚çŒğ·‚µ‚Ä‚¢‚È‚¢‚Ì‚Åfalse‚ğ•Ô‚·B
-	if (normal.Dot(toStart) * normal.Dot(toEnd) >= 0)
+	if (normal.Dot(toStart) * normal.Dot(toEnd) > 0)
 	{
 		return false;
 	}
