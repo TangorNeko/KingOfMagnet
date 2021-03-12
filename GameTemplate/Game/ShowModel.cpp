@@ -270,7 +270,7 @@ void ShowModel::Charge()
 	}
 	else
 	{
-		m_pointLight->SetColor({ 1.0f,0.0f,0.0f });
+		m_pointLight->SetColor({ 10.0f,0.0f,0.0f });
 	}
 	m_pointLight->SetPosition(m_position);
 }

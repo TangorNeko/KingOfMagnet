@@ -57,7 +57,7 @@ void Bullet::Update()
 
 					if (m_isAffectedFromEnemyPower == false)
 					{
-						//m_velocity -= player->m_magPower;
+						m_velocity -= player->m_magPower;
 						m_isAffectedFromEnemyPower = true;
 					}
 				}
