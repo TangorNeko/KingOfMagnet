@@ -28,6 +28,15 @@ void Bullet::Update()
 
 	m_position += m_moveDirection * m_velocity;
 
+	//TODO:後からきちんとした衝突判定は作る。　これはプロトタイプ用　障害物の座標と同じなら弾を消す
+	if ((-113 < m_position.x && m_position.x < 105 && 857 < m_position.z && m_position.z < 1103) ||
+		(915 < m_position.x && m_position.x < 1075 && -94 < m_position.z && m_position.z < 62) ||
+		(-105 < m_position.x && m_position.x < 107 && -1103 < m_position.z && m_position.z < -863) ||
+		(-1047 < m_position.x && m_position.x < -920 && -94 < m_position.z && m_position.z < 82))
+	{
+		DeleteGO(this);
+	}
+
 	QueryGOs<ShowModel>("Player", [this,oldPos](ShowModel* player)->bool
 		{
 			if (m_liveCount == 15 && player->m_playerNum == m_parentNo)
