@@ -27,14 +27,16 @@ bool ShowModel::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({-625.0f, 350.0f});
-	
 	floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
-	return true;
+	floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");	return true;
 }
 
 void ShowModel::Update()
 {
+	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
+	{
+		m_isSceneStop = !m_isSceneStop;
+	}
 	//ƒvƒŒƒCƒ„[”Ô†‚ª—^‚¦‚ç‚ê‚Ä‚¢‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
 	if (m_playerNum == -1)
 	{
