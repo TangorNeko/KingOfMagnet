@@ -15,7 +15,7 @@ ShowModel::~ShowModel()
 bool ShowModel::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-
+	
 	m_skinModelRender->Init("Assets/modelData/mage00.tkm", "Assets/modelData/mageskel.tks");
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
@@ -27,6 +27,9 @@ bool ShowModel::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({-625.0f, 350.0f});
+	
+	floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 	return true;
 }
 
@@ -395,4 +398,10 @@ void ShowModel::Lose()
 	m_spriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_spriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_spriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
+}
+
+void ShowModel::Floor()
+{
+	//斥力床（ジャンプ）
+	//floor_skinModelRender
 }

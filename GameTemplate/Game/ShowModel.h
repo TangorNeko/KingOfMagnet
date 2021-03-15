@@ -16,6 +16,7 @@ class ShowModel : public IGameObject
 	void Charge();
 	void SpecialAttack();
 	void Camera();
+	void Floor();
 
 public:
 	Quaternion rot;
@@ -26,6 +27,7 @@ public:
 	Vector3 Scale = { 0.6,0.6,0.6 };	
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
+	prefab::CSkinModelRender* floor_skinModelRender = nullptr;
 	prefab::CPointLight* m_pointLight = nullptr;
 	prefab::CFontRender* m_fontRender = nullptr;
 	prefab::CSpriteRender* m_spriteRender = nullptr;
