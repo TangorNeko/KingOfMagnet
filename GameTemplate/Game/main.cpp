@@ -5,7 +5,10 @@
 #include "ShowSprite.h"
 #include "BackGround.h"
 #include "CLevel.h"
-
+#include "Mage.h"
+#include "Knight.h"
+#include "Tank.h"
+#include "Ninja.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -37,13 +40,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 	//プレイヤー1を作成
-	ShowModel* showm = NewGO<ShowModel>(0, "Player");
+	Tank* showm = NewGO<Tank>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 2;
 
 	//プレイヤー2を作成
-	ShowModel* showm2 = NewGO<ShowModel>(0, "Player");
+	Ninja* showm2 = NewGO<Ninja>(0, "Player");
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;

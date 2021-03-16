@@ -1,12 +1,10 @@
 #pragma once
 #include "TriangleCollider.h"
-
-class ShowModel : public IGameObject
+class Character_base : public IGameObject
 {
-	~ShowModel();
+	
 	bool Start() override;
-	void Update() override;
-
+	void Update()override;
 	//磁力の定期的な変化
 	void ChangeMagnetPower();
 
@@ -14,23 +12,24 @@ class ShowModel : public IGameObject
 	void Collision();
 
 	//体力、チャージ、磁力の状態等の表示
-	void DisplayStatus();
+	virtual void DisplayStatus()=0;
 
 	//移動アクション
-	void MoveAction();
+	virtual void MoveAction() = 0;
 
 	//通常攻撃
-	void NormalAttack();
+	virtual void NormalAttack() = 0;
 
 	//チャージ
-	void Charge();
+	virtual void Charge() = 0;
 
 	//チャージ攻撃
-	void SpecialAttack();
+	virtual void SpecialAttack() = 0;
 
 	//カメラの移動
 	void Camera();
 public:
+	virtual ~Character_base();
 	Quaternion rot;//キャラクターの回転
 	Vector3 m_position = { 0.0f,0.0f,0.0f };//キャラクターの座標
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
@@ -56,7 +55,6 @@ public:
 	int m_timer = 0;//磁力変化用のタイマー
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 	bool m_isSceneStop = false;//動けるか動けないか
-public:
 	//現在の磁力の状態を取得
 	int GetMagPower()const { return m_magPower; }
 
@@ -70,5 +68,6 @@ public:
 	void Lose();
 
 	//敵のインスタンス
-	ShowModel* m_enemy = nullptr;
+	Character_base* m_enemy = nullptr;
 };
+
