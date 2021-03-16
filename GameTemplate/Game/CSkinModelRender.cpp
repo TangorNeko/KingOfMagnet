@@ -4,6 +4,42 @@
 namespace prefab
 {
 	/// <summary>
+	/// モデルの初期化関数。アニメーションつき。
+	/// </summary>
+	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>
+	/// <param name="skeletonPath">スケルトンファイルのパス(.tks)</param>
+	/// <param name="animationClips">アニメーションクリップの配列</param>
+	/// <param name="animationClipNum">アニメーションクリップの数</param>
+	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath, AnimationClip* animClips, int animClipNum)
+	{
+		m_skeleton.Init(skeletonPath);
+
+		ModelInitData initData;
+
+		initData.m_tkmFilePath = modelPath;
+
+		initData.m_fxFilePath = "Assets/shader/model.fx";
+
+		initData.m_vsEntryPointFunc = "VSMain";
+
+		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
+
+		initData.m_skeleton = &m_skeleton;
+
+		//TODO:引数にして利用者に入力させる必要がありそう。
+		initData.m_modelUpAxis = enModelUpAxisZ;
+
+
+		//定数バッファをモデルに紐付ける
+		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
+		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
+
+		for (auto& model : m_model) {
+			model.Init(initData);
+		}
+	}
+
+	/// <summary>
 	/// モデルの初期化関数。
 	/// </summary>
 	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>

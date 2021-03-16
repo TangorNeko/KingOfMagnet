@@ -225,17 +225,17 @@ void ShowModel::NormalAttack()
 		m_normalAttackCount = 0;
 	}
 
-	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1) && m_normalAttackCount == 0)
+	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_normalAttackCount == 0)
 	{
 		if (m_isLock)
 		{
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
 			bullet->m_position = m_position;
-			bullet->m_position.y += 50;
+			bullet->m_position.y += 40;
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
 			dir.Normalize();
 			bullet->m_moveDirection = dir;
-			bullet->m_velocity = 25.0f;
+			bullet->m_velocity = 40.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 		else
@@ -246,7 +246,7 @@ void ShowModel::NormalAttack()
 			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
 			bullet->m_moveDirection.y = 0.0f;
 			bullet->m_moveDirection.Normalize();
-			bullet->m_velocity = 25.0f;
+			bullet->m_velocity = 40.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
 

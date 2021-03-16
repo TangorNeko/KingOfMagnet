@@ -18,12 +18,16 @@ namespace prefab
 		Quaternion m_qRot; //‰ñ“]
 		Vector3 m_scale; //Šg‘å—¦
 
+		AnimationClip* m_animationClips;
+		Animation m_animation;
+
 		void UpdateModel();
 	public:
 		CSkinModelRender() :m_position(Vector3::Zero), m_qRot(g_quatIdentity), m_scale(Vector3::One) {}
 
 		void Render(RenderContext& rc,Camera* camera) override;
 
+		void Init(const char* modelPath, const char* skeletonPath, AnimationClip* animClips, int animClipNum);
 		void Init(const char* modelPath,const char* skeletonPath);
 		void Init(const char* modelPath);
 
