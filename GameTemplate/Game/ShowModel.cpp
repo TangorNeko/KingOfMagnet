@@ -27,8 +27,9 @@ bool ShowModel::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({-625.0f, 350.0f});
-	floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");	return true;
+	/*floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");	*/
+	return true;
 }
 
 void ShowModel::Update()
@@ -65,8 +66,8 @@ void ShowModel::Update()
 		//カメラの右方向
 		Vector3 right = Cross(g_vec3AxisY, front);
 
-		float naiseki = front.Dot(Vector3::AxisZ);//内積
-		float angle = acosf(naiseki);//アークコサイン
+		float n = front.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(n);//アークコサイン
 		if (front.x < 0) {
 			angle *= -1;
 		}
@@ -316,16 +317,13 @@ void ShowModel::Camera()
 	//カメラ関連
 	if (g_pad[m_playerNum]->IsTrigger(enButtonRB3))
 	{
-		m_isLock = !m_isLock;
+		m_isLock = !m_isLock;//ロック切り替え
 	}
 
-	if (m_isLock)
+	if (m_isLock)//ロックしているなら
 	{
-		Vector3 targetPos = m_enemy->m_position;
-		targetPos.y += 50.0f;
-
-		Vector3 toCamera = m_enemy->m_position - m_position;
-		toCamera *= -1.0f;
+		
+		Vector3 toCamera = m_position - m_enemy->m_position ;//自分から敵へ向かうベクトル
 		toCamera.Normalize();
 		Vector3 Axis;
 		Axis.Cross(toCamera, Vector3::Up);
@@ -343,32 +341,50 @@ void ShowModel::Camera()
 	{
 		Vector3 targetPos = m_position;
 		targetPos.y += 50.0f;
+		
+			Quaternion qRotY;
+			qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 1.5);
+			qRotY.Apply(m_toCamera);
+			
+			
 
-		Quaternion qRotY;
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 1.5);
-		qRotY.Apply(m_toCamera);
+			Quaternion qRotX;
+			Vector3 right = g_camera3D[m_playerNum]->GetRight();
+			qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1.5);
+			Vector3 checkToCamera = m_toCamera;
+			qRotX.Apply(checkToCamera);
+			checkToCamera.Normalize();
+			float t = checkToCamera.Dot(Vector3::Up);
+			if (t > 0.99f || t < 0.1f)
+			{
 
-		Quaternion qRotX;
-		Vector3 right = g_camera3D[m_playerNum]->GetRight();
-		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1.5);
-		Vector3 checkToCamera = m_toCamera;
-		qRotX.Apply(checkToCamera);
-		checkToCamera.Normalize();
-		float t = checkToCamera.Dot(Vector3::Up);
-		if (t > 0.99f || t < 0.1f)
-		{
+			}
+			else
+			{
+				qRotX.Apply(m_toCamera);
+			}
+
+			Vector3 cameraPos = m_position + m_toCamera;
+			//g_camera3D->SetPosition(m_position + m_toCamera);
+			g_camera3D[m_playerNum]->SetPosition(cameraPos);
+			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//if (g_pad[m_playerNum]->IsTrigger(enButtonLB1))
+			//{				
+			//	Vector3 atarget = targetPos - m_position;//a
+			//	Vector3 btarget = m_enemy->m_position - m_position;//b	
+			//	atarget.Normalize();
+			//	btarget.Normalize();
+			//	float t=atarget.Dot(btarget);
+			//	float angle = acosf(t);//アークコサイン
+			//	if (atarget.x < 0) {
+			//		angle *= -1;
+			//	}
+
+			//}
 
 		}
-		else
-		{
-			qRotX.Apply(m_toCamera);
-		}
-
-		Vector3 cameraPos = m_position + m_toCamera;
-		//g_camera3D->SetPosition(m_position + m_toCamera);
-		g_camera3D[m_playerNum]->SetPosition(cameraPos);
-		g_camera3D[m_playerNum]->SetTarget(targetPos);
-	}
+	
 }
 
 void ShowModel::Damage(int damage)
