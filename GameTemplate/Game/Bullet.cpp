@@ -11,10 +11,12 @@ Bullet::~Bullet()
 
 bool Bullet::Start()
 {
+	//弾自身のモデルを作成
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/syuriken1.tkm");
 	m_skinModelRender->SetScale({ 7.0f, 7.0f, 7.0f });
 
+	//弾から出る光
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
 	m_pointLight->SetRange(200.0f);
@@ -24,8 +26,10 @@ bool Bullet::Start()
 
 void Bullet::Update()
 {
+	//前フレームの弾の位置を記録。
 	Vector3 oldPos = m_position;
 
+	//弾の移動処理
 	m_position += m_moveDirection * m_velocity;
 
 	//TODO:後からきちんとした衝突判定は作る。　これはプロトタイプ用　障害物の座標と同じなら弾を消す
@@ -37,25 +41,33 @@ void Bullet::Update()
 		DeleteGO(this);
 	}
 
+	//各プレイヤーを検索
 	QueryGOs<ShowModel>("Player", [this,oldPos](ShowModel* player)->bool
 		{
+			//発射されてから15フレーム後に、発射したプレイヤーの磁力を与える(加速or減速)
 			if (m_liveCount == 15 && player->m_playerNum == m_parentNo)
 			{
 				m_velocity += 5.0f * player->m_magPower;
 			}
 
-			Vector3 diff = player->m_magPosition - m_position;
-
+			//弾を発射したプレイヤーと違う場合(敵の場合)
 			if (player->m_playerNum != m_parentNo)
 			{
+				//敵との距離
+				Vector3 diff = player->m_magPosition - m_position;
+
+				//前フレームの位置と移動後の位置を結んだ線が敵プレイヤーの当たり判定の三角形を通っている場合
 				if (player->m_collider.isHit(oldPos, m_position))
 				{
+					//敵プレイヤーに速度に応じてダメージを与える
 					player->Damage(m_velocity);
 					DeleteGO(this);
 				}
 
+				//敵との距離が500以内なら
 				if (diff.Length() < 500.0f)
 				{
+					//敵が引力モードなら少し引き寄せる。
 					if (player->m_magPower < 0)
 					{
 						Vector3 toPlayer = diff;
@@ -63,7 +75,7 @@ void Bullet::Update()
 						m_position += toPlayer * player->m_magPower * 3 * -1;
 					}
 
-
+					//発射したプレイヤーの磁力を与える(加速or減速)
 					if (m_isAffectedFromEnemyPower == false)
 					{
 						m_velocity -= player->m_magPower;
@@ -76,9 +88,11 @@ void Bullet::Update()
 		}
 	);
 
+	//モデルとライトの位置をセット。
 	m_skinModelRender->SetPosition(m_position);
 	m_pointLight->SetPosition(m_position);
 
+	//100フレーム生存したら消去
 	m_liveCount++;
 	if (m_liveCount > 100)
 	{

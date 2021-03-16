@@ -29,25 +29,31 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 
-	prefab::CDirectionLight* redfromside = NewGO<prefab::CDirectionLight>(0);
-	redfromside->SetDirection({ 0.0f,-1.0f,0.0f });
-	redfromside->SetColor({ 0.5f,0.5f,0.5f });
 
+	//ステージのライトを作成
+	prefab::CDirectionLight* stageLight = NewGO<prefab::CDirectionLight>(0);
+	stageLight->SetDirection({ 0.0f,-1.0f,0.0f });
+	stageLight->SetColor({ 0.5f,0.5f,0.5f });
+
+
+	//プレイヤー1を作成
 	ShowModel* showm = NewGO<ShowModel>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 2;
 
+	//プレイヤー2を作成
 	ShowModel* showm2 = NewGO<ShowModel>(0, "Player");
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;
-	showm2->m_enemy = showm;
 	showm2->m_toCamera = { 0.0f,100.0f,100.0f };
 	
+	//各プレイヤーに敵を渡す
+	showm2->m_enemy = showm;
 	showm->m_enemy = showm2;
 
-
+	//ステージの表示
 	NewGO<BackGround>(0, "background");
 	//NewGO<ShowSprite>(1, "sprite");
 
@@ -68,8 +74,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		//レンダリング開始。
 		g_engine->BeginFrame();
-		
-		prefab::CSpotLight* a = nullptr;
 
 		//////////////////////////////////////
 		//ここから絵を描くコードを記述する。
