@@ -27,10 +27,9 @@ bool ShowModel::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({-625.0f, 350.0f});
-	/*floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");	*/
-	return true;
-}
+	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
+	return true;}
 
 void ShowModel::Update()
 {
@@ -324,6 +323,9 @@ void ShowModel::Camera()
 	{
 		
 		Vector3 toCamera = m_position - m_enemy->m_position ;//自分から敵へ向かうベクトル
+
+
+
 		toCamera.Normalize();
 		Vector3 Axis;
 		Axis.Cross(toCamera, Vector3::Up);
@@ -402,6 +404,14 @@ void ShowModel::Damage(int damage)
 		m_enemy->Win();
 		m_enemy->m_isSceneStop = true;
 	}
+
+	//攻撃を受けたら移動アクションの残り時間が短縮される。
+	m_moveActionCount -= 120;
+	if (m_moveActionCount < 0)
+	{
+		m_moveActionCount = 0;
+	}
+
 }
 
 void ShowModel::Win()
@@ -416,10 +426,4 @@ void ShowModel::Lose()
 	m_spriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_spriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_spriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
-}
-
-void ShowModel::Floor()
-{
-	//斥力床（ジャンプ）
-	//floor_skinModelRender
 }
