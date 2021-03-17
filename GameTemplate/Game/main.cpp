@@ -9,6 +9,7 @@
 #include "Knight.h"
 #include "Tank.h"
 #include "Ninja.h"
+#include "TitleScene.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -27,11 +28,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//2画面描画モードをON
 	//TODO:最初にタイトルの表示が必要なので後々OFFから始める。
-	GameObjectManager::GetInstance()->Set2ScreenMode(true);
+	//GameObjectManager::GetInstance()->Set2ScreenMode(true);
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 
+	//////////////////////////////////////////////////
+	//TitleScene* title = NewGO<TitleScene>(0, "Title");
 
 	//ステージのライトを作成
 	prefab::CDirectionLight* stageLight = NewGO<prefab::CDirectionLight>(0);
