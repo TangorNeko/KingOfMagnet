@@ -37,17 +37,26 @@ namespace prefab
 		void PlayAnimation(int animationNo, float interpolateTime = 0.0f)
 		{
 			m_animation.Play(animationNo, interpolateTime);
+			m_animation.Progress(1.0f/60.0f);
 		}
 		
 		void SetPosition(Vector3 pos);
 		void SetRotation(Quaternion qRot);
 		void SetScale(Vector3 scale);
+		void SetMatrix(Matrix world)
+		{
+			for (auto& model : m_model) {
+				model.UpdateWorldMatrix(world);
+				m_skeleton.Update(world);
+			}
+		}
 
 		bool GetAnimFlag() { return m_animation.IsPlaying(); }
 		Vector3 GetPosition() { return m_position; }
 		Quaternion GetRotation() { return m_qRot; }
 		Vector3 GetScale() { return m_scale; }
 		Model& GetModel(EModel model = eModel_View1) { return m_model[model]; }
+		Matrix GetWorldMatrixFromBoneName(const wchar_t* boneName);
 	};
 }
 

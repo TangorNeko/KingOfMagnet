@@ -164,4 +164,15 @@ namespace prefab
 
 		UpdateModel();
 	}
+
+	/// <summary>
+	/// ボーンの名前からそのボーンのワールド行列を取得する。
+	/// </summary>
+	/// <param name="boneName">ボーンの名前</param>
+	/// <returns></returns>
+	Matrix CSkinModelRender::GetWorldMatrixFromBoneName(const wchar_t* boneName)
+	{
+		int boneNo = m_skeleton.FindBoneID(boneName);
+		return m_skeleton.GetBone(boneNo)->GetWorldMatrix();
+	}
 }

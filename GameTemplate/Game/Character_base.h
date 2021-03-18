@@ -2,7 +2,7 @@
 #include "TriangleCollider.h"
 class Character_base : public IGameObject
 {
-	
+public:
 	bool Start() override;
 	void Update()override;
 	//Ž¥—Í‚Ì’èŠú“I‚È•Ï‰»

@@ -6,6 +6,7 @@ class Knight :public Character_base
 public:
 	bool Start();
 	~Knight();
+	void Update()override;
 	//体力、チャージ、磁力の状態等の表示
 	void DisplayStatus();
 
@@ -21,6 +22,6 @@ public:
 	//チャージ攻撃
 	void SpecialAttack();
 
-
+	prefab::CSkinModelRender* m_weaponModel = nullptr;
 };
 
