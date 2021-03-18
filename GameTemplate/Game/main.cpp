@@ -9,6 +9,8 @@
 #include "Knight.h"
 #include "Tank.h"
 #include "Ninja.h"
+#include "TitleScene.h"
+
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -32,6 +34,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 
+	//////////////////////////////////////////////////
+	//TitleScene* title = NewGO<TitleScene>(0, "Title");
 
 	//ステージのライトを作成
 	prefab::CDirectionLight* stageLight = NewGO<prefab::CDirectionLight>(0);
@@ -40,13 +44,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 	//プレイヤー1を作成
-	Tank* showm = NewGO<Tank>(0, "Player");
+	Knight* showm = NewGO<Knight>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 2;
 
 	//プレイヤー2を作成
-	Ninja* showm2 = NewGO<Ninja>(0, "Player");
+	Knight* showm2 = NewGO<Knight>(0, "Player");
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;

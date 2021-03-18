@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ChargeShot.h"
 #include "ShowModel.h"
-
+#include "Character_base.h"
 ChargeShot::~ChargeShot()
 {
 	DeleteGO(m_skinModelRender);
@@ -41,7 +41,7 @@ void ChargeShot::Update()
 	}
 
 	//各プレイヤーを検索
-	QueryGOs<ShowModel>("Player", [this, oldPos](ShowModel* player)->bool
+	QueryGOs<Character_base>("Player", [this, oldPos](Character_base* player)->bool
 		{
 			//発射されてから15フレーム後に、発射したプレイヤーの磁力を与える(加速or減速)
 			if (m_liveCount == 15 && player->m_playerNum == m_parentNo)

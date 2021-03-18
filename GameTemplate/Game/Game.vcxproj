@@ -292,6 +292,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
     <ClCompile Include="CFontRender.cpp" />
+    <ClCompile Include="CharacterSelect.cpp" />
     <ClCompile Include="Character_base.cpp" />
     <ClCompile Include="ChargeShot.cpp" />
     <ClCompile Include="CLevel.cpp" />
@@ -317,6 +318,7 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Tank.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="tklFile.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
   </ItemGroup>
@@ -381,6 +383,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CDirectionLight.h" />
     <ClInclude Include="CFontRender.h" />
+    <ClInclude Include="CharacterSelect.h" />
     <ClInclude Include="Character_base.h" />
     <ClInclude Include="ChargeShot.h" />
     <ClInclude Include="CLevel.h" />
@@ -399,6 +402,7 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
     <ClInclude Include="Tank.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="tklFile.h" />
     <ClInclude Include="TriangleCollider.h" />
   </ItemGroup>
