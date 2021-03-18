@@ -16,7 +16,15 @@ bool ShowModel::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	
-	m_skinModelRender->Init("Assets/modelData/mage00.tkm", "Assets/modelData/mageskel.tks");
+	
+	m_animClip[0].Load("Assets/animData/Mage_idle.tka");
+	m_animClip[0].SetLoopFlag(true);
+	m_animClip[1].Load("Assets/animData/Mage_Run.tka");
+	m_animClip[1].SetLoopFlag(false);
+	
+
+
+	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", m_animClip,2);
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
@@ -33,6 +41,7 @@ bool ShowModel::Start()
 
 void ShowModel::Update()
 {
+	m_skinModelRender->PlayAnimation(0);
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -45,7 +54,6 @@ void ShowModel::Update()
 
 	if (m_isSceneStop == false)
 	{
-
 		//Ž¥—Í‚Ì•Ï‰»
 		ChangeMagnetPower();
 
@@ -227,6 +235,7 @@ void ShowModel::NormalAttack()
 
 	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_normalAttackCount == 0)
 	{
+		//m_skinModelRender->PlayAnimation(1);
 		if (m_isLock)
 		{
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
@@ -293,7 +302,7 @@ void ShowModel::SpecialAttack()
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
 			dir.Normalize();
 			chargeshot->m_moveDirection = dir;
-			chargeshot->m_velocity = 50.0f;
+			chargeshot->m_velocity = 75.0f;
 			chargeshot->m_parentNo = m_playerNum;
 		}
 		else
@@ -304,7 +313,7 @@ void ShowModel::SpecialAttack()
 			chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
 			chargeshot->m_moveDirection.y = 0.0f;
 			chargeshot->m_moveDirection.Normalize();
-			chargeshot->m_velocity = 50.0f;
+			chargeshot->m_velocity = 75.0f;
 			chargeshot->m_parentNo = m_playerNum;
 		}
 		m_charge = 0;
@@ -399,9 +408,11 @@ void ShowModel::Damage(int damage)
 
 		//WARNING:‚¨ŒÝ‚¢‚É“¯ƒ^ƒCƒ~ƒ“ƒO‚É’e‚ð”­ŽË‚µ‚Ä‚Ç‚¿‚ç‚àHP0‚É‚È‚Á‚½Žž‚¨‚»‚ç‚­‚Ç‚¿‚ç‚àŸ—˜‚µ‚Ç‚¿‚ç‚à”s–k‚·‚éB
 		Lose();
+		DisplayStatus();
 		m_isSceneStop = true;
 
 		m_enemy->Win();
+		m_enemy->DisplayStatus();
 		m_enemy->m_isSceneStop = true;
 	}
 

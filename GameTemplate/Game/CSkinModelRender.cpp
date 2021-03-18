@@ -37,6 +37,14 @@ namespace prefab
 		for (auto& model : m_model) {
 			model.Init(initData);
 		}
+
+		m_animationClips = animClips;
+		m_animationClipNum = animClipNum;
+
+		if (m_animationClips != nullptr)
+		{
+			m_animation.Init(m_skeleton, m_animationClips, m_animationClipNum);
+		}
 	}
 
 	/// <summary>

@@ -60,7 +60,7 @@ void Bullet::Update()
 				if (player->m_collider.isHit(oldPos, m_position))
 				{
 					//敵プレイヤーに速度に応じてダメージを与える
-					player->Damage(m_velocity);
+					player->Damage(m_velocity/2);
 					DeleteGO(this);
 				}
 
@@ -72,7 +72,10 @@ void Bullet::Update()
 					{
 						Vector3 toPlayer = diff;
 						toPlayer.Normalize();
-						m_position += toPlayer * player->m_magPower * 3 * -1;
+						//m_position += toPlayer * player->m_magPower * 3 * -1;
+						Vector3 newDirection = m_moveDirection * m_velocity + toPlayer * player->m_magPower * 2 * -1;
+						newDirection.Normalize();
+						m_moveDirection = newDirection;
 					}
 
 					//発射したプレイヤーの磁力を与える(加速or減速)

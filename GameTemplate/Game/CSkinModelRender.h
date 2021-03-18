@@ -19,6 +19,7 @@ namespace prefab
 		Vector3 m_scale; //拡大率
 
 		AnimationClip* m_animationClips;
+		int m_animationClipNum;
 		Animation m_animation;
 
 		void UpdateModel();
@@ -33,12 +34,16 @@ namespace prefab
 
 
 		//TODO: アニメーションの追加
-		//void PlayAnimation();
+		void PlayAnimation(int animationNo, float interpolateTime = 0.0f)
+		{
+			m_animation.Play(animationNo, interpolateTime);
+		}
 		
 		void SetPosition(Vector3 pos);
 		void SetRotation(Quaternion qRot);
 		void SetScale(Vector3 scale);
 
+		bool GetAnimFlag() { return m_animation.IsPlaying(); }
 		Vector3 GetPosition() { return m_position; }
 		Quaternion GetRotation() { return m_qRot; }
 		Vector3 GetScale() { return m_scale; }
