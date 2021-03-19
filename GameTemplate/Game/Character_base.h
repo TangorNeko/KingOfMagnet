@@ -13,7 +13,7 @@ public:
 	//通常攻撃
 	virtual void NormalAttack() = 0;	
 
-	protected:
+protected:
 	//磁力の定期的な変化
 	void ChangeMagnetPower();
 
@@ -25,6 +25,8 @@ public:
 
 	//カメラの移動
 	void Camera();
+
+	virtual void SpecialAttack()=0;
 public:
 	virtual ~Character_base();
 	Quaternion rot;//キャラクターの回転

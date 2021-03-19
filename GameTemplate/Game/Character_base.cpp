@@ -190,36 +190,7 @@ void Character_base::Charge()
 	m_pointLight->SetPosition(m_position);
 }
 
-void Character_base::SpecialAttack()
-{
-	//ŒÅ—LUŒ‚
-	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge >= 1000)
-	{
-		if (m_isLock)
-		{
-			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
-			chargeshot->m_position = m_position;
-			chargeshot->m_position.y += 50;
-			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
-			dir.Normalize();
-			chargeshot->m_moveDirection = dir;
-			chargeshot->m_velocity = 50.0f;
-			chargeshot->m_parentNo = m_playerNum;
-		}
-		else
-		{
-			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
-			chargeshot->m_position = m_position;
-			chargeshot->m_position.y += 50;
-			chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			chargeshot->m_moveDirection.y = 0.0f;
-			chargeshot->m_moveDirection.Normalize();
-			chargeshot->m_velocity = 50.0f;
-			chargeshot->m_parentNo = m_playerNum;
-		}
-		m_charge = 0;
-	}
-}
+
 
 void Character_base::Camera()
 {

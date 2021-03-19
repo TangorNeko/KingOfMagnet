@@ -15,7 +15,7 @@ Knight::~Knight()
 
 bool Knight::Start()
 {
-	animationClips[enAnimationClip_Attack].Load("Assets/animData/Knight_idle.tka");
+	animationClips[enAnimationClip_Attack].Load("Assets/animData/Knight_Idle.tka");
 	animationClips[enAnimationClip_Attack].SetLoopFlag(true);	//ループモーションにする。
 
 
@@ -289,7 +289,6 @@ void Knight::Charge()
 }
 void Knight::SpecialAttack()
 {
-
 	//固有攻撃
 	if (g_pad[m_playerNum]->IsPress(enButtonX))
 	{	 		
