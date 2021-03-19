@@ -2,7 +2,10 @@
 #include "Character_base.h"
 class Mage :public Character_base
 {
+	
 public:
+	bool Start();
+	void Update();
 	~Mage() {}
 	//体力、チャージ、磁力の状態等の表示
 	void DisplayStatus();

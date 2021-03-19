@@ -2,10 +2,12 @@
 #include "Character_base.h"
 class Ninja :public Character_base
 {
+	bool Start();
+	void Update();
+	~Ninja();
 
 public:
-	bool Start();
-	~Ninja();
+	
 	//体力、チャージ、磁力の状態等の表示
 	void DisplayStatus();
 

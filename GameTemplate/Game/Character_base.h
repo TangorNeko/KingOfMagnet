@@ -3,13 +3,7 @@
 class Character_base : public IGameObject
 {
 	
-	bool Start() override;
-	void Update()override;
-	//磁力の定期的な変化
-	void ChangeMagnetPower();
-
-	//敵に向く当たり判定を作る
-	void Collision();
+	//bool Start() override;	
 
 	//体力、チャージ、磁力の状態等の表示
 	virtual void DisplayStatus()=0;
@@ -18,13 +12,19 @@ class Character_base : public IGameObject
 	virtual void MoveAction() = 0;
 
 	//通常攻撃
-	virtual void NormalAttack() = 0;
+	virtual void NormalAttack() = 0;	
+
+	//チャージ攻撃
+	virtual void SpecialAttack() = 0;
+protected:
+	//磁力の定期的な変化
+	void ChangeMagnetPower();
 
 	//チャージ
 	virtual void Charge() = 0;
 
-	//チャージ攻撃
-	virtual void SpecialAttack() = 0;
+	//敵に向く当たり判定を作る
+	void Collision();
 
 	//カメラの移動
 	void Camera();
@@ -50,6 +50,7 @@ public:
 	int m_hp = 1000;//体力
 	Vector3 m_magPosition = { 0.0f,0.0f,0.0f };//磁力が出ている原点
 	float m_charge = 0;//チャージ
+	int m_chargelevel = 1;//チャージレベル
 	float m_deg = 0;//キャラの向きの角度
 	bool m_isLock = false;//ロックオンしているか。
 	int m_timer = 0;//磁力変化用のタイマー

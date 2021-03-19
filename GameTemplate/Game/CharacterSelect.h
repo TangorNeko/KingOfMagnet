@@ -9,25 +9,26 @@ class CharacterSelect:public IGameObject
 	void Update() override;
 public:
 	~CharacterSelect();
-	prefab::CSpriteRender* m_mage_spriteRender   = nullptr;
-	prefab::CSpriteRender* m_knight_spriteRender = nullptr;
-	prefab::CSpriteRender* m_tank_spriteRender   = nullptr;
-	prefab::CSpriteRender* m_ninja_spriteRender  = nullptr;
-	prefab::CSpriteRender* m_1p_spriteRender = nullptr;
-	prefab::CSpriteRender* m_2p_spriteRender = nullptr;	
-	Vector3 m_top_left = { -100,120,0 };
-	Vector3 m_top_right = { 100,120,0 };
-	Vector3 m_bottom_left = { -100,-130,0 };
-	Vector3 m_bottom_right = { 100,-130,0 };
-	Vector3 m_1p_position;
-	Vector3 m_2p_position;
-	Vector2 m_1p_moveSpeed;
-	Vector2 m_2p_moveSpeed;	
-	float m_gain = 10.0f;
+	prefab::CSpriteRender* m_mage_spriteRender   = nullptr;//魔法使いの画像
+	prefab::CSpriteRender* m_knight_spriteRender = nullptr;//剣士の画像
+	prefab::CSpriteRender* m_tank_spriteRender   = nullptr;//タンクの画像
+	prefab::CSpriteRender* m_ninja_spriteRender  = nullptr;//忍者の画像
+	prefab::CSpriteRender* m_1p_spriteRender = nullptr;//1pアイコン
+	prefab::CSpriteRender* m_2p_spriteRender = nullptr;//2pアイコン
+	//キャラ画像を配置する座標
+	Vector3 m_top_left = { -100,120,0 };//左上
+	Vector3 m_top_right = { 100,120,0 };//右上
+	Vector3 m_bottom_left = { -100,-130,0 };//左下
+	Vector3 m_bottom_right = { 100,-130,0 };//右下
+	Vector3 m_1p_position;//１Pアイコンの座標
+	Vector3 m_2p_position;//２Pアイコンの座標
+	Vector2 m_1p_moveSpeed;//１Pアイコンのスピード
+	Vector2 m_2p_moveSpeed;//２Pアイコンのスピード
+	float m_gain = 10.0f;//スティックを倒した量にかかる倍率
 	int m_1p_character_num;//0:剣士1:魔法使い
 	int m_2p_character_num;//0:剣士1:魔法使い
-	bool m_1p_decision = false;
-	bool m_2p_decision = false;
+	bool m_1p_decision = false;//キャラを決定したかどうか
+	bool m_2p_decision = false;//同上
 	
 };
 

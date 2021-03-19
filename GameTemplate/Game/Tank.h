@@ -2,10 +2,11 @@
 #include "Character_base.h"
 class Tank :public Character_base
 {
-
-public:
 	bool Start();
+	void Update();
 	~Tank();
+public:
+	
 	//体力、チャージ、磁力の状態等の表示
 	void DisplayStatus();
 

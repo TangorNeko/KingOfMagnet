@@ -3,7 +3,7 @@
 #include "Bullet.h"
 #include "ChargeShot.h"
 #include <string>
-#include"Knight.h"
+#include "Knight.h"
 
 Knight::~Knight()
 {
@@ -15,9 +15,13 @@ Knight::~Knight()
 
 bool Knight::Start()
 {
+	animationClips[enAnimationClip_Attack].Load("Assets/animData/Knight_idle.tka");
+	animationClips[enAnimationClip_Attack].SetLoopFlag(true);	//ループモーションにする。
+
+
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-	m_skinModelRender->Init("Assets/modelData/Knight.tkm", "Assets/modelData/Knight.tks");
+	m_skinModelRender->Init("Assets/modelData/Knight.tkm", "Assets/modelData/Knight.tks",animationClips,enAnimationClip_num);
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
@@ -30,8 +34,90 @@ bool Knight::Start()
 	m_fontRender->SetPosition({ -625.0f, 350.0f });
 	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
+	
+	
 	return true;
 }
+void Knight::Update()
+{
+	m_skinModelRender->PlayAnimation(0,60.0f);
+
+	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
+	{
+		m_isSceneStop = !m_isSceneStop;
+	}
+	//プレイヤー番号が与えられていなければ何もしない
+	if (m_playerNum == -1)
+	{
+		return;
+	}
+
+	if (m_isSceneStop == false)
+	{
+
+		//磁力の変化
+		ChangeMagnetPower();
+
+		//座標に応じて三角形の当たり判定の場所をセット。
+		Collision();
+
+		//体力等ステータスのテキストを表示(後に画像にする。)
+		DisplayStatus();
+
+		//移動関連
+
+		//カメラの前方向
+		Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		front.y = 0.0f;
+		front.Normalize();
+
+		//カメラの右方向
+		Vector3 right = Cross(g_vec3AxisY, front);
+
+		float n = front.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(n);//アークコサイン
+		if (front.x < 0) {
+			angle *= -1;
+		}
+		rot.SetRotation(Vector3::AxisY, angle);
+		m_skinModelRender->SetRotation(rot);
+
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
+
+		if (m_moveSpeed.Length() != 0)
+		{
+			m_characterDirection = m_moveSpeed;
+			m_characterDirection.Normalize();
+		}
+
+		//移動アクション
+		MoveAction();
+
+
+		//攻撃関連
+		//通常攻撃
+		NormalAttack();
+
+		//チャージ
+		Charge();
+
+		//固有攻撃
+		SpecialAttack();
+
+
+		//移動関連2
+		m_moveSpeed.y = -2.0f;
+
+		m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+		m_magPosition = m_position;
+		m_magPosition.y += 50.0f;
+		m_skinModelRender->SetPosition(m_position);
+
+		//カメラ関連
+		Camera();
+	}
+}
+
 void Knight::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
@@ -133,15 +219,24 @@ void Knight::Charge()
 	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
 	{
 		m_charge += 10.0f - m_magPower * 2.5f;
-
-		if (m_charge > 1000.0f)
+		if (m_charge < 333.3f) {
+			m_chargelevel = 1;
+		}
+		else if (m_charge < 666.6) {
+			m_chargelevel = 2;
+		}
+		else if (m_charge < 1000.0f) {
+			m_chargelevel = 3;
+		}
+		else if (m_charge >= 1000.0f)
 		{
+			m_chargelevel = 4;
 			m_charge = 1000.0f;
 		}
+		
 
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
-
 	//チャージ確認用
 	if (m_charge < 1000.0f) {
 		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
@@ -155,30 +250,39 @@ void Knight::Charge()
 void Knight::SpecialAttack()
 {
 	//固有攻撃
-	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge >= 1000)
-	{
-		if (m_isLock)
-		{
-			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
-			chargeshot->m_position = m_position;
-			chargeshot->m_position.y += 50;
-			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
-			dir.Normalize();
-			chargeshot->m_moveDirection = dir;
-			chargeshot->m_velocity = 50.0f;
-			chargeshot->m_parentNo = m_playerNum;
+	if (g_pad[m_playerNum]->IsPress(enButtonX))
+	{	 		
+
+		Vector3 to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
+		Vector3 position_with_enemy = to_enemy;//自分から敵までのベクトル
+		to_enemy.Normalize();
+		Vector3 front = g_camera3D[m_playerNum]->GetForward();
+		front.y = 0;
+		front.Normalize();
+		float angle_with_enemy =front.Dot(to_enemy);//敵にどれだけ向いているか
+		if (angle_with_enemy < -0.7&&position_with_enemy.Length() < 100) {//敵が前にいる状態かつ、距離が近ければ
+			loop_flag = true;//ダメージを与えるループを開始する
+		}		
+		m_charge = 0;//チャージを０にする
+	}
+	if (loop_flag == true) {//アニメーションに合わせて遅延を入れる
+		loop_count++;
+	}
+	if (loop_count > 10) {//10Fたつと
+		//レベルに応じたダメージを与える
+		if (m_chargelevel == 1) { 
+			m_enemy->Damage(2.5 * (m_magPower + 3)); 
 		}
-		else
-		{
-			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
-			chargeshot->m_position = m_position;
-			chargeshot->m_position.y += 50;
-			chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			chargeshot->m_moveDirection.y = 0.0f;
-			chargeshot->m_moveDirection.Normalize();
-			chargeshot->m_velocity = 50.0f;
-			chargeshot->m_parentNo = m_playerNum;
+		if (m_chargelevel == 2) {
+			m_enemy->Damage(15 * (m_magPower + 3));
 		}
-		m_charge = 0;
+		if (m_chargelevel == 3) {
+			m_enemy->Damage(25 * (m_magPower + 3));
+		}
+		if (m_chargelevel == 4) {
+			m_enemy->Damage(60 * (m_magPower + 3));
+		}
+		loop_count = 0;
+		loop_flag = false;
 	}
 }

@@ -32,6 +32,84 @@ bool Ninja::Start()
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 	return true;
 }
+void Ninja::Update()
+{
+	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
+	{
+		m_isSceneStop = !m_isSceneStop;
+	}
+	//プレイヤー番号が与えられていなければ何もしない
+	if (m_playerNum == -1)
+	{
+		return;
+	}
+
+	if (m_isSceneStop == false)
+	{
+
+		//磁力の変化
+		ChangeMagnetPower();
+
+		//座標に応じて三角形の当たり判定の場所をセット。
+		Collision();
+
+		//体力等ステータスのテキストを表示(後に画像にする。)
+		DisplayStatus();
+
+		//移動関連
+
+		//カメラの前方向
+		Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		front.y = 0.0f;
+		front.Normalize();
+
+		//カメラの右方向
+		Vector3 right = Cross(g_vec3AxisY, front);
+
+		float n = front.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(n);//アークコサイン
+		if (front.x < 0) {
+			angle *= -1;
+		}
+		rot.SetRotation(Vector3::AxisY, angle);
+		m_skinModelRender->SetRotation(rot);
+
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
+
+		if (m_moveSpeed.Length() != 0)
+		{
+			m_characterDirection = m_moveSpeed;
+			m_characterDirection.Normalize();
+		}
+
+		//移動アクション
+		MoveAction();
+
+
+		//攻撃関連
+		//通常攻撃
+		NormalAttack();
+
+		//チャージ
+		Charge();
+
+		//固有攻撃
+		SpecialAttack();
+
+
+		//移動関連2
+		m_moveSpeed.y = -2.0f;
+
+		m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+		m_magPosition = m_position;
+		m_magPosition.y += 50.0f;
+		m_skinModelRender->SetPosition(m_position);
+
+		//カメラ関連
+		Camera();
+	}
+}
+
 void Ninja::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
