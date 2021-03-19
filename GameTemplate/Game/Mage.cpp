@@ -15,9 +15,12 @@ Character_base::~Character_base()
 
 bool Mage::Start()
 {
+	animationClips[enAnimationClip_Run].Load("Assets/animData/Mage_Run.tka");
+	animationClips[enAnimationClip_Run].SetLoopFlag(true);	//ループモーションにする。
+
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks");
+	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks",animationClips,enAnimationClip_num);
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
@@ -34,6 +37,8 @@ bool Mage::Start()
 }
 void Mage::Update()
 {
+	//m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -257,4 +262,8 @@ void Mage::SpecialAttack()
 		}
 		m_charge = 0;
 	}
+}
+
+void Mage::AnimationSelect()
+{
 }

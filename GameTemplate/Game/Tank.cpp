@@ -260,3 +260,6 @@ void Tank::SpecialAttack()
 		m_charge = 0;
 	}
 }
+void Tank::AnimationSelect()
+{
+}

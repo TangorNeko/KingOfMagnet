@@ -15,9 +15,12 @@ Knight::~Knight()
 
 bool Knight::Start()
 {
-	animationClips[enAnimationClip_Attack].Load("Assets/animData/Knight_Idle.tka");
-	animationClips[enAnimationClip_Attack].SetLoopFlag(true);	//ループモーションにする。
-
+	animationClips[enAnimationClip_Attack].Load("Assets/animData/Knight_Attack.tka");
+	animationClips[enAnimationClip_Attack].SetLoopFlag(false);	//ループモーションにする。
+	animationClips[enAnimationClip_Idle].Load("Assets/animData/Knight_Idle.tka");
+	animationClips[enAnimationClip_Idle].SetLoopFlag(false);	//ループモーションにする。
+	animationClips[enAnimationClip_Run].Load("Assets/animData/Knight_Run.tka");
+	animationClips[enAnimationClip_Run].SetLoopFlag(true);	//ループモーションにする。
 
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
@@ -32,18 +35,24 @@ bool Knight::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({ -625.0f, 350.0f });
+	
+	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
-	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
-	
-	
+
+	m_skinModelRender->SetScale({ Scale });
+	front.y = 0;
 	return true;
 }
 void Knight::Update()
 {
-	m_skinModelRender->PlayAnimation(0,60.0f);
+	//状態更新。
+	UpdateState();
+	//アニメーション選択。
+	AnimationSelect();
+
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -56,7 +65,7 @@ void Knight::Update()
 
 	if (m_isSceneStop == false)
 	{
-
+		
 		//磁力の変化
 		ChangeMagnetPower();
 
@@ -133,7 +142,7 @@ void Knight::Update()
 		{
 			Scale = 2.0f;
 		}
-		
+
 		Matrix mScale;
 		mScale.m[0][0] = Scale;
 		mScale.m[1][1] = Scale;
@@ -157,9 +166,9 @@ void Knight::Update()
 		Character_base::Camera();
 	}
 }
+
 void Knight::DisplayStatus()
 {
-
 	//体力、チャージ、現在の自分の磁力の状態の表示
 	std::wstring powerText;
 	switch (m_magPower)
@@ -199,21 +208,37 @@ void Knight::MoveAction()
 	//移動アクション
 	if (g_pad[m_playerNum]->IsTrigger(enButtonA) && m_moveActionCount == 0 && !(g_pad[m_playerNum]->IsPress(enButtonLB2)))
 	{
-		m_skinModelRender->SetScale({ 0.0f,0.0f,0.0f });
-		m_moveActionCount = 600;
-		m_moveSpeed += m_characterDirection * 500.0f;
+		//m_skinModelRender->SetScale({ 0.0f,0.0f,0.0f });
+		m_moveActionCount = 20;
+		m_move_on = true;
 	}
 	else
 	{
-		if (--m_moveActionCount <= 550)
-		{
-			m_skinModelRender->SetScale({ Scale });
-		}
-
+		
+		m_moveActionCount--;
 		if (m_moveActionCount < 0)
 		{
 			m_moveActionCount = 0;
 		}
+	}
+	if (m_move_on == true&&m_move_count<10)
+	{
+		m_move_count++;
+		m_moveSpeed += m_characterDirection * 50.0f;
+		front = g_camera3D[m_playerNum]->GetForward();
+		to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル 
+		angle_with_enemy = front.Dot(to_enemy);//敵にどれだけ向いているか
+		position_with_enemy = to_enemy;//自分から敵までのベクトル
+		if (angle_with_enemy < -0.5 && position_with_enemy.Length() < 100&&m_move_attack==true) {//敵が前にいる状態かつ、距離が近ければ
+			m_enemy->Damage(5*m_chargelevel);
+			m_move_attack = false;//1回だけダメージを与えるループを開始する
+		}
+	}
+	else
+	{
+		m_move_count = 0;
+		m_move_on = false;
+		m_move_attack = true;
 	}
 }
 
@@ -292,14 +317,16 @@ void Knight::SpecialAttack()
 	//固有攻撃
 	if (g_pad[m_playerNum]->IsPress(enButtonX))
 	{	 		
+		//攻撃アニメーション
+		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 
-		Vector3 to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
-		Vector3 position_with_enemy = to_enemy;//自分から敵までのベクトル
+		to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
+		position_with_enemy = to_enemy;//自分から敵までのベクトル
 		to_enemy.Normalize();
-		Vector3 front = g_camera3D[m_playerNum]->GetForward();
+		front = g_camera3D[m_playerNum]->GetForward();
 		front.y = 0;
 		front.Normalize();
-		float angle_with_enemy =front.Dot(to_enemy);//敵にどれだけ向いているか
+		angle_with_enemy =front.Dot(to_enemy);//敵にどれだけ向いているか
 		if (angle_with_enemy < -0.7&&position_with_enemy.Length() < 100) {//敵が前にいる状態かつ、距離が近ければ
 			loop_flag = true;//ダメージを与えるループを開始する
 		}		
@@ -307,6 +334,7 @@ void Knight::SpecialAttack()
 	}
 	if (loop_flag == true) {//アニメーションに合わせて遅延を入れる
 		loop_count++;
+		
 	}
 	if (loop_count > 10) {//10Fたつと
 		//レベルに応じたダメージを与える
@@ -325,4 +353,76 @@ void Knight::SpecialAttack()
 		loop_count = 0;
 		loop_flag = false;
 	}
+}
+void Knight::TryChangeStatusAttack()
+{
+	if (g_pad[m_playerNum]->IsPress(enButtonX)) {
+		status = enStatus_Attack;
+	}
+}
+void Knight::UpdateState()
+{
+	switch (status) {
+	case enStatus_Attack:
+		if (m_skinModelRender->IsPlayingAnimation() == false) {
+			status = enStatus_Idle;
+		}
+		break;
+	case enStatus_Run:
+		TryChangeStatusAttack();
+		break;
+	case enStatus_Idle:
+		TryChangeStatusAttack();
+		break;
+	case enStatus_Walk:
+		TryChangeStatusAttack();
+		break;
+	}
+}
+void Knight::AnimationSelect()
+{
+	switch (status) {
+	case enStatus_Attack:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+		break;
+	case enStatus_Run:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+		break;
+	case enStatus_Idle:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+		break;
+	case enStatus_Walk:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
+		break;
+	}
+#if 0
+	if ()
+	{
+		m_anim_num = enAnimationClip_Attack;
+	}
+	else if (m_moveSpeed.LengthSq() > 0.0f * 0.0f)
+	{
+		m_anim_num = enAnimationClip_Run;
+	}
+	
+	else if (m_moveSpeed.LengthSq() <= 0.0f)
+	{
+		m_anim_num = enAnimationClip_Idle;
+	}
+	
+
+
+	if (m_anim_num == 0)
+	{
+		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+	}
+	else if (m_anim_num == 1)
+	{
+		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+	}
+	else
+	{
+		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+	}
+#endif
 }

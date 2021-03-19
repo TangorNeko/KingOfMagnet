@@ -260,3 +260,7 @@ void Ninja::SpecialAttack()
 		m_charge = 0;
 	}
 }
+
+void Ninja::AnimationSelect()
+{
+}

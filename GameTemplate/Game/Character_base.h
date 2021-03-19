@@ -26,7 +26,12 @@ protected:
 	//カメラの移動
 	void Camera();
 
+	//固有攻撃
 	virtual void SpecialAttack()=0;
+
+	//アニメーション
+	virtual void AnimationSelect() = 0;
+
 public:
 	virtual ~Character_base();
 	Quaternion rot;//キャラクターの回転
@@ -69,5 +74,13 @@ public:
 
 	//敵のインスタンス
 	Character_base* m_enemy = nullptr;
+
+	//アニメーション選択フラグ
+	bool m_idle_play = false;
+	bool m_run_play = false;
+	bool m_attack_play = false;
+
+	int m_anim_num = 0;
+
 };
 

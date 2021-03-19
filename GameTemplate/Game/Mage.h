@@ -22,6 +22,16 @@ public:
 	//チャージ攻撃
 	void SpecialAttack();
 
+	//アニメーション
+	void AnimationSelect();
+	enum {
+		enAnimationClip_Attack,
+		enAnimationClip_Run,
+		enAnimationClip_Walk,
+		enAnimationClip_Idle,
+		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
+	};
+	AnimationClip animationClips[enAnimationClip_num];
 
 };
 

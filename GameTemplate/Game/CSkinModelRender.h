@@ -39,7 +39,10 @@ namespace prefab
 			m_animation.Play(animationNo, interpolateTime);
 			m_animation.Progress(1.0f/60.0f);
 		}
-		
+		bool IsPlayingAnimation() const
+		{
+			return m_animation.IsPlaying();
+		}
 		void SetPosition(Vector3 pos);
 		void SetRotation(Quaternion qRot);
 		void SetScale(Vector3 scale);
