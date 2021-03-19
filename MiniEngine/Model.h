@@ -48,6 +48,12 @@ public:
 	void UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale);
 
 	/// <summary>
+	/// ワールド行列の更新
+	/// </summary>
+	/// <param name="world">ワールド行列</param>
+	void UpdateWorldMatrix(Matrix world);
+
+	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>

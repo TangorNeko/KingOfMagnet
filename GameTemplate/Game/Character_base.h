@@ -2,9 +2,8 @@
 #include "TriangleCollider.h"
 class Character_base : public IGameObject
 {
-	
+public:
 	//bool Start() override;	
-
 	//体力、チャージ、磁力の状態等の表示
 	virtual void DisplayStatus()=0;
 
@@ -14,9 +13,7 @@ class Character_base : public IGameObject
 	//通常攻撃
 	virtual void NormalAttack() = 0;	
 
-	//チャージ攻撃
-	virtual void SpecialAttack() = 0;
-protected:
+	protected:
 	//磁力の定期的な変化
 	void ChangeMagnetPower();
 

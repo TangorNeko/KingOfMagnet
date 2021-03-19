@@ -32,6 +32,9 @@ bool Knight::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({ -625.0f, 350.0f });
+
+	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
+	m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
 	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 	
@@ -41,7 +44,6 @@ bool Knight::Start()
 void Knight::Update()
 {
 	m_skinModelRender->PlayAnimation(0,60.0f);
-
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -113,13 +115,51 @@ void Knight::Update()
 		m_magPosition.y += 50.0f;
 		m_skinModelRender->SetPosition(m_position);
 
+		//手のボーンのワールド行列を取得
+		Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
+
+		//武器の拡大倍率
+
+		float Scale;
+		if (m_charge < 500.0f)
+		{
+			Scale = 1.0f;
+		}
+		else if (m_charge < 1000.0f)
+		{
+			Scale = 1.5f;
+		}
+		else
+		{
+			Scale = 2.0f;
+		}
+		
+		Matrix mScale;
+		mScale.m[0][0] = Scale;
+		mScale.m[1][1] = Scale;
+		mScale.m[2][2] = Scale;
+
+		//手のボーンの行列
+		handmatrix.Multiply(mScale, handmatrix);
+
+		m_weaponModel->SetMatrix(handmatrix);
+		/*
+		m_weaponModel->SetPosition({ handmatrix.m[3][0],handmatrix.m[3][1],handmatrix.m[3][2] });
+
+		m_weaponModel->SetScale({ 0.5f,0.5f,0.5f });
+		Quaternion Rot;
+
+		Rot.SetRotation(handmatrix);
+
+		m_weaponModel->SetRotation(Rot);
+		*/
 		//カメラ関連
-		Camera();
+		Character_base::Camera();
 	}
 }
-
 void Knight::DisplayStatus()
 {
+
 	//体力、チャージ、現在の自分の磁力の状態の表示
 	std::wstring powerText;
 	switch (m_magPower)
@@ -249,6 +289,7 @@ void Knight::Charge()
 }
 void Knight::SpecialAttack()
 {
+
 	//固有攻撃
 	if (g_pad[m_playerNum]->IsPress(enButtonX))
 	{	 		

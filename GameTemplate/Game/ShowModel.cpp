@@ -17,14 +17,16 @@ bool ShowModel::Start()
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	
 	
-	m_animClip[0].Load("Assets/animData/Mage_idle.tka");
-	m_animClip[0].SetLoopFlag(true);
-	m_animClip[1].Load("Assets/animData/Mage_Run.tka");
-	m_animClip[1].SetLoopFlag(false);
+	m_animClip[enAnim_Idle].Load("Assets/animData/Mage_idle.tka");
+	m_animClip[enAnim_Idle].SetLoopFlag(true);
+	m_animClip[enAnim_Run].Load("Assets/animData/Mage_Run.tka");
+	m_animClip[enAnim_Run].SetLoopFlag(true);
+	m_animClip[enAnim_Attack].Load("Assets/animData/Mage_Attack.tka");
+	m_animClip[enAnim_Attack].SetLoopFlag(false);
 	
 
 
-	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", m_animClip,2);
+	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", m_animClip,enAnimNum);
 
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
@@ -41,7 +43,7 @@ bool ShowModel::Start()
 
 void ShowModel::Update()
 {
-	m_skinModelRender->PlayAnimation(0);
+	m_skinModelRender->PlayAnimation(enAnim_Run);
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -235,7 +237,7 @@ void ShowModel::NormalAttack()
 
 	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_normalAttackCount == 0)
 	{
-		//m_skinModelRender->PlayAnimation(1);
+		m_skinModelRender->PlayAnimation(enAnim_Attack);
 		if (m_isLock)
 		{
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");

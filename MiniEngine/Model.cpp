@@ -58,6 +58,11 @@ void Model::UpdateWorldMatrix(Vector3 pos, Quaternion rot, Vector3 scale)
 	m_world = mBias * mScale * mRot * mTrans;
 }
 
+void Model::UpdateWorldMatrix(Matrix world)
+{
+	m_world = world;
+}
+
 void Model::ChangeAlbedoMap(const char* materialName, Texture& albedoMap)
 {
 	m_meshParts.QueryMeshs([&](const SMesh& mesh) {

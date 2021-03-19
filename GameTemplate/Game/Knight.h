@@ -5,8 +5,6 @@ class Knight :public Character_base
 	bool Start();
 	void Update();
 	~Knight();
-public:
-	
 	//体力、チャージ、磁力の状態等の表示
 	void DisplayStatus();
 
@@ -22,10 +20,11 @@ public:
 	//チャージ攻撃
 	void SpecialAttack();
 
-	//固有攻撃ダメージ遅延
+	prefab::CSkinModelRender* m_weaponModel = nullptr;
+
+//固有攻撃ダメージ遅延
 	int loop_count = 0;
 	bool loop_flag = false;
-
 	enum {
 		enAnimationClip_Attack,
 
