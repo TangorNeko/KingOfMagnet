@@ -31,6 +31,12 @@ public:
 	//走り状態に切り替えできたら切り替える。
 	void TryChangeStatusRun();
 
+	//歩き状態に切り替えできたら切り替える。
+	void TryChangeStatusWalk();
+
+	//遅い歩き状態に切り替えできたら切り替える。
+	void TryChangeStatusWalkSlow();
+
 	//待機状態に切り替えできたら切り替える。
 	void TryChangeStatusIdle();
 
@@ -41,15 +47,15 @@ public:
 	enum {
 		enAnimationClip_Attack,
 		enAnimationClip_Run,
-		enAnimationClip_Walk,
+		enAnimationClip_Walk,		
 		enAnimationClip_Idle,
 		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
 	};
 	enum EnStatus {
 		enStatus_Attack,	//攻撃状態
-		enStatus_Run,		//走り状態
+		enStatus_Run,		//走り状態		
+		enStatus_Walk,		//歩き状態			
 		enStatus_Idle,		//待機状態
-		enStatus_Walk,		//歩き状態		
 		enStatus_Num,		//状態の数。
 	};
 	AnimationClip animationClips[enAnimationClip_num];

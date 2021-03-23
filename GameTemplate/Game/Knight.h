@@ -32,6 +32,9 @@ public:
 
 	//走り状態に切り替えできたら切り替える。
 	void TryChangeStatusRun();
+	
+	//歩き状態に切り替えできたら切り替える。
+	void TryChangeStatusWalk();
 
 	//待機状態に切り替えできたら切り替える。
 	void TryChangeStatusIdle();
@@ -43,7 +46,10 @@ public:
 
 	//固有攻撃ダメージ遅延
 	int loop_count = 0;
-	bool loop_flag = false;
+	bool loop_flag = false;//攻撃があたったとき
+	int SpecialAttack_count = 0;
+	bool SpecialAttack_flag = false;//剣を振ったとき
+
 	//移動アクションフラグ
 	int m_move_count = 0;
 	bool m_move_on=false;

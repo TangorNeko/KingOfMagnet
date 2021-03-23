@@ -21,7 +21,9 @@ bool Mage::Start()
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Attack].Load("Assets/animData/Mage_Attack.tka");
 	animationClips[enAnimationClip_Attack].SetLoopFlag(false);	//ループモーションにする。
-
+	animationClips[enAnimationClip_Walk].Load("Assets/animData/Mage_Walk.tka");
+	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
+	
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks",animationClips,enAnimationClip_num);
@@ -280,13 +282,19 @@ void Mage::TryChangeStatusAttack()
 }
 void Mage::TryChangeStatusRun()
 {
-	if (m_moveSpeed.LengthSq() > 0.0f * 0.0f) {
+	if (m_moveSpeed.LengthSq() > 5.0f) {
 		status = enStatus_Run;
+	}
+}
+void Mage::TryChangeStatusWalk()
+{
+	if (m_moveSpeed.LengthSq() < 5.0f&& m_moveSpeed.LengthSq() > 0.0f) {
+		status = enStatus_Walk;
 	}
 }
 void Mage::TryChangeStatusIdle()
 {
-	if (m_moveSpeed.LengthSq() < 1.0f * 0.001f) {
+	if (m_moveSpeed.LengthSq() <= 0.0f) {
 		status = enStatus_Idle;
 	}
 }
@@ -301,20 +309,24 @@ void Mage::UpdateState()
 			status = enStatus_Idle;
 		}
 		break;
-	
 	case enStatus_Run:
-		TryChangeStatusIdle();
-		TryChangeStatusAttack();		
-		break;
-	case enStatus_Idle:
-		TryChangeStatusRun();
 		TryChangeStatusAttack();
-		break;
+		TryChangeStatusWalk();
+		TryChangeStatusIdle();
+		break;	
 	case enStatus_Walk:
 		TryChangeStatusAttack();
+		TryChangeStatusRun();
+		TryChangeStatusIdle();
+		break;
+	case enStatus_Idle:
+		TryChangeStatusAttack();
+		TryChangeStatusRun();		
+		TryChangeStatusWalk();
 		break;
 	}
 }
+
 void Mage::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
@@ -326,9 +338,11 @@ void Mage::AnimationSelect()
 	case enStatus_Run:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
+	case enStatus_Walk:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
+		break;
 	case enStatus_Idle:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
-
 		break;
 	}
 	

@@ -21,6 +21,8 @@ bool Knight::Start()
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Run].Load("Assets/animData/Knight_Run.tka");
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Walk].Load("Assets/animData/Knight_Walk.tka");
+	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Move].Load("Assets/animData/Mage_Attack.tka");
 	animationClips[enAnimationClip_Move].SetLoopFlag(false);	//ループモーションにする。
 
@@ -80,15 +82,15 @@ void Knight::Update()
 		//移動関連
 
 		//カメラの前方向
-		Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		front = m_position - g_camera3D[m_playerNum]->GetPosition();
 		front.y = 0.0f;
 		front.Normalize();
 
 		//カメラの右方向
-		Vector3 right = Cross(g_vec3AxisY, front);
+		right = Cross(g_vec3AxisY, front);
 
-		float n = front.Dot(Vector3::AxisZ);//内積
-		float angle = acosf(n);//アークコサイン
+		n = front.Dot(Vector3::AxisZ);//内積
+		angle = acosf(n);//アークコサイン
 		if (front.x < 0) {
 			angle *= -1;
 		}
@@ -321,7 +323,7 @@ void Knight::SpecialAttack()
 	{	 		
 		//攻撃アニメーション
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
-
+		SpecialAttack_flag = true;
 		to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
 		position_with_enemy = to_enemy;//自分から敵までのベクトル
 		to_enemy.Normalize();
@@ -331,13 +333,21 @@ void Knight::SpecialAttack()
 		angle_with_enemy =front.Dot(to_enemy);//敵にどれだけ向いているか
 		if (angle_with_enemy < -0.7&&position_with_enemy.Length() < 100) {//敵が前にいる状態かつ、距離が近ければ
 			loop_flag = true;//ダメージを与えるループを開始する
-		}		
+		}
 		m_charge = 0;//チャージを０にする
 	}
-	if (loop_flag == true) {//アニメーションに合わせて遅延を入れる
-		loop_count++;
-		
+	if(SpecialAttack_flag==true) {
+		SpecialAttack_count++;
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 1.0f + right * g_pad[m_playerNum]->GetLStickXF() * 1.0f;
 	}
+	if (SpecialAttack_count > 15) {
+		SpecialAttack_count=0;
+		SpecialAttack_flag = false;
+	}
+	if (loop_flag == true) {//アニメーションに合わせて遅延を入れる
+		loop_count++;		
+	}
+	
 	if (loop_count > 10) {//10Fたつと
 		//レベルに応じたダメージを与える
 		if (m_chargelevel == 1) { 
@@ -355,6 +365,7 @@ void Knight::SpecialAttack()
 		loop_count = 0;
 		loop_flag = false;
 	}
+	
 }
 void Knight::TryChangeStatusAttack()
 {	
@@ -364,13 +375,19 @@ void Knight::TryChangeStatusAttack()
 }
 void Knight::TryChangeStatusRun()
 {
-	if (m_moveSpeed.LengthSq() > 0.0f * 0.0f){
+	if (m_moveSpeed.LengthSq() > 5.0f){
 		status = enStatus_Run;
+	}
+}
+void Knight::TryChangeStatusWalk()
+{
+	if (m_moveSpeed.LengthSq() < 5.0f && m_moveSpeed.LengthSq() > 0.0f) {
+		status = enStatus_Walk;
 	}
 }
 void Knight::TryChangeStatusIdle()
 {
-	if (m_moveSpeed.LengthSq() < 1.0f * 0.001f) {
+	if (m_moveSpeed.LengthSq() <= 0.0f) {
 		status = enStatus_Idle;
 	}
 }
@@ -397,20 +414,24 @@ void Knight::UpdateState()
 			status = enStatus_Idle;
 		}
 		break;
-	case enStatus_Run:		
-		TryChangeStatusIdle();
+	case enStatus_Run:
 		TryChangeStatusAttack();	
 		TryChangeStatusMove();
-		break;
-	case enStatus_Idle:
-		TryChangeStatusRun();
-		TryChangeStatusAttack();
-		TryChangeStatusMove();
+		TryChangeStatusWalk();
+		TryChangeStatusIdle();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
-		TryChangeStatusMove();
+		TryChangeStatusMove();	
+		TryChangeStatusRun();
+		TryChangeStatusIdle();
 		break;
+	case enStatus_Idle:
+		TryChangeStatusAttack();
+		TryChangeStatusRun();		
+		TryChangeStatusMove();
+		TryChangeStatusWalk();
+		break;	
 	}
 }
 void Knight::AnimationSelect()
@@ -424,6 +445,10 @@ void Knight::AnimationSelect()
 	case enStatus_Run:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
+	case enStatus_Walk:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
+		break;
+
 	case enStatus_Idle:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
 				
