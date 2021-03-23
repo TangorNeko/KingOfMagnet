@@ -16,6 +16,9 @@ namespace prefab
 
 		ModelInitData initData;
 
+		//TODO:NewGO‚·‚é‚½‚Ñ‚Éƒ[ƒh‚ªŒÄ‚Î‚ê‚È‚¢‚æ‚¤‚É‚µ‚½‚¢B
+		//initData.m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(modelPath);
+
 		initData.m_tkmFilePath = modelPath;
 
 		initData.m_fxFilePath = "Assets/shader/model.fx";
@@ -58,6 +61,8 @@ namespace prefab
 
 		ModelInitData initData;
 
+		//initData.m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(modelPath);
+
 		initData.m_tkmFilePath = modelPath;
 
 		initData.m_fxFilePath = "Assets/shader/model.fx";
@@ -88,6 +93,8 @@ namespace prefab
 	void CSkinModelRender::Init(const char* modelPath)
 	{
 		ModelInitData initData;
+
+		//initData.m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(modelPath);
 
 		initData.m_tkmFilePath = modelPath;
 

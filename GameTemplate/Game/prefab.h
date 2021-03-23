@@ -5,3 +5,4 @@
 #include "CFontRender.h"
 #include "CPointLight.h"
 #include "CSpotLight.h"
+#include "CLevelRender2D.h"
