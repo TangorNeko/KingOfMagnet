@@ -48,7 +48,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 
 	//ƒvƒŒƒCƒ„[1‚ğì¬
-	Knight* showm = NewGO<Knight>(0, "Player");
+	Mage* showm = NewGO<Mage>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 2;

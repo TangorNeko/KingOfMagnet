@@ -18,9 +18,11 @@ bool Knight::Start()
 	animationClips[enAnimationClip_Attack].Load("Assets/animData/Knight_Attack.tka");
 	animationClips[enAnimationClip_Attack].SetLoopFlag(false);	//ループモーションにする。
 	animationClips[enAnimationClip_Idle].Load("Assets/animData/Knight_Idle.tka");
-	animationClips[enAnimationClip_Idle].SetLoopFlag(false);	//ループモーションにする。
+	animationClips[enAnimationClip_Idle].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Run].Load("Assets/animData/Knight_Run.tka");
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Move].Load("Assets/animData/Mage_Attack.tka");
+	animationClips[enAnimationClip_Move].SetLoopFlag(false);	//ループモーションにする。
 
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
@@ -355,32 +357,66 @@ void Knight::SpecialAttack()
 	}
 }
 void Knight::TryChangeStatusAttack()
-{
+{	
 	if (g_pad[m_playerNum]->IsPress(enButtonX)) {
 		status = enStatus_Attack;
+	}	
+}
+void Knight::TryChangeStatusRun()
+{
+	if (m_moveSpeed.LengthSq() > 0.0f * 0.0f){
+		status = enStatus_Run;
+	}
+}
+void Knight::TryChangeStatusIdle()
+{
+	if (m_moveSpeed.LengthSq() < 1.0f * 0.001f) {
+		status = enStatus_Idle;
+	}
+}
+void Knight::TryChangeStatusMove()
+{
+	if (g_pad[m_playerNum]->IsPress(enButtonRB1)) {
+		status = enStatus_Move;
 	}
 }
 void Knight::UpdateState()
 {
 	switch (status) {
 	case enStatus_Attack:
-		if (m_skinModelRender->IsPlayingAnimation() == false) {
+		TryChangeStatusAttack();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
 			status = enStatus_Idle;
 		}
 		break;
-	case enStatus_Run:
-		TryChangeStatusAttack();
+	case enStatus_Move:
+		TryChangeStatusMove();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
+			status = enStatus_Idle;
+		}
+		break;
+	case enStatus_Run:		
+		TryChangeStatusIdle();
+		TryChangeStatusAttack();	
+		TryChangeStatusMove();
 		break;
 	case enStatus_Idle:
+		TryChangeStatusRun();
 		TryChangeStatusAttack();
+		TryChangeStatusMove();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
+		TryChangeStatusMove();
 		break;
 	}
 }
 void Knight::AnimationSelect()
 {
+	m_skinModelRender->m_animation_speed = 1.0;
+
 	switch (status) {
 	case enStatus_Attack:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
@@ -390,10 +426,16 @@ void Knight::AnimationSelect()
 		break;
 	case enStatus_Idle:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+				
 		break;
-	case enStatus_Walk:
+	case enStatus_Move:
+		m_skinModelRender->m_animation_speed = 4.0;
+		m_skinModelRender->PlayAnimation(enAnimationClip_Move);
+
+		break;
+	/*case enStatus_Walk:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
-		break;
+		break;*/
 	}
 #if 0
 	if ()

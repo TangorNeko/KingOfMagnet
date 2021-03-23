@@ -26,8 +26,18 @@ public:
 
 	//アニメーション
 	void AnimationSelect();
+
 	//攻撃状態に切り替えできたら切り替える。
 	void TryChangeStatusAttack();
+
+	//走り状態に切り替えできたら切り替える。
+	void TryChangeStatusRun();
+
+	//待機状態に切り替えできたら切り替える。
+	void TryChangeStatusIdle();
+
+	//移動アクション状態に切り替えできたら切り替える。
+	void TryChangeStatusMove();
 
 	prefab::CSkinModelRender* m_weaponModel = nullptr;
 
@@ -49,6 +59,7 @@ public:
 		enAnimationClip_Run, 		
 		enAnimationClip_Idle,
 		enAnimationClip_Walk,
+		enAnimationClip_Move,
 		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
 	};
 	enum EnStatus{
@@ -56,6 +67,7 @@ public:
 		enStatus_Run,		//走り状態
 		enStatus_Idle,		//待機状態
 		enStatus_Walk,		//歩き状態
+		enStatus_Move,		//移動アクション状態
 		enStatus_Num,		//状態の数。
 	};
 	AnimationClip animationClips[enAnimationClip_num];

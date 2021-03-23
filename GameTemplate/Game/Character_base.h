@@ -39,7 +39,11 @@ public:
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCamera = { 0.0f,100.0f,-100.0f };//キャラクターからカメラへのベクトル
-	Vector3 Scale = { 0.6,0.6,0.6 };//キャラクターの拡大率
+	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
+	Vector3 front;//カメラの前方向
+	Vector3 right;//カメラの右方向
+	float n;//内積
+	float angle;//アークコサイン
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//キャラクターのモデル
 	prefab::CPointLight* m_pointLight = nullptr;//チャージ確認用のポイントライト(TODO:後からエフェクトに差し替え予定)
@@ -75,12 +79,11 @@ public:
 	//敵のインスタンス
 	Character_base* m_enemy = nullptr;
 
-	//アニメーション選択フラグ
-	bool m_idle_play = false;
-	bool m_run_play = false;
-	bool m_attack_play = false;
+	
 
 	int m_anim_num = 0;
+
+
 
 };
 
