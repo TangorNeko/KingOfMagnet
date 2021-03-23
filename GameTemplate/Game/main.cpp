@@ -34,6 +34,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 
+	//tkmファイルマネージャのインスタンスを作成
+	tkmFileManager::CreateInstance();
+
 	//////////////////////////////////////////////////
 	//TitleScene* title = NewGO<TitleScene>(0, "Title");
 
@@ -42,6 +45,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	stageLight->SetDirection({ 0.0f,-1.0f,0.0f });
 	stageLight->SetColor({ 0.5f,0.5f,0.5f });
 
+	
 
 	//プレイヤー1を作成
 	Knight* showm = NewGO<Knight>(0, "Player");
@@ -99,6 +103,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameObjectManager::DeleteInstance();
 
 	CLightManager::DeleteInstance();
+
+	tkmFileManager::DeleteInstance();
 	return 0;
 }
 
