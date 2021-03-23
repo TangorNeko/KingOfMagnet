@@ -17,6 +17,10 @@ bool Mage::Start()
 {
 	animationClips[enAnimationClip_Run].Load("Assets/animData/Mage_Run.tka");
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Idle].Load("Assets/animData/Mage_Idle.tka");
+	animationClips[enAnimationClip_Idle].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Attack].Load("Assets/animData/Mage_Attack.tka");
+	animationClips[enAnimationClip_Attack].SetLoopFlag(false);	//ループモーションにする。
 
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
@@ -38,6 +42,10 @@ bool Mage::Start()
 void Mage::Update()
 {
 	//m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+	//状態更新。
+	UpdateState();
+	//アニメーション選択。
+	AnimationSelect();
 
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
@@ -64,14 +72,14 @@ void Mage::Update()
 		//移動関連
 
 		//カメラの前方向
-		Vector3 front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		front = m_position - g_camera3D[m_playerNum]->GetPosition();
 		front.y = 0.0f;
 		front.Normalize();
 
 		//カメラの右方向
-		Vector3 right = Cross(g_vec3AxisY, front);
+		right = Cross(g_vec3AxisY, front);
 
-		float n = front.Dot(Vector3::AxisZ);//内積
+		n = front.Dot(Vector3::AxisZ);//内積
 		float angle = acosf(n);//アークコサイン
 		if (front.x < 0) {
 			angle *= -1;
@@ -219,8 +227,8 @@ void Mage::Charge()
 		{
 			m_charge = 1000.0f;
 		}
-
-		m_moveSpeed = { 0.0f,0.0f,0.0f };
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 1.0f + right * g_pad[m_playerNum]->GetLStickXF() * 1.0f;
+		
 	}
 
 	//チャージ確認用
@@ -264,6 +272,64 @@ void Mage::SpecialAttack()
 	}
 }
 
+void Mage::TryChangeStatusAttack()
+{
+	if (g_pad[m_playerNum]->IsPress(enButtonX)|| g_pad[m_playerNum]->IsPress(enButtonRB1)) {
+		status = enStatus_Attack;
+	}
+}
+void Mage::TryChangeStatusRun()
+{
+	if (m_moveSpeed.LengthSq() > 0.0f * 0.0f) {
+		status = enStatus_Run;
+	}
+}
+void Mage::TryChangeStatusIdle()
+{
+	if (m_moveSpeed.LengthSq() < 1.0f * 0.001f) {
+		status = enStatus_Idle;
+	}
+}
+void Mage::UpdateState()
+{
+
+	switch (status) {
+	case enStatus_Attack:
+		TryChangeStatusAttack();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
+			status = enStatus_Idle;
+		}
+		break;
+	
+	case enStatus_Run:
+		TryChangeStatusIdle();
+		TryChangeStatusAttack();		
+		break;
+	case enStatus_Idle:
+		TryChangeStatusRun();
+		TryChangeStatusAttack();
+		break;
+	case enStatus_Walk:
+		TryChangeStatusAttack();
+		break;
+	}
+}
 void Mage::AnimationSelect()
 {
+	m_skinModelRender->m_animation_speed = 1.0;
+	switch (status) {
+	case enStatus_Attack:
+		m_skinModelRender->m_animation_speed = 4.0;
+		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+		break;
+	case enStatus_Run:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+		break;
+	case enStatus_Idle:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+
+		break;
+	}
+	
 }

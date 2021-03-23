@@ -10,6 +10,8 @@ namespace prefab
 			eModel_View2,
 			eModel_Num,
 		};
+		//アニメーション速度
+		float m_animation_speed = 1.0;
 	private:
 		Skeleton m_skeleton; //スケルトン
 		Model m_model[eModel_Num]; //モデル
@@ -37,7 +39,7 @@ namespace prefab
 		void PlayAnimation(int animationNo, float interpolateTime = 0.0f)
 		{
 			m_animation.Play(animationNo, interpolateTime);
-			m_animation.Progress(1.0f/60.0f);
+			m_animation.Progress(m_animation_speed /60.0f);
 		}
 		bool IsPlayingAnimation() const
 		{
