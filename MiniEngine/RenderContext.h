@@ -16,6 +16,7 @@ public:
 	enum EnStep {
 		eStep_RenderViewport1,	// Render to viweport1,
 		eStep_RenderViewport2,	// Render to viewport2,
+		eStep_RenderAllScreen,	// Render to AllScreen
 		eStep_RenderShadowMap,	// Render to shadowMap,
 	};
 	/// <summary>

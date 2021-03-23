@@ -45,7 +45,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	stageLight->SetDirection({ 0.0f,-1.0f,0.0f });
 	stageLight->SetColor({ 0.5f,0.5f,0.5f });
 
-	
+	prefab::CLevelRender2D* level2D = NewGO<prefab::CLevelRender2D>(5);
+	level2D->Init("Assets/Level2D/Level2DTest.casl", nullptr);
 
 	//ƒvƒŒƒCƒ„[1‚ğì¬
 	Mage* showm = NewGO<Mage>(0, "Player");

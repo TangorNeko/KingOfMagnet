@@ -121,5 +121,27 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		}
 	}
 	
+	//Level2D用　
+	{
+		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
+
+		rc.SetStep(RenderContext::eStep_RenderAllScreen);
+		D3D12_VIEWPORT viewport;
+		viewport.TopLeftX = 0;
+		viewport.TopLeftY = 0;
+		viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
+		viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		rc.SetViewport(viewport);
+		//1P側の画面のカメラは1Pのカメラ(g_camera3D[0])
+		CLightManager::GetInstance()->UpdateEyePos(0);
+		g_camera3D[0]->SetAspect(1);
+		for (auto& goList : m_gameObjectListArray) {
+			for (auto& go : goList) {
+				go->RenderWrapper(rc, g_camera3D[0]);
+			}
+		}
+	}
 	
 }
