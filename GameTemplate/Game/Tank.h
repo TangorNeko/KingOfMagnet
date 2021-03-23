@@ -22,6 +22,8 @@ public:
 	//チャージ攻撃
 	void SpecialAttack();
 
+	//アニメーション
+	void AnimationSelect();
 
 };
 
