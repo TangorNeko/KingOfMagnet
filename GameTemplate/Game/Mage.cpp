@@ -110,7 +110,7 @@ void Mage::Update()
 		//固有攻撃
 		SpecialAttack();
 
-
+		
 		//移動関連2
 		m_moveSpeed.y = -2.0f;
 
@@ -118,6 +118,9 @@ void Mage::Update()
 		m_magPosition = m_position;
 		m_magPosition.y += 50.0f;
 		m_skinModelRender->SetPosition(m_position);
+
+		//キャラクターにかかる磁力の影響
+		PlayerMagneticMove();
 
 		//カメラ関連
 		Camera();
@@ -288,13 +291,13 @@ void Mage::TryChangeStatusRun()
 }
 void Mage::TryChangeStatusWalk()
 {
-	if (m_moveSpeed.LengthSq() < 5.0f&& m_moveSpeed.LengthSq() > 0.0f) {
+	if (m_moveSpeed.LengthSq() <= 5.0f&& m_moveSpeed.LengthSq() > 0.0f) {
 		status = enStatus_Walk;
 	}
 }
 void Mage::TryChangeStatusIdle()
 {
-	if (m_moveSpeed.LengthSq() <= 0.0f) {
+	if (m_moveSpeed.LengthSq() <= 0.001f) {
 		status = enStatus_Idle;
 	}
 }

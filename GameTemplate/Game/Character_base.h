@@ -55,6 +55,8 @@ public:
 
 	Vector3 m_repulsionSpeed;
 
+	int m_magStatediff;
+
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//キャラクターのモデル
 	prefab::CPointLight* m_pointLight = nullptr;//チャージ確認用のポイントライト(TODO:後からエフェクトに差し替え予定)
 	prefab::CFontRender* m_fontRender = nullptr;//体力、チャージ、磁力等確認用のフォント(TODO:後からUIスプライトに差し替え予定)

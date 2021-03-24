@@ -119,7 +119,7 @@ void Knight::Update()
 		//固有攻撃
 		SpecialAttack();
 
-
+		
 		//移動関連2
 		m_moveSpeed.y = -2.0f;
 
@@ -127,6 +127,9 @@ void Knight::Update()
 		m_magPosition = m_position;
 		m_magPosition.y += 50.0f;
 		m_skinModelRender->SetPosition(m_position);
+		////////////////////////////////////////////////////////////////////////////////////
+		//キャラクターにかかる磁力の影響
+		PlayerMagneticMove();
 
 		//手のボーンのワールド行列を取得
 		Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
@@ -372,7 +375,7 @@ void Knight::TryChangeStatusAttack()
 }
 void Knight::TryChangeStatusRun()
 {
-	if (m_moveSpeed.LengthSq() > 5.0f){
+	if (m_moveSpeed.LengthSq() >= 5.0f){
 		status = enStatus_Run;
 	}
 }
@@ -455,38 +458,7 @@ void Knight::AnimationSelect()
 		m_skinModelRender->PlayAnimation(enAnimationClip_Move);
 
 		break;
-	/*case enStatus_Walk:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
-		break;*/
-	}
-#if 0
-	if ()
-	{
-		m_anim_num = enAnimationClip_Attack;
-	}
-	else if (m_moveSpeed.LengthSq() > 0.0f * 0.0f)
-	{
-		m_anim_num = enAnimationClip_Run;
-	}
 	
-	else if (m_moveSpeed.LengthSq() <= 0.0f)
-	{
-		m_anim_num = enAnimationClip_Idle;
 	}
-	
 
-
-	if (m_anim_num == 0)
-	{
-		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
-	}
-	else if (m_anim_num == 1)
-	{
-		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
-	}
-	else
-	{
-		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
-	}
-#endif
 }
