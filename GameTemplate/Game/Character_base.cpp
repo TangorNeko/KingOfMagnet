@@ -56,6 +56,9 @@ void Character_base::ChangeMagnetPower()
 		}
 		m_timer = 0;
 	}
+	//////////////////////////////
+	//デバック用
+	//m_magPower = -1;
 }
 
 void Character_base::DisplayStatus()
@@ -305,4 +308,43 @@ void Character_base::Lose()
 	m_spriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_spriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_spriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
+}
+//磁力の状態でプレイヤーが反発し合ったり、引かれ合ったりする
+void Character_base::PlayerMagneticMove()
+{
+	m_position_with_enemy = m_position - m_enemy->m_position;//自分から敵までの距離ベクトル
+	if (m_position_with_enemy.Length() < 500&& m_position_with_enemy.Length() >= 50) {//距離が近ければ
+		m_magStatediff = m_magPower + m_enemy->m_magPower;//自分と敵の磁力状態の差
+		if (m_magStatediff >= 1)//互いに斥力の状態
+		{
+			m_repulsionSpeed = m_position_with_enemy;//自分から敵までの距離ベクトル
+			m_repulsionSpeed.Normalize();//正規化
+			
+			m_repulsionSpeed *=0.3*fabs(m_magStatediff);
+			
+			if (m_magPower == 0) {//自分の磁力がない場合自分だけうごく
+				m_position = m_charaCon.Execute(m_repulsionSpeed, 1.0f);
+			}
+			else if (m_magPower != 0 && m_enemy->m_magPower != 0) {
+				m_position = m_charaCon.Execute(m_repulsionSpeed, 1.0f);
+			}
+		}
+		if (m_magStatediff <= -1)//引力の状態
+		{
+			m_repulsionSpeed = m_position_with_enemy;//自分から敵までの距離ベクトル
+			m_repulsionSpeed.Normalize();//正規化
+			m_repulsionSpeed *= -1;			
+			m_repulsionSpeed *= 0.3 * fabs(m_magStatediff);
+			
+
+			if (m_magPower == 0) {
+				m_position = m_charaCon.Execute(m_repulsionSpeed, 1.0f);
+			}
+			else if (m_magPower != 0 && m_enemy->m_magPower != 0) {
+				m_position = m_charaCon.Execute(m_repulsionSpeed, 1.0f);
+			}
+		}
+		
+	}
+	
 }

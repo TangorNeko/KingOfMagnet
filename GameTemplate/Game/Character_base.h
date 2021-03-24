@@ -32,6 +32,9 @@ protected:
 	//アニメーション
 	virtual void AnimationSelect() = 0;
 
+	//プレイヤーにかかる磁力の影響
+	void PlayerMagneticMove();
+
 public:
 	virtual ~Character_base();
 	Quaternion rot;//キャラクターの回転
@@ -42,8 +45,17 @@ public:
 	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
 	Vector3 front;//カメラの前方向
 	Vector3 right;//カメラの右方向
+
 	float n;//内積
 	float angle;//アークコサイン
+	
+	Vector3 m_to_enemy;
+	float m_angle_with_enemy;
+	Vector3 m_position_with_enemy;
+
+	Vector3 m_repulsionSpeed;
+
+	int m_magStatediff;
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//キャラクターのモデル
 	prefab::CPointLight* m_pointLight = nullptr;//チャージ確認用のポイントライト(TODO:後からエフェクトに差し替え予定)
@@ -65,6 +77,7 @@ public:
 	int m_timer = 0;//磁力変化用のタイマー
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 	bool m_isSceneStop = false;//動けるか動けないか
+	
 	//現在の磁力の状態を取得
 	int GetMagPower()const { return m_magPower; }
 

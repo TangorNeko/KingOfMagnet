@@ -96,7 +96,7 @@ void Ninja::Update()
 		//固有攻撃
 		SpecialAttack();
 
-
+		
 		//移動関連2
 		m_moveSpeed.y = -2.0f;
 
@@ -104,6 +104,9 @@ void Ninja::Update()
 		m_magPosition = m_position;
 		m_magPosition.y += 50.0f;
 		m_skinModelRender->SetPosition(m_position);
+		
+		//キャラクターにかかる磁力の影響
+		PlayerMagneticMove();
 
 		//カメラ関連
 		Camera();
