@@ -79,7 +79,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	level.Init("Assets/modelData/yuka2.tkl",nullptr);
 	*/
 		
-
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////

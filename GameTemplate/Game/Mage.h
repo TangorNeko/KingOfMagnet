@@ -40,6 +40,8 @@ public:
 	//待機状態に切り替えできたら切り替える。
 	void TryChangeStatusIdle();
 
+	prefab::CSoundSource* m_chargeSound = nullptr;
+
 	
 	//状態更新
 	void UpdateState();
