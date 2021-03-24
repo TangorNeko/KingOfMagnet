@@ -25,6 +25,8 @@ namespace prefab
 
 		initData.m_height = height;
 
+		initData.m_alphaBlendMode = AlphaBlendMode_Trans;
+
 		m_sprite.Init(initData);
 	}
 

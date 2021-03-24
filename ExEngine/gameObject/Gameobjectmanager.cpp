@@ -134,9 +134,6 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
-		//1P‘¤‚Ì‰æ–Ê‚ÌƒJƒƒ‰‚Í1P‚ÌƒJƒƒ‰(g_camera3D[0])
-		CLightManager::GetInstance()->UpdateEyePos(0);
-		g_camera3D[0]->SetAspect(1);
 		for (auto& goList : m_gameObjectListArray) {
 			for (auto& go : goList) {
 				go->RenderWrapper(rc, g_camera3D[0]);
