@@ -54,6 +54,9 @@
     <Filter Include="ソース ファイル\Assets\modelData">
       <UniqueIdentifier>{be582d35-47e0-4ddd-840f-cfa8d46913f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MiniEngine\time">
+      <UniqueIdentifier>{9d735050-840b-4cd6-91d4-94b69ef4dbae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -291,6 +294,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CLevelRender2D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundEngine.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CSoundSource.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveFile.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveFileBank.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -558,6 +573,30 @@
     </ClInclude>
     <ClInclude Include="CLevelRender2D.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEngine.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CSoundSource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveFile.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveFileBank.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CUtil.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="NameKey.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MiniEngine\time\GameTime.h">
+      <Filter>MiniEngine\time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MiniEngine\time\Stopwatch.h">
+      <Filter>MiniEngine\time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

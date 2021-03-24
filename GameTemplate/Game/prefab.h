@@ -6,3 +6,4 @@
 #include "CPointLight.h"
 #include "CSpotLight.h"
 #include "CLevelRender2D.h"
+#include "CSoundSource.h"

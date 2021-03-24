@@ -302,6 +302,7 @@
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSkinModelRender.cpp" />
     <ClCompile Include="CLightManager.cpp" />
+    <ClCompile Include="CSoundSource.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSpriteRender.cpp" />
     <ClCompile Include="Knight.cpp" />
@@ -313,6 +314,7 @@
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
+    <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -327,6 +329,8 @@
     <ClCompile Include="tklFile.cpp" />
     <ClCompile Include="tkmFileManager.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
+    <ClCompile Include="WaveFile.cpp" />
+    <ClCompile Include="WaveFileBank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ExEngine\ExEngine.h" />
@@ -380,6 +384,8 @@
     <ClInclude Include="..\..\MiniEngine\Sprite.h" />
     <ClInclude Include="..\..\MiniEngine\StructuredBuffer.h" />
     <ClInclude Include="..\..\MiniEngine\Texture.h" />
+    <ClInclude Include="..\..\MiniEngine\time\GameTime.h" />
+    <ClInclude Include="..\..\MiniEngine\time\Stopwatch.h" />
     <ClInclude Include="..\..\MiniEngine\tkEngine.h" />
     <ClInclude Include="..\..\MiniEngine\tkFile\TkaFile.h" />
     <ClInclude Include="..\..\MiniEngine\tkFile\TkmFile.h" />
@@ -399,16 +405,20 @@
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSkinModelRender.h" />
     <ClInclude Include="CLightManager.h" />
+    <ClInclude Include="CSoundSource.h" />
     <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSpriteRender.h" />
+    <ClInclude Include="CUtil.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Level2D.h" />
     <ClInclude Include="Mage.h" />
     <ClInclude Include="MapChip2D.h" />
     <ClInclude Include="MyCapsuleCollider.h" />
+    <ClInclude Include="NameKey.h" />
     <ClInclude Include="Ninja.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
+    <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
@@ -417,6 +427,8 @@
     <ClInclude Include="tklFile.h" />
     <ClInclude Include="tkmFileManager.h" />
     <ClInclude Include="TriangleCollider.h" />
+    <ClInclude Include="WaveFile.h" />
+    <ClInclude Include="WaveFileBank.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\modelData\StageUV.png" />

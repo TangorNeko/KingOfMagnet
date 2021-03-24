@@ -37,7 +37,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//tkmファイルマネージャのインスタンスを作成
 	tkmFileManager::CreateInstance();
 
+	CSoundEngine::CreateInstance();
+	CSoundEngine::GetInstance()->Init();
+
 	//////////////////////////////////////////////////
+
 	//TitleScene* title = NewGO<TitleScene>(0, "Title");
 
 	//ステージのライトを作成
@@ -103,9 +107,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
 
+	//ライトマネージャーを削除
 	CLightManager::DeleteInstance();
-
+	
+	//tkmFileManagerを削除
 	tkmFileManager::DeleteInstance();
+
+	//サウンドエンジンを削除
+	CSoundEngine::DeleteInstance();
 	return 0;
 }
 
