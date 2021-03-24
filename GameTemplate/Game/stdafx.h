@@ -7,5 +7,3 @@
 #include "prefab.h"
 #include "CLightManager.h"
 #include "tkmFileManager.h"
-
-#include "time/Stopwatch.h"

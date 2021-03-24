@@ -55,11 +55,7 @@ public:
 	bool m_move_on=false;
 	bool m_move_attack = true;
 
-	Vector3 front;	
-	Vector3 to_enemy;
-	float angle_with_enemy;
-	Vector3 position_with_enemy;
-
+	
 	enum {
 		enAnimationClip_Attack,
 		enAnimationClip_Run, 		

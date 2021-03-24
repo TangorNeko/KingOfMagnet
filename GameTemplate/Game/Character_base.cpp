@@ -308,3 +308,16 @@ void Character_base::Lose()
 	m_spriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_spriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
 }
+
+void Character_base::PlayerMagneticMove()
+{
+	m_position_with_enemy = m_position - m_enemy->m_position;//自分から敵までの距離ベクトル
+	if (m_position_with_enemy.Length() < 500) {//敵が前にいる状態かつ、距離が近ければ
+		if (m_magPower >= 1 && m_enemy->m_magPower >= 1)//互いに斥力の状態
+		{
+			m_repulsionSpeed = m_position_with_enemy;//途中だよ
+			//
+		}
+	}
+	
+}

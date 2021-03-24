@@ -210,15 +210,14 @@ void Knight::DisplayStatus()
 void Knight::MoveAction()
 {
 	//移動アクション
+	//Aが押されて前の移動アクションから20フレーム立っていたら
 	if (g_pad[m_playerNum]->IsTrigger(enButtonA) && m_moveActionCount == 0 && !(g_pad[m_playerNum]->IsPress(enButtonLB2)))
 	{
-		//m_skinModelRender->SetScale({ 0.0f,0.0f,0.0f });
 		m_moveActionCount = 20;
 		m_move_on = true;
 	}
 	else
 	{
-		
 		m_moveActionCount--;
 		if (m_moveActionCount < 0)
 		{
@@ -230,10 +229,10 @@ void Knight::MoveAction()
 		m_move_count++;
 		m_moveSpeed += m_characterDirection * 50.0f;
 		front = g_camera3D[m_playerNum]->GetForward();
-		to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル 
-		angle_with_enemy = front.Dot(to_enemy);//敵にどれだけ向いているか
-		position_with_enemy = to_enemy;//自分から敵までのベクトル
-		if (angle_with_enemy < -0.5 && position_with_enemy.Length() < 100&&m_move_attack==true) {//敵が前にいる状態かつ、距離が近ければ
+		m_to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル 
+		m_angle_with_enemy = front.Dot(m_to_enemy);//敵にどれだけ向いているか
+		m_position_with_enemy = m_to_enemy;//自分から敵までのベクトル
+		if (m_angle_with_enemy < -0.5 && m_position_with_enemy.Length() < 100&&m_move_attack==true) {//敵が前にいる状態かつ、距離が近ければ
 			m_enemy->Damage(5*m_chargelevel);
 			m_move_attack = false;//1回だけダメージを与えるループを開始する
 		}
@@ -321,17 +320,15 @@ void Knight::SpecialAttack()
 	//固有攻撃
 	if (g_pad[m_playerNum]->IsPress(enButtonX))
 	{	 		
-		//攻撃アニメーション
-		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		SpecialAttack_flag = true;
-		to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
-		position_with_enemy = to_enemy;//自分から敵までのベクトル
-		to_enemy.Normalize();
+		m_to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
+		m_position_with_enemy = m_to_enemy;//自分から敵までのベクトル
+		m_to_enemy.Normalize();
 		front = g_camera3D[m_playerNum]->GetForward();
 		front.y = 0;
 		front.Normalize();
-		angle_with_enemy =front.Dot(to_enemy);//敵にどれだけ向いているか
-		if (angle_with_enemy < -0.7&&position_with_enemy.Length() < 100) {//敵が前にいる状態かつ、距離が近ければ
+		m_angle_with_enemy =front.Dot(m_to_enemy);//敵にどれだけ向いているか
+		if (m_angle_with_enemy < -0.7&&m_position_with_enemy.Length() < 100) {//敵が前にいる状態かつ、距離が近ければ
 			loop_flag = true;//ダメージを与えるループを開始する
 		}
 		m_charge = 0;//チャージを０にする
