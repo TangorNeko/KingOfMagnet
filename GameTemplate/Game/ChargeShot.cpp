@@ -31,6 +31,11 @@ void ChargeShot::Update()
 	//弾の移動処理
 	m_position += m_moveDirection * m_velocity;
 
+	//プレイヤーとの衝突判定用のカプセルの位置を更新。
+	m_collider.SetStartPoint(oldPos);
+	m_collider.SetEndPoint(m_position);
+	m_collider.SetRadius(30.0f);
+
 	//TODO:後からきちんとした衝突判定は作る。　これはプロトタイプ用　障害物の座標と同じなら弾を消す
 	if ((-113 < m_position.x && m_position.x < 105 && 857 < m_position.z && m_position.z < 1103) ||
 		(915 < m_position.x && m_position.x < 1075 && -94 < m_position.z && m_position.z < 62) ||
@@ -56,7 +61,7 @@ void ChargeShot::Update()
 				Vector3 diff = player->m_magPosition - m_position;
 				
 				//前フレームの位置と移動後の位置を結んだ線が敵プレイヤーの当たり判定の三角形を通っている場合
-				if (player->m_collider.isHit(oldPos, m_position))
+				if (player->m_collider.isHitCapsule(m_collider))
 				{
 					//敵プレイヤーに速度に応じてダメージを与える
 					player->Damage(m_velocity * 4);

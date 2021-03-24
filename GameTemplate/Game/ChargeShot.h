@@ -1,5 +1,6 @@
 #pragma once
 class ShowModel;
+#include "MyCapsuleCollider.h"
 
 class ChargeShot : public IGameObject
 {
@@ -14,6 +15,7 @@ public:
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };
 	float m_velocity = 1.0f;
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
+	MyCapsuleCollider m_collider;
 
 	prefab::CSkinModelRender* m_oldbullet = nullptr;
 	prefab::CPointLight* m_pointLight = nullptr;

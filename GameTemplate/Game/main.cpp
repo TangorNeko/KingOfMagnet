@@ -49,13 +49,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	level2D->Init("Assets/Level2D/Level2DTest.casl", nullptr);
 
 	//プレイヤー1を作成
-	Mage* showm = NewGO<Mage>(0, "Player");
+	Character_base* showm = NewGO<Mage>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 2;
 
 	//プレイヤー2を作成
-	Knight* showm2 = NewGO<Knight>(0, "Player");
+	Character_base* showm2 = NewGO<Knight>(0, "Player");
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -2;

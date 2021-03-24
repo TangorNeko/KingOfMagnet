@@ -1,5 +1,6 @@
 #pragma once
 #include "TriangleCollider.h"
+#include "MyCapsuleCollider.h"
 
 class ShowModel : public IGameObject
 {
@@ -52,7 +53,8 @@ public:
 		enAnimNum
 	};
 	AnimationClip m_animClip[enAnimNum];
-	TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
+	//TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
+	MyCapsuleCollider m_collider;//カプセルの形の当たり判定
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、なし(0)、引力状態(-1,-2)、斥力状態(1,2)
 	int m_normalAttackCount = 0;//通常攻撃のタイマー

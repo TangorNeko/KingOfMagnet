@@ -1,5 +1,5 @@
 #pragma once
-#include "TriangleCollider.h"
+#include "MyCapsuleCollider.h"
 class Character_base : public IGameObject
 {
 public:
@@ -50,7 +50,8 @@ public:
 	prefab::CFontRender* m_fontRender = nullptr;//体力、チャージ、磁力等確認用のフォント(TODO:後からUIスプライトに差し替え予定)
 	prefab::CSpriteRender* m_spriteRender = nullptr;//勝利もしくは敗北時に表示するスプライト
 	CharacterController m_charaCon;//プレイヤーのキャラコン
-	TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
+	//TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
+	MyCapsuleCollider m_collider;
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、なし(0)、引力状態(-1,-2)、斥力状態(1,2)
 	int m_normalAttackCount = 0;//通常攻撃のタイマー
