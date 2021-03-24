@@ -25,7 +25,7 @@ bool Knight::Start()
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Move].Load("Assets/animData/Mage_Attack.tka");
 	animationClips[enAnimationClip_Move].SetLoopFlag(false);	//ループモーションにする。
-
+	
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Knight.tkm", "Assets/modelData/Knight.tks",animationClips,enAnimationClip_num);
@@ -304,7 +304,11 @@ void Knight::Charge()
 			m_chargelevel = 4;
 			m_charge = 1000.0f;
 		}
-		
+		//音の再生
+		m_chargeSound = NewGO<prefab::CSoundSource>(0);
+		m_chargeSound->Init(L"Assets/sound/ビーム砲チャージ.wav");
+		m_chargeSound->SetVolume(0.5f);
+		m_chargeSound->Play(false);
 
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
@@ -321,9 +325,10 @@ void Knight::Charge()
 void Knight::SpecialAttack()
 {
 	//固有攻撃
-	if (g_pad[m_playerNum]->IsPress(enButtonX))
-	{	 		
+	if (g_pad[m_playerNum]->IsPress(enButtonX)&& SpecialAttack_flag==false)
+	{	
 		SpecialAttack_flag = true;
+		
 		m_to_enemy = m_position - m_enemy->m_position;//自分から敵までのベクトル
 		m_position_with_enemy = m_to_enemy;//自分から敵までのベクトル
 		m_to_enemy.Normalize();
@@ -333,6 +338,20 @@ void Knight::SpecialAttack()
 		m_angle_with_enemy =front.Dot(m_to_enemy);//敵にどれだけ向いているか
 		if (m_angle_with_enemy < -0.7&&m_position_with_enemy.Length() < 100) {//敵が前にいる状態かつ、距離が近ければ
 			loop_flag = true;//ダメージを与えるループを開始する
+			//音の再生
+			m_swordSound = NewGO<prefab::CSoundSource>(0);
+			m_swordSound->Init(L"Assets/sound/剣が当たる.wav");
+			m_swordSound->SetVolume(0.5f);
+			m_swordSound->Play(false);
+
+		}
+		else {
+			//音の再生
+			m_swordSound = NewGO<prefab::CSoundSource>(0);
+			m_swordSound->Init(L"Assets/sound/剣の素振り2.wav");
+			m_swordSound->SetVolume(0.5f);
+			m_swordSound->Play(false);
+
 		}
 		m_charge = 0;//チャージを０にする
 	}
@@ -340,7 +359,7 @@ void Knight::SpecialAttack()
 		SpecialAttack_count++;
 		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 1.0f + right * g_pad[m_playerNum]->GetLStickXF() * 1.0f;
 	}
-	if (SpecialAttack_count > 15) {
+	if (SpecialAttack_count > 52) {
 		SpecialAttack_count=0;
 		SpecialAttack_flag = false;
 	}

@@ -233,7 +233,14 @@ void Mage::Charge()
 			m_charge = 1000.0f;
 		}
 		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 1.0f + right * g_pad[m_playerNum]->GetLStickXF() * 1.0f;
-		
+		//音の再生
+		/*m_chargeSound = NewGO<prefab::CSoundSource>(0);
+		m_chargeSound->Init(L"Assets/sound/ビーム砲チャージ.wav");
+		m_chargeSound->SetVolume(0.5f);
+		if (m_chargeSound->IsPlaying() == false) {			
+			m_chargeSound->Play(false);
+		}*/
+
 	}
 
 	//チャージ確認用

@@ -43,7 +43,9 @@ public:
 	void TryChangeStatusMove();
 
 	prefab::CSkinModelRender* m_weaponModel = nullptr;
-
+	
+	prefab::CSoundSource* m_swordSound=nullptr;
+	prefab::CSoundSource* m_chargeSound = nullptr;
 	//ŒÅ—LUŒ‚ƒ_ƒ[ƒW’x‰„
 	int loop_count = 0;
 	bool loop_flag = false;//UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«
