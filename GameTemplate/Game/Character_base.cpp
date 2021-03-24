@@ -14,17 +14,15 @@
 
 void Character_base::Collision()
 {
-	//三角形の当たり判定をつくる
-	Vector3 sidePos1 = m_position;
-	sidePos1.y += 60.0f;
-	Vector3 diff = m_enemy->m_position - m_position;
-	diff.Normalize();
-	diff.Cross(Vector3::AxisY);
-	Vector3 sidePos2 = sidePos1;
-	sidePos1 += diff * 40;
-	sidePos2 -= diff * 40;
+	//カプセルの当たり判定をつくる。
+	Vector3 legPos = m_position;
+	Vector3 headPos = m_position;
+	headPos.y += 100.0f;
 
-	m_collider.SetVertex(m_position, sidePos1, sidePos2);
+	//カプセルの始点と終点を更新する。(半径はStart関数で最初だけ決めてもよい)
+	m_collider.SetStartPoint(legPos);
+	m_collider.SetEndPoint(headPos);
+	m_collider.SetRadius(20.0f);
 }
 
 void Character_base::ChangeMagnetPower()

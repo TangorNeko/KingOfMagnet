@@ -37,13 +37,11 @@ bool ShowModel::Start()
 	m_fontRender = NewGO<prefab::CFontRender>(1);
 	m_fontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_fontRender->SetPosition({-625.0f, 350.0f});
-	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 	return true;}
 
 void ShowModel::Update()
 {
-	m_skinModelRender->PlayAnimation(enAnim_Run);
+	m_skinModelRender->PlayAnimation(enAnim_Idle);
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -120,18 +118,16 @@ void ShowModel::Update()
 }
 
 void ShowModel::Collision()
-{
-	//三角形の当たり判定をつくる
-	Vector3 sidePos1 = m_position;
-	sidePos1.y += 60.0f;
-	Vector3 diff = m_enemy->m_position - m_position;
-	diff.Normalize();
-	diff.Cross(Vector3::AxisY);
-	Vector3 sidePos2 = sidePos1;
-	sidePos1 += diff * 40;
-	sidePos2 -= diff * 40;
+{	
+	//カプセルの当たり判定をつくる。
+	Vector3 legPos = m_position;
+	Vector3 headPos = m_position;
+	headPos.y += 100.0f;
 
-	m_collider.SetVertex(m_position, sidePos1, sidePos2);
+	//カプセルの始点と終点を更新する。(半径はスタートで最初だけ決めてもよい)
+	m_collider.SetStartPoint(legPos);
+	m_collider.SetEndPoint(headPos);
+	m_collider.SetRadius(20.0f);
 }
 
 void ShowModel::ChangeMagnetPower()
