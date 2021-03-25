@@ -4,6 +4,7 @@
 #include "ChargeShot.h"
 #include <string>
 #include "Knight.h"
+#include "BackGround.h"
 
 Knight::~Knight()
 {
@@ -43,11 +44,17 @@ bool Knight::Start()
 	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 
+	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
+	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
+	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
+
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
 
 	m_skinModelRender->SetScale({ Scale });
 	front.y = 0;
+
+	m_stageModel = FindGO<BackGround>("background");
 	return true;
 }
 void Knight::Update()
@@ -271,12 +278,30 @@ void Knight::NormalAttack()
 		}
 		else
 		{
+			Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+			Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
+			Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
+
+			Vector3 crossPoint;
+
+			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
-			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			bullet->m_moveDirection.y = 0.0f;
-			bullet->m_moveDirection.Normalize();
+
+			if (hitFlag)
+			{
+				//Æ€‚ÌŽw‚·•ûŒü‚É”ò‚Î‚·
+				bullet->m_moveDirection = crossPoint - m_magPosition;
+				bullet->m_moveDirection.Normalize();
+			}
+			else
+			{
+				bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				bullet->m_moveDirection.y = 0.0f;
+				bullet->m_moveDirection.Normalize();
+			}
 			bullet->m_velocity = 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}

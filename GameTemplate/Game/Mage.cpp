@@ -2,6 +2,7 @@
 #include "Character_base.h"
 #include "Bullet.h"
 #include "ChargeShot.h"
+#include "BackGround.h"
 #include <string>
 #include"Mage.h"
 
@@ -39,6 +40,11 @@ bool Mage::Start()
 	m_fontRender->SetPosition({ -625.0f, 350.0f });
 	//floor_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
+	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
+	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
+	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
+
+	m_stageModel = FindGO<BackGround>("background");
 	return true;
 }
 void Mage::Update()
@@ -208,12 +214,30 @@ void Mage::NormalAttack()
 		}
 		else
 		{
+			Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+			Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
+			Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
+
+			Vector3 crossPoint;
+
+			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
-			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			bullet->m_moveDirection.y = 0.0f;
-			bullet->m_moveDirection.Normalize();
+
+			if (hitFlag)
+			{
+				//Æ€‚ÌŽw‚·•ûŒü‚É”ò‚Î‚·
+				bullet->m_moveDirection = crossPoint - m_magPosition;
+				bullet->m_moveDirection.Normalize();
+			}
+			else
+			{
+				bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				bullet->m_moveDirection.y = 0.0f;
+				bullet->m_moveDirection.Normalize();
+			}
 			bullet->m_velocity = 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
@@ -271,12 +295,29 @@ void Mage::SpecialAttack()
 		}
 		else
 		{
+			Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+			Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
+			Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
+
+			Vector3 crossPoint;
+
+			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+
 			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
 			chargeshot->m_position = m_position;
 			chargeshot->m_position.y += 50;
-			chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			chargeshot->m_moveDirection.y = 0.0f;
-			chargeshot->m_moveDirection.Normalize();
+
+			if(hitFlag)
+			{ 
+				chargeshot->m_moveDirection = crossPoint - m_magPosition;
+				chargeshot->m_moveDirection.Normalize();
+			}
+			else
+			{
+				chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				chargeshot->m_moveDirection.y = 0.0f;
+				chargeshot->m_moveDirection.Normalize();
+			}
 			chargeshot->m_velocity = 50.0f;
 			chargeshot->m_parentNo = m_playerNum;
 		}

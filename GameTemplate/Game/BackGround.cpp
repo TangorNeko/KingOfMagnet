@@ -28,3 +28,8 @@ void BackGround::Update()
 {
 	m_skinModelRender->SetPosition(m_position);
 }
+
+bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector3& crossPoint)
+{
+	return m_skinModelRender->isLineHitModel(start, end, crossPoint);
+}
