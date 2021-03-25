@@ -1,5 +1,7 @@
 #pragma once
 #include "MyCapsuleCollider.h"
+class BackGround;
+
 class Character_base : public IGameObject
 {
 public:
@@ -42,6 +44,7 @@ public:
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCamera = { 0.0f,100.0f,-100.0f };//キャラクターからカメラへのベクトル
+	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };
 	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
 	Vector3 front;//カメラの前方向
 	Vector3 right;//カメラの右方向
@@ -61,6 +64,8 @@ public:
 	prefab::CPointLight* m_pointLight = nullptr;//チャージ確認用のポイントライト(TODO:後からエフェクトに差し替え予定)
 	prefab::CFontRender* m_fontRender = nullptr;//体力、チャージ、磁力等確認用のフォント(TODO:後からUIスプライトに差し替え予定)
 	prefab::CSpriteRender* m_spriteRender = nullptr;//勝利もしくは敗北時に表示するスプライト
+	prefab::CSpriteRender* m_crosshairRender = nullptr;//照準のスプライト
+	BackGround* m_stageModel;
 	CharacterController m_charaCon;//プレイヤーのキャラコン
 	//TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
 	MyCapsuleCollider m_collider;

@@ -210,74 +210,42 @@ void Character_base::Camera()
 		m_isLock = !m_isLock;//ロック切り替え
 	}
 
-	if (m_isLock)//ロックしているなら
+	Vector3 targetPos = m_position;
+	targetPos.y += 90.0f;
+
+	if (m_isLock)
 	{
-
-		Vector3 toCamera = m_position - m_enemy->m_position;//自分から敵へ向かうベクトル
-
-
-
-		toCamera.Normalize();
-		Vector3 Axis;
-		Axis.Cross(toCamera, Vector3::Up);
-		toCamera *= 140.0f;
-
-		Quaternion qRot;
-		qRot.SetRotationDeg(Axis, 45.0f);
-		qRot.Apply(toCamera);
-
-
-		g_camera3D[m_playerNum]->SetPosition(m_position + toCamera);
-		g_camera3D[m_playerNum]->SetTarget(m_enemy->m_magPosition);
+		Vector3 toEnemy = m_enemy->m_magPosition - targetPos;
+		toEnemy.Normalize();
+		m_toCameraDir = toEnemy * -1.0f;
 	}
 	else
 	{
-		Vector3 targetPos = m_position;
-		targetPos.y += 50.0f;
-
 		Quaternion qRotY;
 		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 1.5);
-		qRotY.Apply(m_toCamera);
-
-
+		qRotY.Apply(m_toCameraDir);
 
 		Quaternion qRotX;
 		Vector3 right = g_camera3D[m_playerNum]->GetRight();
 		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1.5);
-		Vector3 checkToCamera = m_toCamera;
+		Vector3 checkToCamera = m_toCameraDir;
 		qRotX.Apply(checkToCamera);
 		checkToCamera.Normalize();
 		float t = checkToCamera.Dot(Vector3::Up);
-		if (t > 0.99f || t < 0.1f)
+		if (t > 0.99f || t < -0.99f)
 		{
 
 		}
 		else
 		{
-			qRotX.Apply(m_toCamera);
+			qRotX.Apply(m_toCameraDir);
 		}
-
-		Vector3 cameraPos = m_position + m_toCamera;
-		//g_camera3D->SetPosition(m_position + m_toCamera);
-		g_camera3D[m_playerNum]->SetPosition(cameraPos);
-		g_camera3D[m_playerNum]->SetTarget(targetPos);
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//if (g_pad[m_playerNum]->IsTrigger(enButtonLB1))
-		//{				
-		//	Vector3 atarget = targetPos - m_position;//a
-		//	Vector3 btarget = m_enemy->m_position - m_position;//b	
-		//	atarget.Normalize();
-		//	btarget.Normalize();
-		//	float t=atarget.Dot(btarget);
-		//	float angle = acosf(t);//アークコサイン
-		//	if (atarget.x < 0) {
-		//		angle *= -1;
-		//	}
-
-		//}
-
 	}
 
+	Vector3 cameraPos = targetPos + m_toCameraDir * 125.0f;
+
+	g_camera3D[m_playerNum]->SetPosition(cameraPos);
+	g_camera3D[m_playerNum]->SetTarget(targetPos);
 }
 
 void Character_base::Damage(int damage)
