@@ -305,13 +305,34 @@ void Knight::Charge()
 			m_charge = 1000.0f;
 		}
 		//音の再生
-		m_chargeSound = NewGO<prefab::CSoundSource>(0);
-		m_chargeSound->Init(L"Assets/sound/ビーム砲チャージ.wav");
-		m_chargeSound->SetVolume(0.5f);
-		m_chargeSound->Play(false);
+		if (m_chargeSound == nullptr)
+		{
+			m_chargeSound = NewGO<prefab::CSoundSource>(0);
+			m_chargeSound->Init(L"Assets/sound/ビーム砲チャージ.wav");
+			m_chargeSoundVolume = 0.6f;
+			m_chargeSound->SetVolume(m_chargeSoundVolume);
+			m_chargeSound->Play(true);
+		}
 
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
+	else
+	{
+		if (m_chargeSound != nullptr)
+		{
+			m_chargeSoundVolume -= 0.05f;
+			if (m_chargeSoundVolume <= 0.0f)
+			{
+				DeleteGO(m_chargeSound);
+				m_chargeSound = nullptr;
+			}
+			else
+			{
+				m_chargeSound->SetVolume(m_chargeSoundVolume);
+			}
+		}
+	}
+
 	//チャージ確認用
 	if (m_charge < 1000.0f) {
 		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
