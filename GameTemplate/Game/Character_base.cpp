@@ -37,7 +37,7 @@ void Character_base::ChangeMagnetPower()
 	}
 
 	m_timer+=m_timerAccele;
-	if (m_timer == 600)
+	if (m_timer >= 600)
 	{
 		if (m_isMagPowerIncreasing)
 		{
