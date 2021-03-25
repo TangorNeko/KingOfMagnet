@@ -27,7 +27,16 @@ void Character_base::Collision()
 
 void Character_base::ChangeMagnetPower()
 {
-	m_timer++;
+	//Ž¥—Í‰Á‘¬ƒAƒCƒeƒ€‚ðŽæ‚Á‚½‚Æ‚«
+	if (m_timerAccele == 2 && m_AcceleLoop < 600) {
+		m_AcceleLoop++;
+	}
+	else {
+		m_timerAccele = 1;
+		
+	}
+
+	m_timer+=m_timerAccele;
 	if (m_timer == 600)
 	{
 		if (m_isMagPowerIncreasing)

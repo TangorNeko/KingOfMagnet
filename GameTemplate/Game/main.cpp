@@ -10,7 +10,7 @@
 #include "Tank.h"
 #include "Ninja.h"
 #include "TitleScene.h"
-
+#include "PopRandItem.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -53,13 +53,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	level2D->Init("Assets/Level2D/Level2DTest.casl", nullptr);
 
 	//プレイヤー1を作成
-	Character_base* showm = NewGO<Mage>(0, "Player");
+	Character_base* showm = NewGO<Knight>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,-500.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 1;
 
 	//プレイヤー2を作成
-	Character_base* showm2 = NewGO<Knight>(0, "Player");
+	Character_base* showm2 = NewGO<Mage>(0, "Player");
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -1;
@@ -73,12 +73,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	NewGO<BackGround>(0, "background");
 	//NewGO<ShowSprite>(1, "sprite");
 
-	
 	/*
 	prefab::CLevel level;
 	level.Init("Assets/modelData/yuka2.tkl",nullptr);
 	*/
-		
+
+
+	//アイテムをランダムに出現させる
+	NewGO<PopRandItem>(0, "popranditem");
+
+
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////

@@ -97,7 +97,8 @@ public:
 
 	int m_anim_num = 0;
 
-
+	int m_timerAccele = 1;
+	int m_AcceleLoop = 0;
 
 };
 
