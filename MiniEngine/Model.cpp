@@ -42,7 +42,8 @@ void Model::Init(const ModelInitData& initData)
 			initData.m_psEntryPointFunc,
 			initData.m_expandConstantBuffer,
 			initData.m_expandConstantBufferSize,
-			initData.m_expandShaderResoruceView
+			initData.m_expandShaderResoruceView,
+			initData.m_colorBufferFormat
 		);
 	}
 	else
@@ -58,7 +59,8 @@ void Model::Init(const ModelInitData& initData)
 			initData.m_psEntryPointFunc,
 			initData.m_expandConstantBuffer,
 			initData.m_expandConstantBufferSize,
-			initData.m_expandShaderResoruceView
+			initData.m_expandShaderResoruceView,
+			initData.m_colorBufferFormat
 		);
 		
 	}
