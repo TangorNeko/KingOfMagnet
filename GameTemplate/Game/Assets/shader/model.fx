@@ -122,6 +122,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
 	psIn.normal = mul(m, vsIn.normal);
+	psIn.normal = normalize(psIn.normal);
 
 	psIn.normalInView = mul(mView, psIn.normal);
 

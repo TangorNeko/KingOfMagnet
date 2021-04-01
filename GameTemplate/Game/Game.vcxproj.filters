@@ -230,13 +230,7 @@
     <ClCompile Include="CSpotLight.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
-    <ClCompile Include="CLevel.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="tklFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CMapChipRender.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
@@ -244,12 +238,6 @@
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
       <Filter>MiniEngine\font</Filter>
-    </ClCompile>
-    <ClCompile Include="CSpriteRender.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CFontRender.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="TriangleCollider.cpp">
       <Filter>ソース ファイル</Filter>
@@ -293,13 +281,7 @@
     <ClCompile Include="MapChip2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CLevelRender2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="SoundEngine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CSoundSource.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="WaveFile.cpp">
@@ -322,6 +304,24 @@
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\RenderTarget.cpp">
       <Filter>MiniEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="CFontRender.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CLevel.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpriteRender.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CSoundSource.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CMapChipRender.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="CLevelRender2D.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,19 +526,10 @@
     <ClInclude Include="CSpotLight.h">
       <Filter>ソース ファイル\prefab</Filter>
     </ClInclude>
-    <ClInclude Include="CLevel.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="tklFile.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CMapChipRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CSpriteRender.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CFontRender.h">
@@ -586,13 +577,7 @@
     <ClInclude Include="MapChip2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CLevelRender2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SoundEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CSoundSource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="WaveFile.h">
@@ -624,6 +609,21 @@
     </ClInclude>
     <ClInclude Include="MagAcceleration_item.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CLevelRender2D.h">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CMapChipRender.h">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpriteRender.h">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CSoundSource.h">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CLevel.h">
+      <Filter>ソース ファイル\prefab</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

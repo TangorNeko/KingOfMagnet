@@ -61,6 +61,11 @@ public:
 	/// <param name="rc"></param>
 	void ExecuteRender(RenderContext& rc);
 	
+	/// <summary>
+	/// ポストレンダーの描画処理を実行。
+	/// </summary>
+	/// <param name="rc"></param>
+	void ExecutePostRender(RenderContext& rc);
 	
 	/*!
 	*@brief	ゲームオブジェクトのnew

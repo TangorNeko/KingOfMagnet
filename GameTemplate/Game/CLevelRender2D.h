@@ -29,10 +29,11 @@ namespace prefab
 
 		/// <summary>
 		/// レンダーステップが2DLevel用の時のみ描画する。
+		/// PostRenderなのでブルーム等のエフェクトの影響を受けない。
 		/// </summary>
 		/// <param name="rc">レンダーコンテキスト</param>
 		/// <param name="camera">カメラ</param>
-		void Render(RenderContext& rc, Camera* camera)
+		void PostRender(RenderContext& rc, Camera* camera)
 		{
 			if (rc.GetRenderStep() == RenderContext::eStep_RenderAllScreen)
 			{
