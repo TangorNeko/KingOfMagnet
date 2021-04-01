@@ -155,10 +155,9 @@
 		psoDesc.SampleMask = UINT_MAX;
 		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		psoDesc.NumRenderTargets = 1;
-		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		psoDesc.RTVFormats[0] = initData.m_colorBufferFormat;
 		psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 		psoDesc.SampleDesc.Count = 1;
-		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		m_pipelineState.Init(psoDesc);
 	}
 	void Sprite::InitConstantBuffer(const SpriteInitData& initData)
@@ -232,10 +231,11 @@
 		Matrix projMatrix = g_camera2D->GetProjectionMatrix();
 
 		m_constantBufferCPU.mvp = m_world * viewMatrix * projMatrix;
-		m_constantBufferCPU.mulColor.x = 1.0f;
-		m_constantBufferCPU.mulColor.y = 1.0f;
-		m_constantBufferCPU.mulColor.z = 1.0f;
-		m_constantBufferCPU.mulColor.w = 1.0f;
+		//スプライトを透過させたりするため変更。
+		//m_constantBufferCPU.mulColor.x = 1.0f;
+		//m_constantBufferCPU.mulColor.y = 1.0f;
+		//m_constantBufferCPU.mulColor.z = 1.0f;
+		//m_constantBufferCPU.mulColor.w = 1.0f;
 		m_constantBufferCPU.screenParam.x = g_camera3D[0]->GetNear();
 		m_constantBufferCPU.screenParam.y = g_camera3D[0]->GetFar();
 		m_constantBufferCPU.screenParam.z = FRAME_BUFFER_W;

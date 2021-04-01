@@ -32,6 +32,10 @@ namespace prefab
 		void SetScale(Vector3 scale);
 		void SetPivot(Vector2 pivot);
 		void SetDrawScreen(DrawScreen screen) { m_drawScreen = screen; }
+		void SetMulColor(const Vector4& mulColor)
+		{
+			m_sprite.SetMulColor(mulColor);
+		}
 
 		Vector3 GetPosition() { return m_position; }
 		Quaternion GetRotation() { return m_qRot; }

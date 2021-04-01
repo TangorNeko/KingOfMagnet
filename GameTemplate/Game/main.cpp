@@ -82,6 +82,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//アイテムをランダムに出現させる
 	NewGO<PopRandItem>(0, "popranditem");
 
+	//↓レンダリングターゲットテスト
+	/*
+	RenderTarget mainRT;
+	mainRT.Create(1280, 720, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT);
+
+	SpriteInitData spriteInitData1;
+	spriteInitData1.m_textures[0] = &mainRT.GetRenderTargetTexture();
+	spriteInitData1.m_fxFilePath = "Assets/shader/sprite.fx";
+	spriteInitData1.m_width = 1280;
+	spriteInitData1.m_height = 720;
+	spriteInitData1.m_colorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	std::unique_ptr<Sprite> sprite1 = std::make_unique<Sprite>();
+	sprite1->Init(spriteInitData1);
+
+	SpriteInitData spriteInitData2;
+	spriteInitData2.m_textures[0] = &mainRT.GetRenderTargetTexture();
+	spriteInitData2.m_fxFilePath = "Assets/shader/postEffect.fx";
+	spriteInitData2.m_width = 1280;
+	spriteInitData2.m_height = 720;
+	spriteInitData2.m_alphaBlendMode = AlphaBlendMode_Add;
+
+	std::unique_ptr<Sprite> sprite2 = std::make_unique<Sprite>();
+	sprite2->Init(spriteInitData2);
+	*/
+	//↑レンダリングターゲットテスト
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -98,9 +124,28 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 		
+		//↓レンダリングターゲットテスト
+		/*
+		renderContext.WaitUntilToPossibleSetRenderTarget(mainRT);
+		renderContext.SetRenderTarget(mainRT.GetRTVCpuDescriptorHandle(), mainRT.GetDSVCpuDescriptorHandle());
+		renderContext.ClearRenderTargetView(mainRT.GetRTVCpuDescriptorHandle(), mainRT.GetRTVClearColor());
+		renderContext.ClearDepthStencilView(mainRT.GetDSVCpuDescriptorHandle(), mainRT.GetDSVClearValue());
+		*/
+		//↑レンダリングターゲットテスト
+
 
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+
+		//↓レンダリングターゲットテスト
+		/*
+		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRT);
+
+		renderContext.SetRenderTarget(g_graphicsEngine->GetCurrentFrameBuffuerRTV(), g_graphicsEngine->GetCurrentFrameBuffuerDSV());
+		sprite1->Draw(renderContext);
+		sprite2->Draw(renderContext);
+		*/
+		//↑レンダリングターゲットテスト
 
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
