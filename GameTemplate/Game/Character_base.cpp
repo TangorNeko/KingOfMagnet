@@ -173,19 +173,20 @@ void Character_base::Charge()
 	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
 	{
 		m_charge += 10.0f - m_magPower * 2.5f;
-		if (m_charge > 33.3f) {
+		if (m_charge < 333.3f) {
 			m_chargelevel = 1;
 		}
-		else if (m_charge > 66.6f) {
+		else if (m_charge < 666.6) {
 			m_chargelevel = 2;
 		}
-		else if (m_charge > 1000.0f)
-		{
+		else if (m_charge < 1000.0f) {
 			m_chargelevel = 3;
+		}
+		else if (m_charge >= 1000.0f)
+		{
+			m_chargelevel = 4;
 			m_charge = 1000.0f;
 		}
-		else m_chargelevel = 0;
-
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
 

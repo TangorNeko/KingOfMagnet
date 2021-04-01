@@ -9,13 +9,13 @@ bool MagAcceleration_item::Start()
 	//ƒ‚ƒfƒ‹‚ğì¬
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/SandClock.tkm");
-	m_skinModelRender->SetScale({ 5.0f, 5.0f, 5.0f });
+	//m_skinModelRender->SetScale({ 5.0f, 5.0f, 5.0f });
 	m_collider.SetStartPoint(m_position);
 	topPos = m_position;
 	topPos.y += 50;
 	m_collider.SetEndPoint(topPos);
 	m_collider.SetRadius(15.0f);
-	m_skinModelRender->SetPosition(m_position);
+	//m_skinModelRender->SetPosition(m_position);
 
 	return true;
 }

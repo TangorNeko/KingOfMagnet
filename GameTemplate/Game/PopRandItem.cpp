@@ -2,13 +2,14 @@
 #include "PopRandItem.h"
 #include "MagInversion_item.h"
 #include "MagAcceleration_item.h"
+#include "Grenade_item.h"
 PopRandItem::~PopRandItem()
 {
 
 }
 bool PopRandItem::Start()
 {
-	item = MagAcceleration;
+	//item = Grenade;
 
 	return true;
 }
@@ -20,14 +21,21 @@ void PopRandItem::Update()
 void PopRandItem::ItemSelect()
 {
 	m_gatya = rand()%1000;
-	/*if (m_gatya < m_MagInversion_probability)
+	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability+ m_Grenade_probability)
 	{
-		item = MagInversion;
+		item = Grenade;
 	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability)
 	{
 		item = MagAcceleration;
-	}*/
+	}
+	if (m_gatya < m_MagInversion_probability)
+	{
+		item = MagInversion;
+	}
+	
+	
+	
 }
 
 void PopRandItem::ItemPop()
@@ -37,7 +45,7 @@ void PopRandItem::ItemPop()
 	{
 		MagInversion_item* inversion;
 		MagAcceleration_item* acceleration;
-
+		Grenade_item* grenade;
 		m_Loop = 0;
 		switch (item)
 		{
@@ -48,12 +56,15 @@ void PopRandItem::ItemPop()
 			inversion->m_ItemCount++;
 			break;
 		case MagAcceleration:
-			acceleration = NewGO<MagAcceleration_item>(0, "acceleration_item_item");
+			acceleration = NewGO<MagAcceleration_item>(0, "acceleration_item");
 			acceleration->m_position = { ItemSetPosition() };
 			acceleration->m_ItemCount++;
 			break;
-		
-		/*default:
+		case Grenade:
+			grenade = NewGO<Grenade_item>(0, "grenade_item");
+			grenade->m_position = { ItemSetPosition() };
+			grenade->m_ItemCount++;
+			/*default:
 			break;*/
 		}
 	}	

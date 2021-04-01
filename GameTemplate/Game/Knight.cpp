@@ -338,7 +338,7 @@ void Knight::Charge()
 			m_chargeSound->SetVolume(m_chargeSoundVolume);
 			m_chargeSound->Play(true);
 		}
-
+		//‘¬“x‚O
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 	}
 	else
@@ -400,6 +400,7 @@ void Knight::SpecialAttack()
 
 		}
 		m_charge = 0;//ƒ`ƒƒ[ƒW‚ð‚O‚É‚·‚é
+		
 	}
 	if(SpecialAttack_flag==true) {
 		SpecialAttack_count++;
@@ -427,6 +428,7 @@ void Knight::SpecialAttack()
 		if (m_chargelevel == 4) {
 			m_enemy->Damage(60 * (m_magPower + 3));
 		}
+		m_chargelevel = 1;
 		loop_count = 0;
 		loop_flag = false;
 	}
