@@ -134,6 +134,10 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
 	psIn.uv = vsIn.uv;
 
+	psIn.tangent = mul(m,vsIn.tangent);
+	psIn.tangent = normalize(psIn.tangent);
+	psIn.biNormal = mul(m,vsIn.biNormal);
+	psIn.biNormal = normalize(psIn.biNormal);
 	return psIn;
 }
 
@@ -328,16 +332,16 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		//float3 bbb = (1.0f, 0.0f, 0.0f);
 
 		//正規化ランバート拡散反射
-		float3 diffuseNormalizeLambert = CalcLambertDiffuse(directionLigData[i].ligDir, directionLigData[i].ligColor, psIn.normal) / 3.141592f;
+		float3 diffuseNormalizeLambert = CalcLambertDiffuse(directionLigData[i].ligDir, directionLigData[i].ligColor, normal) / 3.141592f;
 
 		//フレネル反射を考慮した拡散反射
-		float3 diffuseFromFresnel = CalcDiffuseFromFresnel(psIn.normal, directionLigData[i].ligDir, psIn.worldPos);
+		float3 diffuseFromFresnel = CalcDiffuseFromFresnel(normal, directionLigData[i].ligDir, psIn.worldPos);
 
 		//拡散反射全体
 		float3 diffuseLig = albedoColor * diffuseFromFresnel * diffuseNormalizeLambert;
 
 		//クックトランス鏡面反射
-		float3 specularLig = CalcCookTrranceSpecular(directionLigData[i].ligDir, psIn.worldPos, psIn.normal, metaric);
+		float3 specularLig = CalcCookTrranceSpecular(directionLigData[i].ligDir, psIn.worldPos, normal, metaric);
 
 		//金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
 		//スペキュラカラーの強さを鏡面反射率として扱う
