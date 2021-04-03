@@ -309,8 +309,10 @@
     <ClCompile Include="DropItem_base.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="Grenade_item.cpp" />
+    <ClCompile Include="Have_Machinegun.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Level2D.cpp" />
+    <ClCompile Include="Machinegun_item.cpp" />
     <ClCompile Include="MagAcceleration_item.cpp" />
     <ClCompile Include="Mage.cpp" />
     <ClCompile Include="MagInversion_item.cpp" />
@@ -419,8 +421,10 @@
     <ClInclude Include="DropItem_base.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="Grenade_item.h" />
+    <ClInclude Include="Have_Machinegun.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Level2D.h" />
+    <ClInclude Include="Machinegun_item.h" />
     <ClInclude Include="MagAcceleration_item.h" />
     <ClInclude Include="Mage.h" />
     <ClInclude Include="MagInversion_item.h" />

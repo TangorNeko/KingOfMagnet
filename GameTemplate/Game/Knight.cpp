@@ -27,6 +27,14 @@ bool Knight::Start()
 	animationClips[enAnimationClip_Move].Load("Assets/animData/Mage_Attack.tka");
 	animationClips[enAnimationClip_Move].SetLoopFlag(false);	//ループモーションにする。
 	
+//マシンガン用
+	animationClips[enAnimationClip_Gun_Idle].Load("Assets/animData/Gun_Idle.tka");
+	animationClips[enAnimationClip_Gun_Idle].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Gun_Run].Load("Assets/animData/Gun_Run.tka");
+	animationClips[enAnimationClip_Gun_Run].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Gun_Walk].Load("Assets/animData/Gun_Walk.tka");
+	animationClips[enAnimationClip_Gun_Walk].SetLoopFlag(true);	//ループモーションにする。
+	
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Knight.tkm", "Assets/modelData/Knight.tks",animationClips,enAnimationClip_num);
@@ -49,6 +57,7 @@ bool Knight::Start()
 	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
 
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
+	//m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
 	m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
 
 	m_skinModelRender->SetScale({ Scale });
@@ -305,8 +314,15 @@ void Knight::NormalAttack()
 			bullet->m_velocity = 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
-
-		m_normalAttackCount = 30;
+		if (m_gunAnimeSelect == false) 
+		{
+			m_normalAttackCount = 30;
+		}
+		else
+		{
+			m_normalAttackCount = 1;
+		}
+		
 	}
 }
 void Knight::Charge()
@@ -504,28 +520,54 @@ void Knight::UpdateState()
 void Knight::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
+	if (m_gunAnimeSelect == false) {
+		switch (status) {
+		case enStatus_Attack:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+			break;
+		case enStatus_Run:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+			break;
+		case enStatus_Walk:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
+			break;
 
-	switch (status) {
-	case enStatus_Attack:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
-		break;
-	case enStatus_Run:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
-		break;
-	case enStatus_Walk:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
-		break;
+		case enStatus_Idle:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
 
-	case enStatus_Idle:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
-				
-		break;
-	case enStatus_Move:
-		m_skinModelRender->m_animation_speed = 4.0;
-		m_skinModelRender->PlayAnimation(enAnimationClip_Move);
+			break;
+		case enStatus_Move:
+			m_skinModelRender->m_animation_speed = 4.0;
+			m_skinModelRender->PlayAnimation(enAnimationClip_Move);
 
-		break;
-	
+			break;
+		}
+	}
+	else
+	{
+		switch (status) {
+		case enStatus_Attack:
+			status = enStatus_Run;
+			//m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+			break;
+		case enStatus_Run:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Gun_Run);
+			break;
+		case enStatus_Walk:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Gun_Walk);
+			break;
+
+		case enStatus_Idle:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Gun_Idle);
+
+			break;
+		case enStatus_Move:
+			status = enStatus_Run;
+			//m_skinModelRender->m_animation_speed = 4.0;
+			//m_skinModelRender->PlayAnimation(enAnimationClip_Move);
+
+			break;
+		}
 	}
 
 }

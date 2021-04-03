@@ -12,13 +12,13 @@ bool Flash::Start()
 	m_position_sprite = { 0,0,0 };
 	m_spriteRender->SetPosition(m_position_sprite);
 	m_spriteRender->Init("Assets/Image/White.dds", 640, 720);
-
 	return true;
 }
 void Flash::Update()
 {
-	m_loopcount++;
-	if (m_loopcount > m_deletetime)
+	m_spriteRender->SetMulColor({ 1.0f,1.0f,1.0f,m_Alpha });
+	m_Alpha -= 0.002;
+	if (m_Alpha < 0)
 	{
 		DeleteGO(this);
 	}

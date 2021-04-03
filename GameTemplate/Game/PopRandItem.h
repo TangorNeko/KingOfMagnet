@@ -11,17 +11,19 @@ class PopRandItem:public IGameObject
 	int m_MagInversion_probability = 100;
 	int m_MagAcceleration_probability = 100;
 	int m_Grenade_probability = 100;
+	int m_Gun_probability = 500;
 public:
 	
 	int m_Loop = 0;
 
-	enum Item {
+	enum enItem {
 		MagInversion,
 		MagAcceleration,
 		Grenade,
+		Gun,
 		ItemNum
 	};
-	Item item = Grenade;
+	enItem enitem = Gun;
 	
 	int m_ItemCount = ItemNum;//ƒAƒCƒeƒ€”
 	int m_gatya=0;

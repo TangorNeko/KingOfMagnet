@@ -1,10 +1,11 @@
 #pragma once
 #include "DropItem_base.h"
-class Grenade_item :public DropItem_base
+class Machinegun_item:public DropItem_base
 {
-	~Grenade_item();
+	~Machinegun_item();
 	bool Start();
 	void Update();
 public:
-	Vector3 topPos;	
+	Vector3 topPos;
 };
+

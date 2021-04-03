@@ -3,6 +3,7 @@
 #include "MagInversion_item.h"
 #include "MagAcceleration_item.h"
 #include "Grenade_item.h"
+#include "Machinegun_item.h"
 PopRandItem::~PopRandItem()
 {
 
@@ -10,28 +11,33 @@ PopRandItem::~PopRandItem()
 bool PopRandItem::Start()
 {
 	//item = Grenade;
-
+	
 	return true;
 }
 void PopRandItem::Update()
 {
 	ItemSelect();
+	enitem = Gun;
 	ItemPop();
 }
 void PopRandItem::ItemSelect()
 {
 	m_gatya = rand()%1000;
+	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability + m_Grenade_probability+m_Gun_probability)
+	{
+		enitem = Gun;
+	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability+ m_Grenade_probability)
 	{
-		item = Grenade;
+		enitem = Grenade;
 	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability)
 	{
-		item = MagAcceleration;
+		enitem = MagAcceleration;
 	}
 	if (m_gatya < m_MagInversion_probability)
 	{
-		item = MagInversion;
+		enitem = MagInversion;
 	}
 	
 	
@@ -43,29 +49,34 @@ void PopRandItem::ItemPop()
 	m_Loop++;
 	if (m_Loop > m_PopInterval)
 	{
-		MagInversion_item* inversion;
-		MagAcceleration_item* acceleration;
-		Grenade_item* grenade;
+		DropItem_base* item;
 		m_Loop = 0;
-		switch (item)
+		switch (enitem)
 		{
 		case MagInversion:
 			//é•óÕîΩì]ÇçÏê¨
-			inversion = NewGO<MagInversion_item>(0, "maginversion_item");
-			inversion->m_position = { ItemSetPosition() };
-			inversion->m_ItemCount++;
+			item = NewGO<MagInversion_item>(0, "maginversion_item");
+			item->m_position = { ItemSetPosition() };
+			item->m_ItemCount++;
 			break;
 		case MagAcceleration:
-			acceleration = NewGO<MagAcceleration_item>(0, "acceleration_item");
-			acceleration->m_position = { ItemSetPosition() };
-			acceleration->m_ItemCount++;
+			item = NewGO<MagAcceleration_item>(0, "acceleration_item");
+			item->m_position = { ItemSetPosition() };
+			item->m_ItemCount++;
 			break;
 		case Grenade:
-			grenade = NewGO<Grenade_item>(0, "grenade_item");
-			grenade->m_position = { ItemSetPosition() };
-			grenade->m_ItemCount++;
-			/*default:
-			break;*/
+			item = NewGO<Grenade_item>(0, "grenade_item");
+			item->m_position = { ItemSetPosition() };
+			item->m_ItemCount++;
+			break;
+		
+		case Gun:
+			item = NewGO<Machinegun_item>(0, "gun_item");
+			item->m_position = { ItemSetPosition() };
+			item->m_scale = { 0.5f,0.5f,0.5f };
+			item->m_ItemCount++;
+			break;
+
 		}
 	}	
 }

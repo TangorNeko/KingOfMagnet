@@ -60,6 +60,8 @@ public:
 
 	int m_magStatediff;
 
+	prefab::CSkinModelRender* m_weaponModel = nullptr;//武器を持つ
+
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//キャラクターのモデル
 	prefab::CPointLight* m_pointLight = nullptr;//チャージ確認用のポイントライト(TODO:後からエフェクトに差し替え予定)
 	prefab::CFontRender* m_fontRender = nullptr;//体力、チャージ、磁力等確認用のフォント(TODO:後からUIスプライトに差し替え予定)
@@ -105,5 +107,32 @@ public:
 	int m_timerAccele = 1;
 	int m_AcceleLoop = 0;
 
+	enum {
+		enAnimationClip_Attack,
+		enAnimationClip_Run,
+		enAnimationClip_Idle,
+		enAnimationClip_Walk,
+		enAnimationClip_Move,		
+		enAnimationClip_Gun_Run,
+		enAnimationClip_Gun_Idle,
+		enAnimationClip_Gun_Walk,	
+		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
+	};
+	enum EnStatus {
+		enStatus_Attack,	//攻撃状態
+		enStatus_Run,		//走り状態
+		enStatus_Idle,		//待機状態
+		enStatus_Walk,		//歩き状態
+		enStatus_Move,		//移動アクション状態		
+		enStatus_Num,		//状態の数。
+	};
+	AnimationClip animationClips[enAnimationClip_num];
+	EnStatus status = enStatus_Idle;	//ナイトの状態。
+
+	bool m_gunAnimeSelect = false;
+	
+		
+		
+	
 };
 

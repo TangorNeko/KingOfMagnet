@@ -25,6 +25,14 @@ bool Mage::Start()
 	animationClips[enAnimationClip_Walk].Load("Assets/animData/Mage_Walk.tka");
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
 	
+	//マシンガン用
+	animationClips[enAnimationClip_Gun_Idle].Load("Assets/animData/Gun_Idle.tka");
+	animationClips[enAnimationClip_Gun_Idle].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Gun_Run].Load("Assets/animData/Gun_Run.tka");
+	animationClips[enAnimationClip_Gun_Run].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_Gun_Walk].Load("Assets/animData/Gun_Walk.tka");
+	animationClips[enAnimationClip_Gun_Walk].SetLoopFlag(true);	//ループモーションにする。
+
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks",animationClips,enAnimationClip_num);
@@ -43,6 +51,10 @@ bool Mage::Start()
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
 	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
+	
+	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
+	//m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
+	m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
 
 	m_stageModel = FindGO<BackGround>("background");
 	return true;
@@ -127,6 +139,12 @@ void Mage::Update()
 
 		//キャラクターにかかる磁力の影響
 		PlayerMagneticMove();
+		//手のボーンのワールド行列を取得
+		Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
+		//手のボーンの行列
+		//handmatrix.Multiply(mScale, handmatrix);
+
+		m_weaponModel->SetMatrix(handmatrix);
 
 		//カメラ関連
 		Camera();
@@ -381,20 +399,48 @@ void Mage::UpdateState()
 void Mage::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
-	switch (status) {
-	case enStatus_Attack:
-		m_skinModelRender->m_animation_speed = 4.0;
-		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
-		break;
-	case enStatus_Run:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
-		break;
-	case enStatus_Walk:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
-		break;
-	case enStatus_Idle:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
-		break;
+	if (m_gunAnimeSelect == false) {
+		switch (status) {
+		case enStatus_Attack:
+			m_skinModelRender->m_animation_speed = 4.0;
+			m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+			break;
+		case enStatus_Run:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Run);
+			break;
+		case enStatus_Walk:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Walk);
+			break;
+		case enStatus_Idle:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+			break;
+		}
+	}
+	else
+	{
+		switch (status) {
+		case enStatus_Attack:
+			status = enStatus_Run;
+			//m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
+			break;
+		case enStatus_Run:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Gun_Run);
+			break;
+		case enStatus_Walk:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Gun_Walk);
+			break;
+
+		case enStatus_Idle:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Gun_Idle);
+
+			break;
+		case enStatus_Move:
+			status = enStatus_Run;
+			//m_skinModelRender->m_animation_speed = 4.0;
+			//m_skinModelRender->PlayAnimation(enAnimationClip_Move);
+
+			break;
+		}
 	}
 	
 }
