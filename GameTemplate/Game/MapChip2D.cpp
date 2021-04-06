@@ -11,6 +11,7 @@ void MapChip2D::Init(CaslData* caslData)
 	//‰æ‘œ‚ð“Ç‚Ýž‚ÞB
 	data.m_ddsFilePath[0] = caslData->ddsFilePath.get();
 	data.m_fxFilePath = "Assets/shader/sprite.fx";
+	data.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	m_sprite.Init(data);
 	//À•WB
 	m_position.x = caslData->position.x;

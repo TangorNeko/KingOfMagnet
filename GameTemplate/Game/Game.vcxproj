@@ -307,6 +307,7 @@
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSpriteRender.cpp" />
     <ClCompile Include="DropItem_base.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Level2D.cpp" />
     <ClCompile Include="MagAcceleration_item.cpp" />
@@ -317,6 +318,7 @@
     <ClCompile Include="MyCapsuleCollider.cpp" />
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="PopRandItem.cpp" />
+    <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
@@ -415,6 +417,7 @@
     <ClInclude Include="CSpriteRender.h" />
     <ClInclude Include="CUtil.h" />
     <ClInclude Include="DropItem_base.h" />
+    <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Level2D.h" />
     <ClInclude Include="MagAcceleration_item.h" />
@@ -425,6 +428,7 @@
     <ClInclude Include="NameKey.h" />
     <ClInclude Include="Ninja.h" />
     <ClInclude Include="PopRandItem.h" />
+    <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="SoundEngine.h" />

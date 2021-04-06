@@ -11,6 +11,7 @@
 #include "Ninja.h"
 #include "TitleScene.h"
 #include "PopRandItem.h"
+#include "PostEffectManager.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -40,6 +41,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	CSoundEngine::CreateInstance();
 	CSoundEngine::GetInstance()->Init();
 
+	//TODO:シングルトンである必要ある?
+	PostEffectManager::CreateInstance();
+	PostEffectManager::GetInstance()->Init(true);
 	//////////////////////////////////////////////////
 
 	//TitleScene* title = NewGO<TitleScene>(0, "Title");
@@ -82,33 +86,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//アイテムをランダムに出現させる
 	NewGO<PopRandItem>(0, "popranditem");
 
-	//↓レンダリングターゲットテスト
-	
-	RenderTarget mainRT;
-	mainRT.Create(1280, 720, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT);
-
-	SpriteInitData spriteInitData1;
-	spriteInitData1.m_textures[0] = &mainRT.GetRenderTargetTexture();
-	spriteInitData1.m_fxFilePath = "Assets/shader/sprite.fx";
-	spriteInitData1.m_width = 1280;
-	spriteInitData1.m_height = 720;
-	spriteInitData1.m_colorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	std::unique_ptr<Sprite> sprite1 = std::make_unique<Sprite>();
-	sprite1->Init(spriteInitData1);
-
-	SpriteInitData spriteInitData2;
-	spriteInitData2.m_textures[0] = &mainRT.GetRenderTargetTexture();
-	spriteInitData2.m_fxFilePath = "Assets/shader/postEffect.fx";
-	spriteInitData2.m_width = 1280;
-	spriteInitData2.m_height = 720;
-	spriteInitData2.m_alphaBlendMode = AlphaBlendMode_Add;
-
-	std::unique_ptr<Sprite> sprite2 = std::make_unique<Sprite>();
-	sprite2->Init(spriteInitData2);
-	
-	//↑レンダリングターゲットテスト
-
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
@@ -124,30 +101,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 		
-		//↓レンダリングターゲットテスト
-		/*
-		renderContext.WaitUntilToPossibleSetRenderTarget(mainRT);
-		renderContext.SetRenderTarget(mainRT.GetRTVCpuDescriptorHandle(), mainRT.GetDSVCpuDescriptorHandle());
-		renderContext.ClearRenderTargetView(mainRT.GetRTVCpuDescriptorHandle(), mainRT.GetRTVClearColor());
-		renderContext.ClearDepthStencilView(mainRT.GetDSVCpuDescriptorHandle(), mainRT.GetDSVClearValue());
-		*/
-		//↑レンダリングターゲットテスト
-
-
 		GameObjectManager::GetInstance()->ExecuteUpdate();
+		
+		//ポストエフェクト用。Render前の処理
+		PostEffectManager::GetInstance()->BeforeRender(renderContext);
+
 		//Renderはモデル等、エフェクトを受けるものを描画する
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 
-		//↓レンダリングターゲットテスト
-		/*
-		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRT);
-
-		renderContext.SetRenderTarget(g_graphicsEngine->GetCurrentFrameBuffuerRTV(), g_graphicsEngine->GetCurrentFrameBuffuerDSV());
-		
-		sprite1->Draw(renderContext);
-		sprite2->Draw(renderContext);
-		*/
-		//↑レンダリングターゲットテスト
+		//ポストエフェクト用。Render後の処理
+		PostEffectManager::GetInstance()->AfterRender(renderContext);
 
 		//PostRenderはスプライト、フォント等、エフェクトを受けないものを描画する
 		GameObjectManager::GetInstance()->ExecutePostRender(renderContext);
@@ -168,6 +131,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//サウンドエンジンを削除
 	CSoundEngine::DeleteInstance();
+	
+	//ポストエフェクトマネージャーを削除
+	PostEffectManager::DeleteInstance();
 	return 0;
 }
 

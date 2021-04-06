@@ -122,6 +122,8 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	}
 	
 	//Level2D用　
+	//レベル2Dは全部スプライトなのでExecuteRenderにはいらないのでは?
+	//だがviewportをセットしないと画面が半分のままなのでセットはしてみる。
 	{
 		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
 
@@ -134,11 +136,13 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
+		/*
 		for (auto& goList : m_gameObjectListArray) {
 			for (auto& go : goList) {
 				go->RenderWrapper(rc, g_camera3D[0]);
 			}
 		}
+		*/
 	}
 	
 }
