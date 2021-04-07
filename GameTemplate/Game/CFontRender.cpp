@@ -3,7 +3,7 @@
 
 namespace prefab
 {
-	void CFontRender::Render(RenderContext& rc, Camera* camera)
+	void CFontRender::PostRender(RenderContext& rc, Camera* camera)
 	{
 		if (m_drawScreen == AllScreen || rc.GetRenderStep() == m_drawScreen)
 		{

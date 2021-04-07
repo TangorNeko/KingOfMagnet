@@ -60,6 +60,8 @@ struct SSkinVSIn {
 struct SVSIn {
 	float4 pos 		: POSITION;		//モデルの頂点座標。
 	float3 normal	: NORMAL;		//法線
+	float3 tangent	: TANGENT;		//接ベクトル
+	float3 biNormal	: BINORMAL;		//従ベクトル
 	float2 uv 		: TEXCOORD0;	//UV座標。
 	SSkinVSIn skinVert;				//スキン用のデータ。
 };
@@ -67,6 +69,8 @@ struct SVSIn {
 struct SPSIn {
 	float4 pos 			: SV_POSITION;	//スクリーン空間でのピクセルの座標。
 	float3 normal		: NORMAL;		//法線
+	float3 tangent		: TANGENT;		//接ベクトル
+	float3 biNormal		: BINORMAL;		//従ベクトル
 	float2 uv 			: TEXCOORD0;	//uv座標。
 	float3 worldPos		: TEXCOORD1;
 	float3 normalInView : TEXCOORD2;
@@ -124,11 +128,16 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
 	psIn.normal = mul(m, vsIn.normal);
+	psIn.normal = normalize(psIn.normal);
 
 	psIn.normalInView = mul(mView, psIn.normal);
 
 	psIn.uv = vsIn.uv;
 
+	psIn.tangent = mul(m,vsIn.tangent);
+	psIn.tangent = normalize(psIn.tangent);
+	psIn.biNormal = mul(m,vsIn.biNormal);
+	psIn.biNormal = normalize(psIn.biNormal);
 	return psIn;
 }
 
@@ -145,6 +154,17 @@ SPSIn VSMain(SVSIn vsIn)
 SPSIn VSSkinMain(SVSIn vsIn)
 {
 	return VSMainCore(vsIn, true);
+}
+
+//法線を計算する。
+float3 GetNormal(float3 normal, float3 tangent, float3 biNormal, float2 uv)
+{
+	float3 binSpaceNormal = g_normalMap.SampleLevel(g_sampler, uv, 0.0f).xyz;
+	binSpaceNormal = (binSpaceNormal * 2.0f) - 1.0f;
+
+	float3 newNormal = tangent * binSpaceNormal.x + biNormal * binSpaceNormal.y + normal * binSpaceNormal.z;
+
+	return newNormal;
 }
 
 //ランバート拡散反射を計算する。
@@ -293,6 +313,8 @@ float3 CalcLimLight(float3 ligDir, float3 ligColor, float3 normalInView,float3 n
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
+	float3 normal = GetNormal(psIn.normal,psIn.tangent,psIn.biNormal,psIn.uv);
+
 	//アルベドカラー
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 	//スペキュラカラー
@@ -306,17 +328,20 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//ディレクションライト
 	for (int i = 0;i < directionLigNum;i++)
 	{
+		//float3 aaa = normal;
+		//float3 bbb = (1.0f, 0.0f, 0.0f);
+
 		//正規化ランバート拡散反射
-		float3 diffuseNormalizeLambert = CalcLambertDiffuse(directionLigData[i].ligDir, directionLigData[i].ligColor,psIn.normal) / 3.141592f;
+		float3 diffuseNormalizeLambert = CalcLambertDiffuse(directionLigData[i].ligDir, directionLigData[i].ligColor, normal) / 3.141592f;
 
 		//フレネル反射を考慮した拡散反射
-		float3 diffuseFromFresnel = CalcDiffuseFromFresnel(psIn.normal, directionLigData[i].ligDir, psIn.worldPos);
+		float3 diffuseFromFresnel = CalcDiffuseFromFresnel(normal, directionLigData[i].ligDir, psIn.worldPos);
 
 		//拡散反射全体
 		float3 diffuseLig = albedoColor * diffuseFromFresnel * diffuseNormalizeLambert;
 
 		//クックトランス鏡面反射
-		float3 specularLig = CalcCookTrranceSpecular(directionLigData[i].ligDir, psIn.worldPos, psIn.normal, metaric);
+		float3 specularLig = CalcCookTrranceSpecular(directionLigData[i].ligDir, psIn.worldPos, normal, metaric);
 
 		//金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
 		//スペキュラカラーの強さを鏡面反射率として扱う

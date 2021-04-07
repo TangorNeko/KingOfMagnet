@@ -169,12 +169,26 @@ void BuildTangentAndBiNormalImp(TkmFile::SMesh& mesh, const IndexBuffer& indexBu
 			auto ABC = Cross(V1, V2);
 	
 			if (ABC.x == 0.0f) {
+				
 				tangent.v[i] = 0.0f;
 				binormal.v[i] = 0.0f;
 			}
 			else {
 				tangent.v[i] = -ABC.y / ABC.x;
 				binormal.v[i] = -ABC.z / ABC.x;
+			}
+		}
+		if (tangent.Length() < FLT_EPSILON) {
+			//Don't calc tangent and binormal from UV.
+			//So calc tangent and binormal from normal.
+			if (fabsf(vert_0.normal.y) > 0.9999f) {
+				//normal is nearly yAxis.
+				tangent.Cross(vert_0.normal, g_vec3AxisX);
+				binormal.Cross(vert_0.normal, tangent);
+			}
+			else {
+				tangent.Cross(vert_0.normal, g_vec3AxisY);
+				binormal.Cross(vert_0.normal, tangent);
 			}
 		}
 

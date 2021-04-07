@@ -83,7 +83,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	NewGO<PopRandItem>(0, "popranditem");
 
 	//↓レンダリングターゲットテスト
-	/*
+	
 	RenderTarget mainRT;
 	mainRT.Create(1280, 720, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT);
 
@@ -106,7 +106,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	std::unique_ptr<Sprite> sprite2 = std::make_unique<Sprite>();
 	sprite2->Init(spriteInitData2);
-	*/
+	
 	//↑レンダリングターゲットテスト
 
 	//////////////////////////////////////
@@ -135,6 +135,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 		GameObjectManager::GetInstance()->ExecuteUpdate();
+		//Renderはモデル等、エフェクトを受けるものを描画する
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 
 		//↓レンダリングターゲットテスト
@@ -142,10 +143,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRT);
 
 		renderContext.SetRenderTarget(g_graphicsEngine->GetCurrentFrameBuffuerRTV(), g_graphicsEngine->GetCurrentFrameBuffuerDSV());
+		
 		sprite1->Draw(renderContext);
 		sprite2->Draw(renderContext);
 		*/
 		//↑レンダリングターゲットテスト
+
+		//PostRenderはスプライト、フォント等、エフェクトを受けないものを描画する
+		GameObjectManager::GetInstance()->ExecutePostRender(renderContext);
 
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！

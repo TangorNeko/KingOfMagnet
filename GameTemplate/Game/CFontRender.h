@@ -23,7 +23,7 @@ namespace prefab
 
 		DrawScreen m_drawScreen = AllScreen;
 	public:
-		void Render(RenderContext& rc, Camera* camera) override;
+		void PostRender(RenderContext& rc, Camera* camera) override;
 
 		void SetText(const std::wstring& text) { m_text = text; }
 

@@ -21,7 +21,7 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+		initData.m_fxFilePath = "Assets/shader/PBR.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
@@ -65,7 +65,7 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+		initData.m_fxFilePath = "Assets/shader/PBR.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
@@ -98,7 +98,7 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+		initData.m_fxFilePath = "Assets/shader/PBR.fx";
 
 		//initData.m_vsEntryPointFunc = "VSMain";
 
