@@ -21,13 +21,15 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/PBR.fx";
+		initData.m_fxFilePath = "Assets/shader/model.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
 		initData.m_skeleton = &m_skeleton;
+
+		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
@@ -65,13 +67,15 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/PBR.fx";
+		initData.m_fxFilePath = "Assets/shader/model.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
 		initData.m_skeleton = &m_skeleton;
+
+		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
@@ -98,11 +102,13 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/PBR.fx";
+		initData.m_fxFilePath = "Assets/shader/model.fx";
 
 		//initData.m_vsEntryPointFunc = "VSMain";
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
+
+		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;

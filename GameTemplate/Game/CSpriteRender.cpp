@@ -27,6 +27,8 @@ namespace prefab
 
 		initData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
+		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+
 		m_sprite.Init(initData);
 	}
 
