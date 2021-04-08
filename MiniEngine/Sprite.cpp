@@ -130,7 +130,7 @@
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vs.GetCompiledBlob());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_ps.GetCompiledBlob());
 		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
+		psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
 		if (initData.m_alphaBlendMode == AlphaBlendMode_Trans) {
@@ -186,11 +186,12 @@
 		InitConstantBuffer(initData);
 		
 		//ルートシグネチャの初期化。
+		//CLAMPにすると端のブルームが反対側の端に行かないようになる。
 		m_rootSignature.Init(
 			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP);
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
 
 		//シェーダーを初期化。
 		InitShader(initData);
@@ -218,7 +219,13 @@
 			{ halfSize.x * localPivot.x, halfSize.y * localPivot.y, 0.0f }
 		);
 		Matrix mTrans, mRot, mScale;
-		mTrans.MakeTranslation(pos);
+
+		//デフォルトの状態ではスプライトのX方向の座標が逆になっているので反転する。
+		Vector3 xReversePos = pos;
+		xReversePos.x *= -1.0f;
+
+		//x座標が反転されたものを渡す。
+		mTrans.MakeTranslation(xReversePos);
 		mRot.MakeRotationFromQuaternion(rot);
 		mScale.MakeScaling(scale);
 		m_world = mPivotTrans * mScale;
@@ -227,8 +234,15 @@
 	}
 	void Sprite::Draw(RenderContext& renderContext)
 	{
+
+		//現在のビューポートから平行投影行列を計算する。
+		D3D12_VIEWPORT viewport = renderContext.GetViewport();
+
+
 		Matrix viewMatrix = g_camera2D->GetViewMatrix();
-		Matrix projMatrix = g_camera2D->GetProjectionMatrix();
+		Matrix projMatrix;
+
+		projMatrix.MakeOrthoProjectionMatrix(viewport.Width, viewport.Height, 0.1f, 1.0f);
 
 		m_constantBufferCPU.mvp = m_world * viewMatrix * projMatrix;
 		//スプライトを透過させたりするため変更。

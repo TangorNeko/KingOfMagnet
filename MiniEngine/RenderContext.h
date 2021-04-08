@@ -85,6 +85,13 @@ public:
 	void SetViewport(D3D12_VIEWPORT& viewport)
 	{
 		m_commandList->RSSetViewports(1, &viewport);
+		m_currentViewPort = viewport;
+
+	}
+
+	D3D12_VIEWPORT GetViewport() const
+	{
+		return m_currentViewPort;
 	}
 	/// <summary>
 	/// シザリング矩形を設定
@@ -379,5 +386,6 @@ private:
 	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };	//定数バッファの配列。
 	Texture* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };			//シェーダーリソースの配列。
 	EnStep m_step = eStep_RenderViewport1;									// render step.
+	D3D12_VIEWPORT m_currentViewPort;
 };
 
