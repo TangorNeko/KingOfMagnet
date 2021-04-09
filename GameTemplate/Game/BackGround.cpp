@@ -17,7 +17,7 @@ bool BackGround::Start()
 	m_pLig->SetRange(500);
 	*/
 
-	m_skinModelRender->Init("Assets/modelData/protostage.tkm");
+	m_skinModelRender->Init("Assets/modelData/protostage00.tkm");
 
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 

@@ -185,6 +185,8 @@ void Knight::Update()
 
 		m_weaponModel->SetRotation(Rot);
 		*/
+		//マシンガンを持ったとき
+		HaveMachinegun();
 		//カメラ関連
 		Character_base::Camera();
 	}
@@ -314,7 +316,7 @@ void Knight::NormalAttack()
 			bullet->m_velocity = 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
-		if (m_gunAnimeSelect == false) 
+		if (m_MachinegunHave == false)
 		{
 			m_normalAttackCount = 30;
 		}
@@ -520,7 +522,7 @@ void Knight::UpdateState()
 void Knight::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
-	if (m_gunAnimeSelect == false) {
+	if (m_MachinegunHave == false) {
 		switch (status) {
 		case enStatus_Attack:
 			m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
@@ -569,5 +571,26 @@ void Knight::AnimationSelect()
 			break;
 		}
 	}
+}
+void Knight::HaveMachinegun()
+{
 
+	if (m_MachinegunHave == true)
+	{
+		if (m_Machinegun_deletetime > 0 && m_Machinegun_bulletNum > 0) {
+			m_Machinegun_deletetime--;
+			if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
+			{
+				m_Machinegun_bulletNum--;
+			}
+		}
+		else
+		{
+			m_MachinegunHave = false;
+			m_Machinegun_loopcount = 0;
+			m_Machinegun_deletetime = 500;
+			m_Machinegun_bulletNum = 100;
+			m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");			
+		}
+	}
 }

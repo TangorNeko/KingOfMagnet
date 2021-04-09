@@ -45,7 +45,8 @@ public:
 	
 	//ó‘ÔXV
 	void UpdateState();
-	
+
+	void HaveMachinegun();
 	
 };
 

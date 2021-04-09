@@ -51,30 +51,10 @@ public:
 	bool loop_flag = false;//攻撃があたったとき
 	int SpecialAttack_count = 0;
 	bool SpecialAttack_flag = false;//剣を振ったとき
-
 	//移動アクションフラグ
 	int m_move_count = 0;
 	bool m_move_on=false;
 	bool m_move_attack = true;
-
-	//キャラクターベースで定義済み
-	//enum {
-	//	enAnimationClip_Attack,
-	//	enAnimationClip_Run, 		
-	//	enAnimationClip_Idle,
-	//	enAnimationClip_Walk,
-	//	enAnimationClip_Move,
-	//	enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
-	//};
-	//enum EnStatus{
-	//	enStatus_Attack,	//攻撃状態
-	//	enStatus_Run,		//走り状態
-	//	enStatus_Idle,		//待機状態
-	//	enStatus_Walk,		//歩き状態
-	//	enStatus_Move,		//移動アクション状態
-	//	enStatus_Num,		//状態の数。
-	//};
-	//AnimationClip animationClips[enAnimationClip_num];
-	//EnStatus status = enStatus_Idle;	//ナイトの状態。
+	void HaveMachinegun();
 };
 

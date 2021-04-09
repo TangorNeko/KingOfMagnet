@@ -307,11 +307,10 @@
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSpriteRender.cpp" />
     <ClCompile Include="DropItem_base.cpp" />
-<ClCompile Include="Flash.cpp" />
+    <ClCompile Include="Flash.cpp" />
     <ClCompile Include="Grenade_item.cpp" />
-    <ClCompile Include="Have_Machinegun.cpp" />
-  
-    <ClCompile Include="GaussianBlur.cpp" />    <ClCompile Include="Knight.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Level2D.cpp" />
     <ClCompile Include="Machinegun_item.cpp" />
     <ClCompile Include="MagAcceleration_item.cpp" />
@@ -421,11 +420,9 @@
     <ClInclude Include="CSpriteRender.h" />
     <ClInclude Include="CUtil.h" />
     <ClInclude Include="DropItem_base.h" />
- <ClInclude Include="Flash.h" />
+    <ClInclude Include="Flash.h" />
     <ClInclude Include="Grenade_item.h" />
-    <ClInclude Include="Have_Machinegun.h" />
-    
-       <ClInclude Include="GaussianBlur.h" />
+    <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Level2D.h" />
     <ClInclude Include="Machinegun_item.h" />

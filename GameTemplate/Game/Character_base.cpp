@@ -322,7 +322,5 @@ void Character_base::PlayerMagneticMove()
 				m_position = m_charaCon.Execute(m_repulsionSpeed, 1.0f);
 			}
 		}
-		
-	}
-	
+	}	
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Machinegun_item.h"
 #include "Character_base.h"
-#include "Have_Machinegun.h"
+
 
 Machinegun_item::~Machinegun_item()
 {
@@ -32,9 +32,9 @@ void Machinegun_item::Update()
 			//ƒvƒŒƒCƒ„[‚ª‹ß‚¯‚ê‚Î
 
 			if (player->m_collider.isHitCapsule(m_collider))
-			{
-				Have_Machinegun* have_machinegun = NewGO<Have_Machinegun>(0, "have_machinegun");
-				have_machinegun->m_playerNum = player->m_playerNum;
+			{				
+				player->m_MachinegunHave = true;
+				player->m_weaponModel->Init("Assets/modelData/Gun.tkm");
 				DeleteGO(this);
 			}
 			return true;

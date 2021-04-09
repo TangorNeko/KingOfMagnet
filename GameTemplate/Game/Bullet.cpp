@@ -6,7 +6,7 @@
 Bullet::~Bullet()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_pointLight);
+	//DeleteGO(m_pointLight);
 }
 
 bool Bullet::Start()
@@ -18,9 +18,9 @@ bool Bullet::Start()
 	m_skinModelRender->SetScale({ 7.0f, 7.0f, 7.0f });
 
 	//弾から出る光
-	m_pointLight = NewGO<prefab::CPointLight>(0);
+	/*m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
-	m_pointLight->SetRange(200.0f);
+	m_pointLight->SetRange(200.0f);*/
 
 	return true;
 }
@@ -99,7 +99,7 @@ void Bullet::Update()
 
 	//モデルとライトの位置をセット。
 	m_skinModelRender->SetPosition(m_position);
-	m_pointLight->SetPosition(m_position);
+	//m_pointLight->SetPosition(m_position);
 
 	//100フレーム生存したら消去
 	m_liveCount++;

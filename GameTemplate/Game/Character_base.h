@@ -85,6 +85,13 @@ public:
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 	bool m_isSceneStop = false;//動けるか動けないか
 	
+	//マシンガンを持ったとき
+	bool m_MachinegunHave=false;
+	bool m_MachinegunDelete = false;	
+	int m_Machinegun_loopcount = 0;
+	int m_Machinegun_deletetime = 500;
+	int m_Machinegun_bulletNum = 100;	
+	
 	//現在の磁力の状態を取得
 	int GetMagPower()const { return m_magPower; }
 
@@ -129,7 +136,7 @@ public:
 	AnimationClip animationClips[enAnimationClip_num];
 	EnStatus status = enStatus_Idle;	//ナイトの状態。
 
-	bool m_gunAnimeSelect = false;
+	
 	
 		
 		

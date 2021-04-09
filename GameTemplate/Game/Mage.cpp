@@ -146,6 +146,8 @@ void Mage::Update()
 
 		m_weaponModel->SetMatrix(handmatrix);
 
+		//マシンガンを持ったとき
+		HaveMachinegun();
 		//カメラ関連
 		Camera();
 	}
@@ -259,8 +261,14 @@ void Mage::NormalAttack()
 			bullet->m_velocity = 25.0f;
 			bullet->m_parentNo = m_playerNum;
 		}
-
-		m_normalAttackCount = 30;
+		if (m_MachinegunHave == false)
+		{
+			m_normalAttackCount = 30;
+		}
+		else
+		{
+			m_normalAttackCount = 1;
+		}		
 	}
 }
 void Mage::Charge()
@@ -399,7 +407,7 @@ void Mage::UpdateState()
 void Mage::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
-	if (m_gunAnimeSelect == false) {
+	if (m_MachinegunHave == false) {
 		switch (status) {
 		case enStatus_Attack:
 			m_skinModelRender->m_animation_speed = 4.0;
@@ -443,4 +451,26 @@ void Mage::AnimationSelect()
 		}
 	}
 	
+}
+void Mage::HaveMachinegun()
+{
+
+	if (m_MachinegunHave == true)
+	{
+		if (m_Machinegun_deletetime > 0 && m_Machinegun_bulletNum > 0) {
+			m_Machinegun_deletetime--;
+			if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
+			{
+				m_Machinegun_bulletNum--;
+			}
+		}
+		else
+		{
+			m_MachinegunHave = false;
+			m_Machinegun_loopcount = 0;
+			m_Machinegun_deletetime = 500;
+			m_Machinegun_bulletNum = 100;
+			m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
+		}
+	}
 }

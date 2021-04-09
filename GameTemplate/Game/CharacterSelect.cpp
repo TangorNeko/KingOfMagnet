@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CharacterSelect.h"
+#include "Character_base.h"
 #include "BackGround.h"
 #include "Mage.h"
 #include "Knight.h"
@@ -107,11 +108,14 @@ void CharacterSelect::Update() {
 			stageLight->SetColor({ 0.5f,0.5f,0.5f });
 			//プレイヤー1を作成
 			Character_base* showm = nullptr;
-			if (m_1p_character_num == 0) {//キャラナンバーが０なら剣士を作成
+			if (m_1p_character_num == 0) 
+			{//キャラナンバーが０なら剣士を作成				
 				showm = NewGO<Knight>(0, "Player");
 			}
-			else
-				showm = NewGO<Mage>(0, "Player");//１なら魔法使いを作成		
+			else if(m_1p_character_num==1)//１なら魔法使いを作成		
+			{				
+				showm = NewGO<Mage>(0, "Player");
+			}
 			showm->m_position = { 0.0f,0.0f,-500.0f };
 			showm->m_playerNum = 0;
 			showm->m_magPower = 2;
