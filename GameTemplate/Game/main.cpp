@@ -43,7 +43,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//TODO:シングルトンである必要ある?
 	PostEffectManager::CreateInstance();
-	PostEffectManager::GetInstance()->Init(true,true);
+
+	//ブルームフラグ、シャドウフラグの順番
+	PostEffectManager::GetInstance()->Init(true,false);
 	//////////////////////////////////////////////////
 
 	//TitleScene* title = NewGO<TitleScene>(0, "Title");

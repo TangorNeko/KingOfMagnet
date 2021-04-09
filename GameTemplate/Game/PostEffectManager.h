@@ -31,6 +31,11 @@ public:
 	/// <param name="bloomMode">ブルームをオンにするか?</param>
 	void Init(bool bloomMode,bool shadowMode);
 
+	bool GetShadowFlag()
+	{
+		return m_shadowMode;
+	}
+
 	/// <summary>
 	/// レンダリング前の処理
 	/// </summary>

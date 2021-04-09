@@ -88,15 +88,21 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 
 void PostEffectManager::ShadowRender(RenderContext& rc)
 {
-	rc.WaitUntilToPossibleSetRenderTarget(m_shadowMap);
-	rc.SetRenderTargetAndViewport(m_shadowMap);
-	rc.ClearRenderTargetView(m_shadowMap.GetRTVCpuDescriptorHandle(), m_shadowMap.GetRTVClearColor());
-	rc.ClearDepthStencilView(m_shadowMap.GetDSVCpuDescriptorHandle(), m_shadowMap.GetDSVClearValue());
+	if (m_shadowMode)
+	{
+		rc.WaitUntilToPossibleSetRenderTarget(m_shadowMap);
+		rc.SetRenderTargetAndViewport(m_shadowMap);
+		rc.ClearRenderTargetView(m_shadowMap.GetRTVCpuDescriptorHandle(), m_shadowMap.GetRTVClearColor());
+		rc.ClearDepthStencilView(m_shadowMap.GetDSVCpuDescriptorHandle(), m_shadowMap.GetDSVClearValue());
+	}
 }
 
 void PostEffectManager::EndShadowRender(RenderContext& rc)
 {
-	rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
+	if (m_shadowMode)
+	{
+		rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
+	}
 }
 
 void PostEffectManager::BeforeRender(RenderContext& rc)

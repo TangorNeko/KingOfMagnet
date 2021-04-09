@@ -122,9 +122,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		}
 	}
 	
+	//TODO:暫定処理、フラグ含め別の形にしたい
 	PostEffectManager::GetInstance()->ShadowRender(rc);
 
 	//shadow
+	if(PostEffectManager::GetInstance()->GetShadowFlag())
 	{
 		rc.SetStep(RenderContext::eStep_RenderShadowMap);
 		//ShadowRenderでビューポートを設定しているのでここでビューポート設定しなくてOK(たぶん)
