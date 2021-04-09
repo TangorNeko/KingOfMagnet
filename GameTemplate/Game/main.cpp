@@ -45,7 +45,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	PostEffectManager::CreateInstance();
 
 	//ブルームフラグ、シャドウフラグの順番
-	PostEffectManager::GetInstance()->Init(true,false);
+	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 
 	//TitleScene* title = NewGO<TitleScene>(0, "Title");
