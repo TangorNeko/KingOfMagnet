@@ -22,7 +22,7 @@ void GaussianBlur::ExecuteOnGPU(RenderContext& rc, float blurPower)
 	//レンダリングターゲットとして利用できるようになるまでwaitを入れる。
 	rc.WaitUntilToPossibleSetRenderTarget(m_xBlurRenderTarget);
 	//レンダリングターゲットを設定。
-	rc.SetRenderTarget(m_xBlurRenderTarget.GetRTVCpuDescriptorHandle(), m_xBlurRenderTarget.GetDSVCpuDescriptorHandle());
+	rc.SetRenderTargetAndViewport(m_xBlurRenderTarget);
 	//レンダリングターゲットをクリア。
 	rc.ClearRenderTargetView(m_xBlurRenderTarget.GetRTVCpuDescriptorHandle(), m_xBlurRenderTarget.GetRTVClearColor());
 	//ドロー。
@@ -34,7 +34,7 @@ void GaussianBlur::ExecuteOnGPU(RenderContext& rc, float blurPower)
 	//レンダリングターゲットとして利用できるようになるまでwaitを入れる。
 	rc.WaitUntilToPossibleSetRenderTarget(m_yBlurRenderTarget);
 	//レンダリングターゲットを設定。
-	rc.SetRenderTarget(m_yBlurRenderTarget.GetRTVCpuDescriptorHandle(), m_yBlurRenderTarget.GetDSVCpuDescriptorHandle());
+	rc.SetRenderTargetAndViewport(m_yBlurRenderTarget);
 	//レンダリングターゲットをクリア。
 	rc.ClearRenderTargetView(m_yBlurRenderTarget.GetRTVCpuDescriptorHandle(), m_yBlurRenderTarget.GetRTVClearColor());
 	//ドロー。
@@ -47,7 +47,7 @@ void GaussianBlur::InitRenderTargets()
 {
 	//Xブラー用のレンダリングターゲットを作成する。
 	m_xBlurRenderTarget.Create(
-		1280,
+		640,
 		720,
 		1,
 		1,
@@ -57,8 +57,8 @@ void GaussianBlur::InitRenderTargets()
 
 	//Yブラー用のレンダリングターゲットを作成する。
 	m_yBlurRenderTarget.Create(
-		1280,
-		720,
+		640,
+		360,
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,

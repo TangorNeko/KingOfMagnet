@@ -26,7 +26,9 @@ PSInput VSMain(VSInput In)
 	psIn.uv = In.uv;
 	return psIn;
 }
-float4 PSMain(PSInput In) : SV_Target0
+
+//あそびよう
+float4 TestPS(PSInput In) : SV_Target0
 {
     float4 color = 0.0f;// = -sceneTexture.Sample(Sampler,In.uv);
     color.a = 1.0f;

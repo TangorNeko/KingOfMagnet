@@ -8,6 +8,7 @@ namespace prefab
 		enum EModel {
 			eModel_View1,
 			eModel_View2,
+			eModel_Shadow,
 			eModel_Num,
 		};
 		//アニメーション速度
@@ -23,6 +24,8 @@ namespace prefab
 		AnimationClip* m_animationClips;
 		int m_animationClipNum;
 		Animation m_animation;
+
+		bool m_isShadowCaster = true;
 
 		/// <summary>
 		/// モデルの情報を更新する。
@@ -104,6 +107,11 @@ namespace prefab
 				model.UpdateWorldMatrix(world);
 				m_skeleton.Update(world);
 			}
+		}
+
+		void SetShadowCasterFlag(bool isShadowCaster)
+		{
+			m_isShadowCaster = isShadowCaster;
 		}
 
 		/// <summary>

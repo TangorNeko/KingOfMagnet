@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ExEngine.h"
 #include "GameObjectManager.h"
+#include "../../GameTemplate/Game/PostEffectManager.h"
 
 GameObjectManager* GameObjectManager::m_instance = nullptr;
 
@@ -120,6 +121,21 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 			}
 		}
 	}
+	
+	PostEffectManager::GetInstance()->ShadowRender(rc);
+
+	//shadow
+	{
+		rc.SetStep(RenderContext::eStep_RenderShadowMap);
+		//ShadowRenderでビューポートを設定しているのでここでビューポート設定しなくてOK(たぶん)
+		for (auto& goList : m_gameObjectListArray) {
+			for (auto& go : goList) {
+				go->RenderWrapper(rc, &(PostEffectManager::GetInstance()->testLightCamera));
+			}
+		}
+	}
+
+	PostEffectManager::GetInstance()->EndShadowRender(rc);
 	
 	//Level2D用　
 	//レベル2Dは全部スプライトなのでExecuteRenderにはいらないのでは?

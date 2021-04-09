@@ -43,7 +43,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//TODO:シングルトンである必要ある?
 	PostEffectManager::CreateInstance();
-	PostEffectManager::GetInstance()->Init(true);
+	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 
 	//TitleScene* title = NewGO<TitleScene>(0, "Title");
@@ -58,7 +58,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//プレイヤー1を作成
 	Character_base* showm = NewGO<Knight>(0, "Player");
-	showm->m_position = { 0.0f,0.0f,-500.0f };
+	showm->m_position = { 0.0f,0.0f,0.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 1;
 

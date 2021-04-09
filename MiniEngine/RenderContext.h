@@ -200,6 +200,20 @@ public:
 		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 	}
 	/// <summary>
+	/// レンダリングターゲットをスロット0に設定する。
+	/// </summary>
+	/// <remarks>
+	/// 本関数はビューポートの設定を行いません。
+	/// ユーザー側で適切なビューポートを指定する必要があります。
+	/// </remarks>
+	/// <param name="renderTarget">レンダリングターゲット</param>
+	void SetRenderTarget(RenderTarget& renderTarget)
+	{
+		RenderTarget* rtArray[] = { &renderTarget };
+		SetRenderTargets(1, rtArray);
+	}
+	void SetRenderTargetAndViewport(RenderTarget& renderTarget);
+	/// <summary>
 	/// レンダリングターゲットとビューポートを同時に設定する。
 	/// </summary>
 	/// <param name="numRT"></param>

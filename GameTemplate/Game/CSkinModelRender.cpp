@@ -39,9 +39,11 @@ namespace prefab
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
-		for (auto& model : m_model) {
-			model.Init(initData);
-		}
+		m_model[eModel_View1].Init(initData);
+		m_model[eModel_View2].Init(initData);
+
+		initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		m_model[eModel_Shadow].Init(initData);
 
 		m_animationClips = animClips;
 		m_animationClipNum = animClipNum;
@@ -85,9 +87,11 @@ namespace prefab
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
-		for (auto& model : m_model) {
-			model.Init(initData);
-		}
+		m_model[eModel_View1].Init(initData);
+		m_model[eModel_View2].Init(initData);
+
+		initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		m_model[eModel_Shadow].Init(initData);
 	}
 
 	/// <summary>
@@ -119,6 +123,9 @@ namespace prefab
 
 		m_model[eModel_View1].Init(initData);
 		m_model[eModel_View2].Init(initData);
+
+		initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		m_model[eModel_Shadow].Init(initData);
 	}
 
 	//ÉÇÉfÉãÇÃï`âÊÅB
@@ -130,6 +137,12 @@ namespace prefab
 			break;
 		case RenderContext::eStep_RenderViewport2:
 			m_model[eModel_View2].Draw(rc, camera);
+			break;
+		case RenderContext::eStep_RenderShadowMap:
+			if (m_isShadowCaster)
+			{
+				m_model[eModel_Shadow].Draw(rc, camera);
+			}
 			break;
 		}
 	}
