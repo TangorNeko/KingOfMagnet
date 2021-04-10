@@ -57,7 +57,7 @@ private:
 	Sprite m_luminanceSprite;//輝度抽出したスプライト。
 	Sprite m_bokeLuminanceSprite;//輝度抽出したものにブラーをかけたスプライト。
 	Sprite m_copyToFrameBufferSprite;//画面に表示する最終結果のスプライト。
-	GaussianBlur m_gaussianBlur;
+	GaussianBlur m_gaussianBlur[4];
 
 public:
 	bool m_shadowMode = false;

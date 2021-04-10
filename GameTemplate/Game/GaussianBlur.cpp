@@ -47,8 +47,8 @@ void GaussianBlur::InitRenderTargets()
 {
 	//Xブラー用のレンダリングターゲットを作成する。
 	m_xBlurRenderTarget.Create(
-		640,
-		720,
+		m_originalTexture->GetWidth() / 2,
+		m_originalTexture->GetHeight(),
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -57,8 +57,8 @@ void GaussianBlur::InitRenderTargets()
 
 	//Yブラー用のレンダリングターゲットを作成する。
 	m_yBlurRenderTarget.Create(
-		640,
-		360,
+		m_originalTexture->GetWidth() / 2,
+		m_originalTexture->GetHeight() / 2,
 		1,
 		1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,

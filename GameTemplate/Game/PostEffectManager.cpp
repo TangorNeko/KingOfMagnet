@@ -43,16 +43,24 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 		m_luminanceSprite.Init(luminanceSpriteInitData);
 		
 		//輝度抽出したスプライトをもとにブラーをかけさせるようにセット。
-		m_gaussianBlur.Init(&m_luminnceRenderTarget.GetRenderTargetTexture());
+		m_gaussianBlur[0].Init(&m_luminnceRenderTarget.GetRenderTargetTexture());
+		m_gaussianBlur[1].Init(&m_gaussianBlur[0].GetBokeTexture());
+		m_gaussianBlur[2].Init(&m_gaussianBlur[1].GetBokeTexture());
+		m_gaussianBlur[3].Init(&m_gaussianBlur[2].GetBokeTexture());
 
 		//輝度抽出されたものにブラーをかけたスプライト。
 		SpriteInitData bokeLuminanceSpriteInitData;
-		bokeLuminanceSpriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+		bokeLuminanceSpriteInitData.m_fxFilePath = "Assets/shader/postEffect.fx";
 		bokeLuminanceSpriteInitData.m_vsEntryPointFunc = "VSMain";
+		bokeLuminanceSpriteInitData.m_psEntryPoinFunc = "PSBloomFinal";
 		bokeLuminanceSpriteInitData.m_width = 1280;
 		bokeLuminanceSpriteInitData.m_height = 720;
 		bokeLuminanceSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
-		bokeLuminanceSpriteInitData.m_textures[0] = &m_gaussianBlur.GetBokeTexture();
+		bokeLuminanceSpriteInitData.m_textures[0] = &m_gaussianBlur[0].GetBokeTexture();
+		bokeLuminanceSpriteInitData.m_textures[1] = &m_gaussianBlur[1].GetBokeTexture();
+		bokeLuminanceSpriteInitData.m_textures[2] = &m_gaussianBlur[2].GetBokeTexture();
+		bokeLuminanceSpriteInitData.m_textures[3] = &m_gaussianBlur[3].GetBokeTexture();
+		bokeLuminanceSpriteInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		m_bokeLuminanceSprite.Init(bokeLuminanceSpriteInitData);
 
@@ -135,7 +143,10 @@ void PostEffectManager::AfterRender(RenderContext& rc)
 		rc.WaitUntilFinishDrawingToRenderTarget(m_luminnceRenderTarget);
 
 		//ガウシアンブラーを実行する
-		m_gaussianBlur.ExecuteOnGPU(rc, 20);
+		m_gaussianBlur[0].ExecuteOnGPU(rc, 10);
+		m_gaussianBlur[1].ExecuteOnGPU(rc, 10);
+		m_gaussianBlur[2].ExecuteOnGPU(rc, 10);
+		m_gaussianBlur[3].ExecuteOnGPU(rc, 10);
 
 		//メインレンダーターゲットが使えるようになるまで待つ
 		rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);

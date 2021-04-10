@@ -73,3 +73,21 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
     clip(t - 1.0f);
     return color;
 }
+
+Texture2D<float4> g_bokeTexture_0 : register(t0);
+Texture2D<float4> g_bokeTexture_1 : register(t1);
+Texture2D<float4> g_bokeTexture_2 : register(t2);
+Texture2D<float4> g_bokeTexture_3 : register(t3);
+
+float4 PSBloomFinal(PSInput In) : SV_Target0
+{
+    float4 combineColor = g_bokeTexture_0.Sample(Sampler,In.uv);
+    combineColor += g_bokeTexture_1.Sample(Sampler, In.uv);
+    combineColor += g_bokeTexture_2.Sample(Sampler, In.uv);
+    combineColor += g_bokeTexture_3.Sample(Sampler, In.uv);
+    
+    combineColor /= 4.0f;
+    combineColor.a = 1.0f;
+
+    return combineColor;
+}
