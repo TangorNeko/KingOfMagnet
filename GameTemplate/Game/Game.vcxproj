@@ -337,7 +337,7 @@
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="tklFile.cpp" />
-    <ClCompile Include="tkmFileManager.cpp" />
+    <ClCompile Include="ResourceBankManager.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
     <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
@@ -444,7 +444,8 @@
     <ClInclude Include="Tank.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="tklFile.h" />
-    <ClInclude Include="tkmFileManager.h" />
+    <ClInclude Include="ResourceBankManager.h" />
+    <ClInclude Include="TResourceBank.h" />
     <ClInclude Include="TriangleCollider.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />

@@ -35,8 +35,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
 
-	//tkmファイルマネージャのインスタンスを作成
-	tkmFileManager::CreateInstance();
+	//リソースマネージャのインスタンスを作成
+	ResourceBankManager::CreateInstance();
 
 	CSoundEngine::CreateInstance();
 	CSoundEngine::GetInstance()->Init();
@@ -129,7 +129,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	CLightManager::DeleteInstance();
 	
 	//tkmFileManagerを削除
-	tkmFileManager::DeleteInstance();
+	ResourceBankManager::DeleteInstance();
 
 	//サウンドエンジンを削除
 	CSoundEngine::DeleteInstance();

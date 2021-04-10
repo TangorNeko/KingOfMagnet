@@ -11,7 +11,7 @@
 #include "SoundEngine.h"
 #include "prefab.h"
 #include "CLightManager.h"
-#include "tkmFileManager.h"
+#include "ResourceBankManager.h"
 
 #include "time/Stopwatch.h"
 #include "time/GameTime.h"
