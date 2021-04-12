@@ -17,7 +17,7 @@ bool PopRandItem::Start()
 void PopRandItem::Update()
 {
 	ItemSelect();
-	enitem = Gun;
+	//enitem = Gun;
 	ItemPop();
 }
 void PopRandItem::ItemSelect()
