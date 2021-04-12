@@ -25,7 +25,7 @@ namespace prefab
 		int m_animationClipNum;
 		Animation m_animation;
 
-		bool m_isShadowCaster = true;
+		bool m_isShadowCaster = false;
 
 		/// <summary>
 		/// モデルの情報を更新する。

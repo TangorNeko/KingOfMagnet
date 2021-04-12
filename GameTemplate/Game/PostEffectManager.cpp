@@ -85,12 +85,6 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 			DXGI_FORMAT_D32_FLOAT,
 			clearColor
 		);
-
-		testLightCamera.SetPosition({ 0.0f,1000.0f,0.0f });
-		testLightCamera.SetTarget(0.0f, 0.0f, 0.0f);
-		testLightCamera.SetUp({ 1.0f,0.0f,0.0f });
-		testLightCamera.SetViewAngle(Math::DegToRad(20.0f));
-		testLightCamera.Update();
 	}
 }
 

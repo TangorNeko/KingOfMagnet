@@ -36,7 +36,7 @@ struct SpotLigData
 	float ligAngle;
 };
 
-cbuffer DirectionLigCb : register(b1)
+cbuffer LigandShadowCb : register(b1)
 {
 	//各配列数はCLightManager.hのMaxLightNumと同じにすること
 	DirectionLigData directionLigData[5];
@@ -71,12 +71,14 @@ struct SPSIn {
 	float2 uv 			: TEXCOORD0;	//uv座標。
 	float3 worldPos		: TEXCOORD1;
 	float3 normalInView : TEXCOORD2;
+	float4 posInLVP 	: TEXCOORD3;
 };
 
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
+Texture2D<float4> g_shadowMap : register(t10);			//シャドウマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
 sampler g_sampler : register(s0);	//サンプラステート。
 
@@ -129,6 +131,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
 	psIn.uv = vsIn.uv;
 
+	psIn.posInLVP = mul(m,psIn.worldPos);
 	return psIn;
 }
 
@@ -308,6 +311,23 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	finalColor.xyz += ambientLig;
 
 	finalColor *= albedoColor;
+
+	//影
+	/*
+
+	float2 shadowMapUV = psIn.posInLVP.xy / psIn.posInLVP.w;
+	shadowMapUV *= float2(0,5f,-0,5f);
+	shadowMapUV += 0.5f;
+
+	float3 shadowMap = 1.0f;
+	
+	if(shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f && shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f)
+	{
+		shadowMap = g_shadowMap.Sample(g_sampler,shadowMapUV);
+	}
+
+	finalColor.xyz *= shadowMap;
+	*/
 
 	return finalColor;
 }

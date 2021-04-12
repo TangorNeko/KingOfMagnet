@@ -42,6 +42,7 @@ cbuffer DirectionLigCb : register(b1)
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[20];
 	SpotLigData spotLigData[20];
+	float4x4 mLVP;
 	float3 eyePos;
 	int directionLigNum;
 	int pointLigNum;

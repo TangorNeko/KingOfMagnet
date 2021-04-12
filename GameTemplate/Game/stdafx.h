@@ -12,6 +12,7 @@
 #include "prefab.h"
 #include "CLightManager.h"
 #include "ResourceBankManager.h"
+#include "PostEffectManager.h"
 
 #include "time/Stopwatch.h"
 #include "time/GameTime.h"

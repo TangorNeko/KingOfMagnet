@@ -39,6 +39,7 @@ bool Knight::Start()
 
 	m_skinModelRender->Init("Assets/modelData/Knight.tkm", "Assets/modelData/Knight.tks",animationClips,enAnimationClip_num);
 
+	m_skinModelRender->SetShadowCasterFlag(true);
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
 	m_pointLight = NewGO<prefab::CPointLight>(0);

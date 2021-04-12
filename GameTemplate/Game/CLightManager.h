@@ -30,12 +30,12 @@ private:
 		prefab::DirLigData directionLightArray[MaxDirectionLightNum];	//ディレクションライトのデータの配列
 		prefab::PointLigData pointLightArray[MaxPointLightNum];			//ポイントライトのデータの配列
 		prefab::SpotLigData spotLightArray[MaxSpotLightNum];			//スポットライトのデータの配列
+		Matrix lightCameraProjectionMatrix;								//ライトビュープロジェクション行列
 		Vector3 eyePos;													//カメラの位置
 		int directionLightNum = 0;										//ディレクションライトの数
 		int pointLightNum = 0;											//ポイントライトの数
 		int spotLightNum = 0;											//スポットライトの数
 	};
-
 	LigDatas m_ligData;				//ライトのデータ
 	int m_size = sizeof(m_ligData);	//ライトのデータのサイズ
 	
@@ -45,6 +45,8 @@ private:
 	std::map<int, int> m_dirLigMap;		//ディレクションライトのタグから現在のディレクションライトの位置を返してくれるMap
 	std::map<int, int> m_pointLigMap;	//ポイントライトのタグから現在のポイントライトの位置を返してくれるMap
 	std::map<int, int> m_spotLigMap;	//スポットライトのタグから現在のスポットライトの位置を返してくれるMap
+
+	Camera m_lightCamera;//シャドウマップ用のライトの位置のカメラ。とりあえずテスト。
 public:
 	static void CreateInstance()
 	{
@@ -70,6 +72,36 @@ public:
 
 	//カメラのポジションを更新する
 	void UpdateEyePos(int camNo) { m_ligData.eyePos = g_camera3D[camNo]->GetPosition(); }
+
+	Camera* GetLightCamera()
+	{
+		return &m_lightCamera;
+	}
+
+	//シャドウ用
+	void SetLightCameraPosition(const Vector3& pos)
+	{
+		m_lightCamera.SetPosition(pos);
+		m_lightCamera.Update();
+	}
+
+	void SetLightCameraTarget(const Vector3& targetPos)
+	{
+		m_lightCamera.SetTarget(targetPos);
+		m_lightCamera.Update();
+	}
+
+	void SetLightCameraUp(const Vector3& up)
+	{
+		m_lightCamera.SetUp(up);
+		m_lightCamera.Update();
+	}
+
+	void SetLightCameraViewAngle(const float& deg)
+	{
+		m_lightCamera.SetViewAngle(Math::DegToRad(deg));
+		m_lightCamera.Update();
+	}
 
 	//ディレクションライト用////////////////////////////////////////////////////////////////////////////////////////////////
 	//Mapを使って安全にライトを削除できる仕組みを作ってみた。オブジェクトの削除がうまくいっていないためまだ検証できていない

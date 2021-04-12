@@ -36,6 +36,11 @@ public:
 		return m_shadowMode;
 	}
 
+	Texture& GetShadowMap()
+	{
+		return m_shadowMap.GetRenderTargetTexture();
+	}
+
 	/// <summary>
 	/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‘O‚Ìˆ—
 	/// </summary>
@@ -62,6 +67,5 @@ private:
 public:
 	bool m_shadowMode = false;
 	RenderTarget m_shadowMap;
-	Camera testLightCamera;
 };
 

@@ -21,7 +21,7 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
@@ -34,6 +34,7 @@ namespace prefab
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
+		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
 
 		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
@@ -43,6 +44,8 @@ namespace prefab
 		m_model[eModel_View2].Init(initData);
 
 		initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		initData.m_expandConstantBufferSize = 0;
+		initData.m_expandConstantBuffer = nullptr;
 		m_model[eModel_Shadow].Init(initData);
 
 		m_animationClips = animClips;
@@ -69,7 +72,7 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
@@ -82,6 +85,7 @@ namespace prefab
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
+		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
 	
 		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
@@ -91,6 +95,8 @@ namespace prefab
 		m_model[eModel_View2].Init(initData);
 
 		initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		initData.m_expandConstantBufferSize = 0;
+		initData.m_expandConstantBuffer = nullptr;
 		m_model[eModel_Shadow].Init(initData);
 	}
 
@@ -106,7 +112,7 @@ namespace prefab
 
 		initData.m_tkmFilePath = modelPath;
 
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
 
 		//initData.m_vsEntryPointFunc = "VSMain";
 
@@ -117,6 +123,8 @@ namespace prefab
 		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
+		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
+
 		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
@@ -125,6 +133,8 @@ namespace prefab
 		m_model[eModel_View2].Init(initData);
 
 		initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		initData.m_expandConstantBufferSize = 0;
+		initData.m_expandConstantBuffer = nullptr;
 		m_model[eModel_Shadow].Init(initData);
 	}
 

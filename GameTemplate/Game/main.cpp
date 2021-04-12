@@ -11,7 +11,6 @@
 #include "Ninja.h"
 #include "TitleScene.h"
 #include "PopRandItem.h"
-#include "PostEffectManager.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -34,6 +33,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
+	CLightManager::GetInstance()->SetLightCameraPosition({ 0.0f,600.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraTarget({ 0.0f,0.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraUp({ 1.0f,0.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraViewAngle(20.0f);
 
 	//リソースマネージャのインスタンスを作成
 	ResourceBankManager::CreateInstance();
@@ -106,13 +109,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		
 		//ポストエフェクト用。Render前の処理
-		PostEffectManager::GetInstance()->BeforeRender(renderContext);
+		//PostEffectManager::GetInstance()->BeforeRender(renderContext);
 
 		//Renderはモデル等、エフェクトを受けるものを描画する
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 
 		//ポストエフェクト用。Render後の処理
-		PostEffectManager::GetInstance()->AfterRender(renderContext);
+		//PostEffectManager::GetInstance()->AfterRender(renderContext);
 
 		//PostRenderはスプライト、フォント等、エフェクトを受けないものを描画する
 		GameObjectManager::GetInstance()->ExecutePostRender(renderContext);

@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "ExEngine.h"
 #include "GameObjectManager.h"
-#include "../../GameTemplate/Game/PostEffectManager.h"
 
 GameObjectManager* GameObjectManager::m_instance = nullptr;
 
@@ -50,6 +49,26 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 {
 	
 	//レンダラーを変更するならここを改造していくと良い。
+	
+	//TODO:暫定処理、フラグ含め別の形にしたい
+	//影を先に描いてからモデルに描いた影を描き足すので先にシャドウマップをつくる。
+	PostEffectManager::GetInstance()->ShadowRender(rc);
+
+	//shadow
+	if (PostEffectManager::GetInstance()->GetShadowFlag())
+	{
+		rc.SetStep(RenderContext::eStep_RenderShadowMap);
+		//ShadowRenderでビューポートを設定しているのでここでビューポート設定しなくてOK(たぶん)
+		for (auto& goList : m_gameObjectListArray) {
+			for (auto& go : goList) {
+				go->RenderWrapper(rc, CLightManager::GetInstance()->GetLightCamera());
+			}
+		}
+	}
+	PostEffectManager::GetInstance()->EndShadowRender(rc);
+
+	//ポストエフェクト用。Render前の処理
+	PostEffectManager::GetInstance()->BeforeRender(rc);
 
 	if (m_2screenMode)//2画面モード
 	{
@@ -122,23 +141,6 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		}
 	}
 	
-	//TODO:暫定処理、フラグ含め別の形にしたい
-	PostEffectManager::GetInstance()->ShadowRender(rc);
-
-	//shadow
-	if(PostEffectManager::GetInstance()->GetShadowFlag())
-	{
-		rc.SetStep(RenderContext::eStep_RenderShadowMap);
-		//ShadowRenderでビューポートを設定しているのでここでビューポート設定しなくてOK(たぶん)
-		for (auto& goList : m_gameObjectListArray) {
-			for (auto& go : goList) {
-				go->RenderWrapper(rc, &(PostEffectManager::GetInstance()->testLightCamera));
-			}
-		}
-	}
-
-	PostEffectManager::GetInstance()->EndShadowRender(rc);
-	
 	//Level2D用　
 	//レベル2Dは全部スプライトなのでExecuteRenderにはいらないのでは?
 	//だがviewportをセットしないと画面が半分のままなのでセットはしてみる。
@@ -163,6 +165,9 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		*/
 	}
 	
+	//ポストエフェクト用。Render後の処理
+	PostEffectManager::GetInstance()->AfterRender(rc);
+
 }
 
 void GameObjectManager::ExecutePostRender(RenderContext& rc)
