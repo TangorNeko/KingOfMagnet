@@ -28,42 +28,27 @@ void Model::Init(const ModelInitData& initData)
 	
 	m_modelUpAxis = initData.m_modelUpAxis;
 
-	m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(initData.m_tkmFilePath);
+	m_tkmFile = ResourceBankManager::GetInstance()->GetTkmFileFromBank(initData.m_tkmFilePath);
 	
 	if (m_tkmFile == nullptr)
 	{
+		//ñ¢ìoò^
+		m_tkmFile = new TkmFile;
 		m_tkmFile->Load(initData.m_tkmFilePath);
+		ResourceBankManager::GetInstance()->RegistTkmFileToBank(initData.m_tkmFilePath, m_tkmFile);
+	}
 
-		m_meshParts.InitFromTkmFile(
-			*m_tkmFile,
-			wfxFilePath,
-			initData.m_vsEntryPointFunc,
-			initData.m_vsSkinEntryPointFunc,
-			initData.m_psEntryPointFunc,
-			initData.m_expandConstantBuffer,
-			initData.m_expandConstantBufferSize,
-			initData.m_expandShaderResoruceView,
-			initData.m_colorBufferFormat
-		);
-	}
-	else
-	{
-		
-		//TkmFileÇÕoperator=Ç™íËã`Ç≥ÇÍÇƒÇ¢Ç»Ç¢ÇÃÇ≈ë„ì¸Ç≈Ç´Ç»Ç¢ÅB
-		//m_tkmFile = initData.m_tkmFile;
-		m_meshParts.InitFromTkmFile(
-			*m_tkmFile,
-			wfxFilePath,
-			initData.m_vsEntryPointFunc,
-			initData.m_vsSkinEntryPointFunc,
-			initData.m_psEntryPointFunc,
-			initData.m_expandConstantBuffer,
-			initData.m_expandConstantBufferSize,
-			initData.m_expandShaderResoruceView,
-			initData.m_colorBufferFormat
-		);
-		
-	}
+	m_meshParts.InitFromTkmFile(
+		*m_tkmFile,
+		wfxFilePath,
+		initData.m_vsEntryPointFunc,
+		initData.m_vsSkinEntryPointFunc,
+		initData.m_psEntryPointFunc,
+		initData.m_expandConstantBuffer,
+		initData.m_expandConstantBufferSize,
+		initData.m_expandShaderResoruceView,
+		initData.m_colorBufferFormat
+	);
 
 	UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);
 	
