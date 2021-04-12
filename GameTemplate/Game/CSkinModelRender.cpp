@@ -12,12 +12,7 @@ namespace prefab
 	/// <param name="animationClipNum">アニメーションクリップの数</param>
 	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath, AnimationClip* animClips, int animClipNum)
 	{
-		m_skeleton.Init(skeletonPath);
-
 		ModelInitData initData;
-
-		//TODO:NewGOするたびにロードが呼ばれないようにしたい。
-		//initData.m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(modelPath);
 
 		initData.m_tkmFilePath = modelPath;
 
@@ -27,11 +22,14 @@ namespace prefab
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
-		initData.m_skeleton = &m_skeleton;
+		if (skeletonPath != nullptr)
+		{
+			m_skeleton.Init(skeletonPath);
+			initData.m_skeleton = &m_skeleton;
+		}
 
 		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
-		//TODO:引数にして利用者に入力させる必要がありそう。
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
 		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
@@ -64,40 +62,7 @@ namespace prefab
 	/// <param name="skeletonPath">スケルトンファイルのパス(.tks)</param>
 	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath)
 	{
-		m_skeleton.Init(skeletonPath);
-
-		ModelInitData initData;
-
-		//initData.m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(modelPath);
-
-		initData.m_tkmFilePath = modelPath;
-
-		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
-
-		initData.m_vsEntryPointFunc = "VSMain";
-
-		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
-
-		initData.m_skeleton = &m_skeleton;
-
-		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-		//TODO:引数にして利用者に入力させる必要がありそう。
-		initData.m_modelUpAxis = enModelUpAxisZ;
-
-		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
-	
-		//定数バッファをモデルに紐付ける
-		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
-		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
-
-		m_model[eModel_View1].Init(initData);
-		m_model[eModel_View2].Init(initData);
-
-		initData.m_fxFilePath = "Assets/shader/shadow.fx";
-		initData.m_expandConstantBufferSize = 0;
-		initData.m_expandConstantBuffer = nullptr;
-		m_model[eModel_Shadow].Init(initData);
+		Init(modelPath, skeletonPath, nullptr, 0);
 	}
 
 	/// <summary>
@@ -106,40 +71,11 @@ namespace prefab
 	/// <param name="modelPath">モデルファイルのパス(.tkm)</param>
 	void CSkinModelRender::Init(const char* modelPath)
 	{
-		ModelInitData initData;
-
-		//initData.m_tkmFile = tkmFileManager::GetInstance()->GetTkmFile(modelPath);
-
-		initData.m_tkmFilePath = modelPath;
-
-		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
-
-		//initData.m_vsEntryPointFunc = "VSMain";
-
-		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
-
-		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-		//TODO:引数にして利用者に入力させる必要がありそう。
-		initData.m_modelUpAxis = enModelUpAxisZ;
-
-		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
-
-		//定数バッファをモデルに紐付ける
-		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
-		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
-
-		m_model[eModel_View1].Init(initData);
-		m_model[eModel_View2].Init(initData);
-
-		initData.m_fxFilePath = "Assets/shader/shadow.fx";
-		initData.m_expandConstantBufferSize = 0;
-		initData.m_expandConstantBuffer = nullptr;
-		m_model[eModel_Shadow].Init(initData);
+		Init(modelPath, nullptr, nullptr, 0);
 	}
 
 	//モデルの描画。
-	void CSkinModelRender::Render(RenderContext& rc,Camera* camera)
+	void CSkinModelRender::Render(RenderContext& rc, Camera* camera)
 	{
 		switch (rc.GetRenderStep()) {
 		case RenderContext::eStep_RenderViewport1:
