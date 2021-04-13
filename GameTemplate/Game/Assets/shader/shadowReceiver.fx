@@ -131,7 +131,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
 	psIn.uv = vsIn.uv;
 
-	psIn.posInLVP = mul(m,psIn.worldPos);
+	psIn.posInLVP = mul(mLVP,float4(psIn.worldPos, 1.0f));
 	return psIn;
 }
 
@@ -313,11 +313,13 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	finalColor *= albedoColor;
 
 	//影
-	/*
 
 	float2 shadowMapUV = psIn.posInLVP.xy / psIn.posInLVP.w;
-	shadowMapUV *= float2(0,5f,-0,5f);
+	shadowMapUV *= float2(0.5f, -0.5f);
 	shadowMapUV += 0.5f;
+
+	float4 a = psIn.posInLVP;
+	float3 b = psIn.worldPos;
 
 	float3 shadowMap = 1.0f;
 	
@@ -327,7 +329,6 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	}
 
 	finalColor.xyz *= shadowMap;
-	*/
 
 	return finalColor;
 }

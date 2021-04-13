@@ -107,15 +107,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////////////
 		
 		GameObjectManager::GetInstance()->ExecuteUpdate();
-		
-		//ポストエフェクト用。Render前の処理
-		//PostEffectManager::GetInstance()->BeforeRender(renderContext);
 
 		//Renderはモデル等、エフェクトを受けるものを描画する
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-
-		//ポストエフェクト用。Render後の処理
-		//PostEffectManager::GetInstance()->AfterRender(renderContext);
 
 		//PostRenderはスプライト、フォント等、エフェクトを受けないものを描画する
 		GameObjectManager::GetInstance()->ExecutePostRender(renderContext);
