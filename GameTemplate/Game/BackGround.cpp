@@ -7,7 +7,7 @@ BackGround::~BackGround()
 }
 
 bool BackGround::Start()
-{
+{ 
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	/*
