@@ -12,7 +12,7 @@ Bullet::~Bullet()
 bool Bullet::Start()
 {
 	//弾自身のモデルを作成
-	
+
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	switch (m_CharaNum)
 	{
@@ -31,7 +31,7 @@ bool Bullet::Start()
 
 		break;
 	}
-	
+
 	//弾から出る光
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
@@ -39,7 +39,7 @@ bool Bullet::Start()
 	//投げた方向に弾を向ける
 	m_direction_me = m_moveDirection;
 	float t = m_direction_me.Dot(Vector3::AxisZ);
-	
+
 	t = acos(t);
 	if (m_direction_me.x < 0) {
 		t *= -1;
@@ -53,7 +53,7 @@ bool Bullet::Start()
 
 void Bullet::Update()
 {
-	
+
 	//前フレームの弾の位置を記録。
 	Vector3 oldPos = m_position;
 
@@ -75,7 +75,7 @@ void Bullet::Update()
 	}
 
 	//各プレイヤーを検索
-	QueryGOs<Character_base>("Player", [this,oldPos](Character_base* player)->bool
+	QueryGOs<Character_base>("Player", [this, oldPos](Character_base* player)->bool
 		{
 			//発射されてから15フレーム後に、発射したプレイヤーの磁力を与える(加速or減速)
 			if (m_liveCount == 15 && player->m_playerNum == m_parentNo)
@@ -93,14 +93,14 @@ void Bullet::Update()
 				if (player->m_collider.isHitCapsule(m_collider))
 				{
 					//敵プレイヤーに速度に応じてダメージを与える
-					player->Damage(m_velocity/2);
+					player->Damage(m_velocity / 2);
 					DeleteGO(this);
 				}
 
 				//敵との距離が500以内なら
 				if (diff.Length() < 500.0f)
-				{				
-					
+				{
+
 					//敵が引力モードなら少し引き寄せる。
 					if (player->m_magPower < 0)
 					{
@@ -110,7 +110,7 @@ void Bullet::Update()
 						Vector3 newDirection = m_moveDirection * m_velocity + toPlayer * player->m_magPower * 2 * -1;
 						newDirection.Normalize();
 						m_moveDirection = newDirection;
-						
+
 					}
 
 					//発射したプレイヤーの磁力を与える(加速or減速)
@@ -128,7 +128,7 @@ void Bullet::Update()
 
 	//モデルとライトの位置をセット。
 	m_skinModelRender->SetPosition(m_position);
-	m_pointLight->SetPosition(m_position);	
+	m_pointLight->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_rot);
 	//100フレーム生存したら消去
 	m_liveCount++;
