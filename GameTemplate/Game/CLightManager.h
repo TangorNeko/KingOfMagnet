@@ -115,6 +115,7 @@ public:
 	{
 		m_lightCamera.SetHeight(height);
 		m_lightCamera.Update();
+		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
 	//ディレクションライト用////////////////////////////////////////////////////////////////////////////////////////////////
