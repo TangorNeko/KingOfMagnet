@@ -10,7 +10,7 @@ Bullet::~Bullet()
 }
 
 bool Bullet::Start()
-{ 
+{  
 	//’e©g‚Ìƒ‚ƒfƒ‹‚ğì¬
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
