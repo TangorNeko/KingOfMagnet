@@ -33,10 +33,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
-	CLightManager::GetInstance()->SetLightCameraPosition({ 0.0f,600.0f,0.0f });
-	CLightManager::GetInstance()->SetLightCameraTarget({ 0.0f,0.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraPosition({ -1000.0f,1000.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraTarget({ -1000.0f,0.0f,0.0f });
 	CLightManager::GetInstance()->SetLightCameraUp({ 1.0f,0.0f,0.0f });
-	CLightManager::GetInstance()->SetLightCameraViewAngle(20.0f);
+	CLightManager::GetInstance()->SetLightCameraUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+	CLightManager::GetInstance()->SetLightCameraWidth(5000.0f);
+	CLightManager::GetInstance()->SetLightCameraHeight(5000.0f);
 
 	//リソースマネージャのインスタンスを作成
 	ResourceBankManager::CreateInstance();

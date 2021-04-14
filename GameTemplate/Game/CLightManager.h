@@ -100,9 +100,23 @@ public:
 		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
-	void SetLightCameraViewAngle(const float& deg)
+	void SetLightCameraUpdateProjMatrixFunc(Camera::EnUpdateProjMatrixFunc func)
 	{
-		m_lightCamera.SetViewAngle(Math::DegToRad(deg));
+		m_lightCamera.SetUpdateProjMatrixFunc(func);
+		m_lightCamera.Update();
+		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
+	}
+
+	void SetLightCameraWidth(const float& width)
+	{
+		m_lightCamera.SetWidth(width);
+		m_lightCamera.Update();
+		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
+	}
+
+	void SetLightCameraHeight(const float& height)
+	{
+		m_lightCamera.SetHeight(height);
 		m_lightCamera.Update();
 		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}

@@ -77,8 +77,8 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 	{
 		float clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 		m_shadowMap.Create(
-			1024,
-			1024,
+			4096,
+			4096,
 			1,
 			1,
 			DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -96,6 +96,11 @@ void PostEffectManager::ShadowRender(RenderContext& rc)
 		rc.SetRenderTargetAndViewport(m_shadowMap);
 		rc.ClearRenderTargetView(m_shadowMap.GetRTVCpuDescriptorHandle(), m_shadowMap.GetRTVClearColor());
 		rc.ClearDepthStencilView(m_shadowMap.GetDSVCpuDescriptorHandle(), m_shadowMap.GetDSVClearValue());
+
+		D3D12_RECT shadowRect;
+		shadowRect.right = 4096;
+		shadowRect.bottom = 4096;
+		rc.SetScissorRect(shadowRect);
 	}
 }
 
@@ -104,6 +109,11 @@ void PostEffectManager::EndShadowRender(RenderContext& rc)
 	if (m_shadowMode)
 	{
 		rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
+
+		D3D12_RECT normalRect;
+		normalRect.right = 1280;
+		normalRect.bottom = 720;
+		rc.SetScissorRect(normalRect);
 	}
 }
 
