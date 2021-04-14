@@ -6,27 +6,54 @@
 Bullet::~Bullet()
 {
 	DeleteGO(m_skinModelRender);
-	//DeleteGO(m_pointLight);
+	DeleteGO(m_pointLight);
 }
 
 bool Bullet::Start()
-{  
+{
 	//弾自身のモデルを作成
+	
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	switch (m_CharaNum)
+	{
+	case 0:
+		m_skinModelRender->Init("Assets/modelData/KnightBullet.tkm");
+		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
+		break;
+	case 1:
+		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
+		m_skinModelRender->SetScale({ 1.0f, 1.0f, 1.0f });
+		break;
+	default:
+		m_skinModelRender->Init("Assets/modelData/syuriken1.tkm");
 
-	m_skinModelRender->Init("Assets/modelData/syuriken1.tkm");
-	m_skinModelRender->SetScale({ 7.0f, 7.0f, 7.0f });
+		m_skinModelRender->SetScale({ 7.0f, 7.0f, 7.0f });
 
+		break;
+	}
+	
 	//弾から出る光
-	/*m_pointLight = NewGO<prefab::CPointLight>(0);
+	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
-	m_pointLight->SetRange(200.0f);*/
+	m_pointLight->SetRange(200.0f);
+	//投げた方向に弾を向ける
+	m_direction_me = m_moveDirection;
+	float t = m_direction_me.Dot(Vector3::AxisZ);
+	
+	t = acos(t);
+	if (m_direction_me.x < 0) {
+		t *= -1;
+	}
+
+	m_rot.SetRotation(Vector3::AxisY, t);
+	m_skinModelRender->SetRotation(m_rot);
 
 	return true;
 }
 
 void Bullet::Update()
 {
+	
 	//前フレームの弾の位置を記録。
 	Vector3 oldPos = m_position;
 
@@ -72,7 +99,8 @@ void Bullet::Update()
 
 				//敵との距離が500以内なら
 				if (diff.Length() < 500.0f)
-				{
+				{				
+					
 					//敵が引力モードなら少し引き寄せる。
 					if (player->m_magPower < 0)
 					{
@@ -82,6 +110,7 @@ void Bullet::Update()
 						Vector3 newDirection = m_moveDirection * m_velocity + toPlayer * player->m_magPower * 2 * -1;
 						newDirection.Normalize();
 						m_moveDirection = newDirection;
+						
 					}
 
 					//発射したプレイヤーの磁力を与える(加速or減速)
@@ -99,12 +128,13 @@ void Bullet::Update()
 
 	//モデルとライトの位置をセット。
 	m_skinModelRender->SetPosition(m_position);
-	//m_pointLight->SetPosition(m_position);
-
+	m_pointLight->SetPosition(m_position);	
+	m_skinModelRender->SetRotation(m_rot);
 	//100フレーム生存したら消去
 	m_liveCount++;
 	if (m_liveCount > 100)
 	{
 		DeleteGO(this);
 	}
+
 }

@@ -83,28 +83,24 @@ public:
 	{
 		m_lightCamera.SetPosition(pos);
 		m_lightCamera.Update();
-		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
 	void SetLightCameraTarget(const Vector3& targetPos)
 	{
 		m_lightCamera.SetTarget(targetPos);
 		m_lightCamera.Update();
-		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
 	void SetLightCameraUp(const Vector3& up)
 	{
 		m_lightCamera.SetUp(up);
 		m_lightCamera.Update();
-		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
 	void SetLightCameraViewAngle(const float& deg)
 	{
 		m_lightCamera.SetViewAngle(Math::DegToRad(deg));
 		m_lightCamera.Update();
-		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
 	//ディレクションライト用////////////////////////////////////////////////////////////////////////////////////////////////
