@@ -148,6 +148,8 @@ void Mage::Update()
 
 		//マシンガンを持ったとき
 		HaveMachinegun();
+		//ダメージ表示ポジション更新
+		
 		//カメラ関連
 		Camera();
 	}
@@ -224,6 +226,7 @@ void Mage::NormalAttack()
 		if (m_isLock)
 		{
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+			bullet->m_CharaNum = 1;
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
@@ -243,6 +246,7 @@ void Mage::NormalAttack()
 			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
 
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+			bullet->m_CharaNum = 1;
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
 
@@ -276,21 +280,34 @@ void Mage::Charge()
 	//チャージ
 	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
 	{
-		m_charge += 10.0f - m_magPower * 2.5f;
-
-		if (m_charge > 1000.0f)
+		
+		if (m_Psycho_on == false)
 		{
+		}
+		m_charge += 10.0f - m_magPower * 2.5f;
+		if (m_charge < 333.3f) {
+			m_chargelevel = 1;
+		}
+		else if (m_charge < 666.6) {
+			m_chargelevel = 2;
+		}
+		else if (m_charge < 1000.0f) {
+			m_chargelevel = 3;
+		}
+		else if (m_charge >= 1000.0f)
+		{
+			m_chargelevel = 4;
 			m_charge = 1000.0f;
 		}
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 1.0f + right * g_pad[m_playerNum]->GetLStickXF() * 1.0f;
 		//音の再生
-		/*m_chargeSound = NewGO<prefab::CSoundSource>(0);
-		m_chargeSound->Init(L"Assets/sound/ビーム砲チャージ.wav");
-		m_chargeSound->SetVolume(0.5f);
-		if (m_chargeSound->IsPlaying() == false) {			
-			m_chargeSound->Play(false);
-		}*/
-
+		if (m_chargeSound == nullptr)
+		{
+			m_chargeSound = NewGO<prefab::CSoundSource>(0);
+			m_chargeSound->Init(L"Assets/sound/ビーム砲チャージ.wav");
+			m_chargeSoundVolume = 0.6f;
+			m_chargeSound->SetVolume(m_chargeSoundVolume);
+			m_chargeSound->Play(true);
+		}
 	}
 
 	//チャージ確認用

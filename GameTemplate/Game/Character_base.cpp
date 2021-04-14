@@ -2,6 +2,7 @@
 #include "Character_base.h"
 #include "Bullet.h"
 #include "ChargeShot.h"
+#include "DamageDisplay.h"
 #include <string>
 
 //Character_base::~Character_base()
@@ -130,42 +131,42 @@ void Character_base::MoveAction()
 	}
 }
 
-void Character_base::NormalAttack()
-{
-	//í èÌçUåÇ
-	if (--m_normalAttackCount < 0)
-	{
-		m_normalAttackCount = 0;
-	}
-
-	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1) && m_normalAttackCount == 0)
-	{
-		if (m_isLock)
-		{
-			Bullet* bullet = NewGO<Bullet>(0, "bullet");
-			bullet->m_position = m_position;
-			bullet->m_position.y += 50;
-			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
-			dir.Normalize();
-			bullet->m_moveDirection = dir;
-			bullet->m_velocity = 25.0f;
-			bullet->m_parentNo = m_playerNum;
-		}
-		else
-		{
-			Bullet* bullet = NewGO<Bullet>(0, "bullet");
-			bullet->m_position = m_position;
-			bullet->m_position.y += 50;
-			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-			bullet->m_moveDirection.y = 0.0f;
-			bullet->m_moveDirection.Normalize();
-			bullet->m_velocity = 25.0f;
-			bullet->m_parentNo = m_playerNum;
-		}
-
-		m_normalAttackCount = 30;
-	}
-}
+//void Character_base::NormalAttack()
+//{
+//	//í èÌçUåÇ
+//	if (--m_normalAttackCount < 0)
+//	{
+//		m_normalAttackCount = 0;
+//	}
+//
+//	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1) && m_normalAttackCount == 0)
+//	{
+//		if (m_isLock)
+//		{
+//			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+//			bullet->m_position = m_position;
+//			bullet->m_position.y += 50;
+//			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
+//			dir.Normalize();
+//			bullet->m_moveDirection = dir;
+//			bullet->m_velocity = 25.0f;
+//			bullet->m_parentNo = m_playerNum;
+//		}
+//		else
+//		{
+//			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+//			bullet->m_position = m_position;
+//			bullet->m_position.y += 50;
+//			bullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+//			bullet->m_moveDirection.y = 0.0f;
+//			bullet->m_moveDirection.Normalize();
+//			bullet->m_velocity = 25.0f;
+//			bullet->m_parentNo = m_playerNum;
+//		}
+//
+//		m_normalAttackCount = 30;
+//	}
+//}
 
 void Character_base::Charge()
 {
@@ -271,8 +272,16 @@ void Character_base::Damage(int damage)
 	{
 		m_moveActionCount = 0;
 	}
-
+	
+	//ó^Ç¶ÇΩÉ_ÉÅÅ[ÉWó ÇëäéËÇ…ï\é¶Ç∑ÇÈ
+	m_hitcount++;
+	DamageDisplay* damagedisplay = NewGO<DamageDisplay>(0, "damagedisplay");
+	damagedisplay->m_damagePos = m_position;
+	damagedisplay->m_enemyNum = m_enemy->m_playerNum;
+	damagedisplay->m_hitcount = m_hitcount;
+	damagedisplay->m_damage = damage;
 }
+
 
 void Character_base::Win()
 {

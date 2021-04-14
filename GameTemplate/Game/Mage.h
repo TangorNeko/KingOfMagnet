@@ -41,8 +41,10 @@ public:
 	void TryChangeStatusIdle();
 
 	prefab::CSoundSource* m_chargeSound = nullptr;
-
+	float m_chargeSoundVolume = 0.6f;
 	
+	//サイコキネシスつかってるか
+	bool m_Psycho_on = false;
 	//状態更新
 	void UpdateState();
 

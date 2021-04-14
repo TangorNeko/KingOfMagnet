@@ -306,6 +306,7 @@
     <ClCompile Include="CSoundSource.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSpriteRender.cpp" />
+    <ClCompile Include="DamageDisplay.cpp" />
     <ClCompile Include="DropItem_base.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="Grenade_item.cpp" />
@@ -419,6 +420,7 @@
     <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSpriteRender.h" />
     <ClInclude Include="CUtil.h" />
+    <ClInclude Include="DamageDisplay.h" />
     <ClInclude Include="DropItem_base.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="Grenade_item.h" />

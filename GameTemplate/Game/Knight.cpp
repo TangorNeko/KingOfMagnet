@@ -188,6 +188,8 @@ void Knight::Update()
 		*/
 		//マシンガンを持ったとき
 		HaveMachinegun();
+		//ダメージ表示ポジション更新
+		
 		//カメラ関連
 		Character_base::Camera();
 	}
@@ -280,6 +282,7 @@ void Knight::NormalAttack()
 		if (m_isLock)
 		{
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+			bullet->m_CharaNum = 0;
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
@@ -299,6 +302,7 @@ void Knight::NormalAttack()
 			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
 
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
+			bullet->m_CharaNum = 0;
 			bullet->m_position = m_position;
 			bullet->m_position.y += 50;
 

@@ -136,10 +136,13 @@ public:
 	AnimationClip animationClips[enAnimationClip_num];
 	EnStatus status = enStatus_Idle;	//ナイトの状態。
 
-	
-	
-		
-		
-	
+	int m_hitcount=0;
+	int m_oldhitcount=0;
+	int m_damage = 0;
+	prefab::CFontRender* m_fontRenderDamage= nullptr;
+	Vector3 damagePos;
+	Vector2 screenDamagePos;
+	std::wstring damageText;//ダメージ量表示
+	//void DamageDisplay();
 };
 
