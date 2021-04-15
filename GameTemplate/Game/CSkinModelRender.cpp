@@ -32,7 +32,7 @@ namespace prefab
 
 		initData.m_modelUpAxis = enModelUpAxisZ;
 
-		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetShadowMap();
+		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetBlurShadowMap();
 
 		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
@@ -42,8 +42,7 @@ namespace prefab
 		m_model[eModel_View2].Init(initData);
 
 		initData.m_fxFilePath = "Assets/shader/shadow.fx";
-		initData.m_expandConstantBufferSize = 0;
-		initData.m_expandConstantBuffer = nullptr;
+		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32_FLOAT;
 		m_model[eModel_Shadow].Init(initData);
 
 		m_animationClips = animClips;

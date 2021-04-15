@@ -41,6 +41,11 @@ public:
 		return m_shadowMap.GetRenderTargetTexture();
 	}
 
+	Texture& GetBlurShadowMap()
+	{
+		return m_shadowBlur.GetBokeTexture();
+	}
+
 	/// <summary>
 	/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‘O‚Ìˆ—
 	/// </summary>
@@ -67,5 +72,6 @@ private:
 public:
 	bool m_shadowMode = false;
 	RenderTarget m_shadowMap;
+	GaussianBlur m_shadowBlur;
 };
 
