@@ -110,9 +110,8 @@ void Mage::Update()
 			angle *= -1;
 		}
 		rot.SetRotation(Vector3::AxisY, angle);
-		m_skinModelRender->SetRotation(rot);
-
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
+		m_skinModelRender->SetRotation(rot);		
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed;
 
 		if (m_moveSpeed.Length() != 0)
 		{
@@ -326,6 +325,13 @@ void Mage::Charge()
 			m_chargeSound->SetVolume(m_chargeSoundVolume);
 			m_chargeSound->Play(true);
 		}
+		//速度０
+		m_Speed = 1.0f;
+	}
+	else
+	{
+		//速度０
+		m_Speed = 4.0f;
 	}
 
 	//チャージ確認用
@@ -343,22 +349,21 @@ void Mage::Charge()
 		psychokinesis->m_playerpos = m_position;
 		//psychokinesis->m_Dir = cameraPos;
 	}
+
 }
 void Mage::SpecialAttack()
 {
 	//固有攻撃
-	if (g_pad[m_playerNum]->IsPress(enButtonX) &&m_charge>30)
+	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_Psycho_on == true)
 	{
 		if (m_isLock)
-		{
-			
+		{			
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
 			dir.Normalize();
 			psychokinesis->m_moveDirection = dir;
 			psychokinesis->m_velocity = 50.0f;
 			psychokinesis->m_parentNo = m_playerNum;
-			m_charge = 0;
-			m_Psycho_on = false;
+			m_charge = 0;			
 		}
 		else
 		{
@@ -386,7 +391,7 @@ void Mage::SpecialAttack()
 			psychokinesis->m_parentNo = m_playerNum;
 		}
 		m_charge = 0;
-		m_Psycho_on = false;
+		
 	}
 }
 
