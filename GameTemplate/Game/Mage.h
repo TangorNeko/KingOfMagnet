@@ -1,5 +1,6 @@
 #pragma once
 #include "Character_base.h"
+#include "Psychokinesis.h"
 class Mage :public Character_base
 {
 	
@@ -45,6 +46,7 @@ public:
 	
 	//サイコキネシスつかってるか
 	bool m_Psycho_on = false;
+	Psychokinesis* psychokinesis = nullptr;
 	//状態更新
 	void UpdateState();
 

@@ -48,7 +48,8 @@ public:
 	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
 	Vector3 front;//カメラの前方向
 	Vector3 right;//カメラの右方向
-
+	Vector3 cameraPos;//カメラのポジション
+	Quaternion qRotY;
 	float n;//内積
 	float angle;//アークコサイン
 	

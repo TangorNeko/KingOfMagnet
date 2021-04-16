@@ -341,6 +341,9 @@
     <ClCompile Include="DamageDisplay.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Psychokinesis.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -662,6 +665,9 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DamageDisplay.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Psychokinesis.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -168,39 +168,39 @@ void Character_base::MoveAction()
 //	}
 //}
 
-void Character_base::Charge()
-{
-	//チャージ
-	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
-	{
-		m_charge += 10.0f - m_magPower * 2.5f;
-		if (m_charge < 333.3f) {
-			m_chargelevel = 1;
-		}
-		else if (m_charge < 666.6) {
-			m_chargelevel = 2;
-		}
-		else if (m_charge < 1000.0f) {
-			m_chargelevel = 3;
-		}
-		else if (m_charge >= 1000.0f)
-		{
-			m_chargelevel = 4;
-			m_charge = 1000.0f;
-		}
-		m_moveSpeed = { 0.0f,0.0f,0.0f };
-	}
-
-	//チャージ確認用
-	if (m_charge < 1000.0f) {
-		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
-	}
-	else
-	{
-		m_pointLight->SetColor({ 10.0f,0.0f,0.0f });
-	}
-	m_pointLight->SetPosition(m_position);
-}
+//void Character_base::Charge()
+//{
+//	//チャージ
+//	if (g_pad[m_playerNum]->IsPress(enButtonLB2) && g_pad[m_playerNum]->IsPress(enButtonRB2))
+//	{
+//		m_charge += 10.0f - m_magPower * 2.5f;
+//		if (m_charge < 333.3f) {
+//			m_chargelevel = 1;
+//		}
+//		else if (m_charge < 666.6) {
+//			m_chargelevel = 2;
+//		}
+//		else if (m_charge < 1000.0f) {
+//			m_chargelevel = 3;
+//		}
+//		else if (m_charge >= 1000.0f)
+//		{
+//			m_chargelevel = 4;
+//			m_charge = 1000.0f;
+//		}
+//		m_moveSpeed = { 0.0f,0.0f,0.0f };
+//	}
+//
+//	//チャージ確認用
+//	if (m_charge < 1000.0f) {
+//		m_pointLight->SetColor({ 0.0f,m_charge / 100,0.0f });
+//	}
+//	else
+//	{
+//		m_pointLight->SetColor({ 10.0f,0.0f,0.0f });
+//	}
+//	m_pointLight->SetPosition(m_position);
+//}
 
 
 
@@ -222,8 +222,7 @@ void Character_base::Camera()
 		m_toCameraDir = toEnemy * -1.0f;
 	}
 	else
-	{
-		Quaternion qRotY;
+	{	
 		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 1.5);
 		qRotY.Apply(m_toCameraDir);
 
@@ -244,7 +243,7 @@ void Character_base::Camera()
 		}
 	}
 
-	Vector3 cameraPos = targetPos + m_toCameraDir * 125.0f;
+	cameraPos = targetPos + m_toCameraDir * 125.0f;
 
 	g_camera3D[m_playerNum]->SetPosition(cameraPos);
 	g_camera3D[m_playerNum]->SetTarget(targetPos);

@@ -4,6 +4,8 @@
 #include "BackGround.h"
 #include "Mage.h"
 #include "Knight.h"
+
+
 CharacterSelect::~CharacterSelect() {
 	//キャラ画像
 	DeleteGO(m_mage_spriteRender);
@@ -138,6 +140,7 @@ void CharacterSelect::Update() {
 
 			//ステージの表示
 			NewGO<BackGround>(0, "background");	
+			
 			DeleteGO(this);
 		}
 	}

@@ -323,6 +323,7 @@
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="PopRandItem.cpp" />
     <ClCompile Include="PostEffectManager.cpp" />
+    <ClCompile Include="Psychokinesis.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
@@ -437,6 +438,7 @@
     <ClInclude Include="Ninja.h" />
     <ClInclude Include="PopRandItem.h" />
     <ClInclude Include="PostEffectManager.h" />
+    <ClInclude Include="Psychokinesis.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="SoundEngine.h" />

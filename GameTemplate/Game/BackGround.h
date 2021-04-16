@@ -1,4 +1,5 @@
 #pragma once
+#include "PopRandItem.h"
 class BackGround : public IGameObject
 {
 	~BackGround();
@@ -6,6 +7,8 @@ class BackGround : public IGameObject
 	void Update()override;
 
 	Vector3 m_position = { 0.0f,0.0f,0.0f };
+	
+	PopRandItem* popranditem = nullptr;
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pLig = nullptr;

@@ -6,6 +6,7 @@
 #include <string>
 #include"Mage.h"
 
+
 Character_base::~Character_base()
 {
 	DeleteGO(m_skinModelRender);
@@ -57,6 +58,8 @@ bool Mage::Start()
 	m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
 
 	m_stageModel = FindGO<BackGround>("background");
+	
+	
 	return true;
 }
 void Mage::Update()
@@ -283,6 +286,15 @@ void Mage::Charge()
 		
 		if (m_Psycho_on == false)
 		{
+			m_Psycho_on = true;
+			psychokinesis = NewGO<Psychokinesis>(0,"psychokinesis");
+			psychokinesis->m_playerNum = m_playerNum;
+			psychokinesis->m_rot = rot;
+		}
+		else
+		{
+			psychokinesis->m_charge = m_charge;
+			psychokinesis->m_chargelevel = m_chargelevel;
 		}
 		m_charge += 10.0f - m_magPower * 2.5f;
 		if (m_charge < 333.3f) {
@@ -290,9 +302,13 @@ void Mage::Charge()
 		}
 		else if (m_charge < 666.6) {
 			m_chargelevel = 2;
+			if(psychokinesis->m_level2 == false)
+			psychokinesis->m_level2 = true;
 		}
 		else if (m_charge < 1000.0f) {
 			m_chargelevel = 3;
+			if (psychokinesis->m_level3 == false)
+				psychokinesis->m_level3 = true;
 		}
 		else if (m_charge >= 1000.0f)
 		{
@@ -319,22 +335,28 @@ void Mage::Charge()
 		m_pointLight->SetColor({ 10.0f,0.0f,0.0f });
 	}
 	m_pointLight->SetPosition(m_position);
+	//サイコキネシスの岩にプレイヤーの座標を送る
+	if (m_Psycho_on == true)
+	{
+		psychokinesis->m_playerpos = m_position;
+		//psychokinesis->m_Dir = cameraPos;
+	}
 }
 void Mage::SpecialAttack()
 {
 	//固有攻撃
-	if (g_pad[m_playerNum]->IsPress(enButtonX) && m_charge >= 1000)
+	if (g_pad[m_playerNum]->IsPress(enButtonX) &&m_charge>30)
 	{
 		if (m_isLock)
 		{
-			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
-			chargeshot->m_position = m_position;
-			chargeshot->m_position.y += 50;
+			
 			Vector3 dir = m_enemy->m_magPosition - m_magPosition;
 			dir.Normalize();
-			chargeshot->m_moveDirection = dir;
-			chargeshot->m_velocity = 50.0f;
-			chargeshot->m_parentNo = m_playerNum;
+			psychokinesis->m_moveDirection = dir;
+			psychokinesis->m_velocity = 50.0f;
+			psychokinesis->m_parentNo = m_playerNum;
+			m_charge = 0;
+			m_Psycho_on = false;
 		}
 		else
 		{
@@ -346,25 +368,23 @@ void Mage::SpecialAttack()
 
 			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
 
-			ChargeShot* chargeshot = NewGO<ChargeShot>(0, "chargeshot");
-			chargeshot->m_position = m_position;
-			chargeshot->m_position.y += 50;
-
+			
 			if(hitFlag)
 			{ 
-				chargeshot->m_moveDirection = crossPoint - m_magPosition;
-				chargeshot->m_moveDirection.Normalize();
+				psychokinesis->m_moveDirection = crossPoint - m_magPosition;
+				psychokinesis->m_moveDirection.Normalize();
 			}
 			else
 			{
-				chargeshot->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-				chargeshot->m_moveDirection.y = 0.0f;
-				chargeshot->m_moveDirection.Normalize();
+				psychokinesis->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				psychokinesis->m_moveDirection.y = 0.0f;
+				psychokinesis->m_moveDirection.Normalize();
 			}
-			chargeshot->m_velocity = 50.0f;
-			chargeshot->m_parentNo = m_playerNum;
+			psychokinesis->m_velocity = 50.0f;
+			psychokinesis->m_parentNo = m_playerNum;
 		}
 		m_charge = 0;
+		m_Psycho_on = false;
 	}
 }
 

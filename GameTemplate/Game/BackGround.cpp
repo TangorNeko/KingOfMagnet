@@ -1,14 +1,18 @@
 #include "stdafx.h"
 #include "BackGround.h"
+#include "PopRandItem.h"
 
 BackGround::~BackGround()
 {
 	DeleteGO(m_skinModelRender);
+	DeleteGO(popranditem);
 }
 
 bool BackGround::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	//アイテムをランダムに出現させる
+	popranditem = NewGO<PopRandItem>(0, "popranditem");
 
 	/*
 	m_pLig = NewGO<prefab::CPointLight>(0);

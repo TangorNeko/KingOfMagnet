@@ -36,14 +36,7 @@ void ChargeShot::Update()
 	m_collider.SetEndPoint(m_position);
 	m_collider.SetRadius(30.0f);
 
-	//TODO:後からきちんとした衝突判定は作る。　これはプロトタイプ用　障害物の座標と同じなら弾を消す
-	if ((-113 < m_position.x && m_position.x < 105 && 857 < m_position.z && m_position.z < 1103) ||
-		(915 < m_position.x && m_position.x < 1075 && -94 < m_position.z && m_position.z < 62) ||
-		(-105 < m_position.x && m_position.x < 107 && -1103 < m_position.z && m_position.z < -863) ||
-		(-1047 < m_position.x && m_position.x < -920 && -94 < m_position.z && m_position.z < 82))
-	{
-		DeleteGO(this);
-	}
+	
 
 	//各プレイヤーを検索
 	QueryGOs<Character_base>("Player", [this, oldPos](Character_base* player)->bool

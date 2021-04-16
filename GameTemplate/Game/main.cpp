@@ -10,7 +10,7 @@
 #include "Tank.h"
 #include "Ninja.h"
 #include "TitleScene.h"
-#include "PopRandItem.h"
+
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	level2D->Init("Assets/Level2D/Level2DTest.casl", nullptr);
 
 	//プレイヤー1を作成
-	Character_base* showm = NewGO<Knight>(0, "Player");
+	Character_base* showm = NewGO<Mage>(0, "Player");
 	showm->m_position = { 0.0f,0.0f,0.0f };
 	showm->m_playerNum = 0;
 	showm->m_magPower = 1;
@@ -77,9 +77,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//各プレイヤーに敵を渡す
 	showm2->m_enemy = showm;
 	showm->m_enemy = showm2;
+	//アイテムをランダムに出現させる
+	NewGO<PopRandItem>(0, "popranditem");
 
 	//ステージの表示
 	NewGO<BackGround>(0, "background");
+
 	//NewGO<ShowSprite>(1, "sprite");
 
 	/*
@@ -88,9 +91,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	*/
 
 
-	//アイテムをランダムに出現させる
-	NewGO<PopRandItem>(0, "popranditem");
-
+	
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
