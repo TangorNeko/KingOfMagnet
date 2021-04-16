@@ -341,10 +341,11 @@
     <ClCompile Include="DamageDisplay.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Psychokinesis.cpp">
+    <ClCompile Include="SkyBoard.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-  </ItemGroup>
+    </ClCompile>    <ClCompile Include="Psychokinesis.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
       <Filter>ヘッダー ファイル\system</Filter>
@@ -667,10 +668,11 @@
     <ClInclude Include="DamageDisplay.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Psychokinesis.h">
+    <ClInclude Include="SkyBoard.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>    <ClInclude Include="Psychokinesis.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\modelData\StageUV.png">
       <Filter>ソース ファイル\Assets\modelData</Filter>

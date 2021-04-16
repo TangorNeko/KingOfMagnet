@@ -11,6 +11,7 @@
 #include "Ninja.h"
 #include "TitleScene.h"
 
+#include "SkyBoard.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -33,10 +34,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
-	CLightManager::GetInstance()->SetLightCameraPosition({ 0.0f,600.0f,0.0f });
-	CLightManager::GetInstance()->SetLightCameraTarget({ 0.0f,0.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraPosition({ -1000.0f,1000.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraTarget({ -1000.0f,0.0f,0.0f });
 	CLightManager::GetInstance()->SetLightCameraUp({ 1.0f,0.0f,0.0f });
-	CLightManager::GetInstance()->SetLightCameraViewAngle(20.0f);
+	CLightManager::GetInstance()->SetLightCameraUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+	CLightManager::GetInstance()->SetLightCameraWidth(5000.0f);
+	CLightManager::GetInstance()->SetLightCameraHeight(5000.0f);
 
 	//リソースマネージャのインスタンスを作成
 	ResourceBankManager::CreateInstance();
@@ -73,7 +76,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -1;
 	showm2->m_toCamera = { 0.0f,100.0f,100.0f };
-	
+
 	//各プレイヤーに敵を渡す
 	showm2->m_enemy = showm;
 	showm->m_enemy = showm2;
@@ -90,6 +93,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	level.Init("Assets/modelData/yuka2.tkl",nullptr);
 	*/
 
+	//空を作成。キューブマップじゃなくてただの板ポリ。
+	SkyBoard* sky = NewGO<SkyBoard>(0);
 
 	
 	//////////////////////////////////////

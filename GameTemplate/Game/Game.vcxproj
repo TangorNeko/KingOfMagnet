@@ -326,6 +326,7 @@
     <ClCompile Include="Psychokinesis.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
+    <ClCompile Include="SkyBoard.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -441,6 +442,7 @@
     <ClInclude Include="Psychokinesis.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
+    <ClInclude Include="SkyBoard.h" />
     <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

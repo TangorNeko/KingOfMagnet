@@ -36,13 +36,14 @@ struct SpotLigData
 	float ligAngle;
 };
 
-cbuffer DirectionLigCb : register(b1)
+cbuffer LigandShadowCb : register(b1)
 {
 	//各配列数はCLightManager.hのMaxLightNumと同じにすること
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[20];
 	SpotLigData spotLigData[20];
 	float4x4 mLVP;
+	float3 lightCameraPos;
 	float3 eyePos;
 	int directionLigNum;
 	int pointLigNum;
@@ -152,5 +153,13 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-	return float4(0.5f,0.5f,0.5f,1.0f);
+	//ライトからの距離
+	//本来の比較用の距離はこっち
+	//float depth = length(psIn.worldPos - lightCameraPos)/1000.0f;//深度値を1000で割って0.0～1.0にする
+
+	//TODO:カメラが平行投影なのでライトの高さとワールド座標の高さを比較している。
+	//この方法だとライトカメラの向きがy方向の時しかできない。
+	float depth = (psIn.worldPos.y - lightCameraPos.y)/1000.0f;
+	depth = abs(depth);
+	return float4(depth,depth*depth,0.0f,1.0f);
 }

@@ -178,6 +178,7 @@ bool GraphicsEngine::Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeig
 	{
 		m_camera3D[i].SetPosition({ 0.0f, 50.0f, 200.0f });
 		m_camera3D[i].SetTarget({ 0.0f, 50.0f, 0.0f });
+		m_camera3D[i].SetFar(250000.0f);
 
 		g_camera3D[i] = &m_camera3D[i];
 	}
