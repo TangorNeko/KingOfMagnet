@@ -10,7 +10,7 @@
 #include "Tank.h"
 #include "Ninja.h"
 #include "TitleScene.h"
-
+ 
 #include "SkyBoard.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
