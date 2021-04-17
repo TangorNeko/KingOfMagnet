@@ -15,12 +15,6 @@ public:
 		{ -15.0f,20.0f,float(rand() % 50)},
 		{  15.0f,20.0f,float(rand() % 50)}
 	};
-	/*Vector3 m_position0 = { -20.0f,50.0f,rand()%50 };
-	Vector3 m_position1 = {  20.0f,50.0f,rand()%50 };
-	Vector3 m_position2 = { -30.0f,30.0f,rand()%50 };
-	Vector3 m_position3 = {  30.0f,30.0f,rand()%50 };
-	Vector3 m_position4 = { -15.0f,20.0f,rand()%50 };
-	Vector3 m_position5 = {  15.0f,20.0f,rand()%50 };	*/
 	
 	prefab::CSkinModelRender* m_skinModelRender[6] =
 	{ 
@@ -56,12 +50,7 @@ public:
 		{m_position[4]},
 		{m_position[5]}
 	};
-	//Vector3 toPos0 = m_position0;	//キャラの座標に向かって伸びているベクトル。
-	//Vector3 toPos1 = m_position1;
-	//Vector3 toPos2 = m_position2;
-	//Vector3 toPos3 = m_position3;
-	//Vector3 toPos4 = m_position4;
-	//Vector3 toPos5 = m_position5;
+	
 
 	Quaternion qRotY;
 	Quaternion m_rot;
@@ -83,7 +72,7 @@ public:
 	int m_liveCount = 0;
 	int m_parentNo = 0;
 	bool m_isAffectedFromEnemyPower = false;
-
+	bool m_Psycho_on = false;
 	bool m_shot_on = false;
 };
 

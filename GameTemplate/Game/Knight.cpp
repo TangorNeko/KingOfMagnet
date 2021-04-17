@@ -114,7 +114,7 @@ void Knight::Update()
 		rot.SetRotation(Vector3::AxisY, angle);
 		m_skinModelRender->SetRotation(rot);
 
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * 3.0f + right * g_pad[m_playerNum]->GetLStickXF() * 3.0f;
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed;
 
 		if (m_moveSpeed.Length() != 0)
 		{
@@ -361,11 +361,13 @@ void Knight::Charge()
 			m_chargeSound->SetVolume(m_chargeSoundVolume);
 			m_chargeSound->Play(true);
 		}
-		//‘¬“x‚O
-		m_moveSpeed = { 0.0f,0.0f,0.0f };
+		//‘¬“x
+		m_Speed = 1.0f;
 	}
 	else
 	{
+		//‘¬“x
+		m_Speed = 6.0f;
 		if (m_chargeSound != nullptr)
 		{
 			m_chargeSoundVolume -= 0.05f;

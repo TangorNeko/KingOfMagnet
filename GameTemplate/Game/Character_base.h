@@ -84,7 +84,7 @@ public:
 	int m_timer = 0;//磁力変化用のタイマー
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 	bool m_isSceneStop = false;//動けるか動けないか
-	
+	float m_Speed = 6.0;
 	//マシンガンを持ったとき
 	bool m_MachinegunHave=false;
 	bool m_MachinegunDelete = false;	
