@@ -79,7 +79,7 @@ void FontEngine::Draw(
 	const Vector2& position,
 	const Vector4& color,
 	float rotation,
-	float scale,
+	Vector2 scale,
 	Vector2 pivot
 )
 {
@@ -90,6 +90,6 @@ void FontEngine::Draw(
 		color,
 		rotation,
 		DirectX::XMFLOAT2(pivot.x, pivot.y),
-		scale
+		DirectX::XMFLOAT2(scale.x, scale.y)
 	);
 }

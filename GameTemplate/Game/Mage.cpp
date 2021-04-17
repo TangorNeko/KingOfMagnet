@@ -53,7 +53,7 @@ bool Mage::Start()
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
-	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
+	m_crosshairRender->Init("Assets/Image/Sight.dds", 32, 32);
 	
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	//m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");

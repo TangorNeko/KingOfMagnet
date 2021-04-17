@@ -13,37 +13,48 @@ namespace prefab
 	void CSkinModelRender::Init(const char* modelPath, const char* skeletonPath, AnimationClip* animClips, int animClipNum)
 	{
 		ModelInitData initData;
+		ModelInitData shadowModelInitData;
 
 		initData.m_tkmFilePath = modelPath;
+		shadowModelInitData.m_tkmFilePath = modelPath;
 
 		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
+		shadowModelInitData.m_fxFilePath = "Assets/shader/shadow.fx";
 
 		initData.m_vsEntryPointFunc = "VSMain";
+		shadowModelInitData.m_vsEntryPointFunc = "VSMain";
 
 		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		shadowModelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
 		if (skeletonPath != nullptr)
 		{
 			m_skeleton.Init(skeletonPath);
 			initData.m_skeleton = &m_skeleton;
+			shadowModelInitData.m_skeleton = &m_skeleton;
 		}
 
 		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		shadowModelInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32_FLOAT;
 
 		initData.m_modelUpAxis = enModelUpAxisZ;
+		shadowModelInitData.m_modelUpAxis = enModelUpAxisZ;
 
 		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetBlurShadowMap();
 
 		//定数バッファをモデルに紐付ける
 		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
+		shadowModelInitData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
 		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
+		shadowModelInitData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
 
 		m_model[eModel_View1].Init(initData);
 		m_model[eModel_View2].Init(initData);
 
-		initData.m_fxFilePath = "Assets/shader/shadow.fx";
-		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32_FLOAT;
-		m_model[eModel_Shadow].Init(initData);
+		//initData.m_fxFilePath = "Assets/shader/shadow.fx";
+		//initData.m_colorBufferFormat = DXGI_FORMAT_R32G32_FLOAT;
+
+		m_model[eModel_Shadow].Init(shadowModelInitData);
 
 		m_animationClips = animClips;
 		m_animationClipNum = animClipNum;

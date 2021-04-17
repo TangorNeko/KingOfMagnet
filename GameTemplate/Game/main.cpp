@@ -75,7 +75,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -1;
-	showm2->m_toCamera = { 0.0f,100.0f,100.0f };
 
 	//各プレイヤーに敵を渡す
 	showm2->m_enemy = showm;
@@ -86,13 +85,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ステージの表示
 	NewGO<BackGround>(0, "background");
 
-	//NewGO<ShowSprite>(1, "sprite");
-
 	/*
 	prefab::CLevel level;
-	level.Init("Assets/modelData/yuka2.tkl",nullptr);
+	level.Init("Assets/modelData/yuka2.tkl", nullptr);
 	*/
-
 	//空を作成。キューブマップじゃなくてただの板ポリ。
 	SkyBoard* sky = NewGO<SkyBoard>(0);
 
@@ -113,15 +109,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////////////
 		
 		GameObjectManager::GetInstance()->ExecuteUpdate();
-		
-		//ポストエフェクト用。Render前の処理
-		//PostEffectManager::GetInstance()->BeforeRender(renderContext);
 
 		//Renderはモデル等、エフェクトを受けるものを描画する
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-
-		//ポストエフェクト用。Render後の処理
-		//PostEffectManager::GetInstance()->AfterRender(renderContext);
 
 		//PostRenderはスプライト、フォント等、エフェクトを受けないものを描画する
 		GameObjectManager::GetInstance()->ExecutePostRender(renderContext);

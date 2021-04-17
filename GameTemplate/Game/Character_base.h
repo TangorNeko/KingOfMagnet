@@ -43,7 +43,6 @@ public:
 	Vector3 m_position = { 0.0f,0.0f,0.0f };//キャラクターの座標
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
-	Vector3 m_toCamera = { 0.0f,100.0f,-100.0f };//キャラクターからカメラへのベクトル
 	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };
 	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
 	Vector3 front;//カメラの前方向

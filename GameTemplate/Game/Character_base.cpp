@@ -103,9 +103,9 @@ void Character_base::DisplayStatus()
 
 	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp)
 		+ L"\nCharge:" + std::to_wstring(m_charge / 10.0f)
-		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
 		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60)
-		+ L"　　　　　　　　  移動アクション:" + std::to_wstring(m_moveActionCount / 60));
+		+ L"\n移動アクション:" + std::to_wstring(m_moveActionCount / 60));
 }
 
 void Character_base::MoveAction()

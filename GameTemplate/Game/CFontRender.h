@@ -18,8 +18,10 @@ namespace prefab
 		Vector2 m_position = { 0.0f,0.0f };
 		Vector4 m_color = { 1.0f,1.0f,1.0f,1.0f };
 		float m_rotation = 0.0f;
-		float m_scale = 1.0f;
+		Vector2 m_scale = { 1.0f,1.0f };
 		Vector2 m_pivot = { 0.5f,0.5f };
+
+		Vector2 m_aspect = { 1.0f,1.0f };
 
 		DrawScreen m_drawScreen = AllScreen;
 	public:
@@ -33,7 +35,7 @@ namespace prefab
 
 		void SetRotation(const float& rotation) { m_rotation = rotation;; }
 
-		void SetScale(const float& scale) { m_scale = scale; }
+		void SetScale(const Vector2& scale) { m_scale = scale; }
 
 		void SetPivot(const Vector2& pivot) { m_pivot = pivot; }
 

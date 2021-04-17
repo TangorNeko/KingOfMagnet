@@ -61,16 +61,17 @@ public:
 
 	void EndShadowRender(RenderContext& rc);
 private:
-	bool m_bloomMode = false;
 	RenderTarget m_mainRenderTarget;
+	Sprite m_copyToFrameBufferSprite;//画面に表示する最終結果のスプライト。
+
+	//ブルーム関連。
+	bool m_bloomMode = true; //ブルームが有効か
 	RenderTarget m_luminnceRenderTarget;
 	Sprite m_luminanceSprite;//輝度抽出したスプライト。
 	Sprite m_bokeLuminanceSprite;//輝度抽出したものにブラーをかけたスプライト。
-	Sprite m_copyToFrameBufferSprite;//画面に表示する最終結果のスプライト。
-	GaussianBlur m_gaussianBlur[4];
+	GaussianBlur m_gaussianBlur[4];//ブラー。
 
-public:
-	bool m_shadowMode = false;
+	bool m_shadowMode = true;//シャドウが有効か。
 	RenderTarget m_shadowMap;
 	GaussianBlur m_shadowBlur;
 };

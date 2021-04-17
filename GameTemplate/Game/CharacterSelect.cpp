@@ -132,7 +132,6 @@ void CharacterSelect::Update() {
 			showm2->m_position = { 0.0f,0.0f,500.0f };
 			showm2->m_playerNum = 1;
 			showm2->m_magPower = -2;
-			showm2->m_toCamera = { 0.0f,100.0f,100.0f };
 
 			//ŠeƒvƒŒƒCƒ„[‚É“G‚ð“n‚·
 			showm2->m_enemy = showm;

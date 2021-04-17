@@ -43,9 +43,9 @@ cbuffer LigandShadowCb : register(b1)
 	PointLigData pointLigData[20];
 	SpotLigData spotLigData[20];
 	float4x4 mLVP;
-	float3 lightCameraPos;
 	float3 eyePos;
 	int directionLigNum;
+	//float3 lightCameraPos;
 	int pointLigNum;
 	int spotLigNum;
 };
@@ -157,6 +157,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//本来の比較用の距離はこっち
 	//float depth = length(psIn.worldPos - lightCameraPos)/1000.0f;//深度値を1000で割って0.0～1.0にする
 
+	float3 lightCameraPos = {-1000.0f,1000.0f,0.0f};
 	//TODO:カメラが平行投影なのでライトの高さとワールド座標の高さを比較している。
 	//この方法だとライトカメラの向きがy方向の時しかできない。
 	float depth = (psIn.worldPos.y - lightCameraPos.y)/1000.0f;

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PostEffectManager.h"
-//#include "GaussianBlur.h"
 
 PostEffectManager* PostEffectManager::m_instance = nullptr;
 
@@ -9,18 +8,18 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 	m_bloomMode = bloomMode;
 	m_shadowMode = shadowMode;
 
+	//最終的に画面に出力する用のレンダーターゲット
+	m_mainRenderTarget.Create(
+		1280,
+		720,
+		1,
+		1,
+		DXGI_FORMAT_R32G32B32A32_FLOAT,
+		DXGI_FORMAT_D32_FLOAT
+	);
+
 	if (m_bloomMode == true)
 	{
-		//最終的に画面に出力する用のレンダーターゲット
-		m_mainRenderTarget.Create(
-			1280,
-			720,
-			1,
-			1,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
-			DXGI_FORMAT_D32_FLOAT
-		);
-
 		//輝度を抽出したものが格納されるレンダーターゲット
 		m_luminnceRenderTarget.Create(
 			1280,
@@ -63,18 +62,11 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 		bokeLuminanceSpriteInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		m_bokeLuminanceSprite.Init(bokeLuminanceSpriteInitData);
-
-		//最終的にmainRenderTargetには元の画面にブルームをかけたものが出力されるので、それを画面に出力する用のスプライト。
-		SpriteInitData copyToBufferSpriteInitData;
-		copyToBufferSpriteInitData.m_textures[0] = &m_mainRenderTarget.GetRenderTargetTexture();
-		copyToBufferSpriteInitData.m_width = 1280;
-		copyToBufferSpriteInitData.m_height = 720;
-		copyToBufferSpriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-		m_copyToFrameBufferSprite.Init(copyToBufferSpriteInitData);
 	}
 
 	if (m_shadowMode)
 	{
+		//シャドウマップの作成。
 		float clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 		m_shadowMap.Create(
 			4096,
@@ -86,8 +78,18 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 			clearColor
 		);
 
+		//VSM用にテクスチャをぼかす。
 		m_shadowBlur.Init(&m_shadowMap.GetRenderTargetTexture());
 	}
+
+	//最終的な画面に出力されるスプライト。
+	SpriteInitData copyToBufferSpriteInitData;
+	copyToBufferSpriteInitData.m_textures[0] = &m_mainRenderTarget.GetRenderTargetTexture();
+	copyToBufferSpriteInitData.m_width = 1280;
+	copyToBufferSpriteInitData.m_height = 720;
+	copyToBufferSpriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+	m_copyToFrameBufferSprite.Init(copyToBufferSpriteInitData);
+
 }
 
 void PostEffectManager::ShadowRender(RenderContext& rc)
@@ -123,24 +125,21 @@ void PostEffectManager::EndShadowRender(RenderContext& rc)
 
 void PostEffectManager::BeforeRender(RenderContext& rc)
 {
-	if (m_bloomMode == true)
-	{
-		//メインレンダーターゲットを描画先にセットする。
-		rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
-		rc.SetRenderTargetAndViewport(m_mainRenderTarget);
-		rc.ClearRenderTargetView(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_mainRenderTarget.GetRTVClearColor());
-		rc.ClearDepthStencilView(m_mainRenderTarget.GetDSVCpuDescriptorHandle(), m_mainRenderTarget.GetDSVClearValue());
-		//この後、各モデルのドローコールが呼ばれる(はず)。
-	}
+	//メインレンダーターゲットを描画先にセットする。
+	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+	rc.ClearRenderTargetView(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_mainRenderTarget.GetRTVClearColor());
+	rc.ClearDepthStencilView(m_mainRenderTarget.GetDSVCpuDescriptorHandle(), m_mainRenderTarget.GetDSVClearValue());
+	//この後、各モデルのドローコールが呼ばれる(はず)。
 }
 
 void PostEffectManager::AfterRender(RenderContext& rc)
 {
+	//メインレンダーターゲットが描画を終えるまで待つ。
+	rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+
 	if (m_bloomMode == true)
 	{
-		//メインレンダーターゲットが描画を終えるまで待つ。
-		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
-
 		//輝度抽出用のレンダーターゲットに変更する。
 		rc.WaitUntilToPossibleSetRenderTarget(m_luminnceRenderTarget);
 		rc.SetRenderTargetAndViewport(m_luminnceRenderTarget);
@@ -164,11 +163,11 @@ void PostEffectManager::AfterRender(RenderContext& rc)
 		m_bokeLuminanceSprite.Draw(rc);
 		//メインレンダーターゲットが描画を終えるまで待つ。
 		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
-
-		//描画先をフレームバッファにする。
-		rc.SetRenderTarget(g_graphicsEngine->GetCurrentFrameBuffuerRTV(), g_graphicsEngine->GetCurrentFrameBuffuerDSV());
-
-		//メインレンダーターゲットに描かれていた最終イメージを画面上に描く。
-		m_copyToFrameBufferSprite.Draw(rc);
 	}
+
+	//描画先をフレームバッファにする。
+	rc.SetRenderTarget(g_graphicsEngine->GetCurrentFrameBuffuerRTV(), g_graphicsEngine->GetCurrentFrameBuffuerDSV());
+
+	//メインレンダーターゲットに描かれていた最終イメージを画面上に描く。
+	m_copyToFrameBufferSprite.Draw(rc);
 }
