@@ -225,11 +225,14 @@ void Knight::DisplayStatus()
 		powerText = L"error";
 	}
 
+	wchar_t charge[256];
+	swprintf_s(charge, L"%.1f", m_charge / 10.0f);
+
 	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\nCharge:" + std::to_wstring(m_charge / 10.0f)
-		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"\nCharge:" + charge
+		+ L"%\n\n\n\n\n\n\n磁力:" + powerText
 		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60)
-		+ L"　　　　　　　　  移動アクション:" + std::to_wstring(m_moveActionCount / 60));
+		+ L"\n移動アクション:" + std::to_wstring(m_moveActionCount / 60));
 }
 void Knight::MoveAction()
 {

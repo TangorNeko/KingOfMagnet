@@ -5,6 +5,7 @@ class TitleScene:public IGameObject
 	void Update() override;
 public:
 	~TitleScene();
+	prefab::CFontRender* m_title_fontRender = nullptr;//タイトル。
 	prefab::CFontRender* m_start_fontRender = nullptr;//始める
 	prefab::CFontRender* m_description_fontRender = nullptr;//操作説明
 	prefab::CFontRender* m_option_fontRender = nullptr;//オプション

@@ -101,9 +101,12 @@ void Character_base::DisplayStatus()
 		powerText = L"error";
 	}
 
+	wchar_t charge[256];
+	swprintf_s(charge,L"%.1f",m_charge/10.0f);
+
 	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\nCharge:" + std::to_wstring(m_charge / 10.0f)
-		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"\nCharge:" + charge
+		+ L"%\n\n\n\n\n\n\n磁力:" + powerText
 		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60)
 		+ L"\n移動アクション:" + std::to_wstring(m_moveActionCount / 60));
 }
@@ -258,11 +261,17 @@ void Character_base::Damage(int damage)
 
 
 		//WARNING:お互いに同タイミングに弾を発射してどちらもHP0になった時おそらくどちらも勝利しどちらも敗北する。
-		Lose();
-		m_isSceneStop = true;
+		if (m_enemy->m_isSceneStop == false)
+		{
+			//体力の更新。
+			DisplayStatus();
 
-		m_enemy->Win();
-		m_enemy->m_isSceneStop = true;
+			Lose();
+			m_isSceneStop = true;
+
+			m_enemy->Win();
+			m_enemy->m_isSceneStop = true;
+		}
 	}
 
 	//攻撃を受けたら移動アクションの残り時間が短縮される。
