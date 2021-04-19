@@ -25,7 +25,9 @@ bool Mage::Start()
 	animationClips[enAnimationClip_Attack].SetLoopFlag(false);	//ループモーションにする。
 	animationClips[enAnimationClip_Walk].Load("Assets/animData/Mage_Walk.tka");
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
-	
+	animationClips[enAnimationClip_Fall].Load("Assets/animData/Mage_Fall.tka");
+	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
+
 	//マシンガン用
 	animationClips[enAnimationClip_Gun_Idle].Load("Assets/animData/Gun_Idle.tka");
 	animationClips[enAnimationClip_Gun_Idle].SetLoopFlag(true);	//ループモーションにする。
@@ -37,7 +39,6 @@ bool Mage::Start()
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks",animationClips,enAnimationClip_num);
-
 
 	m_skinModelRender->SetShadowCasterFlag(true);
 	m_charaCon.Init(10.0f, 50.0f, m_position);
@@ -67,11 +68,7 @@ bool Mage::Start()
 void Mage::Update()
 {
 	//m_skinModelRender->PlayAnimation(enAnimationClip_Run);
-	//状態更新。
-	UpdateState();
-	//アニメーション選択。
-	AnimationSelect();
-
+	
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -111,7 +108,19 @@ void Mage::Update()
 		}
 		rot.SetRotation(Vector3::AxisY, angle);
 		m_skinModelRender->SetRotation(rot);		
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed;
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed+m_Yspeed;
+		if (m_charaCon.IsOnGround() == false)
+		{
+			m_loop++;
+			if (m_moveSpeed.y > -0.001)
+			{
+				m_moveSpeed.y -= 0.005f * (m_loop * m_loop);
+			}
+		}
+		else
+		{
+			m_loop = 0;
+		}
 
 		if (m_moveSpeed.Length() != 0)
 		{
@@ -131,11 +140,9 @@ void Mage::Update()
 
 		//固有攻撃
 		SpecialAttack();
-
 		
 		//移動関連2
-		m_moveSpeed.y = -2.0f;
-
+		
 		m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
 		m_magPosition = m_position;
 		m_magPosition.y += 50.0f;
@@ -152,8 +159,12 @@ void Mage::Update()
 
 		//マシンガンを持ったとき
 		HaveMachinegun();
-		//ダメージ表示ポジション更新
 		
+		//状態更新。
+		UpdateState();
+		//アニメーション選択。
+		AnimationSelect();
+
 		//カメラ関連
 		Camera();
 	}
@@ -317,6 +328,7 @@ void Mage::Charge()
 			m_charge = 1000.0f;
 		}
 		//音の再生
+		//音がずっと出る
 		if (m_chargeSound == nullptr)
 		{
 			m_chargeSound = NewGO<prefab::CSoundSource>(0);
@@ -363,7 +375,7 @@ void Mage::SpecialAttack()
 			psychokinesis->m_moveDirection = dir;
 			psychokinesis->m_velocity = 50.0f;
 			psychokinesis->m_parentNo = m_playerNum;
-			m_charge = 0;			
+			m_charge = 0;
 		}
 		else
 		{
@@ -419,11 +431,24 @@ void Mage::TryChangeStatusIdle()
 		status = enStatus_Idle;
 	}
 }
+void Mage::TryChangeStatusFall()
+{
+	if (m_charaCon.IsOnGround() == false) 
+	{
+		status = enStatus_Fall;
+		m_skinModelRender->SetScale(m_fallScale);
+	}
+	else
+	{		
+		m_skinModelRender->SetScale(Scale);
+	}
+}
 void Mage::UpdateState()
 {
 
 	switch (status) {
 	case enStatus_Attack:
+		TryChangeStatusFall();
 		TryChangeStatusAttack();
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
@@ -434,16 +459,26 @@ void Mage::UpdateState()
 		TryChangeStatusAttack();
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
+		TryChangeStatusFall();
 		break;	
 	case enStatus_Walk:
 		TryChangeStatusAttack();
 		TryChangeStatusRun();
 		TryChangeStatusIdle();
+		TryChangeStatusFall();
 		break;
 	case enStatus_Idle:
 		TryChangeStatusAttack();
 		TryChangeStatusRun();		
 		TryChangeStatusWalk();
+		TryChangeStatusFall();
+		break;
+	case enStatus_Fall:
+		TryChangeStatusAttack();
+		TryChangeStatusRun();
+		TryChangeStatusWalk();
+		TryChangeStatusIdle();
+		TryChangeStatusFall();
 		break;
 	}
 }
@@ -465,6 +500,9 @@ void Mage::AnimationSelect()
 			break;
 		case enStatus_Idle:
 			m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+			break;
+		case enStatus_Fall:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Fall);
 			break;
 		}
 	}
@@ -492,9 +530,11 @@ void Mage::AnimationSelect()
 			//m_skinModelRender->PlayAnimation(enAnimationClip_Move);
 
 			break;
+		case enStatus_Fall:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Fall);
+
 		}
-	}
-	
+	}	
 }
 void Mage::HaveMachinegun()
 {

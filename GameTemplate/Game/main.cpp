@@ -71,7 +71,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	showm->m_magPower = 1;
 
 	//ƒvƒŒƒCƒ„[2‚ğì¬
-	Character_base* showm2 = NewGO<Mage>(0, "Player");
+	Character_base* showm2 = NewGO<Knight>(0, "Player");
 	showm2->m_position = { 0.0f,0.0f,500.0f };
 	showm2->m_playerNum = 1;
 	showm2->m_magPower = -1;

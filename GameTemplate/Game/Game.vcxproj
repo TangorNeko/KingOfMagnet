@@ -324,6 +324,7 @@
     <ClCompile Include="PopRandItem.cpp" />
     <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="Psychokinesis.cpp" />
+    <ClCompile Include="Repulsion.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
@@ -440,6 +441,7 @@
     <ClInclude Include="PopRandItem.h" />
     <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="Psychokinesis.h" />
+    <ClInclude Include="Repulsion.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="SkyBoard.h" />

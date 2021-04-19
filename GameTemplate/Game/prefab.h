@@ -7,3 +7,4 @@
 #include "CSpotLight.h"
 #include "CLevelRender2D.h"
 #include "CSoundSource.h"
+#include "CLevel.h"
