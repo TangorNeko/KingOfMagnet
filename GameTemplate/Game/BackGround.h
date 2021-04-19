@@ -1,5 +1,6 @@
 #pragma once
 #include "PopRandItem.h"
+class Repulsion;
 class BackGround : public IGameObject
 {
 	~BackGround();
@@ -7,7 +8,10 @@ class BackGround : public IGameObject
 	void Update()override;
 
 	Vector3 m_position = { 0.0f,0.0f,0.0f };
-	
+
+	prefab::CLevel m_level;
+	std::vector<Repulsion*> m_repulsion;
+
 	PopRandItem* popranditem = nullptr;
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;

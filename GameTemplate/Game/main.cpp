@@ -44,8 +44,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 
-	//タイトルシーンを作成。
+//タイトルシーンを作成。
 	TitleScene* title = NewGO<TitleScene>(0, "Title");
+
 	
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

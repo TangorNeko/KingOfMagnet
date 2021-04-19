@@ -20,7 +20,7 @@ Psychokinesis::~Psychokinesis()
 	}
 	DeleteGO(m_pointLight);
 	//各プレイヤーを検索
-	QueryGOs<Mage>("Player", [this](Mage* player)->bool
+	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
 	{
 		//弾を発射したプレイヤーと違う場合(敵の場合)
 			if (player->m_playerNum == m_parentNo)
@@ -115,7 +115,7 @@ void Psychokinesis::Update()
 		}
 
 		//各プレイヤーを検索
-		QueryGOs<Mage>("Player", [this](Mage* player)->bool
+		QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
 		{
 				
 				//発射されてから15フレーム後に、発射したプレイヤーの磁力を与える(加速or減速)

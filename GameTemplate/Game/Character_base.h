@@ -45,6 +45,7 @@ public:
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };
 	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
+	Vector3 m_fallScale = { 0.66f,0.66f,0.66f };
 	Vector3 front;//カメラの前方向
 	Vector3 right;//カメラの右方向
 	Vector3 cameraPos;//カメラのポジション
@@ -82,6 +83,7 @@ public:
 	float m_deg = 0;//キャラの向きの角度
 	bool m_isLock = false;//ロックオンしているか。
 	int m_timer = 0;//磁力変化用のタイマー
+	int m_loop = 0;//落下制御用のループカウント
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 	bool m_isSceneStop = false;//動けるか動けないか
 	float m_Speed = 6.0;
@@ -104,10 +106,14 @@ public:
 	//敗北した時
 	void Lose();
 
+	//斥力床が近いとき
+	//void NearRepulsionFloor();
+	Vector3 m_Yspeed = { 0.0f,0.0f,0.0f };
 	//敵のインスタンス
 	Character_base* m_enemy = nullptr;
 
-	
+	//サイコキネシスつかってるか(魔法使いだけ)
+	bool m_Psycho_on = false;
 
 	int m_anim_num = 0;
 
@@ -119,7 +125,8 @@ public:
 		enAnimationClip_Run,
 		enAnimationClip_Idle,
 		enAnimationClip_Walk,
-		enAnimationClip_Move,		
+		enAnimationClip_Move,	
+		enAnimationClip_Fall,
 		enAnimationClip_Gun_Run,
 		enAnimationClip_Gun_Idle,
 		enAnimationClip_Gun_Walk,	
@@ -131,10 +138,11 @@ public:
 		enStatus_Idle,		//待機状態
 		enStatus_Walk,		//歩き状態
 		enStatus_Move,		//移動アクション状態		
+		enStatus_Fall,		//落下状態
 		enStatus_Num,		//状態の数。
 	};
 	AnimationClip animationClips[enAnimationClip_num];
-	EnStatus status = enStatus_Idle;	//ナイトの状態。
+	EnStatus status = enStatus_Idle;	//現在の状態。
 
 	int m_hitcount=0;
 	int m_oldhitcount=0;

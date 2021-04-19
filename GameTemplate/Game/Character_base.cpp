@@ -4,7 +4,7 @@
 #include "ChargeShot.h"
 #include "DamageDisplay.h"
 #include <string>
-
+#include "Repulsion.h"
 //Character_base::~Character_base()
 //{
 //	DeleteGO(m_skinModelRender);
@@ -308,6 +308,7 @@ void Character_base::Lose()
 void Character_base::PlayerMagneticMove()
 {
 	m_position_with_enemy = m_position - m_enemy->m_position;//©•ª‚©‚ç“G‚Ü‚Å‚Ì‹——£ƒxƒNƒgƒ‹
+	m_position_with_enemy.y = 0;
 	if (m_position_with_enemy.Length() < 500&& m_position_with_enemy.Length() >= 50) {//‹——£‚ª‹ß‚¯‚ê‚Î
 		m_magStatediff = m_magPower + m_enemy->m_magPower;//©•ª‚Æ“G‚Ì¥—Íó‘Ô‚Ì·
 		if (m_magStatediff >= 1)//Œİ‚¢‚ÉË—Í‚Ìó‘Ô
@@ -341,3 +342,16 @@ void Character_base::PlayerMagneticMove()
 		}
 	}	
 }
+
+////Ë—Í°‚É‹ß‚Ã‚¢‚½‚Æ‚«
+//void Character_base::NearRepulsionFloor()
+//{	
+//	QueryGOs<Repulsion>("repulsion", [this](Repulsion* repulsion)->bool
+//		{
+//			if (m_playerNum == 0) {
+//				
+//			}
+//			return true;
+//		}
+//	);
+//}
