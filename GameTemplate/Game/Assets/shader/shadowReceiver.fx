@@ -43,9 +43,9 @@ cbuffer LigandShadowCb : register(b1)
 	PointLigData pointLigData[20];
 	SpotLigData spotLigData[20];
 	float4x4 mLVP;
-	float3 lightCameraPos;
 	float3 eyePos;
 	int directionLigNum;
+	//float3 lightCameraPos;
 	int pointLigNum;
 	int spotLigNum;
 };
@@ -139,6 +139,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
 	//TODO:カメラが平行投影なのでライトの高さとワールド座標の高さを比較している。
 	//この方法だとライトカメラの向きがy方向の時しかできない。
+	float3 lightCameraPos = {-1000.0f,1000.0f,0.0f};
+
 	psIn.posInLVP.z = (psIn.worldPos.y - lightCameraPos.y)/1000.0f;
 	psIn.posInLVP.z = abs(psIn.posInLVP.z);
 	return psIn;

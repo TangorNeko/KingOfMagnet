@@ -31,10 +31,10 @@ private:
 		prefab::PointLigData pointLightArray[MaxPointLightNum];			//ポイントライトのデータの配列
 		prefab::SpotLigData spotLightArray[MaxSpotLightNum];			//スポットライトのデータの配列
 		Matrix lightCameraProjectionMatrix;								//ライトビュープロジェクション行列
-		Vector3 lightCameraPosition;									//ライトカメラの位置
-		float pad;
 		Vector3 eyePos;													//カメラの位置
 		int directionLightNum = 0;										//ディレクションライトの数
+		//TODO:ここ聞く!!!なんでこれ入れたらReleaseでだけ変になるの!!!!
+		//Vector3 lightCameraPosition;									//ライトカメラの位置(パディングを考慮してこんな位置に)
 		int pointLightNum = 0;											//ポイントライトの数
 		int spotLightNum = 0;											//スポットライトの数
 	};
@@ -85,7 +85,8 @@ public:
 	{
 		m_lightCamera.SetPosition(pos);
 		m_lightCamera.Update();
-		m_ligData.lightCameraPosition = pos;
+		//m_ligData.lightCameraPosition = pos;
+		m_ligData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
 	void SetLightCameraTarget(const Vector3& targetPos)

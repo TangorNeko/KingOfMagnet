@@ -350,8 +350,11 @@
     <ClCompile Include="Repulsion.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
+  </ItemGroup>    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>  <ItemGroup>
     <ClInclude Include="system\system.h">
       <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
@@ -559,9 +562,6 @@
     <ClInclude Include="Bullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CFontRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="TriangleCollider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -682,8 +682,13 @@
     <ClInclude Include="Repulsion.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
+  </ItemGroup>    <ClInclude Include="CFontRender.h">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>  <ItemGroup>
     <Image Include="Assets\modelData\StageUV.png">
       <Filter>ソース ファイル\Assets\modelData</Filter>
     </Image>

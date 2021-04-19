@@ -20,7 +20,7 @@ void Font::Draw(
 	const Vector2& position,
 	const Vector4& color,
 	float rotation,
-	float scale,
+	Vector2 scale,
 	Vector2 pivot)
 {		
 	if (text == nullptr) {

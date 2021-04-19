@@ -57,7 +57,7 @@ bool Knight::Start()
 
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
-	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
+	m_crosshairRender->Init("Assets/Image/Sight.dds", 32, 32);
 
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	//m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
@@ -233,11 +233,14 @@ void Knight::DisplayStatus()
 		powerText = L"error";
 	}
 
+	wchar_t charge[256];
+	swprintf_s(charge, L"%.1f", m_charge / 10.0f);
+
 	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\nCharge:" + std::to_wstring(m_charge / 10.0f)
-		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"\nCharge:" + charge
+		+ L"%\n\n\n\n\n\n\n磁力:" + powerText
 		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60)
-		+ L"　　　　　　　　  移動アクション:" + std::to_wstring(m_moveActionCount / 60));
+		+ L"\n移動アクション:" + std::to_wstring(m_moveActionCount / 60));
 }
 void Knight::MoveAction()
 {

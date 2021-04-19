@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "CharacterSelect.h"
 #include "Character_base.h"
-#include "BackGround.h"
 #include "Mage.h"
 #include "Knight.h"
+
+#include "GameScene.h"
 
 
 CharacterSelect::~CharacterSelect() {
@@ -103,43 +104,37 @@ void CharacterSelect::Update() {
 	
 	if (m_1p_decision == true && m_2p_decision == true) {//両プレイヤーがキャラ選択しているとき
 		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {//どちらかがAを押すと
-			GameObjectManager::GetInstance()->Set2ScreenMode(true);//２画面にする
-			//ステージのライトを作成
-			prefab::CDirectionLight* stageLight = NewGO<prefab::CDirectionLight>(0);
-			stageLight->SetDirection({ 0.0f,-1.0f,0.0f });
-			stageLight->SetColor({ 0.5f,0.5f,0.5f });
+			
+			//キャラ選択が確定したのでゲームシーンを作成。
+			GameScene* gamescene = NewGO<GameScene>(0, "gamescene");
+
 			//プレイヤー1を作成
-			Character_base* showm = nullptr;
+			Character_base* player1 = nullptr;
 			if (m_1p_character_num == 0) 
 			{//キャラナンバーが０なら剣士を作成				
-				showm = NewGO<Knight>(0, "Player");
+				player1 = NewGO<Knight>(0, "Player");
 			}
 			else if(m_1p_character_num==1)//１なら魔法使いを作成		
 			{				
-				showm = NewGO<Mage>(0, "Player");
+				player1 = NewGO<Mage>(0, "Player");
 			}
-			showm->m_position = { 0.0f,0.0f,-500.0f };
-			showm->m_playerNum = 0;
-			showm->m_magPower = 2;
+			player1->m_position = { 0.0f,0.0f,-500.0f };
+			player1->m_playerNum = 0;
+			player1->m_magPower = 2;
 
 			//プレイヤー2を作成
-			Character_base* showm2 = nullptr;
+			Character_base* player2 = nullptr;
 			if (m_2p_character_num == 0) {
-				showm2 = NewGO<Knight>(0, "Player");
+				player2 = NewGO<Knight>(0, "Player");
 			}
 			else
-				showm2 = NewGO<Mage>(0, "Player");
-			showm2->m_position = { 0.0f,0.0f,500.0f };
-			showm2->m_playerNum = 1;
-			showm2->m_magPower = -2;
-			showm2->m_toCamera = { 0.0f,100.0f,100.0f };
+				player2 = NewGO<Mage>(0, "Player");
+			player2->m_position = { 0.0f,0.0f,500.0f };
+			player2->m_playerNum = 1;
+			player2->m_magPower = -2;
 
-			//各プレイヤーに敵を渡す
-			showm2->m_enemy = showm;
-			showm->m_enemy = showm2;
-
-			//ステージの表示
-			NewGO<BackGround>(0, "background");	
+			//ゲームシーンにプレイヤーを登録。
+			gamescene->RegisterPlayer(player1, player2);
 			
 			DeleteGO(this);
 		}

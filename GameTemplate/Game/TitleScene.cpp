@@ -3,6 +3,7 @@
 #include "CharacterSelect.h"
 TitleScene::~TitleScene() 
 {
+	DeleteGO(m_title_fontRender);
 	DeleteGO(m_start_fontRender);
 	DeleteGO(m_description_fontRender);
 	DeleteGO(m_option_fontRender);
@@ -10,17 +11,21 @@ TitleScene::~TitleScene()
 bool TitleScene::Start() 
 {
 	//文字表示
+	m_title_fontRender = NewGO<prefab::CFontRender>(0);
+	m_title_fontRender->SetPosition({ -200.0f, 200.0f });
+	m_title_fontRender->SetText(L"磁界之王");
+	m_title_fontRender->SetScale({ 2.0f,2.0f });
+
 	m_start_fontRender = NewGO<prefab::CFontRender>(0);
-	
-	m_start_fontRender->SetPosition({ 0.0f, 100.0f });//上
+	m_start_fontRender->SetPosition({ -100.0f, 0.0f });//上
 	m_start_fontRender->SetText(L"スタート");
 
 	m_description_fontRender = NewGO<prefab::CFontRender>(0);	
-	m_description_fontRender->SetPosition({ 0.0f, 0.0f });//真ん中
+	m_description_fontRender->SetPosition({ -100.0f, -100.0f });//真ん中
 	m_description_fontRender->SetText(L"操作説明");
 
 	m_option_fontRender = NewGO<prefab::CFontRender>(0);	
-	m_option_fontRender->SetPosition({ 0.0f, -100.0f });//下
+	m_option_fontRender->SetPosition({ -100.0f, -200.0f });//下
 	m_option_fontRender->SetText(L"オプション");
 	return true;
 }

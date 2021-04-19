@@ -54,7 +54,7 @@ bool Mage::Start()
 	//floor_skinModelRender->Init("Assets/modelData/mag_floor.tkm");
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
-	m_crosshairRender->Init("Assets/Image/1p.dds", 5, 5);
+	m_crosshairRender->Init("Assets/Image/Sight.dds", 32, 32);
 	
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	//m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
@@ -199,11 +199,14 @@ void Mage::DisplayStatus()
 		powerText = L"error";
 	}
 
+	wchar_t charge[256];
+	swprintf_s(charge, L"%.1f", m_charge / 10.0f);
+
 	m_fontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\nCharge:" + std::to_wstring(m_charge / 10.0f)
-		+ L"%\n\n\n\n\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"\nCharge:" + charge
+		+ L"%\n\n\n\n\n\n\n磁力:" + powerText
 		+ L"\n磁力の変化まで:" + std::to_wstring((600 - m_timer) / 60)
-		+ L"　　　　　　　　  移動アクション:" + std::to_wstring(m_moveActionCount / 60));
+		+ L"\n移動アクション:" + std::to_wstring(m_moveActionCount / 60));
 }
 void Mage::MoveAction()
 {
@@ -337,11 +340,34 @@ void Mage::Charge()
 			m_chargeSound->SetVolume(m_chargeSoundVolume);
 			m_chargeSound->Play(true);
 		}
+		else
+		{
+			m_chargeSoundVolume += 0.1f;
+			if (m_chargeSoundVolume >= 0.6f)
+			{
+				m_chargeSoundVolume = 0.6f;
+			}
+			m_chargeSound->SetVolume(m_chargeSoundVolume);
+		}
 		//速度０
 		m_Speed = 1.0f;
 	}
 	else
 	{
+		//チャージをやめた時の音がゆるやかに減衰する。
+		if (m_chargeSound != nullptr)
+		{
+			m_chargeSoundVolume -= 0.05f;
+			if (m_chargeSoundVolume <= 0.0f)
+			{
+				DeleteGO(m_chargeSound);
+				m_chargeSound = nullptr;
+			}
+			else
+			{
+				m_chargeSound->SetVolume(m_chargeSoundVolume);
+			}
+		}
 		//速度０
 		m_Speed = 4.0f;
 	}
