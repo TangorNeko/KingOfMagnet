@@ -31,8 +31,6 @@ bool TriangleCollider::isHit(const Vector3& start, const Vector3& end)
 
 	toEnd = end - m_vertex[0];
 
-	Vector3 test = start - end;
-
 	float a = normal.Dot(toStart);
 
 	normal *= -1;

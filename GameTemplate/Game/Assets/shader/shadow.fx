@@ -157,10 +157,49 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//本来の比較用の距離はこっち
 	//float depth = length(psIn.worldPos - lightCameraPos)/1000.0f;//深度値を1000で割って0.0～1.0にする
 
+	//ここから平行光源の深度チェックのテスト用。
+
+	//定数バッファを増やして後からきちんと持ってきます。
 	float3 lightCameraPos = {-1000.0f,1000.0f,0.0f};
-	//TODO:カメラが平行投影なのでライトの高さとワールド座標の高さを比較している。
-	//この方法だとライトカメラの向きがy方向の時しかできない。
-	float depth = (psIn.worldPos.y - lightCameraPos.y)/1000.0f;
-	depth = abs(depth);
+
+	//ライトの向きを取得。とりあえず0番目で。
+	float3 cameraDir = directionLigData[0].ligDir;
+	//正規化されてるはずだけど、念の為。
+	cameraDir = normalize(cameraDir);
+
+	float3 axisX = {1.0f,0.0f,0.0f};
+
+	float3 lightCameraAnotherAxis = cross(axisX,cameraDir);
+
+	//axisX,lightCameraAnotherAxisで構成される平面にpsIn.worldPosから垂線をおろす。
+
+	float3 start = psIn.worldPos;
+
+	//スタート地点からカメラの向きをプラスして仮想の垂線をつくる。
+	float3 end = psIn.worldPos + -100 * cameraDir;
+
+	//ポリゴンと線分の交差判定を参考に、
+	//仮想の垂線とlightCameraPos,lightCameraPos+axisX,lightCameraPos+lightCameraAnotherAxisの
+	//3点でできる平面との交点を求めていく。
+
+	float3 toStart = start - lightCameraPos;
+
+	float3 toEnd = end - lightCameraPos;
+
+	float a = dot(cameraDir,toStart);
+
+	float3 cameraDirRev = -cameraDir;
+
+	float b = dot(cameraDirRev,toEnd);
+
+	//crosspointは交点 = 3点でできる平面と垂線の交点。depthの開始点になる。
+	float3 crossPoint = toStart - toEnd;
+	crossPoint *= b / (a+b);
+	crossPoint += end;
+
+	//crossからの長さで平行光源でもしっかり深度がわかる(はず)
+	float depth = length(psIn.worldPos - crossPoint)/1000.0f;
+
+	//ここまで平行光源の深度チェックのテスト用。
 	return float4(depth,depth*depth,0.0f,1.0f);
 }
