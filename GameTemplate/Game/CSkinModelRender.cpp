@@ -43,10 +43,13 @@ namespace prefab
 		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetBlurShadowMap();
 
 		//定数バッファをモデルに紐付ける
-		initData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
-		shadowModelInitData.m_expandConstantBufferSize = CLightManager::GetInstance()->GetDataSize();
-		initData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
-		shadowModelInitData.m_expandConstantBuffer = CLightManager::GetInstance()->GetLigDatas();
+		initData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigDataSize();
+		shadowModelInitData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigCameraDataSize();
+		initData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigDatas();
+		shadowModelInitData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigCameraDatas();
+
+		initData.m_expandConstantBufferSize[1] = CLightManager::GetInstance()->GetLigCameraDataSize();
+		initData.m_expandConstantBuffer[1] = CLightManager::GetInstance()->GetLigCameraDatas();
 
 		m_model[eModel_View1].Init(initData);
 		m_model[eModel_View2].Init(initData);
