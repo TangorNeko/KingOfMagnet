@@ -11,6 +11,6 @@ public:
 		m_vertex[2] = v3;
 	}
 
-	bool isHit(const Vector3& start, const Vector3& end);
+	bool isHit(const Vector3& start, const Vector3& end,Vector3& finalCrossPoint);
 };
 

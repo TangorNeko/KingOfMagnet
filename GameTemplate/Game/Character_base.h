@@ -1,5 +1,6 @@
 #pragma once
 #include "MyCapsuleCollider.h"
+#include "TriangleCollider.h"
 class BackGround;
 
 class Character_base : public IGameObject
@@ -70,7 +71,7 @@ public:
 	prefab::CSpriteRender* m_crosshairRender = nullptr;//照準のスプライト
 	BackGround* m_stageModel;
 	CharacterController m_charaCon;//プレイヤーのキャラコン
-	//TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
+	TriangleCollider m_triCollider[2];//単純な三角形の当たり判定(発射先の判定に使う。)
 	MyCapsuleCollider m_collider;
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、なし(0)、引力状態(-1,-2)、斥力状態(1,2)

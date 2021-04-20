@@ -304,13 +304,38 @@ void Knight::NormalAttack()
 		}
 		else
 		{
+			//ロックオンしていないので、発射先を決める必要がある。
+			//カメラの位置から向いている方向に飛ばすレイを作成。
+			//キャラクターの位置からじゃないことに注意。
+			//レイの向き
 			Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+			//レイの始点
 			Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
+			//レイの始点と向きから求めたレイの終点(10000以上の距離狙うことはないと思うので距離は10000に設定)
 			Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
 
+			//交点(キャラクターの位置からこの位置に向かって発射されることになる)
 			Vector3 crossPoint;
 
-			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+			//交差したかフラグ。
+			bool hitFlag = false;
+
+			//まず敵キャラクター付近の板ポリ当たり判定を検索する。
+			for (auto tricollider : m_enemy->m_triCollider)
+			{
+				hitFlag = tricollider.isHit(testRayStart, testRayEnd, crossPoint);
+				if (hitFlag == true)
+				{
+					//1回でもヒットしていたらbreak
+					break;
+				}
+			}
+
+			//敵キャラクター付近にヒットしなかったらステージのモデルを検索する。
+			if (hitFlag == false)
+			{
+				hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+			}
 
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
 			bullet->m_CharaNum = 0;

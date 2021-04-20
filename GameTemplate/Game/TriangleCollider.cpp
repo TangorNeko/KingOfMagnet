@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TriangleCollider.h"
 
-bool TriangleCollider::isHit(const Vector3& start, const Vector3& end)
+bool TriangleCollider::isHit(const Vector3& start, const Vector3& end, Vector3& finalCrossPoint)
 {
 	//1.ポリゴンを含む無限平面との交差判定
 
@@ -59,6 +59,8 @@ bool TriangleCollider::isHit(const Vector3& start, const Vector3& end)
 
 	if (vA.Dot(vB) > 0 && vA.Dot(vC) > 0)
 	{
+		//最終的にヒットしていた場合のみ交点を格納。
+		finalCrossPoint = crossPoint;
 		return true;
 	}
 	else
