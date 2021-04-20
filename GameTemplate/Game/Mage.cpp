@@ -125,6 +125,7 @@ void Mage::Update()
 		if (m_moveSpeed.Length() != 0)
 		{
 			m_characterDirection = m_moveSpeed;
+			m_characterDirection.y = 0;
 			m_characterDirection.Normalize();
 		}
 

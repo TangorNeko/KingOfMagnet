@@ -38,6 +38,9 @@ protected:
 	//プレイヤーにかかる磁力の影響
 	void PlayerMagneticMove();
 
+	//タレットを操縦する
+	void ControlTurret();
+
 public:
 	virtual ~Character_base();
 	Quaternion rot;//キャラクターの回転

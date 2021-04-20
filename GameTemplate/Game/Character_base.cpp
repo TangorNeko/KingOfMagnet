@@ -5,6 +5,7 @@
 #include "DamageDisplay.h"
 #include <string>
 #include "Repulsion.h"
+#include "Turret.h"
 //Character_base::~Character_base()
 //{
 //	DeleteGO(m_skinModelRender);
@@ -373,16 +374,13 @@ void Character_base::PlayerMagneticMove()
 		}
 	}	
 }
-
-////Ë—Í°‚É‹ß‚Ã‚¢‚½‚Æ‚«
-//void Character_base::NearRepulsionFloor()
-//{	
-//	QueryGOs<Repulsion>("repulsion", [this](Repulsion* repulsion)->bool
-//		{
-//			if (m_playerNum == 0) {
-//				
-//			}
-//			return true;
-//		}
-//	);
-//}
+//ƒ^ƒŒƒbƒg‚ğ‘€c
+void Character_base::ControlTurret()
+{
+	QueryGOs<Turret>("Player", [this](Turret* turret)->bool
+		{
+			turret->diff = m_position - turret->m_position;
+			return true;
+		}
+	);
+}

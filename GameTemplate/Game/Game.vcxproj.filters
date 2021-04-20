@@ -1,699 +1,224 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="ソース ファイル\system">
-      <UniqueIdentifier>{a9bb9230-eaa9-4c07-a610-f43e5384bb9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\system">
-      <UniqueIdentifier>{dbc0c16e-80e1-4c7c-8b01-c720c0baa9a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine">
-      <UniqueIdentifier>{cc7395d8-c038-48b6-8449-ccd23e842334}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\math">
-      <UniqueIdentifier>{537105af-f4ca-42d1-ab2d-d112e5b73c11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\tkFile">
-      <UniqueIdentifier>{22cebcfb-0109-475e-8c80-6691262acbc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\HID">
-      <UniqueIdentifier>{9f01cb00-6a78-4c93-86b4-c6d2bd22048e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\raytracing">
-      <UniqueIdentifier>{14187c21-3fa7-4895-9517-5392eeebd991}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExEngine">
-      <UniqueIdentifier>{9b6426bf-a42e-442b-9906-7f04fbaa5270}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExEngine\gameObject">
-      <UniqueIdentifier>{103836a8-41fc-4624-a457-cbf2a093308b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\debug">
-      <UniqueIdentifier>{a4afebf9-da6c-48cf-86ed-ad66371d7516}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExEngine\physics">
-      <UniqueIdentifier>{28d50a61-e332-409d-aaf8-cee4a2b444bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\font">
-      <UniqueIdentifier>{0dd42389-4c3e-4926-8685-6cf90e216ab0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\prefab">
-      <UniqueIdentifier>{82a09072-8ac3-42a3-a971-ed3ffaab5a12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Assets">
-      <UniqueIdentifier>{61c75069-1f86-4049-9924-1d70d8624b63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Assets\modelData">
-      <UniqueIdentifier>{be582d35-47e0-4ddd-840f-cfa8d46913f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\time">
-      <UniqueIdentifier>{9d735050-840b-4cd6-91d4-94b69ef4dbae}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="..\..\ExEngine\gameObject\Gameobjectmanager.cpp" />
+    <ClCompile Include="..\..\ExEngine\gameObject\IGameObject.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\CapsuleCollider.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\CharacterController.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\MeshCollider.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\Physics.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\PhysicsStaticObject.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\RigidBody.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Animation.cpp" />
+    <ClCompile Include="..\..\MiniEngine\AnimationClip.cpp" />
+    <ClCompile Include="..\..\MiniEngine\AnimationPlayController.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Camera.cpp" />
+    <ClCompile Include="..\..\MiniEngine\ConstantBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\DescriptorHeap.cpp" />
+    <ClCompile Include="..\..\MiniEngine\font\Font.cpp" />
+    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\GPUBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\GraphicsEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\HID\GamePad.cpp" />
+    <ClCompile Include="..\..\MiniEngine\IndexBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Material.cpp" />
+    <ClCompile Include="..\..\MiniEngine\math\Matrix.cpp" />
+    <ClCompile Include="..\..\MiniEngine\math\Vector.cpp" />
+    <ClCompile Include="..\..\MiniEngine\MeshParts.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Model.cpp" />
+    <ClCompile Include="..\..\MiniEngine\NullTextureMaps.cpp" />
+    <ClCompile Include="..\..\MiniEngine\PipelineState.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\BLASBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingInstance.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingPSO.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingWorld.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\TLASBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\RenderTarget.cpp" />
+    <ClCompile Include="..\..\MiniEngine\RootSignature.cpp" />
+    <ClCompile Include="..\..\MiniEngine\RWStructuredBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Shader.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Skeleton.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Sprite.cpp" />
+    <ClCompile Include="..\..\MiniEngine\StructuredBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Texture.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkFile\TkaFile.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkFile\TkmFile.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
+    <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CaslFile.cpp" />
+    <ClCompile Include="CDirectionLight.cpp" />
+    <ClCompile Include="CFontRender.cpp" />
+    <ClCompile Include="CharacterSelect.cpp" />
+    <ClCompile Include="Character_base.cpp" />
+    <ClCompile Include="ChargeShot.cpp" />
+    <ClCompile Include="CLevel.cpp" />
+    <ClCompile Include="CLevelRender2D.cpp" />
+    <ClCompile Include="CMapChipRender.cpp" />
+    <ClCompile Include="CPointLight.cpp" />
+    <ClCompile Include="CSkinModelRender.cpp" />
+    <ClCompile Include="CLightManager.cpp" />
+    <ClCompile Include="CSoundSource.cpp" />
+    <ClCompile Include="CSpotLight.cpp" />
+    <ClCompile Include="CSpriteRender.cpp" />
+    <ClCompile Include="DamageDisplay.cpp" />
+    <ClCompile Include="DropItem_base.cpp" />
+    <ClCompile Include="Flash.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="Grenade_item.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
+    <ClCompile Include="Knight.cpp" />
+    <ClCompile Include="Level2D.cpp" />
+    <ClCompile Include="Machinegun_item.cpp" />
+    <ClCompile Include="MagAcceleration_item.cpp" />
+    <ClCompile Include="Mage.cpp" />
+    <ClCompile Include="MagInversion_item.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapChip2D.cpp" />
+    <ClCompile Include="MyCapsuleCollider.cpp" />
+    <ClCompile Include="Ninja.cpp" />
+    <ClCompile Include="PopRandItem.cpp" />
+    <ClCompile Include="PostEffectManager.cpp" />
+    <ClCompile Include="Psychokinesis.cpp" />
+    <ClCompile Include="Repulsion.cpp" />
+    <ClCompile Include="ShowModel.cpp" />
+    <ClCompile Include="ShowSprite.cpp" />
+    <ClCompile Include="SkyBoard.cpp" />
+    <ClCompile Include="SoundEngine.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Tank.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="tklFile.cpp" />
+    <ClCompile Include="ResourceBankManager.cpp" />
+    <ClCompile Include="TriangleCollider.cpp" />
+    <ClCompile Include="WaveFile.cpp" />
+    <ClCompile Include="WaveFileBank.cpp" />
+    <ClCompile Include="Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="system\system.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\GraphicsEngine.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\IndexBuffer.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\StructuredBuffer.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\ConstantBuffer.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\DescriptorHeap.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Texture.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Shader.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\math\Vector.cpp">
-      <Filter>MiniEngine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\math\Matrix.cpp">
-      <Filter>MiniEngine\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Sprite.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\PipelineState.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\RootSignature.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp">
-      <Filter>MiniEngine\tkFile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\tkFile\TkaFile.cpp">
-      <Filter>MiniEngine\tkFile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\tkFile\TkmFile.cpp">
-      <Filter>MiniEngine\tkFile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Camera.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Skeleton.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\MeshParts.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Material.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Model.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\HID\GamePad.cpp">
-      <Filter>MiniEngine\HID</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\GPUBuffer.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\RWStructuredBuffer.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\NullTextureMaps.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\TLASBuffer.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\BLASBuffer.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingEngine.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingInstance.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingPSO.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingWorld.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\AnimationClip.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\AnimationPlayController.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\Animation.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\gameObject\IGameObject.cpp">
-      <Filter>ExEngine\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\gameObject\Gameobjectmanager.cpp">
-      <Filter>ExEngine\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\tkEngine.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\physics\Physics.cpp">
-      <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\physics\MeshCollider.cpp">
-      <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\physics\RigidBody.cpp">
-      <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\physics\CapsuleCollider.cpp">
-      <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\physics\CharacterController.cpp">
-      <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExEngine\physics\PhysicsStaticObject.cpp">
-      <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp">
-      <Filter>MiniEngine\font</Filter>
-    </ClCompile>
-    <ClCompile Include="ShowModel.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ShowSprite.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CSkinModelRender.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CDirectionLight.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="BackGround.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CLightManager.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CPointLight.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CSpotLight.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="tklFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
-      <Filter>MiniEngine\font</Filter>
-    </ClCompile>
-    <ClCompile Include="TriangleCollider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ChargeShot.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Character_base.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Mage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Knight.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Tank.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Ninja.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterSelect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceBankManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MyCapsuleCollider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CaslFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Level2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MapChip2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundEngine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="WaveFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="WaveFileBank.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="DropItem_base.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MagInversion_item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="PopRandItem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MagAcceleration_item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Grenade_item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Flash.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\RenderTarget.cpp">
-      <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Machinegun_item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CFontRender.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CLevel.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CSpriteRender.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CSoundSource.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CMapChipRender.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CLevelRender2D.cpp">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="PostEffectManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GaussianBlur.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="DamageDisplay.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyBoard.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Psychokinesis.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Repulsion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-  </ItemGroup>    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-  </ItemGroup>  <ItemGroup>
-    <ClInclude Include="system\system.h">
-      <Filter>ヘッダー ファイル\system</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\GraphicsEngine.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\RenderContext.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\RenderContext_inline.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\VertexBuffer.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\IndexBuffer.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\StructuredBuffer.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\ConstantBuffer.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\DescriptorHeap.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Texture.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Shader.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\math\Vector.h">
-      <Filter>MiniEngine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\MiniEngine.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\math\Math.h">
-      <Filter>MiniEngine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\math\Matrix.h">
-      <Filter>MiniEngine\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Sprite.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\PipelineState.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\RootSignature.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\tkFile\TkmFile.h">
-      <Filter>MiniEngine\tkFile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h">
-      <Filter>MiniEngine\tkFile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\tkFile\TkaFile.h">
-      <Filter>MiniEngine\tkFile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Camera.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Skeleton.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\MeshParts.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Material.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Model.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\HID\GamePad.h">
-      <Filter>MiniEngine\HID</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\DescriptorHeap_inline.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\GPUBuffer.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\RWStructuredBuffer.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\NullTextureMaps.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\TLASBuffer.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\BLASBuffer.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\Raytracing.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingEngine.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingInstance.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingPSO.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingWorld.h">
-      <Filter>MiniEngine\raytracing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\AnimationClip.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\AnimationPlayController.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\Animation.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\gameObject\IGameobject.h">
-      <Filter>ExEngine\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\gameObject\GameObjectManager.h">
-      <Filter>ExEngine\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\tkEngine.h">
-      <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\debug\MyAssert.h">
-      <Filter>MiniEngine\debug</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\Physics.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\ExEngine.h">
-      <Filter>ExEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\MeshCollider.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\RigidBody.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\ICollider.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\CapsuleCollider.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\CharacterController.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExEngine\physics\PhysicsStaticObject.h">
-      <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\font\FontEngine.h">
-      <Filter>MiniEngine\font</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\font\Font.h">
-      <Filter>MiniEngine\font</Filter>
-    </ClInclude>
-    <ClInclude Include="ShowModel.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ShowSprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="prefab.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CSkinModelRender.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CDirectionLight.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="BackGround.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CLightManager.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CPointLight.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CSpotLight.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="tklFile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TriangleCollider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ChargeShot.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Character_base.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Mage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Knight.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Tank.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Ninja.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterSelect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceBankManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MyCapsuleCollider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CaslFile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Level2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MapChip2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="WaveFile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="WaveFileBank.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CUtil.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="NameKey.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\time\GameTime.h">
-      <Filter>MiniEngine\time</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MiniEngine\time\Stopwatch.h">
-      <Filter>MiniEngine\time</Filter>
-    </ClInclude>
-    <ClInclude Include="DropItem_base.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MagInversion_item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="PopRandItem.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MagAcceleration_item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Grenade_item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Flash.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Machinegun_item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CLevelRender2D.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CMapChipRender.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CSpriteRender.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CSoundSource.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="CLevel.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="PostEffectManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GaussianBlur.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TResourceBank.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DamageDisplay.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SkyBoard.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Psychokinesis.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Repulsion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-  </ItemGroup>    <ClInclude Include="CFontRender.h">
-      <Filter>ソース ファイル\prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-  </ItemGroup>  <ItemGroup>
-    <Image Include="Assets\modelData\StageUV.png">
-      <Filter>ソース ファイル\Assets\modelData</Filter>
-    </Image>
+    <ClInclude Include="..\..\ExEngine\ExEngine.h" />
+    <ClInclude Include="..\..\ExEngine\gameObject\GameObjectManager.h" />
+    <ClInclude Include="..\..\ExEngine\gameObject\IGameobject.h" />
+    <ClInclude Include="..\..\ExEngine\physics\CapsuleCollider.h" />
+    <ClInclude Include="..\..\ExEngine\physics\CharacterController.h" />
+    <ClInclude Include="..\..\ExEngine\physics\ICollider.h" />
+    <ClInclude Include="..\..\ExEngine\physics\MeshCollider.h" />
+    <ClInclude Include="..\..\ExEngine\physics\Physics.h" />
+    <ClInclude Include="..\..\ExEngine\physics\PhysicsStaticObject.h" />
+    <ClInclude Include="..\..\ExEngine\physics\RigidBody.h" />
+    <ClInclude Include="..\..\MiniEngine\Animation.h" />
+    <ClInclude Include="..\..\MiniEngine\AnimationClip.h" />
+    <ClInclude Include="..\..\MiniEngine\AnimationPlayController.h" />
+    <ClInclude Include="..\..\MiniEngine\Camera.h" />
+    <ClInclude Include="..\..\MiniEngine\ConstantBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\debug\MyAssert.h" />
+    <ClInclude Include="..\..\MiniEngine\DescriptorHeap.h" />
+    <ClInclude Include="..\..\MiniEngine\DescriptorHeap_inline.h" />
+    <ClInclude Include="..\..\MiniEngine\font\Font.h" />
+    <ClInclude Include="..\..\MiniEngine\font\FontEngine.h" />
+    <ClInclude Include="..\..\MiniEngine\GPUBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\GraphicsEngine.h" />
+    <ClInclude Include="..\..\MiniEngine\HID\GamePad.h" />
+    <ClInclude Include="..\..\MiniEngine\IndexBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\Material.h" />
+    <ClInclude Include="..\..\MiniEngine\math\Math.h" />
+    <ClInclude Include="..\..\MiniEngine\math\Matrix.h" />
+    <ClInclude Include="..\..\MiniEngine\math\Vector.h" />
+    <ClInclude Include="..\..\MiniEngine\MeshParts.h" />
+    <ClInclude Include="..\..\MiniEngine\MiniEngine.h" />
+    <ClInclude Include="..\..\MiniEngine\Model.h" />
+    <ClInclude Include="..\..\MiniEngine\NullTextureMaps.h" />
+    <ClInclude Include="..\..\MiniEngine\PipelineState.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\BLASBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\Raytracing.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingEngine.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingInstance.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingPSO.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingWorld.h" />
+    <ClInclude Include="..\..\MiniEngine\raytracing\TLASBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\RenderContext.h" />
+    <ClInclude Include="..\..\MiniEngine\RenderContext_inline.h" />
+    <ClInclude Include="..\..\MiniEngine\RootSignature.h" />
+    <ClInclude Include="..\..\MiniEngine\RWStructuredBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\Shader.h" />
+    <ClInclude Include="..\..\MiniEngine\Skeleton.h" />
+    <ClInclude Include="..\..\MiniEngine\Sprite.h" />
+    <ClInclude Include="..\..\MiniEngine\StructuredBuffer.h" />
+    <ClInclude Include="..\..\MiniEngine\Texture.h" />
+    <ClInclude Include="..\..\MiniEngine\time\GameTime.h" />
+    <ClInclude Include="..\..\MiniEngine\time\Stopwatch.h" />
+    <ClInclude Include="..\..\MiniEngine\tkEngine.h" />
+    <ClInclude Include="..\..\MiniEngine\tkFile\TkaFile.h" />
+    <ClInclude Include="..\..\MiniEngine\tkFile\TkmFile.h" />
+    <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h" />
+    <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CaslFile.h" />
+    <ClInclude Include="CDirectionLight.h" />
+    <ClInclude Include="CFontRender.h" />
+    <ClInclude Include="CharacterSelect.h" />
+    <ClInclude Include="Character_base.h" />
+    <ClInclude Include="ChargeShot.h" />
+    <ClInclude Include="CLevel.h" />
+    <ClInclude Include="CLevelRender2D.h" />
+    <ClInclude Include="CMapChipRender.h" />
+    <ClInclude Include="CPointLight.h" />
+    <ClInclude Include="CSkinModelRender.h" />
+    <ClInclude Include="CLightManager.h" />
+    <ClInclude Include="CSoundSource.h" />
+    <ClInclude Include="CSpotLight.h" />
+    <ClInclude Include="CSpriteRender.h" />
+    <ClInclude Include="CUtil.h" />
+    <ClInclude Include="DamageDisplay.h" />
+    <ClInclude Include="DropItem_base.h" />
+    <ClInclude Include="Flash.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="Grenade_item.h" />
+    <ClInclude Include="GaussianBlur.h" />
+    <ClInclude Include="Knight.h" />
+    <ClInclude Include="Level2D.h" />
+    <ClInclude Include="Machinegun_item.h" />
+    <ClInclude Include="MagAcceleration_item.h" />
+    <ClInclude Include="Mage.h" />
+    <ClInclude Include="MagInversion_item.h" />
+    <ClInclude Include="MapChip2D.h" />
+    <ClInclude Include="MyCapsuleCollider.h" />
+    <ClInclude Include="NameKey.h" />
+    <ClInclude Include="Ninja.h" />
+    <ClInclude Include="PopRandItem.h" />
+    <ClInclude Include="PostEffectManager.h" />
+    <ClInclude Include="Psychokinesis.h" />
+    <ClInclude Include="Repulsion.h" />
+    <ClInclude Include="ShowModel.h" />
+    <ClInclude Include="ShowSprite.h" />
+    <ClInclude Include="SkyBoard.h" />
+    <ClInclude Include="SoundEngine.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="system\system.h" />
+    <ClInclude Include="prefab.h" />
+    <ClInclude Include="Tank.h" />
+    <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="tklFile.h" />
+    <ClInclude Include="ResourceBankManager.h" />
+    <ClInclude Include="TResourceBank.h" />
+    <ClInclude Include="TriangleCollider.h" />
+    <ClInclude Include="WaveFile.h" />
+    <ClInclude Include="WaveFileBank.h" />
+    <ClInclude Include="Turret.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Assets\modelData\Stage.tkm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\modelData\StageUV.png" />
   </ItemGroup>
 </Project>

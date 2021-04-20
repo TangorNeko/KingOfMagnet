@@ -344,6 +344,7 @@
     <ClCompile Include="tklFile.cpp" />
     <ClCompile Include="ResourceBankManager.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
+    <ClCompile Include="Turret.cpp" />
     <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
   </ItemGroup>
@@ -457,6 +458,7 @@
     <ClInclude Include="ResourceBankManager.h" />
     <ClInclude Include="TResourceBank.h" />
     <ClInclude Include="TriangleCollider.h" />
+    <ClInclude Include="Turret.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />
   </ItemGroup>
