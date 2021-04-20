@@ -25,16 +25,31 @@ void Repulsion::Update()
 				//立方体の範囲に入れば斥力を与える
 				if ((diff0.x < 200 && diff0.x > -200) &&
 					(diff0.z < 200 && diff0.z > -200) &&
-					diff0.y < 200 )//床との距離が近ければ
+					 diff0.y < 200 )//床との距離が近ければ
 				{
 					//時間が立つに連れスピードが上がる
 					m_loop0++;
-					player->m_Yspeed.y += (0.0005f * (m_loop0 * m_loop0));
+					if (m_objNum == 0) 
+					{
+						player->m_Yspeed0.y += (0.0005f * (m_loop0 * m_loop0));
+					}
+					if (m_objNum == 1)
+					{						
+						player->m_Yspeed1.y += (0.0005f * (m_loop0 * m_loop0));
+					}
 					player->m_loop = 0;//エレベーター減少対策
-				}	//範囲外は値を０に
-				else
+
+				}	
+				else//範囲外は値を０に
 				{
-					player->m_Yspeed.y = 0;
+					if (m_objNum == 0)
+					{
+						player->m_Yspeed0.y = 0;						
+					}
+					if (m_objNum == 1)
+					{
+						player->m_Yspeed1.y = 0;
+					}
 					m_loop0 = 0;					
 				}
 			}
@@ -49,13 +64,27 @@ void Repulsion::Update()
 				{
 					//床に近ければ近いほど加算する値を大きくする
 					m_loop1++;
-					player->m_Yspeed.y += (0.0005f * (m_loop1 * m_loop1));
+					if (m_objNum == 0)
+					{
+						player->m_Yspeed0.y += (0.0005f * (m_loop1 * m_loop1));
+					}
+					if (m_objNum == 1)
+					{
+						player->m_Yspeed1.y += (0.0005f * (m_loop1 * m_loop1));
+					}
 					player->m_loop = 0;//エレベーター減少対策
 
 				}
 				else
 				{
-					player->m_Yspeed.y = 0;					
+					if (m_objNum == 0)
+					{
+						player->m_Yspeed0.y = 0;
+					}
+					if (m_objNum == 1)
+					{
+						player->m_Yspeed1.y = 0;
+					}
 					m_loop1 = 0;				
 				}
 			}

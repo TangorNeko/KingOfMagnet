@@ -108,7 +108,7 @@ void Mage::Update()
 		}
 		rot.SetRotation(Vector3::AxisY, angle);
 		m_skinModelRender->SetRotation(rot);		
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed+m_Yspeed;
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed + m_Yspeed0 + m_Yspeed1;
 		if (m_charaCon.IsOnGround() == false)
 		{
 			m_loop++;
@@ -461,13 +461,8 @@ void Mage::TryChangeStatusFall()
 {
 	if (m_charaCon.IsOnGround() == false) 
 	{
-		status = enStatus_Fall;
-		m_skinModelRender->SetScale(m_fallScale);
-	}
-	else
-	{		
-		m_skinModelRender->SetScale(Scale);
-	}
+		status = enStatus_Fall;		
+	}	
 }
 void Mage::UpdateState()
 {
@@ -512,6 +507,7 @@ void Mage::UpdateState()
 void Mage::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
+	
 	if (m_MachinegunHave == false) {
 		switch (status) {
 		case enStatus_Attack:

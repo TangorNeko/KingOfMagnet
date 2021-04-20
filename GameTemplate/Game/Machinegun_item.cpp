@@ -1,3 +1,4 @@
+//マシンガンをマップに表示させる
 #include "stdafx.h"
 #include "Machinegun_item.h"
 #include "Character_base.h"
@@ -12,7 +13,7 @@ bool Machinegun_item::Start()
 	//モデルを作成
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	
-	m_position.y += 50;
+	m_position.y += 50;//地面に埋まらないように
 	m_startpositionY = m_position.y;
 	m_skinModelRender->Init("Assets/modelData/Gun.tkm");
 	m_collider.SetStartPoint(m_position);
