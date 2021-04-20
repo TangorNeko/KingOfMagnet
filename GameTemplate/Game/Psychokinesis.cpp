@@ -3,20 +3,16 @@
 #include "Mage.h"
 #include "ShowModel.h"
 #include "Character_base.h"
+#include "BackGround.h"
 
 Psychokinesis::~Psychokinesis()
 {
-	DeleteGO(m_skinModelRender[0]);
-	DeleteGO(m_skinModelRender[1]);
-	if (m_level2)//チャージ33.3以上
+	for (int i = 0;i < 5;i++)
 	{
-		DeleteGO(m_skinModelRender[2]);
-		DeleteGO(m_skinModelRender[3]);
-	}
-	if (m_level3)//チャージ66.6以上
-	{
-		DeleteGO(m_skinModelRender[4]);
-		DeleteGO(m_skinModelRender[5]);
+		if (m_skinModelRender[i] != nullptr)
+		{
+			DeleteGO(m_skinModelRender[i]);
+		}
 	}
 	DeleteGO(m_pointLight);
 	//各プレイヤーを検索
@@ -45,6 +41,8 @@ bool Psychokinesis::Start() // L2R2同時押しした時点で
 	m_pointLight = NewGO<prefab::CPointLight>(0);
 	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
 	m_pointLight->SetRange(200.0f);
+
+	m_stageModel = FindGO<BackGround>("background");
 	return true;
 }
 void Psychokinesis::Update()
@@ -114,6 +112,18 @@ void Psychokinesis::Update()
 			}
 		}
 
+		for (int i = 0;i < 6;i++)
+		{
+			Vector3 crossPoint;
+			bool hitFlag = m_stageModel->isLineHitModel(oldPos[i], m_position[i], crossPoint);
+
+			if (hitFlag == true)
+			{
+				DeleteGO(m_skinModelRender[i]);
+				m_skinModelRender[i] = nullptr;
+			}
+		}
+
 		//各プレイヤーを検索
 		QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
 		{
@@ -131,36 +141,40 @@ void Psychokinesis::Update()
 					Vector3 diff[6];
 					for (int i = 0; i < 6; i++)
 					{
-						diff[i] = player->m_magPosition - m_position[i];
-						//前フレームの位置と移動後の位置を結んだ線が敵プレイヤーの当たり判定の三角形を通っている場合
-						if (player->m_collider.isHitCapsule(m_collider[i]))
+						if (m_skinModelRender[i] != nullptr)
 						{
-							//敵プレイヤーに速度に応じてダメージを与える
-							player->Damage((m_velocity * m_chargelevel)/5);
-							
-							DeleteGO(this);
-						}
-						//敵との距離が500以内なら
-						if (diff[i].Length() < 500.0f)
-						{
-							//敵が引力モードなら少し引き寄せる。
-							if (player->m_magPower < 0)
+							diff[i] = player->m_magPosition - m_position[i];
+							//前フレームの位置と移動後の位置を結んだ線が敵プレイヤーの当たり判定の三角形を通っている場合
+							if (player->m_collider.isHitCapsule(m_collider[i]))
 							{
-								Vector3 toPlayer = diff[i];
-								toPlayer.Normalize();
-								//m_position += toPlayer * player->m_magPower * 4 * -1;
-								Vector3 newDirection = m_moveDirection * m_velocity + toPlayer * player->m_magPower * 2 * -1;
-								newDirection.Normalize();
-								m_moveDirection = newDirection;
-							}
+								//敵プレイヤーに速度に応じてダメージを与える
+								player->Damage((m_velocity * m_chargelevel) / 5);
 
-							//発射したプレイヤーの磁力を与える(加速or減速)
-							if (m_isAffectedFromEnemyPower == false)
-							{
-								m_velocity -= player->m_magPower;
-								m_isAffectedFromEnemyPower = true;
+								DeleteGO(m_skinModelRender[i]);
+								m_skinModelRender[i] = nullptr;
 							}
-						}						
+							//敵との距離が500以内なら
+							if (diff[i].Length() < 500.0f)
+							{
+								//敵が引力モードなら少し引き寄せる。
+								if (player->m_magPower < 0)
+								{
+									Vector3 toPlayer = diff[i];
+									toPlayer.Normalize();
+									//m_position += toPlayer * player->m_magPower * 4 * -1;
+									Vector3 newDirection = m_moveDirection * m_velocity + toPlayer * player->m_magPower * 2 * -1;
+									newDirection.Normalize();
+									m_moveDirection = newDirection;
+								}
+
+								//発射したプレイヤーの磁力を与える(加速or減速)
+								if (m_isAffectedFromEnemyPower == false)
+								{
+									m_velocity -= player->m_magPower;
+									m_isAffectedFromEnemyPower = true;
+								}
+							}
+						}
 					}	
 				}
 				return true;
@@ -178,20 +192,29 @@ void Psychokinesis::Update()
 		/// １レベルのときあやしい
 		for (int i = 0; i < 2; i++)
 		{
-			m_skinModelRender[i]->SetPosition(m_position[i]);		
+			if (m_skinModelRender[i] != nullptr)
+			{
+				m_skinModelRender[i]->SetPosition(m_position[i]);
+			}
 		}
 		if (m_level2)
 		{
 			for (int i = 2; i < 4; i++)
 			{
-				m_skinModelRender[i]->SetPosition(m_position[i]);
+				if (m_skinModelRender[i] != nullptr)
+				{
+					m_skinModelRender[i]->SetPosition(m_position[i]);
+				}
 			}
 		}
 		if (m_level3)
 		{
 			for (int i = 4; i < 6; i++)
 			{
-				m_skinModelRender[i]->SetPosition(m_position[i]);				
+				if (m_skinModelRender[i] != nullptr)
+				{
+					m_skinModelRender[i]->SetPosition(m_position[i]);
+				}
 			}
 		}
 		

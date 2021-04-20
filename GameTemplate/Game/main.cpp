@@ -20,8 +20,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameObjectManager::CreateInstance();
 	PhysicsWorld::CreateInstance();
 
-	//2画面描画モードをON
-	//TODO:最初にタイトルの表示が必要なので後々OFFから始める。
+	//2画面描画モードはOFFから始める。
 	GameObjectManager::GetInstance()->Set2ScreenMode(false);
 
 	//ライトマネージャーのインスタンスを作成

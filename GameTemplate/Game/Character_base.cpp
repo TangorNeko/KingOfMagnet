@@ -347,7 +347,7 @@ void Character_base::PlayerMagneticMove()
 			m_repulsionSpeed = m_position_with_enemy;//自分から敵までの距離ベクトル
 			m_repulsionSpeed.Normalize();//正規化
 			
-			m_repulsionSpeed *=0.3*fabs(m_magStatediff);
+			m_repulsionSpeed *=2.0f*fabs(m_magStatediff);
 			
 			if (m_magPower == 0) {//自分の磁力がない場合自分だけうごく
 				m_position = m_charaCon.Execute(m_repulsionSpeed, 1.0f);
@@ -361,7 +361,7 @@ void Character_base::PlayerMagneticMove()
 			m_repulsionSpeed = m_position_with_enemy;//自分から敵までの距離ベクトル
 			m_repulsionSpeed.Normalize();//正規化
 			m_repulsionSpeed *= -1;			
-			m_repulsionSpeed *= 0.3 * fabs(m_magStatediff);
+			m_repulsionSpeed *= 2.0f * fabs(m_magStatediff);
 			
 
 			if (m_magPower == 0) {

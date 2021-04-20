@@ -1,5 +1,6 @@
 #pragma once
 class ShowModel;
+class BackGround;
 #include "MyCapsuleCollider.h"
 
 class Bullet : public IGameObject
@@ -28,5 +29,6 @@ public:
 	int m_liveCount = 0;
 	int m_parentNo = 0;
 	bool m_isAffectedFromEnemyPower = false;
+	BackGround* m_stageModel = nullptr;
 };
 

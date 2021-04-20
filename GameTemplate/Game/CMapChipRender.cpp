@@ -32,7 +32,6 @@ namespace prefab
 			sprintf_s(filepath, "Assets/modelData/%s.tkm", m_renderObjectData.name);
 			m_modelRender->Init(filepath);
 
-			//TODO:ポジションが全部同じになっている?もっとバリエーションのあるtklファイルを作成して検証する必要あり。
 			m_modelRender->SetPosition(m_renderObjectData.position);
 			m_modelRender->SetRotation(m_renderObjectData.rotation);
 			m_modelRender->SetScale(m_renderObjectData.scale);
