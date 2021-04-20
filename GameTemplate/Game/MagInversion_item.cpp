@@ -1,3 +1,4 @@
+//磁力状態を反転させるアイテム
 #include "stdafx.h"
 #include "MagInversion_item.h"
 
@@ -9,7 +10,7 @@ bool MagInversion_item::Start()
 {
 	//モデルを作成
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/SandClock.tkm");
+	m_skinModelRender->Init("Assets/modelData/SandClockRed.tkm");
 	m_skinModelRender->SetScale({ 3.0f, 3.0f, 3.0f });
 	m_collider.SetStartPoint(m_position);
 	topPos = m_position;
@@ -28,6 +29,7 @@ void MagInversion_item::Update()
 		//プレイヤーが近ければ
 		if (player->m_collider.isHitCapsule(m_collider))
 		{
+			//反転させる
 			player->m_magPower += 2;
 			if (player->m_magPower == 3)
 				player->m_magPower = -1;

@@ -45,8 +45,8 @@ public:
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };
-	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
-	Vector3 m_fallScale = { 0.66f,0.66f,0.66f };
+	Vector3 Scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率
+	
 	Vector3 front;//カメラの前方向
 	Vector3 right;//カメラの右方向
 	Vector3 cameraPos;//カメラのポジション
@@ -69,6 +69,7 @@ public:
 	prefab::CFontRender* m_fontRender = nullptr;//体力、チャージ、磁力等確認用のフォント(TODO:後からUIスプライトに差し替え予定)
 	prefab::CSpriteRender* m_spriteRender = nullptr;//勝利もしくは敗北時に表示するスプライト
 	prefab::CSpriteRender* m_crosshairRender = nullptr;//照準のスプライト
+	
 	BackGround* m_stageModel;
 	CharacterController m_charaCon;//プレイヤーのキャラコン
 	TriangleCollider m_triCollider[2];//単純な三角形の当たり判定(発射先の判定に使う。)
@@ -108,8 +109,9 @@ public:
 	void Lose();
 
 	//斥力床が近いとき
-	//void NearRepulsionFloor();
-	Vector3 m_Yspeed = { 0.0f,0.0f,0.0f };
+	
+	Vector3 m_Yspeed0 = { 0.0f,0.0f,0.0f };
+	Vector3 m_Yspeed1 = { 0.0f,0.0f,0.0f };
 	//敵のインスタンス
 	Character_base* m_enemy = nullptr;
 

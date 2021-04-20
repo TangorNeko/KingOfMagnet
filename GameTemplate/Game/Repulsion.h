@@ -19,5 +19,7 @@ public:
 	
 	int m_loop1 = 0;
 	int m_jumploop1 = 0;
+
+	int m_objNum;
 };
 

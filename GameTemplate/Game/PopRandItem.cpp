@@ -1,3 +1,4 @@
+//ランダムにアイテムを出現させる
 #include "stdafx.h"
 #include "PopRandItem.h"
 #include "MagInversion_item.h"
@@ -6,7 +7,7 @@
 #include "Machinegun_item.h"
 PopRandItem::~PopRandItem()
 {
-
+	DeleteGO(this);
 }
 bool PopRandItem::Start()
 {
@@ -22,22 +23,23 @@ void PopRandItem::Update()
 }
 void PopRandItem::ItemSelect()
 {
+	//千分率で確率を調整
 	m_gatya = rand()%1000;
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability + m_Grenade_probability+m_Gun_probability)
 	{
-		enitem = Gun;
+		enitem = Gun;//マシンガン
 	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability+ m_Grenade_probability)
 	{
-		enitem = Grenade;
+		enitem = Grenade;//フラッシュグレネード
 	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability)
 	{
-		enitem = MagAcceleration;
+		enitem = MagAcceleration;//磁力加速
 	}
 	if (m_gatya < m_MagInversion_probability)
 	{
-		enitem = MagInversion;
+		enitem = MagInversion;//磁力反転
 	}
 	
 	
@@ -83,6 +85,7 @@ void PopRandItem::ItemPop()
 Vector3 PopRandItem::ItemSetPosition()
 {
 	Vector3 RandPosition;
+	//ランダムな座標にアイテムを置く
 	RandPosition.x = (rand() % 2000)-1000;
 	RandPosition.z = ((rand() * m_gatya) % 2000)-1000;
 	RandPosition.y = 0.0f;

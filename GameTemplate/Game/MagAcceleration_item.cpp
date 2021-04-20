@@ -1,3 +1,4 @@
+//磁力遷移を加速させるアイテムを表示させる
 #include "stdafx.h"
 #include "MagAcceleration_item.h"
 MagAcceleration_item::~MagAcceleration_item()
@@ -8,7 +9,7 @@ bool MagAcceleration_item::Start()
 {
 	//モデルを作成
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/SandClock.tkm");
+	m_skinModelRender->Init("Assets/modelData/SandClockBlue.tkm");
 	//m_skinModelRender->SetScale({ 5.0f, 5.0f, 5.0f });
 	m_collider.SetStartPoint(m_position);
 	topPos = m_position;

@@ -27,7 +27,7 @@ bool Knight::Start()
 	animationClips[enAnimationClip_Move].Load("Assets/animData/Mage_Attack.tka");
 	animationClips[enAnimationClip_Move].SetLoopFlag(false);	//ループモーションにする。
 	animationClips[enAnimationClip_Fall].Load("Assets/animData/Knight_Fall.tka");
-	animationClips[enAnimationClip_Fall].SetLoopFlag(false);	//ループモーションにする。
+	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
 
 //マシンガン用
 	animationClips[enAnimationClip_Gun_Idle].Load("Assets/animData/Gun_Idle.tka");
@@ -112,7 +112,7 @@ void Knight::Update()
 		rot.SetRotation(Vector3::AxisY, angle);
 		m_skinModelRender->SetRotation(rot);
 
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed + m_Yspeed;
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed + m_Yspeed0 + m_Yspeed1;
 		if (m_charaCon.IsOnGround() == false)
 		{
 			m_loop++;
@@ -499,7 +499,8 @@ void Knight::TryChangeStatusAttack()
 {	
 	if (g_pad[m_playerNum]->IsPress(enButtonX)) {
 		status = enStatus_Attack;
-	}	
+	}
+	
 }
 void Knight::TryChangeStatusRun()
 {
@@ -585,9 +586,10 @@ void Knight::UpdateState()
 void Knight::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
+	
 	if (m_MachinegunHave == false) {
 		switch (status) {
-		case enStatus_Attack:
+		case enStatus_Attack:			
 			m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 			break;
 		case enStatus_Run:

@@ -26,11 +26,21 @@ bool BackGround::Start()
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 
 	m_level.Init("Assets/modelData/level_00.tkl", [&](prefab::LevelObjectData& objData) {
-		if (strcmp(objData.name,"repulsion") == 0) {//Ë—Í°
+		if (strcmp(objData.name,"repulsion0") == 0) {//Ë—Í°
 			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
 			gimmick->m_position = objData.position;//
 			gimmick->m_rot = objData.rotation;
 			gimmick->m_scale = objData.scale;
+			gimmick->m_objNum = 0;
+			m_repulsion.push_back(gimmick);
+			return true;
+		}
+		if (strcmp(objData.name, "repulsion1") == 0) {//Ë—Í°
+			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
+			gimmick->m_position = objData.position;//
+			gimmick->m_rot = objData.rotation;
+			gimmick->m_scale = objData.scale;
+			gimmick->m_objNum = 1;
 			m_repulsion.push_back(gimmick);
 			return true;
 		}
