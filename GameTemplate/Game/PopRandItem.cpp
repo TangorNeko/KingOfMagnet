@@ -5,7 +5,6 @@
 #include "MagAcceleration_item.h"
 #include "Grenade_item.h"
 #include "Machinegun_item.h"
-#include "GameScene.h"
 PopRandItem::~PopRandItem()
 {
 	DeleteGO(this);
@@ -13,8 +12,6 @@ PopRandItem::~PopRandItem()
 bool PopRandItem::Start()
 {
 	//item = Grenade;
-
-	m_gameScene = FindGO<GameScene>("gamescene");
 	
 	return true;
 }
@@ -22,10 +19,7 @@ void PopRandItem::Update()
 {
 	ItemSelect();
 	//enitem = Gun;
-	if (m_gameScene->GetGameEndFlag() == false)
-	{
-		ItemPop();
-	}
+	ItemPop();
 }
 void PopRandItem::ItemSelect()
 {

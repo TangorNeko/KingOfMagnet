@@ -13,8 +13,6 @@ Character_base::~Character_base()
 	DeleteGO(m_pointLight);
 	DeleteGO(m_fontRender);
 	DeleteGO(m_spriteRender);
-	DeleteGO(m_crosshairRender);
-	DeleteGO(m_weaponModel);
 }
 
 bool Mage::Start()

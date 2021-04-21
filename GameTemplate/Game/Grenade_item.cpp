@@ -18,17 +18,10 @@ bool Grenade_item::Start()
 	m_collider.SetRadius(15.0f);
 	//m_skinModelRender->SetPosition(m_position);
 
-	m_gameScene = FindGO<GameScene>("gamescene");
-
 	return true;
 }
 void Grenade_item::Update()
 {
-	if (m_gameScene->GetGameEndFlag() == true)
-	{
-		DeleteGO(this);
-	}
-
 	//各プレイヤーを検索
 	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
 		{

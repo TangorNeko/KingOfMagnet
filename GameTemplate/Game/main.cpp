@@ -44,7 +44,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////////////////
 
 //タイトルシーンを作成。
-	TitleScene* title = NewGO<TitleScene>(0, "titlescene");
+	TitleScene* title = NewGO<TitleScene>(0, "Title");
 
 	
 	//////////////////////////////////////

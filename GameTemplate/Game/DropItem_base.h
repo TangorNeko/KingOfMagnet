@@ -1,7 +1,5 @@
 #pragma once
 #include "Character_base.h"
-#include "GameScene.h"
-
 class DropItem_base :public IGameObject
 
 {
@@ -23,7 +21,5 @@ protected:
 	void ItemMotion();//ƒAƒCƒeƒ€‚Ì“®‚«
 
 	float m_startpositionY;
-
-	GameScene* m_gameScene = nullptr;
 };
 

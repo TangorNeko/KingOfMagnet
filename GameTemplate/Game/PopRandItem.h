@@ -1,7 +1,5 @@
 #pragma once
 
-class GameScene;
-
 class PopRandItem:public IGameObject
 {
 	~PopRandItem();
@@ -14,8 +12,6 @@ class PopRandItem:public IGameObject
 	int m_MagAcceleration_probability = 250;
 	int m_Grenade_probability = 250;
 	int m_Gun_probability = 250;
-
-	GameScene* m_gameScene = nullptr;
 public:
 	
 	int m_Loop = 0;
