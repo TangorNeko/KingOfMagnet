@@ -245,10 +245,10 @@ void Knight::DisplayStatus()
 void Knight::MoveAction()
 {
 	//移動アクション
-	//Aが押されて前の移動アクションから20フレーム立っていたら
+	//Aが押されて前の移動アクションから600フレーム立っていたら
 	if (g_pad[m_playerNum]->IsTrigger(enButtonA) && m_moveActionCount == 0 && !(g_pad[m_playerNum]->IsPress(enButtonLB2)))
 	{
-		m_moveActionCount = 20;
+		m_moveActionCount = 600;
 		m_move_on = true;
 	}
 	else

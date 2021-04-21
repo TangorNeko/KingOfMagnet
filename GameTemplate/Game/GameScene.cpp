@@ -21,8 +21,8 @@ bool GameScene::Start()
 	m_stageLight->SetDirection({ 0.0f,-1.0f,0.0f });
 	m_stageLight->SetColor({ 0.5f,0.5f,0.5f });
 
-	//prefab::CLevelRender2D* m_level2D = NewGO<prefab::CLevelRender2D>(5);
-	//m_level2D->Init("Assets/Level2D/Level2DTest.casl", nullptr);
+	prefab::CLevelRender2D* m_level2D = NewGO<prefab::CLevelRender2D>(5);
+	m_level2D->Init("Assets/Level2D/Level2DTest.casl", nullptr);
 
 	/*
 	//ƒvƒŒƒCƒ„[1‚ðì¬
@@ -64,7 +64,7 @@ GameScene::~GameScene()
 	DeleteGO(m_itemgenerator);
 	DeleteGO(m_player1);
 	DeleteGO(m_player2);
-	//DeleteGO(m_level2D);
+	DeleteGO(m_level2D);
 	DeleteGO(m_stageLight);
 
 	GameObjectManager::GetInstance()->Set2ScreenMode(false);
