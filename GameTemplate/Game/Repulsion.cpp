@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Repulsion.h"
 #include "Character_base.h"
+#include "GameScene.h"
+
 Repulsion::~Repulsion()
 {
 	DeleteGO(m_skinModelRender);
@@ -12,10 +14,16 @@ bool Repulsion::Start()
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_rot);
 	m_skinModelRender->SetScale(m_scale);
+
+	m_gameScene = FindGO<GameScene>("gamescene");
 	return true;
 }
 void Repulsion::Update()
 {
+	if (m_gameScene->GetGameEndFlag() == true)
+	{
+		DeleteGO(this);
+	}
 	
 	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
 		{			
