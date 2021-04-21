@@ -1,4 +1,6 @@
 #pragma once
+class GameScene;
+
 class Repulsion : public IGameObject
 {
 	~Repulsion();
@@ -21,5 +23,7 @@ public:
 	int m_jumploop1 = 0;
 
 	int m_objNum;
+
+	GameScene* m_gameScene = nullptr;
 };
 

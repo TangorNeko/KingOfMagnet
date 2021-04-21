@@ -5,6 +5,7 @@
 #include "DamageDisplay.h"
 #include <string>
 #include "Repulsion.h"
+#include "GameScene.h"
 //Character_base::~Character_base()
 //{
 //	DeleteGO(m_skinModelRender);
@@ -302,6 +303,9 @@ void Character_base::Damage(int damage)
 
 			m_enemy->Win();
 			m_enemy->m_isSceneStop = true;
+
+			GameScene* gamescene = FindGO<GameScene>("gamescene");
+			gamescene->SetGameEndFlag(true);
 		}
 	}
 
