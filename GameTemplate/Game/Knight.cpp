@@ -722,8 +722,7 @@ void Knight::HaveGravityGrenade()
 			m_GravityGrenadeHave = false;
 			m_GravityGrenade_deletetime = 500;
 			m_GravityGrenadeUse = false;
-			m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
-
+			m_weaponModel->Init("Assets/modelData/Knight_Weapon.tkm");
 		}
 	}
 }
