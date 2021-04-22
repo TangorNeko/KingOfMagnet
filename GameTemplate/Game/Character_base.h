@@ -1,6 +1,7 @@
 #pragma once
 #include "MyCapsuleCollider.h"
 class BackGround;
+class UsedItem_base;
 
 class Character_base : public IGameObject
 {
@@ -88,10 +89,31 @@ public:
 	//マシンガンを持ったとき
 	bool m_MachinegunHave=false;
 	bool m_MachinegunDelete = false;	
-	int m_Machinegun_loopcount = 0;
 	int m_Machinegun_deletetime = 500;
 	int m_Machinegun_bulletNum = 100;	
-	
+	int m_maxHaveItemNum = 5;		//最大アイテム所持数
+	int m_haveItemCount = 0;		//今持っているアイテムの数
+
+	//プレイヤーが持てるアイテムの種類
+	//enum EnHaveItem {
+	//	MagInversion,		//磁力反転
+	//	MagAcceleration,	//磁力遷移の加速
+	//	Gun,				//マシンガン
+	//	ExplosionGrenade,	//爆破グレネード
+	//	FlashGrenade,		//閃光グレネード
+	//	GravityGrenade,		//引力弾
+	//	MoveActStockRecover,	//ムーブアクションのストックを回復
+	//	ItemNum
+	//};
+	//EnHaveItem en_itemPocket[5];
+
+	UsedItem_base* m_itemPocket[5] = {nullptr,nullptr,nullptr,nullptr,nullptr};
+
+	bool m_GravityGrenadeHave = false;
+	int m_GravityGrenade_deletetime = 500;
+	bool m_GravityGrenadeUse = false;		//グレネード弾が投げられたかどうか。
+	//アイテムを拾ってストックしたときの、最大所持数と、表示順について
+
 	//現在の磁力の状態を取得
 	int GetMagPower()const { return m_magPower; }
 

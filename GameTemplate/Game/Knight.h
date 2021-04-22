@@ -56,5 +56,7 @@ public:
 	bool m_move_on=false;
 	bool m_move_attack = true;
 	void HaveMachinegun();
+	//ˆø—Í’e
+	void HaveGravityGrenade();
 };
 

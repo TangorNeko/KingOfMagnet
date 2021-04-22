@@ -2,8 +2,10 @@
 #include "PopRandItem.h"
 #include "MagInversion_item.h"
 #include "MagAcceleration_item.h"
-#include "Grenade_item.h"
+#include "FlashGrenade_item.h"
 #include "Machinegun_item.h"
+#include "GravityGrenade_item.h"
+
 PopRandItem::~PopRandItem()
 {
 
@@ -17,19 +19,22 @@ bool PopRandItem::Start()
 void PopRandItem::Update()
 {
 	ItemSelect();
-	//enitem = Gun;
 	ItemPop();
 }
 void PopRandItem::ItemSelect()
 {
 	m_gatya = rand()%1000;
-	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability + m_Grenade_probability+m_Gun_probability)
+	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability + m_Grenade_probability + m_Gun_probability + m_GravityGrenade)
 	{
 		enitem = Gun;
 	}
+	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability + m_Grenade_probability+m_Gun_probability)
+	{
+		enitem = GravityGrenade;
+	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability+ m_Grenade_probability)
 	{
-		enitem = Grenade;
+		enitem = FlashGrenade;
 	}
 	if (m_gatya < m_MagInversion_probability + m_MagAcceleration_probability)
 	{
@@ -64,8 +69,8 @@ void PopRandItem::ItemPop()
 			item->m_position = { ItemSetPosition() };
 			item->m_ItemCount++;
 			break;
-		case Grenade:
-			item = NewGO<Grenade_item>(0, "grenade_item");
+		case FlashGrenade:
+			item = NewGO<FlashGrenade_item>(0, "falshgrenade_item");
 			item->m_position = { ItemSetPosition() };
 			item->m_ItemCount++;
 			break;
@@ -77,6 +82,12 @@ void PopRandItem::ItemPop()
 			item->m_ItemCount++;
 			break;
 
+		case GravityGrenade:
+			item = NewGO<GravityGrenade_item>(0, "gravitygrenade_item");
+			item->m_position = { ItemSetPosition() };
+			item->m_scale = { 0.5f,0.5f,0.5f };
+			item->m_ItemCount++;
+			break;
 		}
 	}	
 }
