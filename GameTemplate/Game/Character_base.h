@@ -28,7 +28,7 @@ protected:
 	void Collision();
 
 	//ƒJƒƒ‰‚ÌˆÚ“®
-	void Camera();
+	void Camera(); 
 
 	//ŒÅ—LUŒ‚
 	virtual void SpecialAttack()=0;
