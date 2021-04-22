@@ -4,7 +4,8 @@
 #include "ChargeShot.h"
 #include "BackGround.h"
 #include <string>
-#include"Mage.h"
+#include "Mage.h"
+#include "UsedGravityGrenade.h"
 
 
 Character_base::~Character_base()
@@ -127,6 +128,7 @@ void Mage::Update()
 		if (m_moveSpeed.Length() != 0)
 		{
 			m_characterDirection = m_moveSpeed;
+			m_characterDirection.y = 0;
 			m_characterDirection.Normalize();
 		}
 
@@ -161,7 +163,8 @@ void Mage::Update()
 
 		//マシンガンを持ったとき
 		HaveMachinegun();
-		
+		//グラビティを持ったとき
+		HaveGravityGrenade();		
 		//状態更新。
 		UpdateState();
 		//アニメーション選択。
@@ -241,7 +244,8 @@ void Mage::NormalAttack()
 		m_normalAttackCount = 0;
 	}
 
-	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1) && m_normalAttackCount == 0)
+	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1) && m_normalAttackCount == 0
+		&& m_GravityGrenadeHave == false)
 	{
 		if (m_isLock)
 		{
@@ -612,7 +616,6 @@ void Mage::AnimationSelect()
 }
 void Mage::HaveMachinegun()
 {
-
 	if (m_MachinegunHave == true)
 	{
 		if (m_Machinegun_deletetime > 0 && m_Machinegun_bulletNum > 0) {
@@ -625,10 +628,74 @@ void Mage::HaveMachinegun()
 		else
 		{
 			m_MachinegunHave = false;
-			m_Machinegun_loopcount = 0;
 			m_Machinegun_deletetime = 500;
 			m_Machinegun_bulletNum = 100;
 			m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
+		}
+	}
+}
+void Mage::HaveGravityGrenade() 
+{
+	if (m_GravityGrenadeHave == true)
+	{
+		if (m_GravityGrenade_deletetime > 0 && m_GravityGrenadeUse == false) {
+			m_GravityGrenade_deletetime--;
+			if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
+			{
+				if (m_isLock)
+				{
+					UsedGravityGrenade* usedGravityGrenade = NewGO<UsedGravityGrenade>(0, "usedGravityGrenade");
+					usedGravityGrenade->m_CharaNum = 1;
+					usedGravityGrenade->m_position = m_position;
+					usedGravityGrenade->m_position.y += 50;
+					Vector3 dir = m_enemy->m_magPosition - m_magPosition;
+					dir.y += 300.0f;
+					dir.Normalize();
+					usedGravityGrenade->m_moveDirection = dir;
+					usedGravityGrenade->m_velocity = 70.0f;
+					usedGravityGrenade->m_parentNo = m_playerNum;
+				}
+				else
+				{
+					Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+					Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
+					Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
+
+					Vector3 crossPoint;
+
+					bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+
+					UsedGravityGrenade* usedGravityGrenade = NewGO<UsedGravityGrenade>(0, "usedGravityGrenade");
+					usedGravityGrenade->m_CharaNum = 1;
+					usedGravityGrenade->m_position = m_position;
+					usedGravityGrenade->m_position.y += 50;
+
+					if (hitFlag)
+					{
+						//照準の指す方向に飛ばす
+						usedGravityGrenade->m_moveDirection = crossPoint - m_magPosition;
+						usedGravityGrenade->m_moveDirection.y += 300.0f;
+						usedGravityGrenade->m_moveDirection.Normalize();
+					}
+					else
+					{
+						usedGravityGrenade->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+						usedGravityGrenade->m_moveDirection.y += 300.0f;
+						usedGravityGrenade->m_moveDirection.Normalize();
+					}
+					usedGravityGrenade->m_velocity = 70.0f;
+					usedGravityGrenade->m_parentNo = m_playerNum;
+				}
+				m_GravityGrenadeUse = true;
+			}
+		}
+		else
+		{
+			m_GravityGrenadeHave = false;
+			m_GravityGrenade_deletetime = 500;
+			m_GravityGrenadeUse = false;
+			m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
+
 		}
 	}
 }

@@ -50,8 +50,8 @@ public:
 	void UpdateState();
 
 	void HaveMachinegun();
-
-	
+	//ˆø—Í’e
+	void HaveGravityGrenade();	
 	
 };
 

@@ -310,7 +310,8 @@
     <ClCompile Include="DropItem_base.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Grenade_item.cpp" />
+    <ClCompile Include="GravityGrenade_item.cpp" />
+    <ClCompile Include="FlashGrenade_item.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Level2D.cpp" />
@@ -340,11 +341,13 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Tank.cpp" />
+    <ClCompile Include="UsedGravityGrenade.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="tklFile.cpp" />
     <ClCompile Include="ResourceBankManager.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
-    <ClCompile Include="WaveFile.cpp" />
+    <ClCompile Include="Turret.cpp" />
+    <ClCompile Include="UsedItem_base.cpp" />    <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -428,7 +431,8 @@
     <ClInclude Include="DropItem_base.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Grenade_item.h" />
+    <ClInclude Include="GravityGrenade_item.h" />
+    <ClInclude Include="FlashGrenade_item.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Level2D.h" />
@@ -452,11 +456,14 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
     <ClInclude Include="Tank.h" />
+    <ClInclude Include="UsedGravityGrenade.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="tklFile.h" />
     <ClInclude Include="ResourceBankManager.h" />
     <ClInclude Include="TResourceBank.h" />
     <ClInclude Include="TriangleCollider.h" />
+    <ClInclude Include="Turret.h" />
+    <ClInclude Include="UsedItem_base.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />
   </ItemGroup>

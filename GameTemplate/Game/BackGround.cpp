@@ -44,6 +44,16 @@ bool BackGround::Start()
 			m_repulsion.push_back(gimmick);
 			return true;
 		}
+		
+		if (strcmp(objData.name, "turret") == 0) {//Ë—Í°
+			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
+			gimmick->m_position = objData.position;//
+			gimmick->m_rot = objData.rotation;
+			gimmick->m_scale = objData.scale;
+			gimmick->m_objNum = 1;
+			m_repulsion.push_back(gimmick);
+			return true;
+		}
 		return false;
 	});
 	return true;

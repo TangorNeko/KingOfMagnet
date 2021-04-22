@@ -26,7 +26,7 @@ void Repulsion::Update()
 	}
 	
 	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
-		{			
+		{
 			if (player->m_playerNum == 0) {//ƒvƒŒƒCƒ„[‚O				
 				//°‚Æ‚Ì‹——£
 				diff0 = player->m_position - m_position;
