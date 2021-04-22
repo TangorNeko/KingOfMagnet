@@ -2,11 +2,12 @@
 #include "Bullet.h"
 #include "ShowModel.h"
 #include "Character_base.h"
+#include "BackGround.h"
 
 Bullet::~Bullet()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_pointLight);
+	//DeleteGO(m_pointLight);
 }
 
 bool Bullet::Start()
@@ -33,9 +34,9 @@ bool Bullet::Start()
 	}
 
 	//弾から出る光
-	m_pointLight = NewGO<prefab::CPointLight>(0);
-	m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
-	m_pointLight->SetRange(200.0f);
+	//m_pointLight = NewGO<prefab::CPointLight>(0);
+	//m_pointLight->SetColor({ 1.0f,1.0f,0.0f });
+	//m_pointLight->SetRange(200.0f);
 	//投げた方向に弾を向ける
 	m_direction_me = m_moveDirection;
 	float t = m_direction_me.Dot(Vector3::AxisZ);
@@ -48,6 +49,7 @@ bool Bullet::Start()
 	m_rot.SetRotation(Vector3::AxisY, t);
 	m_skinModelRender->SetRotation(m_rot);
 
+	m_stageModel = FindGO<BackGround>("background");
 	return true;
 }
 
@@ -65,14 +67,13 @@ void Bullet::Update()
 	m_collider.SetEndPoint(m_position);
 	m_collider.SetRadius(15.0f);
 
-	//TODO:後からきちんとした衝突判定は作る。　これはプロトタイプ用　障害物の座標と同じなら弾を消す
-	/*if ((-113 < m_position.x && m_position.x < 105 && 857 < m_position.z && m_position.z < 1103) ||
-		(915 < m_position.x && m_position.x < 1075 && -94 < m_position.z && m_position.z < 62) ||
-		(-105 < m_position.x && m_position.x < 107 && -1103 < m_position.z && m_position.z < -863) ||
-		(-1047 < m_position.x && m_position.x < -920 && -94 < m_position.z && m_position.z < 82))
+	Vector3 crossPoint;
+	bool hitFlag = m_stageModel->isLineHitModel(oldPos, m_position, crossPoint);
+
+	if (hitFlag == true)
 	{
 		DeleteGO(this);
-	}*/
+	}
 
 	//各プレイヤーを検索
 	QueryGOs<Character_base>("Player", [this, oldPos](Character_base* player)->bool
@@ -128,7 +129,7 @@ void Bullet::Update()
 
 	//モデルとライトの位置をセット。
 	m_skinModelRender->SetPosition(m_position);
-	m_pointLight->SetPosition(m_position);
+	//m_pointLight->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_rot);
 	//100フレーム生存したら消去
 	m_liveCount++;

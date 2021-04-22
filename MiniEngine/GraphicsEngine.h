@@ -33,7 +33,7 @@ public:
 	/// <param name="frameBufferwidth">フレームバッファの幅</param>
 	/// <param name="frameBufferHeight">フレームバッファの高さ</param>
 	/// <returns>falseが返ってきたら作成に失敗。</returns>
-	bool Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeight);
+	bool Init(HWND hwnd, UINT frameBufferWidth, UINT frameBufferHeight,int framerate);
 	/// <summary>
 	/// レンダリング開始。
 	/// </summary>
@@ -309,6 +309,7 @@ private:
 	NullTextureMaps m_nullTextureMaps;			//ヌルテクスチャマップ。
 	FontEngine m_fontEngine;					//フォントエンジン。
 	std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;	//DirectXTKのグラフィックメモリシステム。
+	int m_frameRate;
 };
 extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
 extern Camera* g_camera2D;					//2Dカメラ。

@@ -1,5 +1,7 @@
 #pragma once
 
+class GameScene;
+
 class PopRandItem:public IGameObject
 {
 	~PopRandItem();
@@ -8,12 +10,13 @@ class PopRandItem:public IGameObject
 	//アイテムが出る間隔
 	int m_PopInterval=2000;
 	//アイテムが出る確率、千分率
-	int m_MagInversion_probability = 2000;
+int m_MagInversion_probability = 100;
 	int m_MagAcceleration_probability = 100;
-	int m_Grenade_probability = 100;
+	int m_Grenade_probability = 100;	
 	int m_GravityGrenade = 100;
-	int m_Gun_probability = 500;public:
-	
+	int m_Gun_probability = 250;
+public:
+	GameScene* m_gameScene = nullptr;	
 	int m_Loop = 0;
 
 

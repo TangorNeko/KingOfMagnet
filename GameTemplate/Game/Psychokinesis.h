@@ -1,4 +1,6 @@
 #pragma once
+
+class BackGround;
 #include "MyCapsuleCollider.h"
 class Psychokinesis:public IGameObject
 {
@@ -74,5 +76,7 @@ public:
 	bool m_isAffectedFromEnemyPower = false;
 	bool m_Psycho_on = false;
 	bool m_shot_on = false;
+
+	BackGround* m_stageModel = nullptr;
 };
 

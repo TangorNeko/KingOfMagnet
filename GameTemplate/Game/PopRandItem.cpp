@@ -6,7 +6,7 @@
 #include "FlashGrenade_item.h"
 #include "Machinegun_item.h"
 #include "GravityGrenade_item.h"
-
+#include "GameScene.h"
 PopRandItem::~PopRandItem()
 {
 	DeleteGO(this);
@@ -14,13 +14,18 @@ PopRandItem::~PopRandItem()
 bool PopRandItem::Start()
 {
 	//item = Grenade;
+
+	m_gameScene = FindGO<GameScene>("gamescene");
 	
 	return true;
 }
 void PopRandItem::Update()
 {
 	ItemSelect();
-	ItemPop();
+	if (m_gameScene->GetGameEndFlag() == false)
+	{
+		ItemPop();
+	}
 }
 void PopRandItem::ItemSelect()
 {

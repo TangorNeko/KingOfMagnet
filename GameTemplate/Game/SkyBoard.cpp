@@ -14,8 +14,8 @@ bool SkyBoard::Start()
 	skyInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
 	skyInitData.m_colorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	skyInitData.m_modelUpAxis = enModelUpAxisZ;
-	skyInitData.m_expandConstantBuffer = &m_skyData;
-	skyInitData.m_expandConstantBufferSize = sizeof(m_skyData);
+	skyInitData.m_expandConstantBuffer[0] = &m_skyData;
+	skyInitData.m_expandConstantBufferSize[0] = sizeof(m_skyData);
 
 	m_skyModel[0].Init(skyInitData);
 	m_skyModel[1].Init(skyInitData);

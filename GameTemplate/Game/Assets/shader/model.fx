@@ -36,14 +36,12 @@ struct SpotLigData
 	float ligAngle;
 };
 
-cbuffer LigandShadowCb : register(b1)
+cbuffer LightDataCb : register(b1)
 {
 	//各配列数はCLightManager.hのMaxLightNumと同じにすること
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[20];
 	SpotLigData spotLigData[20];
-	float4x4 mLVP;
-	float3 lightCameraPos;
 	float3 eyePos;
 	int directionLigNum;
 	int pointLigNum;

@@ -20,8 +20,8 @@ public:
 	Vector3 m_top_right = { 100,120,0 };//右上
 	Vector3 m_bottom_left = { -100,-130,0 };//左下
 	Vector3 m_bottom_right = { 100,-130,0 };//右下
-	Vector3 m_1p_position;//１Pアイコンの座標
-	Vector3 m_2p_position;//２Pアイコンの座標
+	Vector3 m_1p_position = { -50,60,0 };//１Pアイコンの座標
+	Vector3 m_2p_position = { 50,60,0 };//２Pアイコンの座標
 	Vector2 m_1p_moveSpeed;//１Pアイコンのスピード
 	Vector2 m_2p_moveSpeed;//２Pアイコンのスピード
 	float m_gain = 10.0f;//スティックを倒した量にかかる倍率

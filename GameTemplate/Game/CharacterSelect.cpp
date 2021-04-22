@@ -27,10 +27,10 @@ bool CharacterSelect::Start() {
 	m_knight_spriteRender->Init("Assets/Image/Knight.dds", 256, 256);
 	m_tank_spriteRender = NewGO<prefab::CSpriteRender>(0, "m_tank_spriteRender");
 	m_tank_spriteRender->SetPosition({ m_bottom_left });
-	m_tank_spriteRender->Init("Assets/Image/Tank.dds", 256, 256);
+	m_tank_spriteRender->Init("Assets/Image/TankX.dds", 256, 256);
 	m_ninja_spriteRender = NewGO<prefab::CSpriteRender>(0, "m_ninja_spriteRender");
 	m_ninja_spriteRender->SetPosition({ m_bottom_right });
-	m_ninja_spriteRender->Init("Assets/Image/Ninja.dds", 256, 256);
+	m_ninja_spriteRender->Init("Assets/Image/NinjaX.dds", 256, 256);
 	//アイコンの画像を配置
 	m_1p_spriteRender = NewGO<prefab::CSpriteRender>(1, "m_1p_spriteRender");
 	m_1p_spriteRender->SetPosition({ m_top_right });
@@ -101,6 +101,11 @@ void CharacterSelect::Update() {
 	if (m_1p_position.x < -screen_half_height + icon_half) { m_1p_position.x = -screen_half_height + icon_half; }
 	if (m_1p_position.y > screen_half_width - icon_half) { m_1p_position.y = screen_half_width - icon_half; }
 	if (m_1p_position.y < -screen_half_width + icon_half) { m_1p_position.y = -screen_half_width+ icon_half; }
+
+	if (m_2p_position.x > screen_half_height - icon_half) { m_2p_position.x = screen_half_height - icon_half; }
+	if (m_2p_position.x < -screen_half_height + icon_half) { m_2p_position.x = -screen_half_height + icon_half; }
+	if (m_2p_position.y > screen_half_width - icon_half) { m_2p_position.y = screen_half_width - icon_half; }
+	if (m_2p_position.y < -screen_half_width + icon_half) { m_2p_position.y = -screen_half_width + icon_half; }
 	
 	if (m_1p_decision == true && m_2p_decision == true) {//両プレイヤーがキャラ選択しているとき
 		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {//どちらかがAを押すと

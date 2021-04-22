@@ -36,18 +36,23 @@ struct SpotLigData
 	float ligAngle;
 };
 
-cbuffer LigandShadowCb : register(b1)
+cbuffer LightDataCb : register(b1)
 {
 	//各配列数はCLightManager.hのMaxLightNumと同じにすること
 	DirectionLigData directionLigData[5];
 	PointLigData pointLigData[20];
 	SpotLigData spotLigData[20];
-	float4x4 mLVP;
 	float3 eyePos;
 	int directionLigNum;
-	//float3 lightCameraPos;
 	int pointLigNum;
 	int spotLigNum;
+};
+
+cbuffer LightCameraCb : register(b2)
+{
+	float4x4 mLVP;
+	float3 lightCameraPos;
+	float3 lightCameraDir;
 };
 
 ////////////////////////////////////////////////
@@ -139,11 +144,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
 	//ここから平行光源の深度チェックのテスト用。
 
-	//定数バッファを増やして後からきちんと持ってきます。
-	float3 lightCameraPos = {-1000.0f,1000.0f,0.0f};
-
-	//ライトの向きを取得。とりあえず0番目で。
-	float3 cameraDir = directionLigData[0].ligDir;
+	//ライトの向きを取得。
+	float3 cameraDir = lightCameraDir;
 	//正規化されてるはずだけど、念の為。
 	cameraDir = normalize(cameraDir);
 
