@@ -326,6 +326,7 @@
     <ClCompile Include="PopRandItem.cpp" />
     <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="Psychokinesis.cpp" />
+    <ClCompile Include="Repulsion.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
@@ -345,8 +346,8 @@
     <ClCompile Include="tklFile.cpp" />
     <ClCompile Include="ResourceBankManager.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
-    <ClCompile Include="UsedItem_base.cpp" />
-    <ClCompile Include="WaveFile.cpp" />
+    <ClCompile Include="Turret.cpp" />
+    <ClCompile Include="UsedItem_base.cpp" />    <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -446,6 +447,7 @@
     <ClInclude Include="PopRandItem.h" />
     <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="Psychokinesis.h" />
+    <ClInclude Include="Repulsion.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="SkyBoard.h" />
@@ -460,6 +462,7 @@
     <ClInclude Include="ResourceBankManager.h" />
     <ClInclude Include="TResourceBank.h" />
     <ClInclude Include="TriangleCollider.h" />
+    <ClInclude Include="Turret.h" />
     <ClInclude Include="UsedItem_base.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />

@@ -42,6 +42,8 @@ public:
 	//移動アクション状態に切り替えできたら切り替える。
 	void TryChangeStatusMove();
 
+	//落下状態に切り替える
+	void TryChangeStatusFall();
 	
 	prefab::CSoundSource* m_swordSound=nullptr;
 	prefab::CSoundSource* m_chargeSound = nullptr;
@@ -57,6 +59,5 @@ public:
 	bool m_move_attack = true;
 	void HaveMachinegun();
 	//引力弾
-	void HaveGravityGrenade();
-};
+	void HaveGravityGrenade();};
 

@@ -4,7 +4,8 @@
 #include "ChargeShot.h"
 #include "DamageDisplay.h"
 #include <string>
-
+#include "Repulsion.h"
+#include "Turret.h"
 //Character_base::~Character_base()
 //{
 //	DeleteGO(m_skinModelRender);
@@ -15,6 +16,37 @@
 
 void Character_base::Collision()
 {
+	//三角形の当たり判定×2で四角形の当たり判定をつくる
+	//敵への向きとY軸の外積で、敵から見た横側を取得。
+	Vector3 diff = m_enemy->m_position - m_position;
+	diff.Normalize();
+	Vector3 side = Cross(diff,Vector3::AxisY);
+
+	//四角形の左上
+	Vector3 squarePos1 = m_position;
+	squarePos1.y += 250.0f;
+	squarePos1 += side * 250.0f;
+
+	//四角形の左下
+	Vector3 squarePos2 = m_position;
+	squarePos2.y -= 250.0f;
+	squarePos2 += side * 250.0f;
+
+	//四角形の右上
+	Vector3 squarePos3 = m_position;
+	squarePos3.y += 250.0f;
+	squarePos3 -= side * 250.0f;
+
+	//四角形の右下
+	Vector3 squarePos4 = m_position;
+	squarePos4.y -= 250.0f;
+	squarePos4 -= side * 250.0f;
+
+	//1つ目の三角形の頂点は左上、左下、右上。
+	m_triCollider[0].SetVertex(squarePos1, squarePos2, squarePos3);
+	//2つ目の三角形の頂点は右下、右上、左下。
+	m_triCollider[1].SetVertex(squarePos4, squarePos3, squarePos2);
+
 	//カプセルの当たり判定をつくる。
 	Vector3 legPos = m_position;
 	Vector3 headPos = m_position;
@@ -308,6 +340,7 @@ void Character_base::Lose()
 void Character_base::PlayerMagneticMove()
 {
 	m_position_with_enemy = m_position - m_enemy->m_position;//自分から敵までの距離ベクトル
+	m_position_with_enemy.y = 0;
 	if (m_position_with_enemy.Length() < 500&& m_position_with_enemy.Length() >= 50) {//距離が近ければ
 		m_magStatediff = m_magPower + m_enemy->m_magPower;//自分と敵の磁力状態の差
 		if (m_magStatediff >= 1)//互いに斥力の状態
@@ -340,4 +373,14 @@ void Character_base::PlayerMagneticMove()
 			}
 		}
 	}	
+}
+//タレットを操縦
+void Character_base::ControlTurret()
+{
+	QueryGOs<Turret>("Player", [this](Turret* turret)->bool
+		{
+			turret->diff = m_position - turret->m_position;
+			return true;
+		}
+	);
 }

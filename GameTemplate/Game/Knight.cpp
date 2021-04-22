@@ -27,7 +27,9 @@ bool Knight::Start()
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Move].Load("Assets/animData/Mage_Attack.tka");
 	animationClips[enAnimationClip_Move].SetLoopFlag(false);	//ループモーションにする。
-	
+	animationClips[enAnimationClip_Fall].Load("Assets/animData/Knight_Fall.tka");
+	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
+
 //マシンガン用
 	animationClips[enAnimationClip_Gun_Idle].Load("Assets/animData/Gun_Idle.tka");
 	animationClips[enAnimationClip_Gun_Idle].SetLoopFlag(true);	//ループモーションにする。
@@ -70,11 +72,7 @@ bool Knight::Start()
 }
 void Knight::Update()
 {
-	//状態更新。
-	UpdateState();
-	//アニメーション選択。
-	AnimationSelect();
-
+	
 	if (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart))
 	{
 		m_isSceneStop = !m_isSceneStop;
@@ -98,7 +96,7 @@ void Knight::Update()
 		DisplayStatus();
 
 		//移動関連
-
+		
 		//カメラの前方向
 		front = m_position - g_camera3D[m_playerNum]->GetPosition();
 		front.y = 0.0f;
@@ -115,8 +113,16 @@ void Knight::Update()
 		rot.SetRotation(Vector3::AxisY, angle);
 		m_skinModelRender->SetRotation(rot);
 
-		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed;
-
+		m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_Speed + right * g_pad[m_playerNum]->GetLStickXF() * m_Speed + m_Yspeed0 + m_Yspeed1;
+		if (m_charaCon.IsOnGround() == false)
+		{
+			m_loop++;
+			m_moveSpeed.y -= 0.005 * (m_loop * m_loop);
+		}
+		else
+		{
+			m_loop = 0;
+		}
 		if (m_moveSpeed.Length() != 0)
 		{
 			m_characterDirection = m_moveSpeed;
@@ -137,10 +143,8 @@ void Knight::Update()
 		//固有攻撃
 		SpecialAttack();
 
-		
 		//移動関連2
-		m_moveSpeed.y = -2.0f;
-
+		
 		m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
 		m_magPosition = m_position;
 		m_magPosition.y += 50.0f;
@@ -189,10 +193,13 @@ void Knight::Update()
 		*/
 		//マシンガンを持ったとき
 		HaveMachinegun();
-		//グラビティを持ったとき
-		HaveGravityGrenade();
-		//ダメージ表示ポジション更新
-		
+//グラビティを持ったとき
+		HaveGravityGrenade();		
+		//状態更新。
+		UpdateState();
+		//アニメーション選択。
+		AnimationSelect();
+
 		//カメラ関連
 		Character_base::Camera();
 	}
@@ -300,13 +307,38 @@ void Knight::NormalAttack()
 		}
 		else
 		{
+			//ロックオンしていないので、発射先を決める必要がある。
+			//カメラの位置から向いている方向に飛ばすレイを作成。
+			//キャラクターの位置からじゃないことに注意。
+			//レイの向き
 			Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+			//レイの始点
 			Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
+			//レイの始点と向きから求めたレイの終点(10000以上の距離狙うことはないと思うので距離は10000に設定)
 			Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
 
+			//交点(キャラクターの位置からこの位置に向かって発射されることになる)
 			Vector3 crossPoint;
 
-			bool hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+			//交差したかフラグ。
+			bool hitFlag = false;
+
+			//まず敵キャラクター付近の板ポリ当たり判定を検索する。
+			for (auto tricollider : m_enemy->m_triCollider)
+			{
+				hitFlag = tricollider.isHit(testRayStart, testRayEnd, crossPoint);
+				if (hitFlag == true)
+				{
+					//1回でもヒットしていたらbreak
+					break;
+				}
+			}
+
+			//敵キャラクター付近にヒットしなかったらステージのモデルを検索する。
+			if (hitFlag == false)
+			{
+				hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+			}
 
 			Bullet* bullet = NewGO<Bullet>(0, "bullet");
 			bullet->m_CharaNum = 0;
@@ -470,7 +502,8 @@ void Knight::TryChangeStatusAttack()
 {	
 	if (g_pad[m_playerNum]->IsPress(enButtonX)) {
 		status = enStatus_Attack;
-	}	
+	}
+	
 }
 void Knight::TryChangeStatusRun()
 {
@@ -496,15 +529,24 @@ void Knight::TryChangeStatusMove()
 		status = enStatus_Move;
 	}
 }
+void Knight::TryChangeStatusFall()
+{
+	if (m_charaCon.IsOnGround() == false)
+	{
+		status = enStatus_Fall;
+	}
+}
 void Knight::UpdateState()
 {
 	switch (status) {
 	case enStatus_Attack:
+		TryChangeStatusFall();
 		TryChangeStatusAttack();
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
 			status = enStatus_Idle;
 		}
+		
 		break;
 	case enStatus_Move:
 		TryChangeStatusMove();
@@ -512,33 +554,45 @@ void Knight::UpdateState()
 		{
 			status = enStatus_Idle;
 		}
+		TryChangeStatusFall();
 		break;
 	case enStatus_Run:
 		TryChangeStatusAttack();	
 		TryChangeStatusMove();
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
+		TryChangeStatusFall();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
 		TryChangeStatusMove();	
 		TryChangeStatusRun();
 		TryChangeStatusIdle();
+		TryChangeStatusFall();
 		break;
 	case enStatus_Idle:
 		TryChangeStatusAttack();
 		TryChangeStatusRun();		
 		TryChangeStatusMove();
 		TryChangeStatusWalk();
-		break;	
+		TryChangeStatusFall();
+		break;
+	case enStatus_Fall:
+		TryChangeStatusAttack();
+		TryChangeStatusRun();
+		TryChangeStatusMove();
+		TryChangeStatusWalk();
+		TryChangeStatusFall();
+		break;
 	}
 }
 void Knight::AnimationSelect()
 {
 	m_skinModelRender->m_animation_speed = 1.0;
+	
 	if (m_MachinegunHave == false) {
 		switch (status) {
-		case enStatus_Attack:
+		case enStatus_Attack:			
 			m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 			break;
 		case enStatus_Run:
@@ -556,6 +610,9 @@ void Knight::AnimationSelect()
 			m_skinModelRender->m_animation_speed = 4.0;
 			m_skinModelRender->PlayAnimation(enAnimationClip_Move);
 
+			break;
+		case enStatus_Fall:
+			m_skinModelRender->PlayAnimation(enAnimationClip_Fall);
 			break;
 		}
 	}

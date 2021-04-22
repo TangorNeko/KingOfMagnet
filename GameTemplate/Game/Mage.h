@@ -34,9 +34,9 @@ public:
 
 	//歩き状態に切り替えできたら切り替える。
 	void TryChangeStatusWalk();
-
-	//遅い歩き状態に切り替えできたら切り替える。
-	void TryChangeStatusWalkSlow();
+	
+	//落下状態に切り替える
+	void TryChangeStatusFall();
 
 	//待機状態に切り替えできたら切り替える。
 	void TryChangeStatusIdle();
@@ -44,15 +44,14 @@ public:
 	prefab::CSoundSource* m_chargeSound = nullptr;
 	float m_chargeSoundVolume = 0.6f;
 	
-	//サイコキネシスつかってるか
-	bool m_Psycho_on = false;
+	
 	Psychokinesis* psychokinesis = nullptr;
 	//状態更新
 	void UpdateState();
 
 	void HaveMachinegun();
 	//引力弾
-	void HaveGravityGrenade();
+	void HaveGravityGrenade();	
 	
 };
 

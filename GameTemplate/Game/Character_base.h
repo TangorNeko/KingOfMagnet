@@ -1,5 +1,6 @@
 #pragma once
 #include "MyCapsuleCollider.h"
+#include "TriangleCollider.h"
 class BackGround;
 class UsedItem_base;
 
@@ -38,6 +39,9 @@ protected:
 	//プレイヤーにかかる磁力の影響
 	void PlayerMagneticMove();
 
+	//タレットを操縦する
+	void ControlTurret();
+
 public:
 	virtual ~Character_base();
 	Quaternion rot;//キャラクターの回転
@@ -45,7 +49,8 @@ public:
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };
-	Vector3 Scale = { 0.3,0.3,0.3 };//キャラクターの拡大率
+	Vector3 Scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率
+	
 	Vector3 front;//カメラの前方向
 	Vector3 right;//カメラの右方向
 	Vector3 cameraPos;//カメラのポジション
@@ -68,9 +73,10 @@ public:
 	prefab::CFontRender* m_fontRender = nullptr;//体力、チャージ、磁力等確認用のフォント(TODO:後からUIスプライトに差し替え予定)
 	prefab::CSpriteRender* m_spriteRender = nullptr;//勝利もしくは敗北時に表示するスプライト
 	prefab::CSpriteRender* m_crosshairRender = nullptr;//照準のスプライト
+	
 	BackGround* m_stageModel;
 	CharacterController m_charaCon;//プレイヤーのキャラコン
-	//TriangleCollider m_collider;//単純な三角形の当たり判定(TODO:もっとしっかりした当たり判定を作りたい)
+	TriangleCollider m_triCollider[2];//単純な三角形の当たり判定(発射先の判定に使う。)
 	MyCapsuleCollider m_collider;
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、なし(0)、引力状態(-1,-2)、斥力状態(1,2)
@@ -83,6 +89,7 @@ public:
 	float m_deg = 0;//キャラの向きの角度
 	bool m_isLock = false;//ロックオンしているか。
 	int m_timer = 0;//磁力変化用のタイマー
+	int m_loop = 0;//落下制御用のループカウント
 	bool m_isMagPowerIncreasing = false;//磁力が増加しているか減少しているか
 	bool m_isSceneStop = false;//動けるか動けないか
 	float m_Speed = 6.0;
@@ -126,10 +133,15 @@ public:
 	//敗北した時
 	void Lose();
 
+	//斥力床が近いとき
+	
+	Vector3 m_Yspeed0 = { 0.0f,0.0f,0.0f };
+	Vector3 m_Yspeed1 = { 0.0f,0.0f,0.0f };
 	//敵のインスタンス
 	Character_base* m_enemy = nullptr;
 
-	
+	//サイコキネシスつかってるか(魔法使いだけ)
+	bool m_Psycho_on = false;
 
 	int m_anim_num = 0;
 
@@ -141,7 +153,8 @@ public:
 		enAnimationClip_Run,
 		enAnimationClip_Idle,
 		enAnimationClip_Walk,
-		enAnimationClip_Move,		
+		enAnimationClip_Move,	
+		enAnimationClip_Fall,
 		enAnimationClip_Gun_Run,
 		enAnimationClip_Gun_Idle,
 		enAnimationClip_Gun_Walk,	
@@ -153,10 +166,11 @@ public:
 		enStatus_Idle,		//待機状態
 		enStatus_Walk,		//歩き状態
 		enStatus_Move,		//移動アクション状態		
+		enStatus_Fall,		//落下状態
 		enStatus_Num,		//状態の数。
 	};
 	AnimationClip animationClips[enAnimationClip_num];
-	EnStatus status = enStatus_Idle;	//ナイトの状態。
+	EnStatus status = enStatus_Idle;	//現在の状態。
 
 	int m_hitcount=0;
 	int m_oldhitcount=0;

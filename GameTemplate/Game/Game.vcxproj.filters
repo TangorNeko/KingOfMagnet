@@ -1,62 +1,105 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="ソース ファイル\system">
-      <UniqueIdentifier>{a9bb9230-eaa9-4c07-a610-f43e5384bb9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\system">
-      <UniqueIdentifier>{dbc0c16e-80e1-4c7c-8b01-c720c0baa9a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine">
-      <UniqueIdentifier>{cc7395d8-c038-48b6-8449-ccd23e842334}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\math">
-      <UniqueIdentifier>{537105af-f4ca-42d1-ab2d-d112e5b73c11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\tkFile">
-      <UniqueIdentifier>{22cebcfb-0109-475e-8c80-6691262acbc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\HID">
-      <UniqueIdentifier>{9f01cb00-6a78-4c93-86b4-c6d2bd22048e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\raytracing">
-      <UniqueIdentifier>{14187c21-3fa7-4895-9517-5392eeebd991}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExEngine">
-      <UniqueIdentifier>{9b6426bf-a42e-442b-9906-7f04fbaa5270}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExEngine\gameObject">
-      <UniqueIdentifier>{103836a8-41fc-4624-a457-cbf2a093308b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\debug">
-      <UniqueIdentifier>{a4afebf9-da6c-48cf-86ed-ad66371d7516}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ExEngine\physics">
-      <UniqueIdentifier>{28d50a61-e332-409d-aaf8-cee4a2b444bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\font">
-      <UniqueIdentifier>{0dd42389-4c3e-4926-8685-6cf90e216ab0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\prefab">
-      <UniqueIdentifier>{82a09072-8ac3-42a3-a971-ed3ffaab5a12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Assets">
-      <UniqueIdentifier>{61c75069-1f86-4049-9924-1d70d8624b63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Assets\modelData">
-      <UniqueIdentifier>{be582d35-47e0-4ddd-840f-cfa8d46913f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniEngine\time">
-      <UniqueIdentifier>{9d735050-840b-4cd6-91d4-94b69ef4dbae}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="..\..\ExEngine\gameObject\Gameobjectmanager.cpp" />
+    <ClCompile Include="..\..\ExEngine\gameObject\IGameObject.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\CapsuleCollider.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\CharacterController.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\MeshCollider.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\Physics.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\PhysicsStaticObject.cpp" />
+    <ClCompile Include="..\..\ExEngine\physics\RigidBody.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Animation.cpp" />
+    <ClCompile Include="..\..\MiniEngine\AnimationClip.cpp" />
+    <ClCompile Include="..\..\MiniEngine\AnimationPlayController.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Camera.cpp" />
+    <ClCompile Include="..\..\MiniEngine\ConstantBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\DescriptorHeap.cpp" />
+    <ClCompile Include="..\..\MiniEngine\font\Font.cpp" />
+    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\GPUBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\GraphicsEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\HID\GamePad.cpp" />
+    <ClCompile Include="..\..\MiniEngine\IndexBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Material.cpp" />
+    <ClCompile Include="..\..\MiniEngine\math\Matrix.cpp" />
+    <ClCompile Include="..\..\MiniEngine\math\Vector.cpp" />
+    <ClCompile Include="..\..\MiniEngine\MeshParts.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Model.cpp" />
+    <ClCompile Include="..\..\MiniEngine\NullTextureMaps.cpp" />
+    <ClCompile Include="..\..\MiniEngine\PipelineState.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\BLASBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingInstance.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingPSO.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingWorld.cpp" />
+    <ClCompile Include="..\..\MiniEngine\raytracing\TLASBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\RenderTarget.cpp" />
+    <ClCompile Include="..\..\MiniEngine\RootSignature.cpp" />
+    <ClCompile Include="..\..\MiniEngine\RWStructuredBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Shader.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Skeleton.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Sprite.cpp" />
+    <ClCompile Include="..\..\MiniEngine\StructuredBuffer.cpp" />
+    <ClCompile Include="..\..\MiniEngine\Texture.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkEngine.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkFile\TkaFile.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkFile\TkmFile.cpp" />
+    <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
+    <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CaslFile.cpp" />
+    <ClCompile Include="CDirectionLight.cpp" />
+    <ClCompile Include="CFontRender.cpp" />
+    <ClCompile Include="CharacterSelect.cpp" />
+    <ClCompile Include="Character_base.cpp" />
+    <ClCompile Include="ChargeShot.cpp" />
+    <ClCompile Include="CLevel.cpp" />
+    <ClCompile Include="CLevelRender2D.cpp" />
+    <ClCompile Include="CMapChipRender.cpp" />
+    <ClCompile Include="CPointLight.cpp" />
+    <ClCompile Include="CSkinModelRender.cpp" />
+    <ClCompile Include="CLightManager.cpp" />
+    <ClCompile Include="CSoundSource.cpp" />
+    <ClCompile Include="CSpotLight.cpp" />
+    <ClCompile Include="CSpriteRender.cpp" />
+    <ClCompile Include="DamageDisplay.cpp" />
+    <ClCompile Include="DropItem_base.cpp" />
+    <ClCompile Include="Flash.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="Grenade_item.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
+    <ClCompile Include="Knight.cpp" />
+    <ClCompile Include="Level2D.cpp" />
+    <ClCompile Include="Machinegun_item.cpp" />
+    <ClCompile Include="MagAcceleration_item.cpp" />
+    <ClCompile Include="Mage.cpp" />
+    <ClCompile Include="MagInversion_item.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapChip2D.cpp" />
+    <ClCompile Include="MyCapsuleCollider.cpp" />
+    <ClCompile Include="Ninja.cpp" />
+    <ClCompile Include="PopRandItem.cpp" />
+    <ClCompile Include="PostEffectManager.cpp" />
+    <ClCompile Include="Psychokinesis.cpp" />
+    <ClCompile Include="Repulsion.cpp" />
+    <ClCompile Include="ShowModel.cpp" />
+    <ClCompile Include="ShowSprite.cpp" />
+    <ClCompile Include="SkyBoard.cpp" />
+    <ClCompile Include="SoundEngine.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Tank.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="tklFile.cpp" />
+    <ClCompile Include="ResourceBankManager.cpp" />
+    <ClCompile Include="TriangleCollider.cpp" />
+    <ClCompile Include="WaveFile.cpp" />
+    <ClCompile Include="WaveFileBank.cpp" />
+    <ClCompile Include="Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -346,8 +389,7 @@
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="FlashGrenade_item.cpp">
+    </ClCompile>    <ClCompile Include="FlashGrenade_item.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="UsedGravityGrenade.cpp">
@@ -361,7 +403,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="system\system.h">
+   <ClInclude Include="system\system.h">
       <Filter>ヘッダー ファイル\system</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -687,8 +729,7 @@
     </ClInclude>
     <ClInclude Include="GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="FlashGrenade_item.h">
+    </ClInclude>    <ClInclude Include="FlashGrenade_item.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="UsedGravityGrenade.h">
@@ -702,11 +743,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\modelData\StageUV.png">
-      <Filter>ソース ファイル\Assets\modelData</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="Assets\modelData\Stage.tkm" />
+    <Image Include="Assets\modelData\StageUV.png" />
   </ItemGroup>
 </Project>

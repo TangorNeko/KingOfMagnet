@@ -256,8 +256,8 @@ const Vector3& CharacterController::Execute( Vector3& moveSpeed, float deltaTime
 			}
 		}
 		else {
-			//地面上にいない場合は1m下を見る。
-			endPos.y -= 100.0f;
+			//地面上にいない場合は0.5m下を見る。
+			endPos.y -= 50.0f;
 		}
 		end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 		SweepResultGround callback;
