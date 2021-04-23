@@ -103,6 +103,8 @@ void PostEffectManager::ShadowRender(RenderContext& rc)
 		rc.ClearDepthStencilView(m_shadowMap.GetDSVCpuDescriptorHandle(), m_shadowMap.GetDSVClearValue());
 
 		D3D12_RECT shadowRect;
+		shadowRect.left = 0;
+		shadowRect.top = 0;
 		shadowRect.right = 4096;
 		shadowRect.bottom = 4096;
 		rc.SetScissorRect(shadowRect);
@@ -118,6 +120,8 @@ void PostEffectManager::EndShadowRender(RenderContext& rc)
 		m_shadowBlur.ExecuteOnGPU(rc, 2.0f);
 
 		D3D12_RECT normalRect;
+		normalRect.left = 0;
+		normalRect.top = 0;
 		normalRect.right = 1280;
 		normalRect.bottom = 720;
 		rc.SetScissorRect(normalRect);
