@@ -347,7 +347,8 @@
     <ClCompile Include="ResourceBankManager.cpp" />
     <ClCompile Include="TriangleCollider.cpp" />
     <ClCompile Include="Turret.cpp" />
-    <ClCompile Include="UsedItem_base.cpp" />    <ClCompile Include="WaveFile.cpp" />
+    <ClCompile Include="UsedItem_base.cpp" />
+    <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -466,14 +467,6 @@
     <ClInclude Include="UsedItem_base.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\modelData\StageUV.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="Assets\modelData\Stage.tkm">
-      <FileType>Document</FileType>
-    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
