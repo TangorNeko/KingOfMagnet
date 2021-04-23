@@ -38,6 +38,7 @@ void PostEffectManager::Init(bool bloomMode,bool shadowMode)
 		luminanceSpriteInitData.m_width = 1280;
 		luminanceSpriteInitData.m_height = 720;
 		luminanceSpriteInitData.m_textures[0] =	&m_mainRenderTarget.GetRenderTargetTexture();
+		luminanceSpriteInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		m_luminanceSprite.Init(luminanceSpriteInitData);
 		

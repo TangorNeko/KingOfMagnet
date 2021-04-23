@@ -12,7 +12,7 @@ bool SkyBoard::Start()
 	skyInitData.m_fxFilePath = "Assets/shader/SkyBoard.fx";
 	skyInitData.m_vsEntryPointFunc = "VSMain";
 	skyInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
-	skyInitData.m_colorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	skyInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	skyInitData.m_modelUpAxis = enModelUpAxisZ;
 	skyInitData.m_expandConstantBuffer[0] = &m_skyData;
 	skyInitData.m_expandConstantBufferSize[0] = sizeof(m_skyData);
