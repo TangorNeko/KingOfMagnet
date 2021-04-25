@@ -24,10 +24,12 @@ bool FlashGrenade_item::Start()
 }
 void FlashGrenade_item::Update()
 {
+	/*
 	if (m_gameScene->GetGameEndFlag() == true)
 	{
 		DeleteGO(this);
 	}
+	*/
 
 	//各プレイヤーを検索
 	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool

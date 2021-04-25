@@ -20,10 +20,12 @@ bool Repulsion::Start()
 }
 void Repulsion::Update()
 {
+	/*
 	if (m_gameScene->GetGameEndFlag() == true)
 	{
 		DeleteGO(this);
 	}
+	*/
 	
 	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
 		{

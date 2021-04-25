@@ -6,14 +6,14 @@
 BackGround::~BackGround()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(popranditem);
+	//DeleteGO(popranditem);
 }
 
 bool BackGround::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	//アイテムをランダムに出現させる
-	popranditem = NewGO<PopRandItem>(0, "popranditem");
+	//popranditem = NewGO<PopRandItem>(0, "popranditem");
 
 	/*
 	m_pLig = NewGO<prefab::CPointLight>(0);
@@ -25,6 +25,7 @@ bool BackGround::Start()
 
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 
+	/*-
 	m_level.Init("Assets/modelData/level_00.tkl", [&](prefab::LevelObjectData& objData) {
 		if (strcmp(objData.name,"repulsion0") == 0) {//斥力床
 			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
@@ -56,6 +57,7 @@ bool BackGround::Start()
 		}
 		return false;
 	});
+	*/
 	return true;
 }
 void BackGround::Update()

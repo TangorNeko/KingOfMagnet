@@ -1,0 +1,189 @@
+#include "stdafx.h"
+#include "Debris.h"
+
+#include "Player.h"
+#include "BackGround.h"
+
+Debris::~Debris()
+{
+	DeleteGO(m_skinModelRender);
+}
+
+bool Debris::Start()
+{
+	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+
+	//ガレキの形状で読み込むモデルを分岐
+	switch (m_debrisShape)
+	{
+	case enStone:
+		//石のモデル
+		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
+		m_skinModelRender->SetScale({ 0.5f,0.5f,0.5f });
+		break;
+	case enSword:
+		//剣のモデル
+		m_skinModelRender->Init("Assets/modelData/KnightBullet.tkm");
+		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
+		break;
+	default:
+		MessageBoxA(nullptr, "存在しないガレキの形状です。\n", "エラー", MB_OK);
+		break;
+	}
+
+	//ステージとの当たり判定用
+	m_stageModel = FindGO<BackGround>("background");
+
+	return true;
+}
+
+void Debris::Update()
+{
+	//前フレームの座標を記録
+	m_oldPosition = m_position;
+
+	//ガレキの状態で分岐
+	switch (m_debrisState)
+	{
+	case enDrop:
+		//地面に落ちている時の挙動
+		AsDropBehave();
+		break;
+	case enBullet:
+		//弾として発射されている時の挙動
+		AsBulletBehave();
+		break;
+	case enHold:
+		//プレイヤーに保持されている時の挙動
+		AsHoldBehave();
+		break;
+	default:
+		MessageBoxA(nullptr, "存在しないガレキの状態です。", "エラー", MB_OK);
+		break;
+	}
+
+	m_skinModelRender->SetPosition(m_position);
+}
+
+
+//地面に落ちている時の挙動
+void Debris::AsDropBehave()
+{
+	QueryGOs<Player>("Player", [this](Player* player)->bool {
+
+		Vector3 toPlayer = player->m_position - m_position;
+
+		//引力の時のみ
+		if (player->m_magPower == -1)
+		{
+			//バーストしてたら引っ張ってくる
+			if (toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			{
+				m_position.y += 15.0f;
+
+				Vector3 moveDir = toPlayer;
+				moveDir.Normalize();
+
+				m_position += moveDir *= 30.0f;
+			}
+
+			//バーストしてなかったら近づくと拾える
+			if (toPlayer.Length() < 100.0f)
+			{
+				m_parent = player;
+				m_debrisState = enHold;
+
+				//プレイヤーの保持するガレキコンテナに格納
+				player->m_holdDebrisVector.push_back(this);
+			}
+		}
+		return true;
+		});
+}
+
+//弾として発射されている時の挙動
+void Debris::AsBulletBehave()
+{
+	//プレイヤーとの当たり判定用
+	m_bulletCollider.SetStartPoint(m_oldPosition);
+	m_bulletCollider.SetRadius(30.0f);
+
+	QueryGOs<Player>("Player", [this](Player* player)->bool
+		{
+			//発射したプレイヤーと違う時
+			if (player->m_playerNum != m_parent->m_playerNum)
+			{
+				//敵プレイヤーが磁力バーストしている時
+				if (player->m_isBurst == true)
+				{
+					Vector3 toPlayer = player->m_magPosition - m_position;
+
+					//敵との距離が500未満なら
+					if (toPlayer.Length() < 500.0f)
+					{
+						//引力なら
+						if (player->m_magPower == -1)
+						{
+							toPlayer.Normalize();
+							Vector3 newDirection = m_moveDirection + toPlayer;
+							newDirection /= 2;
+							newDirection.Normalize();
+							m_moveDirection = newDirection;
+						}
+						else //斥力なら
+						{
+							toPlayer.Normalize();
+							Vector3 newDirection = m_moveDirection - toPlayer;
+							newDirection /= 2;
+							newDirection.Normalize();
+							m_moveDirection = newDirection;
+						}
+					}
+				}
+
+				//移動処理(TODO:撃った弾と違うプレイヤーは1人しかいないので1回しか呼ばれないので大丈夫だが、場所の移動は検討する、
+				//その場合、QueryGOsを移動処理と当たり判定処理の2回に分けてすることになるかも)
+				m_position += m_moveDirection * m_velocity;
+
+				//移動先の当たり判定を更新
+				m_bulletCollider.SetEndPoint(m_position);
+
+				//当たり判定にヒットしているならダメージ。
+				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				{
+					//ガレキの形状でダメージが分岐
+					switch (m_debrisShape)
+					{
+					case enStone:
+						player->Damage(50.0f);
+						break;
+					case enSword:
+						player->Damage(100.0f);
+						break;
+					}
+					//当たった所にドロップさせる(TODO:空中に残るのではなく地面に落としたい)
+					m_debrisState = enDrop;
+				}
+			}
+			return true;
+		});
+
+
+	//ステージとの当たり判定
+	Vector3 crossPoint;
+	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+	if (isHit == true)
+	{
+		//当たった所にドロップさせる(TODO:空中に残るのではなく地面に落としたい)
+		m_position = crossPoint;
+		m_position.y += 10.0f;
+		m_debrisState = enDrop;
+	}
+}
+
+
+//プレイヤーに保持されている時の挙動
+void Debris::AsHoldBehave()
+{
+	
+}

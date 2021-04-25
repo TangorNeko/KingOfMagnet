@@ -2,6 +2,7 @@
 #include "system/system.h"
 
 #include "TitleScene.h"
+#include "SampleScene.h"
 
 #include "GameScene.h"
 ///////////////////////////////////////////////////////////////////
@@ -44,8 +45,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////////////////
 
 //タイトルシーンを作成。
-	TitleScene* title = NewGO<TitleScene>(0, "titlescene");
+	//TitleScene* title = NewGO<TitleScene>(0, "titlescene");
 
+	SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 	
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

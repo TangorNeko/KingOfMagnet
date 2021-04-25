@@ -12,7 +12,7 @@ class BackGround : public IGameObject
 	prefab::CLevel m_level;
 	std::vector<Repulsion*> m_repulsion;
 
-	PopRandItem* popranditem = nullptr;
+	//PopRandItem* popranditem = nullptr;
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pLig = nullptr;

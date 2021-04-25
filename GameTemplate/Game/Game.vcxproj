@@ -307,6 +307,8 @@
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSpriteRender.cpp" />
     <ClCompile Include="DamageDisplay.cpp" />
+    <ClCompile Include="Debris.cpp" />
+    <ClCompile Include="DebrisBlock.cpp" />
     <ClCompile Include="DropItem_base.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -323,10 +325,12 @@
     <ClCompile Include="MapChip2D.cpp" />
     <ClCompile Include="MyCapsuleCollider.cpp" />
     <ClCompile Include="Ninja.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PopRandItem.cpp" />
     <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="Psychokinesis.cpp" />
     <ClCompile Include="Repulsion.cpp" />
+    <ClCompile Include="SampleScene.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
@@ -429,6 +433,8 @@
     <ClInclude Include="CSpriteRender.h" />
     <ClInclude Include="CUtil.h" />
     <ClInclude Include="DamageDisplay.h" />
+    <ClInclude Include="Debris.h" />
+    <ClInclude Include="DebrisBlock.h" />
     <ClInclude Include="DropItem_base.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="GameScene.h" />
@@ -445,10 +451,12 @@
     <ClInclude Include="MyCapsuleCollider.h" />
     <ClInclude Include="NameKey.h" />
     <ClInclude Include="Ninja.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PopRandItem.h" />
     <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="Psychokinesis.h" />
     <ClInclude Include="Repulsion.h" />
+    <ClInclude Include="SampleScene.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="SkyBoard.h" />

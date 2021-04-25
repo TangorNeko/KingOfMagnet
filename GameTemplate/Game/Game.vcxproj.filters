@@ -178,12 +178,6 @@
     <ClCompile Include="FlashGrenade_item.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -306,6 +300,16 @@
     </ClCompile>
     <ClCompile Include="CSpriteRender.cpp">
       <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SampleScene.cpp" />
+    <ClCompile Include="Debris.cpp" />
+    <ClCompile Include="DebrisBlock.cpp" />
+    <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -944,6 +948,10 @@
     <ClInclude Include="prefab.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="SampleScene.h" />
+    <ClInclude Include="Debris.h" />
+    <ClInclude Include="DebrisBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">

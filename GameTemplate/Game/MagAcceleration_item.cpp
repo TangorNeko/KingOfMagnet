@@ -24,10 +24,12 @@ bool MagAcceleration_item::Start()
 }
 void MagAcceleration_item::Update()
 {
+	/*
 	if (m_gameScene->GetGameEndFlag() == true)
 	{
 		DeleteGO(this);
 	}
+	*/
 
 	//各プレイヤーを検索
 	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool

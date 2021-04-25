@@ -22,10 +22,12 @@ bool PopRandItem::Start()
 void PopRandItem::Update()
 {
 	ItemSelect();
+	/*
 	if (m_gameScene->GetGameEndFlag() == false)
 	{
 		ItemPop();
 	}
+	*/
 }
 void PopRandItem::ItemSelect()
 {
