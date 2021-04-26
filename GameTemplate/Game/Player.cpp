@@ -66,6 +66,19 @@ void Player::Update()
 	//体力等ステータスのテキストを表示(後に画像にする。)
 	DisplayStatus();
 
+
+	//グレネード用。仮です。
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		Debris* debris = NewGO<Debris>(0, "debris");
+		debris->m_debrisShape = Debris::enGrenade;
+		debris->m_debrisState = Debris::enBullet;
+		debris->m_parent = this;
+		debris->m_position = m_magPosition;
+
+		debris->m_moveDirection = m_characterDirection;
+	}
+
 	//座標に応じて三角形の当たり判定の場所をセット。
 	Collision();
 
@@ -171,7 +184,18 @@ void Player::Move()
 //攻撃
 void Player::Attack()
 {
-	if (g_pad[m_playerNum]->IsTrigger(enButtonRB1))
+	m_attackCount--;
+	//攻撃のクールタイムが終わると移動速度を戻す
+	if (m_attackCount <= 0)
+	{
+		m_attackCount = 0;
+
+		m_isAttacking = false;
+
+		m_characterSpeed = 6.0f;
+	}
+
+	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_attackCount == 0)
 	{
 		//ガレキを一つでも持っているなら
 		if (m_holdDebrisVector.empty() == false)
@@ -180,6 +204,15 @@ void Player::Attack()
 			auto debris = m_holdDebrisVector.front();
 			//保持したガレキを発射モードにする
 			debris->m_debrisState = Debris::enBullet;
+
+			//キャラクターのスピードを遅くする。
+			m_characterSpeed = 0.5f;
+
+			//攻撃中のフラグをオン
+			m_isAttacking = true;
+
+			//攻撃の隙の持続時間
+			m_attackCount = 10;
 			
 			//発射先の決定
 			if (m_isLock)
@@ -325,8 +358,8 @@ void Player::MagneticBehavior()
 		break;
 	}
 
-	//LB1を押すとバースト状態に移行
-	if (g_pad[m_playerNum]->IsTrigger(enButtonLB1))
+	//LB1を押して攻撃中でなかった場合バースト状態に移行
+	if (g_pad[m_playerNum]->IsTrigger(enButtonLB1) && m_isAttacking == false)
 	{
 		//磁力ゲージを300消費。
 		m_charge -= 300.0f;
@@ -361,26 +394,56 @@ void Player::MagneticBurst()
 	case -1://引力
 
 		//引っ張るのでマイナスに
-		force *= -20.0f;
+		force *= -10.0f;
 		//近すぎる時は引っ張らない
-		if (toEnemy.Length() > 100.0f && toEnemy.Length() < 1000.0f)
+		if (toEnemy.Length() > 100.0f && toEnemy.Length() < 750.0f)
 		{
 			m_enemy->m_charaCon.Execute(force, 1.0f);
 
-			//持ってるガレキをドロップさせる
-			for (auto debris : m_enemy->m_holdDebrisVector)
+			//敵の弾をまだ奪っていないかつ、敵の保持する弾が1発以上ある時
+			if (m_isSteal == false && m_enemy->m_holdDebrisVector.size() != 0)
 			{
-				debris->m_debrisState = Debris::enDrop;
+				int i = 0;
+				//持ってるガレキをドロップさせる
+				//全部ではなく3つまでにしてみる。
+
+				//敵の持っているガレキのリストを走査
+				for (auto iterator = m_enemy->m_holdDebrisVector.begin();iterator != m_enemy->m_holdDebrisVector.end();iterator++)
+				{
+					//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
+					(*iterator)->m_debrisState = Debris::enDrop;
+
+					//カウントをすすめる
+					i++;
+
+					//3になったら3つ吸ったのでブレイク。
+					if (i == 3)
+					{
+						break;
+					}
+				}
+
+				//コンテナのサイズが3以下なら削除
+				if (m_enemy->m_holdDebrisVector.size() < 3)
+				{
+					m_enemy->m_holdDebrisVector.clear();
+				}
+				else//3以上なら3個分削除
+				{
+					m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
+				}
+
+				//もう敵の弾を奪ったのでフラグ変更
+				m_isSteal = true;
 			}
-			m_enemy->m_holdDebrisVector.clear();
 		}
 
 
 		break;
 	case 1: //斥力
 
-		force *= 20.0f;
-		if (toEnemy.Length() < 1000.0f)
+		force *= 10.0f;
+		if (toEnemy.Length() < 750.0f)
 		{
 			m_enemy->m_charaCon.Execute(force, 1.0f);
 		}
@@ -396,6 +459,9 @@ void Player::MagneticBurst()
 	if (m_burstCount <= 0)
 	{
 		m_isBurst = false;
+
+		//敵の弾を奪ったフラグをリセット。
+		m_isSteal = false;
 
 		//スピードも戻す
 		m_characterSpeed = 6.0f;
@@ -417,6 +483,12 @@ void Player::ChangeMagnetPower()
 		//磁力の状態が-1か1なので、-1を掛ければ反転する。
 		//普通にswitchしてもいいかも。
 		m_magPower *= -1;
+
+		if (m_isAttacking == true)
+		{
+			m_isAttacking = false;
+			m_characterSpeed = 6.0f;
+		}
 
 		//チャージを回復。
 		m_charge = 1000;
@@ -526,6 +598,13 @@ void Player::Damage(int damage)
 	if (m_hp <= 0)
 	{
 		m_hp = 0;
+
+		//体力の更新。
+		DisplayStatus();
+
+		Lose();
+
+		m_enemy->Win();
 	}
 
 
@@ -539,13 +618,17 @@ void Player::Damage(int damage)
 //勝利した時
 void Player::Win()
 {
-
+	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
+	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);
 }
 
 //敗北した時
 void Player::Lose()
 {
-
+	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
+	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
 }
 
 //攻撃状態に切り替えできたら切り替える。
