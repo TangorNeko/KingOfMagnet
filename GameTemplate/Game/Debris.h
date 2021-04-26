@@ -19,6 +19,9 @@ class Debris : public IGameObject
 	//プレイヤーに保持されている時の挙動
 	void AsHoldBehave();
 
+	//
+	void AsPopBehave();
+
 public:
 	//ガレキの状態
 	enum enDebrisState
@@ -26,6 +29,7 @@ public:
 		enDrop,//落ちている。
 		enBullet,//弾として発射されている
 		enHold,//プレイヤーが保持している
+		enPop,//はねている。
 	};
 
 	enDebrisState m_debrisState = enDrop;

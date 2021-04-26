@@ -19,7 +19,7 @@ bool Debris::Start()
 	case enStone:
 		//石のモデル
 		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
-		m_skinModelRender->SetScale({ 0.5f,0.5f,0.5f });
+		m_skinModelRender->SetScale({ 1.0f,1.0f,1.0f });
 		break;
 	case enSword:
 		//剣のモデル
@@ -56,6 +56,10 @@ void Debris::Update()
 	case enHold:
 		//プレイヤーに保持されている時の挙動
 		AsHoldBehave();
+		break;
+	case enPop:
+		//何かに当たった直後の挙動
+		AsPopBehave();
 		break;
 	default:
 		MessageBoxA(nullptr, "存在しないガレキの状態です。", "エラー", MB_OK);
@@ -106,7 +110,7 @@ void Debris::AsBulletBehave()
 {
 	//プレイヤーとの当たり判定用
 	m_bulletCollider.SetStartPoint(m_oldPosition);
-	m_bulletCollider.SetRadius(30.0f);
+	m_bulletCollider.SetRadius(60.0f);
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
@@ -161,8 +165,8 @@ void Debris::AsBulletBehave()
 						player->Damage(100.0f);
 						break;
 					}
-					//当たった所にドロップさせる(TODO:空中に残るのではなく地面に落としたい)
-					m_debrisState = enDrop;
+					//当たった所からポップさせる
+					m_debrisState = enPop;
 				}
 			}
 			return true;
@@ -174,10 +178,15 @@ void Debris::AsBulletBehave()
 	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 	if (isHit == true)
 	{
-		//当たった所にドロップさせる(TODO:空中に残るのではなく地面に落としたい)
 		m_position = crossPoint;
-		m_position.y += 10.0f;
-		m_debrisState = enDrop;
+		
+		Vector3 moveDir = m_position - m_oldPosition;
+		moveDir.Normalize();
+
+		//当たった所より少し手前からポップさせる
+		m_position -= moveDir * 30.0f;
+		
+		m_debrisState = enPop;
 	}
 }
 
@@ -186,4 +195,21 @@ void Debris::AsBulletBehave()
 void Debris::AsHoldBehave()
 {
 	
+}
+
+//何かに当たった直後の挙動
+void Debris::AsPopBehave()
+{
+	m_position.y -= 10.0f;
+
+	//ステージとの当たり判定
+	Vector3 crossPoint;
+	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+	if (isHit == true)
+	{
+		//当たった所にドロップさせる(TODO:空中に残るのではなく地面に落としたい)
+		m_position = crossPoint;
+		m_position.y += 10.0f;
+		m_debrisState = enDrop;
+	}
 }

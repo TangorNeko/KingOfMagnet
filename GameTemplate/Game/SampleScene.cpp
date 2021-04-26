@@ -42,13 +42,29 @@ bool SampleScene::Start()
 
 	//ガレキブロック。
 	DebrisBlock* debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 100.0f,0.0f,300.0f };
+	debrisblock->m_position = { -870.0f,160.0f,535.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 100.0f,0.0f,500.0f };
+	debrisblock->m_position = { -820.0f,160.0f,535.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 200.0f,0.0f,500.0f };
+	debrisblock->m_position = { -870.0f,160.0f,485.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -820.0f,160.0f,485.0f };
+
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -870.0f,160.0f,-535.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -820.0f,160.0f,-535.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -870.0f,160.0f,-485.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -820.0f,160.0f,-485.0f };
 
 	//ガレキ。
 	Debris* debris = NewGO<Debris>(0, "debris");

@@ -104,10 +104,12 @@ public:
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、引力状態(-1)、斥力(1)
 	float m_charge = 1000;//磁力ゲージの現在の量
-	int m_attackCount = 0;//攻撃のタイマー
 	int m_hp = 1000;//体力
 	bool m_isBurst = false;//バーストしているか。
 	int m_burstCount = 0;//バーストの持続時間
+	bool m_isAttacking = false; //攻撃を発射しているか。
+	int m_attackCount = 0;//攻撃の隙で移動速度が落ちている時間。
+	bool m_isSteal = false;//一回の引力バースト中にすでに敵の弾を奪ったか
 
 	Vector3 m_magPosition = { 0.0f,0.0f,0.0f };//磁力が出ている原点
 
