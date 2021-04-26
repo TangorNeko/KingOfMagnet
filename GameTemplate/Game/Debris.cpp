@@ -26,6 +26,10 @@ bool Debris::Start()
 		m_skinModelRender->Init("Assets/modelData/KnightBullet.tkm");
 		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
 		break;
+	case enGrenade:
+		m_skinModelRender->Init("Assets/modelData/FlashGrenade.tkm");
+		m_skinModelRender->SetScale({ 1.0f, 1.0f, 1.0f });
+		break;
 	default:
 		MessageBoxA(nullptr, "存在しないガレキの形状です。\n", "エラー", MB_OK);
 		break;
@@ -108,85 +112,105 @@ void Debris::AsDropBehave()
 //弾として発射されている時の挙動
 void Debris::AsBulletBehave()
 {
-	//プレイヤーとの当たり判定用
-	m_bulletCollider.SetStartPoint(m_oldPosition);
-	m_bulletCollider.SetRadius(60.0f);
-
-	QueryGOs<Player>("Player", [this](Player* player)->bool
-		{
-			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
-			{
-				//敵プレイヤーが磁力バーストしている時
-				if (player->m_isBurst == true)
-				{
-					Vector3 toPlayer = player->m_magPosition - m_position;
-
-					//敵との距離が500未満なら
-					if (toPlayer.Length() < 500.0f)
-					{
-						//引力なら
-						if (player->m_magPower == -1)
-						{
-							toPlayer.Normalize();
-							Vector3 newDirection = m_moveDirection + toPlayer;
-							newDirection /= 2;
-							newDirection.Normalize();
-							m_moveDirection = newDirection;
-						}
-						else //斥力なら
-						{
-							toPlayer.Normalize();
-							Vector3 newDirection = m_moveDirection - toPlayer;
-							newDirection /= 2;
-							newDirection.Normalize();
-							m_moveDirection = newDirection;
-						}
-					}
-				}
-
-				//移動処理(TODO:撃った弾と違うプレイヤーは1人しかいないので1回しか呼ばれないので大丈夫だが、場所の移動は検討する、
-				//その場合、QueryGOsを移動処理と当たり判定処理の2回に分けてすることになるかも)
-				m_position += m_moveDirection * m_velocity;
-
-				//移動先の当たり判定を更新
-				m_bulletCollider.SetEndPoint(m_position);
-
-				//当たり判定にヒットしているならダメージ。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
-				{
-					//ガレキの形状でダメージが分岐
-					switch (m_debrisShape)
-					{
-					case enStone:
-						player->Damage(50.0f);
-						break;
-					case enSword:
-						player->Damage(100.0f);
-						break;
-					}
-					//当たった所からポップさせる
-					m_debrisState = enPop;
-				}
-			}
-			return true;
-		});
-
-
-	//ステージとの当たり判定
-	Vector3 crossPoint;
-	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-	if (isHit == true)
+	if (m_debrisShape == enGrenade)
 	{
-		m_position = crossPoint;
-		
-		Vector3 moveDir = m_position - m_oldPosition;
-		moveDir.Normalize();
+		//久世くん用。ここにグレネードの弾としての挙動を書いてね。
+		//RB2ボタンだとisTriggerがうまく動かなかったのでYボタンで発射するように割り当てています。
 
-		//当たった所より少し手前からポップさせる
-		m_position -= moveDir * 30.0f;
+		//サンプル、プレイヤーが最後に移動した方向に動くようにしている。
+		m_position += m_moveDirection;
 		
-		m_debrisState = enPop;
+		//弾が移動する方向。
+		m_moveDirection;
+
+		//座標 まだ移動処理をしていないのでこれをいじる感じ。
+		m_position;
+
+		//前フレームの座標　いじらない　使用する用。
+		m_oldPosition;
+	}
+	else
+	{
+		//プレイヤーとの当たり判定用
+		m_bulletCollider.SetStartPoint(m_oldPosition);
+		m_bulletCollider.SetRadius(60.0f);
+
+		QueryGOs<Player>("Player", [this](Player* player)->bool
+			{
+				//発射したプレイヤーと違う時
+				if (player->m_playerNum != m_parent->m_playerNum)
+				{
+					//敵プレイヤーが磁力バーストしている時
+					if (player->m_isBurst == true)
+					{
+						Vector3 toPlayer = player->m_magPosition - m_position;
+
+						//敵との距離が500未満なら
+						if (toPlayer.Length() < 500.0f)
+						{
+							//引力なら
+							if (player->m_magPower == -1)
+							{
+								toPlayer.Normalize();
+								Vector3 newDirection = m_moveDirection + toPlayer;
+								newDirection /= 2;
+								newDirection.Normalize();
+								m_moveDirection = newDirection;
+							}
+							else //斥力なら
+							{
+								toPlayer.Normalize();
+								Vector3 newDirection = m_moveDirection - toPlayer;
+								newDirection /= 2;
+								newDirection.Normalize();
+								m_moveDirection = newDirection;
+							}
+						}
+					}
+
+					//移動処理(TODO:撃った弾と違うプレイヤーは1人しかいないので1回しか呼ばれないので大丈夫だが、場所の移動は検討する、
+					//その場合、QueryGOsを移動処理と当たり判定処理の2回に分けてすることになるかも)
+					m_position += m_moveDirection * m_velocity;
+
+					//移動先の当たり判定を更新
+					m_bulletCollider.SetEndPoint(m_position);
+
+					//当たり判定にヒットしているならダメージ。
+					if (player->m_collider.isHitCapsule(m_bulletCollider))
+					{
+						//ガレキの形状でダメージが分岐
+						switch (m_debrisShape)
+						{
+						case enStone:
+							player->Damage(50.0f);
+							break;
+						case enSword:
+							player->Damage(100.0f);
+							break;
+						}
+						//当たった所からポップさせる
+						m_debrisState = enPop;
+					}
+				}
+				return true;
+			});
+
+
+		//ステージとの当たり判定
+		Vector3 crossPoint;
+		bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+		if (isHit == true)
+		{
+			m_position = crossPoint;
+
+			Vector3 moveDir = m_position - m_oldPosition;
+			moveDir.Normalize();
+
+			//当たった所より少し手前からポップさせる
+			m_position -= moveDir * 30.0f;
+
+			m_debrisState = enPop;
+		}
 	}
 }
 

@@ -66,6 +66,19 @@ void Player::Update()
 	//体力等ステータスのテキストを表示(後に画像にする。)
 	DisplayStatus();
 
+
+	//グレネード用。仮です。
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		Debris* debris = NewGO<Debris>(0, "debris");
+		debris->m_debrisShape = Debris::enGrenade;
+		debris->m_debrisState = Debris::enBullet;
+		debris->m_parent = this;
+		debris->m_position = m_magPosition;
+
+		debris->m_moveDirection = m_characterDirection;
+	}
+
 	//座標に応じて三角形の当たり判定の場所をセット。
 	Collision();
 
