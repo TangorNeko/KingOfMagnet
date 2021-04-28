@@ -40,6 +40,7 @@ public:
 		enStone,//Î
 		enSword,//Œ•
 		enGrenade,//”š’e
+		enFlashGrenade,//‘MŒõ’e
 		//‚±‚±‚©‚ç‘¼‚ÌƒAƒCƒeƒ€(–‚–@‚Ìñ)‚È‚Ç’Ç‰Á‚µ‚Ä‚¢‚­?
 	};
 
@@ -58,5 +59,8 @@ public:
 
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//ˆÚ“®‚·‚é•ûŒü
 	const float m_velocity = 50.0f;//’e‘¬
+
+	//”š’e—p
+	int m_explosionCount = 0;
 };
 
