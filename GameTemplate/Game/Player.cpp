@@ -183,6 +183,13 @@ void Player::Move()
 	m_magPosition = m_position;
 	m_magPosition.y += 50.0f;
 	m_skinModelRender->SetPosition(m_position);
+
+	//ŒŠ‚É—‚¿‚½‚Ìˆ—
+	if (m_position.y <= -1000.0f) {
+		m_position.y += 2000.0f;
+		m_charaCon.Init(10.0f, 50.0f, m_position);
+		m_skinModelRender->SetPosition(m_position);
+	}
 }
 
 //UŒ‚
