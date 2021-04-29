@@ -312,6 +312,7 @@
     <ClCompile Include="DropItem_base.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="GravityBullet.cpp" />
     <ClCompile Include="GravityGrenade_item.cpp" />
     <ClCompile Include="FlashGrenade_item.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
@@ -438,6 +439,7 @@
     <ClInclude Include="DropItem_base.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="GravityBullet.h" />
     <ClInclude Include="GravityGrenade_item.h" />
     <ClInclude Include="FlashGrenade_item.h" />
     <ClInclude Include="GaussianBlur.h" />

@@ -20,6 +20,9 @@ class Player : public IGameObject
 	//攻撃
 	void Attack();
 
+	//必殺技
+	void SpecialAttack();
+
 	//保持しているガレキを浮遊させる。
 	void HoldDebris();
 
@@ -142,6 +145,8 @@ public:
 	EnStatus m_animStatus = enStatus_Idle;	//現在の状態。
 
 	Player* m_enemy = nullptr; //敵
+
+	bool m_isGravityBulletAttack = false;//引力の必殺技の攻撃タイミングを指示する用変数。
 
 
 };
