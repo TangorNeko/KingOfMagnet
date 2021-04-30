@@ -95,7 +95,7 @@ void Debris::AsDropBehave()
 		if (player->m_magPower == -1)
 		{
 			//バーストしてたら引っ張ってくる
-			if (toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
 			{
 				m_position.y += 15.0f;
 
@@ -105,8 +105,8 @@ void Debris::AsDropBehave()
 				m_position += moveDir *= 30.0f;
 			}
 
-			//バーストしてなかったら近づくと拾える
-			if (toPlayer.Length() < 100.0f)
+			//近くに弾があれば10発以内なら拾える
+			if (toPlayer.Length() < 100.0f && player->m_holdDebrisVector.size() < 10)
 			{
 				m_parent = player;
 				m_debrisState = enHold;

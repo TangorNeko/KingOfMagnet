@@ -229,33 +229,23 @@ void Player::Attack()
 			//攻撃の隙の持続時間
 			m_attackCount = 10;
 			
-			//発射先の決定
-			if (m_isLock)
-			{
-				Vector3 dir = m_enemy->m_magPosition - debris->m_position;
-				dir.Normalize();
-				debris->m_moveDirection = dir;
-			}
-			else
-			{
-				//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
-				Vector3 crossPoint;
-				//発射先を計算。
-				bool hitFlag = GetShootPoint(crossPoint);
+			//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
+			Vector3 crossPoint;
+			//発射先を計算。
+			bool hitFlag = GetShootPoint(crossPoint);
 
-				//発射先に敵もしくはステージのモデルがある。
-				if (hitFlag)
-				{
-					//照準の指す方向に飛ばす
-					debris->m_moveDirection = crossPoint - debris->m_position;
-					debris->m_moveDirection.Normalize();
-				}
-				else //ない。
-				{
-					debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-					debris->m_moveDirection.y = 0.0f;
-					debris->m_moveDirection.Normalize();
-				}
+			//発射先に敵もしくはステージのモデルがある。
+			if (hitFlag)
+			{
+				//照準の指す方向に飛ばす
+				debris->m_moveDirection = crossPoint - debris->m_position;
+				debris->m_moveDirection.Normalize();
+			}
+			else //ない。
+			{
+				debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				debris->m_moveDirection.y = 0.0f;
+				debris->m_moveDirection.Normalize();
 			}
 
 			//発射したガレキを保持リストから削除
@@ -593,6 +583,16 @@ void Player::Camera()
 		Vector3 toEnemy = m_enemy->m_magPosition - targetPos;
 		toEnemy.Normalize();
 		m_toCameraDir = toEnemy * -1.0f;
+
+		//コントローラーの入力でカメラの向きをちょっとずらせる
+		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 5.0f);
+		qRotY.Apply(m_toCameraDir);
+
+		Quaternion qRotX;
+		Vector3 right = g_camera3D[m_playerNum]->GetRight();
+		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -5.0f);
+
+		qRotX.Apply(m_toCameraDir);
 	}
 	else
 	{
@@ -674,6 +674,10 @@ void Player::Collision()
 void Player::Damage(int damage)
 {
 	m_hp -= damage;
+
+	ChargeSpecialAttackGauge(10);
+	m_enemy->ChargeSpecialAttackGauge(5);
+
 	if (m_hp <= 0)
 	{
 		m_hp = 0;
