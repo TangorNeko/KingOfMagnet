@@ -69,7 +69,7 @@ void Player::Update()
 
 
 	//グレネード用。仮です。
-	if (g_pad[0]->IsTrigger(enButtonY))
+	if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 	{
 		//音
 		prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
@@ -170,7 +170,10 @@ void Player::Move()
 	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + right * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
 	if (m_charaCon.IsOnGround() == false)
 	{
-		m_fallLoop++;
+		if (m_fallLoop < 75)
+		{
+			m_fallLoop++;
+		}
 		if (m_moveSpeed.y > -0.001)
 		{
 			m_moveSpeed.y -= 0.005f * (m_fallLoop * m_fallLoop);
@@ -577,7 +580,7 @@ void Player::MagneticBurst()
 void Player::ChangeMagnetPower()
 {
 	//磁力ゲージの自然減少
-	m_charge -= 1.0f;
+	m_charge -= 2.0f;
 	if (m_charge < 0)
 	{
 		m_charge = 0;
