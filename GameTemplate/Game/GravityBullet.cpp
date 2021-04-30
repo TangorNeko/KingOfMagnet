@@ -1,0 +1,184 @@
+#include "stdafx.h"
+#include "GravityBullet.h"
+
+#include "Player.h"
+#include "BackGround.h"
+#include "Debris.h"
+
+GravityBullet::~GravityBullet()
+{
+	DeleteGO(m_skinModelRender);
+}
+
+bool GravityBullet::Start()
+{
+	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+
+	m_skinModelRender->Init("Assets/modelData/Gravity.tkm");
+	m_skinModelRender->SetScale({ 0.1f,0.1f,0.1f, });
+
+	m_stageModel = FindGO<BackGround>("background");
+
+	return true;
+}
+
+void GravityBullet::Update()
+{
+	//前フレームの座標を記録
+	m_oldPosition = m_position;
+
+	switch (m_gravityBulletState)
+	{
+	case enBullet:
+		//発射されている途中の挙動
+		AsBulletBehave();
+		break;
+	case enExplode:
+		//着弾した瞬間の挙動
+		AsExplodeBehave();
+		break;
+	case enGravity:
+		//着弾した後の挙動
+		AsGravityBehave();
+		break;
+	case enFinish:
+		//フィニッシュ攻撃中の挙動
+		AsFinishBehave();
+		break;
+	}
+
+	m_skinModelRender->SetPosition(m_position);
+}
+
+void GravityBullet::AsBulletBehave()
+{
+	//移動処理。
+	m_position += m_moveDirection * m_velocity;
+
+	//プレイヤーとの当たり判定用
+	m_bulletCollider.SetStartPoint(m_oldPosition);
+	m_bulletCollider.SetEndPoint(m_position);
+	m_bulletCollider.SetRadius(30.0f);
+
+	QueryGOs<Player>("Player", [this](Player* player)->bool
+		{
+			//発射したプレイヤーと違う時
+			if (player->m_playerNum != m_parent->m_playerNum)
+			{
+				//当たり判定にヒットしているなら爆発。
+				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				{
+					m_gravityBulletState = enExplode;
+				}
+			}
+			return true;
+		});
+
+
+	//ステージとの当たり判定
+	Vector3 crossPoint;
+	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+	if (isHit == true)
+	{
+		m_position = crossPoint;
+
+		//ステージのどこかに当たったので爆発。
+		m_gravityBulletState = enExplode;
+	}
+}
+
+void GravityBullet::AsExplodeBehave()
+{
+	//周囲のガレキを浮かせるモードに。
+	QueryGOs<Debris>("debris", [this](Debris* debris)->bool
+		{
+			Vector3 diff = m_position - debris->m_position;
+
+			if (diff.Length() < 400.0f && debris->m_debrisState == Debris::enDrop)
+			{
+				//HACK:浮いてる途中に拾われないかつダメージを直で受けないようにPopにしている。
+				//正直あんまり良いとは思わない DebrisのStateを増やす?
+				debris->m_debrisState = Debris::enPop;
+
+				//浮かせたガレキを後ほど攻撃状態に移行させるためにコンテナに格納。
+				m_controlDebrisVector.push_back(debris);
+			}
+
+			return true;
+		});
+
+	//爆発の瞬間に仮モデルを大きく(TODO:エフェクトにしたいね)
+	m_skinModelRender->SetScale({ 0.25f,0.25f,0.25f });
+
+	//爆発したので引力を発生させる状態へ
+	m_gravityBulletState = enGravity;
+}
+
+void GravityBullet::AsGravityBehave()
+{
+	//HACK:Pop状態では常にm_position.yがマイナス10され続けているので
+	//毎フレーム+11することで1ずつ浮く形になっている。
+	//またenPop状態でm_position.yがマイナス10された時地形に当たっていたら
+	//Drop状態に移行するため毎フレームPopにしている。処理が汚い。
+	//TODO:後から直す。
+	for (auto debris : m_controlDebrisVector)
+	{
+		debris->m_debrisState = Debris::enPop;
+		debris->m_position.y += 11.0f;
+	}
+
+	//引力状態のカウンターを進める
+	m_gravityTimeCount++;
+
+	//カウンターが180以上か、プレイヤーから攻撃指示が出たらフィニッシュ状態へ移行。
+	if (m_gravityTimeCount >= 180 || m_parent->m_isGravityBulletAttack == true)
+	{
+		m_gravityBulletState = enFinish;
+	}
+	//爆発してからプレイヤーを吸い寄せ始めるまでに少しタイムラグを設ける。
+	else if (m_gravityTimeCount >= 30)
+	{
+		QueryGOs<Player>("Player", [this](Player* player)->bool
+			{
+				Vector3 diff = m_position - player->m_position;
+				if (diff.Length() < 400.0f && player != m_parent)
+				{
+					//Y軸も吸い寄せると床抜けすることがあるのでy軸を除く。
+					Vector3 toGravity = diff;
+					toGravity.y = 0.0f;
+					toGravity.Normalize();
+
+					//吸い寄せスピード分乗算
+					toGravity *= m_bacuumSpeed;
+
+					//敵プレイヤーのキャラコンに実行させる
+					//正直このやり方も良いといえるのか分からない。
+					player->m_charaCon.Execute(toGravity, 1.0f);
+				}
+				return true;
+			});
+	}
+}
+
+void GravityBullet::AsFinishBehave()
+{
+	//浮かせたガレキに攻撃を指示。
+	for (auto debris : m_controlDebrisVector)
+	{
+		//ガレキの状態をBulletに
+		debris->m_debrisState = Debris::enBullet;
+
+		//どちらのプレイヤーの攻撃かをガレキに渡す。
+		debris->m_parent = m_parent;
+
+		//攻撃先は引力弾の中心(敵プレイヤーの位置に飛ぶわけではない)
+		Vector3 toGravity = m_position - debris->m_position;
+		toGravity.Normalize();
+
+		//ガレキに移動方向を指定。
+		debris->m_moveDirection = toGravity;
+	}
+
+	//フィニッシュ攻撃を指示したので引力弾としての役目は終わり。
+	DeleteGO(this);
+}

@@ -5,7 +5,7 @@ namespace prefab
 {
 	void CFontRender::PostRender(RenderContext& rc, Camera* camera)
 	{
-		if (m_drawScreen == AllScreen || m_drawScreen == rc.GetRenderStep())
+		if (rc.GetRenderStep() == m_drawScreen)
 		{
 			m_font.Begin(rc);
 			if (m_drawScreen == AllScreen)

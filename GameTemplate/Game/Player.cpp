@@ -4,6 +4,7 @@
 #include "BackGround.h"
 #include "Debris.h"
 #include "DamageDisplay.h"
+#include "GravityBullet.h"
 
 Player::~Player()
 {
@@ -90,6 +91,9 @@ void Player::Update()
 	//移動
 	Move();
 
+	//必殺技
+	SpecialAttack();
+
 	//保持しているガレキの位置を制御する
 	HoldDebris();
 
@@ -135,9 +139,13 @@ void Player::DisplayStatus()
 	wchar_t charge[256];
 	swprintf_s(charge, L"%.1f", m_charge / 10.0f);
 
+	wchar_t special[256];
+	swprintf_s(special, L"%d", m_specialAttackGauge);
+
 	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\nCharge:" + charge
-		+ L"%\n\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"\n磁力ゲージ:" + charge
+		+ L"%\n必殺ゲージ:" + special
+		+ L"\n\n\n\n\n\n\n\n磁力:" + powerText
 	);
 }
 
@@ -240,46 +248,19 @@ void Player::Attack()
 			}
 			else
 			{
-				//ロックオンしていないので、発射先を決める必要がある。
-				//カメラの位置から向いている方向に飛ばすレイを作成。
-				//キャラクターの位置からじゃないことに注意。
-				//レイの向き
-				Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
-				//レイの始点
-				Vector3 testRayStart = g_camera3D[m_playerNum]->GetPosition();
-				//レイの始点と向きから求めたレイの終点(10000以上の距離狙うことはないと思うので距離は10000に設定)
-				Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
-
-				//交点(キャラクターの位置からこの位置に向かって発射されることになる)
+				//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 				Vector3 crossPoint;
+				//発射先を計算。
+				bool hitFlag = GetShootPoint(crossPoint);
 
-				//交差したかフラグ。
-				bool hitFlag = false;
-
-				//まず敵キャラクター付近の板ポリ当たり判定を検索する。
-				for (auto tricollider : m_enemy->m_triCollider)
-				{
-					hitFlag = tricollider.isHit(testRayStart, testRayEnd, crossPoint);
-					if (hitFlag == true)
-					{
-						//1回でもヒットしていたらbreak
-						break;
-					}
-				}
-
-				//敵キャラクター付近にヒットしなかったらステージのモデルを検索する。
-				if (hitFlag == false)
-				{
-					hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
-				}
-
+				//発射先に敵もしくはステージのモデルがある。
 				if (hitFlag)
 				{
 					//照準の指す方向に飛ばす
 					debris->m_moveDirection = crossPoint - debris->m_position;
 					debris->m_moveDirection.Normalize();
 				}
-				else
+				else //ない。
 				{
 					debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
 					debris->m_moveDirection.y = 0.0f;
@@ -291,6 +272,94 @@ void Player::Attack()
 			m_holdDebrisVector.erase(m_holdDebrisVector.begin());
 		}
 
+	}
+}
+
+//必殺技
+void Player::SpecialAttack()
+{
+	//引力モードの必殺技のタイミングを指示できる。
+	if (m_isGravityBulletAttack == true)
+	{
+		m_isGravityBulletAttack = false;
+	}
+	else if (g_pad[m_playerNum]->IsTrigger(enButtonLB3))
+	{
+		m_isGravityBulletAttack = true;
+	}
+
+	//必殺技ポイントが溜まっていて(後から追加)ボタンを押したら
+	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
+	{
+		//引力なら
+		if (m_magPower == -1)
+		{
+			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
+			gravityBullet->m_position = m_magPosition;
+			gravityBullet->m_parent = this;
+
+			//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
+			Vector3 crossPoint;
+			//発射先を計算。
+			bool hitFlag = GetShootPoint(crossPoint);
+
+			if (hitFlag)
+			{
+				//照準の指す方向に飛ばす
+				gravityBullet->m_moveDirection = crossPoint - gravityBullet->m_position;
+				gravityBullet->m_moveDirection.Normalize();
+			}
+			else
+			{
+				gravityBullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				gravityBullet->m_moveDirection.y = 0.0f;
+				gravityBullet->m_moveDirection.Normalize();
+			}
+
+			//撃ったので必殺技ゲージを0に
+			m_specialAttackGauge = 0;
+		}
+		else//斥力なら
+		{
+			//弾を1発でも持ってる?
+			if (m_holdDebrisVector.size() != 0)
+			{
+				//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
+				Vector3 crossPoint;
+				//発射先を計算。
+				bool hitFlag = GetShootPoint(crossPoint);
+
+				if (hitFlag)
+				{
+					//照準の指す方向に飛ばす
+					for (auto debris : m_holdDebrisVector)
+					{
+						debris->m_debrisState = Debris::enBullet;
+						debris->m_moveDirection = crossPoint - debris->m_position;
+						debris->m_moveDirection.Normalize();
+					}
+				}
+				else
+				{
+					for (auto debris : m_holdDebrisVector)
+					{
+						debris->m_debrisState = Debris::enBullet;
+						debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+						debris->m_moveDirection.y = 0.0f;
+						debris->m_moveDirection.Normalize();
+					}
+				}
+
+				m_holdDebrisVector.clear();
+
+				//撃ったので必殺技ゲージを0に
+				m_specialAttackGauge = 0;
+			}
+			else
+			{
+				//1発も弾持ってないから不発にする。エラー音?ゲージも消費しなくていい
+			}
+		}
 	}
 }
 
@@ -459,6 +528,9 @@ void Player::MagneticBurst()
 
 				//もう敵の弾を奪ったのでフラグ変更
 				m_isSteal = true;
+
+				//リスクのある行動を成功させたので必殺技ゲージをプラス。
+				ChargeSpecialAttackGauge(25);
 			}
 		}
 
@@ -643,6 +715,17 @@ void Player::Damage(int damage)
 	damagedisplay->m_damage = damage;
 }
 
+//必殺技ゲージをチャージする。
+void Player::ChargeSpecialAttackGauge(int charge)
+{
+	m_specialAttackGauge += charge;
+
+	if (m_specialAttackGauge >= 100)
+	{
+		m_specialAttackGauge = 100;
+	}
+}
+
 //勝利した時
 void Player::Win()
 {
@@ -764,4 +847,41 @@ void Player::AnimationSelect()
 		break;
 	}
 
+}
+
+//カメラが向いている方向に敵のモデルもしくはステージのモデルがあるかを計算する。
+bool Player::GetShootPoint(Vector3& crossPoint)
+{
+	//発射先の決定
+
+	//カメラの位置から向いている方向に飛ばすレイを作成。
+	//キャラクターの位置からじゃないことに注意。
+	//レイの向き
+	Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
+	//レイの始点はプレイヤーの頭上(カメラのTargetは頭上にある)
+	Vector3 testRayStart = g_camera3D[m_playerNum]->GetTarget();
+	//レイの始点と向きから求めたレイの終点(10000以上の距離狙うことはないと思うので距離は10000に設定)
+	Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
+
+	//交差したかフラグ。
+	bool hitFlag = false;
+
+	//まず敵キャラクター付近の板ポリ当たり判定を検索する。
+	for (auto tricollider : m_enemy->m_triCollider)
+	{
+		hitFlag = tricollider.isHit(testRayStart, testRayEnd, crossPoint);
+		if (hitFlag == true)
+		{
+			//1回でもヒットしていたらreturn
+			return hitFlag;
+		}
+	}
+
+	//敵キャラクター付近にヒットしなかったらステージのモデルを検索する。
+	if (hitFlag == false)
+	{
+		hitFlag = m_stageModel->isLineHitModel(testRayStart, testRayEnd, crossPoint);
+	}
+
+	return hitFlag;
 }

@@ -7,9 +7,9 @@ namespace prefab
 	public:
 		enum DrawScreen
 		{
-			Screen1,
-			Screen2,
-			AllScreen = 3
+			Screen1,//¶‰æ–Ê
+			Screen2,//‰E‰æ–Ê
+			AllScreen//‰æ–Ê‘S‘Ì
 		};
 	private:
 		Font m_font;
