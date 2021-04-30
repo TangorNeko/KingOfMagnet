@@ -252,15 +252,21 @@ void Debris::AsBulletBehave()
 					{
 						//ヒット音
 						prefab::CSoundSource* ssHit = NewGO<prefab::CSoundSource>(0);;
-						ssHit->Init(L"Assets/sound/打撃音.wav");
-						ssHit->Play(false);
 						//ガレキの形状でダメージが分岐
 						switch (m_debrisShape)
 						{
 						case enStone:
+							//音を再生
+							ssHit->Init(L"Assets/sound/ダメージ音.wav");
+							ssHit->Play(false);
+
 							player->Damage(50.0f);
 							break;
 						case enSword:
+							//音を再生
+							ssHit->Init(L"Assets/sound/剣が当たる.wav");
+							ssHit->Play(false);
+
 							player->Damage(100.0f);
 							break;
 						}

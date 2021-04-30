@@ -281,9 +281,16 @@ void Player::SpecialAttack()
 	//必殺技ポイントが溜まっていて(後から追加)ボタンを押したら
 	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
 	{
+		//音を設定
+		prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
+
 		//引力なら
 		if (m_magPower == -1)
 		{
+			//音を鳴らす
+			ssSPAttack->Init(L"Assets/sound/暗黒魔法.wav");
+			ssSPAttack->Play(false);
+
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
 			gravityBullet->m_position = m_magPosition;
 			gravityBullet->m_parent = this;
@@ -314,6 +321,10 @@ void Player::SpecialAttack()
 			//弾を1発でも持ってる?
 			if (m_holdDebrisVector.size() != 0)
 			{
+				//音を鳴らす
+				ssSPAttack->Init(L"Assets/sound/気弾1.wav");
+				ssSPAttack->Play(false);
+
 				//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 				Vector3 crossPoint;
 				//発射先を計算。
@@ -446,15 +457,29 @@ void Player::MagneticBehavior()
 
 		m_isBurst = true;
 		m_burstCount = 60;
+
+		//バースト音
+		prefab::CSoundSource* ssBurst = NewGO<prefab::CSoundSource>(0);;
+
+		switch (m_magPower)
+		{
+		case -1://引力
+			//バースト音を再生
+			ssBurst->Init(L"Assets/sound/引力バースト音.wav");
+			ssBurst->Play(false);
+			break;
+		case 1://斥力
+			//バースト音を再生
+			ssBurst->Init(L"Assets/sound/斥力バースト音.wav");
+			ssBurst->Play(false);
+			break;
+		}
 	}
 }
 
 //磁力バースト
 void Player::MagneticBurst()
 {
-	//バースト音
-	prefab::CSoundSource* ssBurst = NewGO<prefab::CSoundSource>(0);;
-
 	//バースト中は移動速度は0に
 	m_characterSpeed = 0.0f;
 
@@ -472,10 +497,6 @@ void Player::MagneticBurst()
 	{
 	case -1://引力
 
-		//バースト音を再生
-		ssBurst->Init(L"Assets/sound/引力バースト音.wav");
-		ssBurst->Play(false);
-		
 		//引っ張るのでマイナスに
 		force *= -10.0f;
 		//近すぎる時は引っ張らない
@@ -524,13 +545,8 @@ void Player::MagneticBurst()
 			}
 		}
 
-
 		break;
 	case 1: //斥力
-
-		//バースト音を再生
-		ssBurst->Init(L"Assets/sound/斥力バースト音.wav");
-		ssBurst->Play(false);
 
 		force *= 10.0f;
 		if (toEnemy.Length() < 750.0f)
