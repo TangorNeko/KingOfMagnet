@@ -6,6 +6,7 @@
 #include "SkyBoard.h"
 #include "Debris.h"
 #include "DebrisBlock.h"
+#include "Repulsion.h"
 class GameTime;
 
 SampleScene::~SampleScene()
@@ -57,6 +58,7 @@ bool SampleScene::Start()
 	debrisblock->m_position = { -750.0f,0.0f,550.0f };
 
 
+
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 700.0f,0.0f,-600.0f };
 
@@ -68,6 +70,22 @@ bool SampleScene::Start()
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 750.0f,0.0f,-550.0f };
+
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { 0.0f,160.0f,0.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { 50.0f,160.0f,50.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { 50.0f,160.0f,-50.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -50.0f,160.0f,50.0f };
+
+	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	debrisblock->m_position = { -50.0f,160.0f,-50.0f };
 
 	//ガレキ。
 	Debris* debris = NewGO<Debris>(0, "debris");
@@ -87,6 +105,12 @@ bool SampleScene::Start()
 	debris->m_debrisState = Debris::enDrop;
 	debris->m_position = { 300.0f,0.0f,100.0f };
 
+	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
+	rep->m_position = { 310.0f,1.0f,0.0f };
+
+	rep = NewGO<Repulsion>(0, "repulsion");
+	rep->m_position = { -310.0f,1.0f,0.0f };
+
 	//空を作成。キューブマップじゃなくてただの板ポリ。
 	m_sky = NewGO<SkyBoard>(0);
 
@@ -95,7 +119,7 @@ bool SampleScene::Start()
 
 	//タイムリミット表示
 	m_timeFontRender = NewGO<prefab::CFontRender>(0);
-	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)0);
+	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	m_timeFontRender->SetPosition({ 0.0f, 0.0f });
 
 	return true;

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Repulsion.h"
-#include "Character_base.h"
+#include "Player.h"
 #include "GameScene.h"
+#include "SampleScene.h"
 
 Repulsion::~Repulsion()
 {
@@ -15,89 +16,27 @@ bool Repulsion::Start()
 	m_skinModelRender->SetRotation(m_rot);
 	m_skinModelRender->SetScale(m_scale);
 
-	m_gameScene = FindGO<GameScene>("gamescene");
+	//m_gameScene = FindGO<GameScene>("gamescene");
 	return true;
 }
 void Repulsion::Update()
-{
-	/*
-	if (m_gameScene->GetGameEndFlag() == true)
-	{
-		DeleteGO(this);
-	}
-	*/
-	
-	QueryGOs<Character_base>("Player", [this](Character_base* player)->bool
-		{
-			if (player->m_playerNum == 0) {//プレイヤー０				
+{	
+	QueryGOs<Player>("Player", [this](Player* player)->bool
+		{			
 				//床との距離
-				diff0 = player->m_position - m_position;
+				diff = player->m_position - m_position;
 				//立方体の範囲に入れば斥力を与える
-				if ((diff0.x < 200 && diff0.x > -200) &&
-					(diff0.z < 200 && diff0.z > -200) &&
-					 diff0.y < 200 )//床との距離が近ければ
+				if ((diff.x < 160 && diff.x > -160) &&
+					(diff.z < 160 && diff.z > -160) &&
+					 diff.y < 200 )//床との距離が近ければ
 				{
-					//時間が立つに連れスピードが上がる
-					m_loop0++;
-					if (m_objNum == 0) 
-					{
-						player->m_Yspeed0.y += (0.0005f * (m_loop0 * m_loop0));
-					}
-					if (m_objNum == 1)
-					{						
-						player->m_Yspeed1.y += (0.0005f * (m_loop0 * m_loop0));
-					}
-					player->m_loop = 0;//エレベーター減少対策
+
+					Vector3 up = Vector3::Up;
+					up *= 5;
+					player->m_charaCon.Execute(up, 1.0f);
+					player->m_fallLoop = 0;
 
 				}	
-				else//範囲外は値を０に
-				{
-					if (m_objNum == 0)
-					{
-						player->m_Yspeed0.y = 0;						
-					}
-					if (m_objNum == 1)
-					{
-						player->m_Yspeed1.y = 0;
-					}
-					m_loop0 = 0;					
-				}
-			}
-			else if(player->m_playerNum==1)//プレイヤー１
-			{
-				//床との距離
-				diff1 = player->m_position - m_position ;
-				//立方体の範囲に入れば斥力を与える
-				if ((diff1.x < 200 && diff1.x > -200) &&
-					(diff1.z < 200 && diff1.z > -200) &&
-					diff1.y < 200)//床との距離が近ければ
-				{
-					//床に近ければ近いほど加算する値を大きくする
-					m_loop1++;
-					if (m_objNum == 0)
-					{
-						player->m_Yspeed0.y += (0.0005f * (m_loop1 * m_loop1));
-					}
-					if (m_objNum == 1)
-					{
-						player->m_Yspeed1.y += (0.0005f * (m_loop1 * m_loop1));
-					}
-					player->m_loop = 0;//エレベーター減少対策
-
-				}
-				else
-				{
-					if (m_objNum == 0)
-					{
-						player->m_Yspeed0.y = 0;
-					}
-					if (m_objNum == 1)
-					{
-						player->m_Yspeed1.y = 0;
-					}
-					m_loop1 = 0;				
-				}
-			}
 			return true;
 		}
 	);
