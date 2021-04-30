@@ -68,10 +68,16 @@ class Player : public IGameObject
 	//アニメーションを再生
 	void AnimationSelect();
 
+	//発射先の計算。
+	bool GetShootPoint(Vector3& crossPoint);
+
 public:
 
 	//自分の体力にダメージを与える
 	void Damage(int damage);
+
+	//必殺技ゲージをチャージする。
+	void ChargeSpecialAttackGauge(int charge);
 
 	
 public:
@@ -146,6 +152,7 @@ public:
 
 	Player* m_enemy = nullptr; //敵
 
+	int m_specialAttackGauge = 0;//必殺技のゲージ
 	bool m_isGravityBulletAttack = false;//引力の必殺技の攻撃タイミングを指示する用変数。
 
 
