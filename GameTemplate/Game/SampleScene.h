@@ -4,6 +4,7 @@ class Player;
 class CDirectionLight;
 class BackGround;
 class SkyBoard;
+class GameTime;
 
 class SampleScene : public IGameObject
 {
@@ -32,5 +33,10 @@ public:
 	{
 		return m_gameEndFlag;
 	}
+
+	//êßå¿éûä‘
+	prefab::CFontRender* m_timeFontRender = nullptr;
+	float m_timeLimit = 100;
+	float m_deltaTimeCount = 0.0f;
 };
 

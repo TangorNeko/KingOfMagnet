@@ -250,6 +250,10 @@ void Debris::AsBulletBehave()
 					//当たり判定にヒットしているならダメージ。
 					if (player->m_collider.isHitCapsule(m_bulletCollider))
 					{
+						//ヒット音
+						prefab::CSoundSource* ssHit = NewGO<prefab::CSoundSource>(0);;
+						ssHit->Init(L"Assets/sound/打撃音.wav");
+						ssHit->Play(false);
 						//ガレキの形状でダメージが分岐
 						switch (m_debrisShape)
 						{
@@ -309,7 +313,7 @@ void Debris::AsPopBehave()
 
 		if (m_debrisShape == enGrenade) {
 			m_explosionCount++;
-			if (m_explosionCount >= 30) {
+			if (m_explosionCount >= 80) {
 				Explosion* m_explosion = NewGO<Explosion>(0);
 				m_explosion->m_position = crossPoint;
 				DeleteGO(this);

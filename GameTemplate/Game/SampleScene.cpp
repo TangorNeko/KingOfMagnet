@@ -6,6 +6,7 @@
 #include "SkyBoard.h"
 #include "Debris.h"
 #include "DebrisBlock.h"
+class GameTime;
 
 SampleScene::~SampleScene()
 {
@@ -90,10 +91,19 @@ bool SampleScene::Start()
 	//すべて作成し終わった所で2画面にする。
 	GameObjectManager::GetInstance()->Set2ScreenMode(true);
 
+	//タイムリミット表示
+	m_timeFontRender = NewGO<prefab::CFontRender>(0);
+	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)0);
+	m_timeFontRender->SetPosition({ 0.0f, 0.0f });
+
 	return true;
 }
 
 void SampleScene::Update()
 {
-
+	//制限時間の表示
+	if (m_timeLimit > 0) {
+		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
+		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
+	}
 }

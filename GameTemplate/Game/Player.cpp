@@ -70,6 +70,11 @@ void Player::Update()
 	//グレネード用。仮です。
 	if (g_pad[0]->IsTrigger(enButtonY))
 	{
+		//音
+		prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
+		ssThrow->Init(L"Assets/sound/投げる音.wav");
+		ssThrow->Play(false);
+
 		Debris* debris = NewGO<Debris>(0, "debris");
 		debris->m_debrisShape = Debris::enGrenade;
 		debris->m_debrisState = Debris::enBullet;
@@ -207,6 +212,11 @@ void Player::Attack()
 		//ガレキを一つでも持っているなら
 		if (m_holdDebrisVector.empty() == false)
 		{
+			//音を鳴らす
+			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+			ssShoot->Init(L"Assets/sound/シュート音.wav");
+			ssShoot->Play(false);
+
 			//一番最初に保持したガレキを発射
 			auto debris = m_holdDebrisVector.front();
 			//保持したガレキを発射モードにする
@@ -383,6 +393,9 @@ void Player::MagneticBehavior()
 //磁力バースト
 void Player::MagneticBurst()
 {
+	//バースト音
+	prefab::CSoundSource* ssBurst = NewGO<prefab::CSoundSource>(0);;
+
 	//バースト中は移動速度は0に
 	m_characterSpeed = 0.0f;
 
@@ -400,6 +413,10 @@ void Player::MagneticBurst()
 	{
 	case -1://引力
 
+		//バースト音を再生
+		ssBurst->Init(L"Assets/sound/引力バースト音.wav");
+		ssBurst->Play(false);
+		
 		//引っ張るのでマイナスに
 		force *= -10.0f;
 		//近すぎる時は引っ張らない
@@ -448,6 +465,10 @@ void Player::MagneticBurst()
 
 		break;
 	case 1: //斥力
+
+		//バースト音を再生
+		ssBurst->Init(L"Assets/sound/斥力バースト音.wav");
+		ssBurst->Play(false);
 
 		force *= 10.0f;
 		if (toEnemy.Length() < 750.0f)
