@@ -21,7 +21,7 @@ bool BackGround::Start()
 	m_pLig->SetColor({ 1.0f,1.0f,1.0f });
 	m_pLig->SetRange(500);
 	*/
-	m_skinModelRender->Init("Assets/modelData/map.tkm");
+	m_skinModelRender->Init("Assets/modelData/stage00.tkm");
 
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 
