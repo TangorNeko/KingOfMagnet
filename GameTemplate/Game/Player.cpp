@@ -83,69 +83,76 @@ bool Player::Start()
 void Player::Update()
 {
 	//プレイヤー番号が与えられていなければ何もしない
-	if (m_playerNum == -1)
+		if (m_playerNum == -1)
+		{
+			return;
+		}
+	if (m_opning == true)
 	{
-		return;
+		OpeningCamera();
 	}
+	else
+	{
+		
 
-	//磁力の変化
-	ChangeMagnetPower();
+		//磁力の変化
+		ChangeMagnetPower();
 
-	//体力等ステータスのテキストを表示(後に画像にする。)
-	DisplayStatus();
-	
-	//座標に応じて三角形の当たり判定の場所をセット。
-	Collision();
+		//体力等ステータスのテキストを表示(後に画像にする。)
+		DisplayStatus();
 
-	if (m_isKnockBack == true) {
-		KnockBack();
+		//座標に応じて三角形の当たり判定の場所をセット。
+		Collision();
+
+		if (m_isKnockBack == true) {
+			KnockBack();
+		}
+		else if (m_isKnockBack == false) {
+			//移動
+			Move();
+
+			//必殺技
+			SpecialAttack();
+
+			//保持しているガレキの位置を制御する
+			HoldDebris();
+
+			//バーストを使用している?
+			if (m_isBurst == true)
+			{
+				MagneticBurst();
+			}
+			else
+			{
+				MagneticBehavior();
+			}
+
+			//グレネード用。仮です。
+			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+			{
+				//音
+				prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
+				ssThrow->Init(L"Assets/sound/投げる音.wav");
+				ssThrow->Play(false);
+
+				Debris* debris = NewGO<Debris>(0, "debris");
+				debris->m_debrisShape = Debris::enGrenade;
+				debris->m_debrisState = Debris::enBullet;
+				debris->m_parent = this;
+				debris->m_position = m_magPosition;
+
+				debris->m_moveDirection = m_characterDirection;
+			}
+		}
+
+		//状態更新。
+		UpdateState();
+		//アニメーション選択。
+		AnimationSelect();
+
+		//カメラの移動
+		Camera();
 	}
-	else if (m_isKnockBack == false){
-		//移動
-		Move();
-
-		//必殺技
-		SpecialAttack();
-
-		//保持しているガレキの位置を制御する
-		HoldDebris();
-
-		//バーストを使用している?
-		if (m_isBurst == true)
-		{
-			MagneticBurst();
-		}
-		else
-		{
-			MagneticBehavior();
-		}
-
-		//グレネード用。仮です。
-		if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-		{
-			//音
-			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
-			ssThrow->Init(L"Assets/sound/投げる音.wav");
-			ssThrow->Play(false);
-
-			Debris* debris = NewGO<Debris>(0, "debris");
-			debris->m_debrisShape = Debris::enGrenade;
-			debris->m_debrisState = Debris::enBullet;
-			debris->m_parent = this;
-			debris->m_position = m_magPosition;
-
-			debris->m_moveDirection = m_characterDirection;
-		}
-	}
-	
-	//状態更新。
-	UpdateState();
-	//アニメーション選択。
-	AnimationSelect();
-
-	//カメラの移動
-	Camera();
-
 }
 
 //体力、メビウスゲージの表示
@@ -971,4 +978,51 @@ void Player::KnockBack() {
 		m_isKnockBack = false;
 	}
 	
+}
+void Player::OpeningCamera()
+{
+	m_cameraLoopCount++;
+	
+	
+	if (m_cameraLoopCount < 250)
+	{
+		Vector3 toPos = m_position;
+		toPos.y = 400;
+		//toPosを回す。
+		Quaternion qRotY;
+		//Y軸回りにちょっとだけ回転するクォータニオンをつくる。
+		m_addY += 0.01;
+		qRotY.SetRotation(Vector3::AxisY, m_addY);
+		//クォータニオンを使ってtoPosを回す。
+		qRotY.Apply(toPos);
+		m_cameraPos = toPos;
+		g_camera3D[m_playerNum]->SetTarget(m_targetPos);
+	}
+	else
+	{
+		Vector3 PlayerPos = m_position;
+		PlayerPos.y = m_position.y + 90.0f;
+		m_targetPos *= factor;
+		if (factor < 1.0f)
+			factor += 0.01f;
+		Vector3 targetVec = PlayerPos - m_cameraPos;
+		if (targetVec.Length() < 50)
+		{
+			m_opning = false;
+		}
+		targetVec.Normalize();
+		m_cameraPos += targetVec*gain;
+		gain += 0.1;
+		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
+	}	
+
+	
+	
+	//qRotY.SetRotationDeg(CVector3::AxisY, roty);
+	
+
+	
+	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+	//MainCamera().SetPosition(bossposition + targetvec * gain);//+targerVec*gain
+
 }

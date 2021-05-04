@@ -11,6 +11,9 @@ class Player : public IGameObject
 	bool Start() override;
 	void Update() override;
 
+	//開始前カメラ移動
+	void OpeningCamera();
+
 	//体力、メビウスゲージの表示
 	void DisplayStatus();
 
@@ -96,6 +99,14 @@ public:
 	Quaternion qRotY;
 	float n;//内積
 	float angle;//アークコサイン
+
+	Vector3 m_cameraPos;
+	Vector3 m_targetPos = { 0.0f,0.0f,0.0f };
+	float gain = 10;//カメラとターゲットとの距離
+	float factor = 0.0f;
+	float m_addY = 0.0f;
+	int m_cameraLoopCount = 0;
+	bool m_opning = true;
 
 	int m_fallLoop = 0;//落下制御用のループカウント
 	float m_characterSpeed = 6.0;//キャラクターの移動速度

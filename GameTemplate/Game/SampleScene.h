@@ -14,6 +14,7 @@ class SampleScene : public IGameObject
 	//ŸÒ”»’è
 	void WinnerJudge();
 
+	
 	Player* m_player1 = nullptr;
 	Player* m_player2 = nullptr;
 
@@ -38,6 +39,7 @@ public:
 		return m_gameEndFlag;
 	}
 
+	
 	//§ŒÀŠÔ
 	prefab::CFontRender* m_timeFontRender = nullptr;
 	float m_timeLimit = 100;
