@@ -4,6 +4,7 @@
 
 class BackGround;
 class Debris;
+class Bomb;
 
 class Player : public IGameObject
 {
@@ -23,8 +24,14 @@ class Player : public IGameObject
 	//必殺技
 	void SpecialAttack();
 
+	//爆弾を投げる
+	void ThrowBomb();
+
 	//保持しているガレキを浮遊させる。
 	void HoldDebris();
+
+	//保持している爆弾を浮遊させる。
+	void HoldBomb();
 
 	//磁力バーストを使用していない時の通常の動き
 	void MagneticBehavior();
@@ -126,6 +133,9 @@ public:
 
 	std::vector<Debris*> m_holdDebrisVector;//保持しているガレキが格納されるコンテナ
 	float m_holdDebrisRotateDeg = 0;//保持しているガレキの回転角度
+
+	std::vector<Bomb*> m_holdBombVector;//保持している爆弾が格納されるコンテナ
+	int m_selectBombNo = 0;//選択している爆弾の番号
 
 	//アニメーションの数
 	enum {
