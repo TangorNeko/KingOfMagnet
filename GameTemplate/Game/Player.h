@@ -79,7 +79,9 @@ public:
 	//必殺技ゲージをチャージする。
 	void ChargeSpecialAttackGauge(int charge);
 
-	
+	//ノックバックをする。
+	void KnockBack();
+
 public:
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion rot;//キャラクターの回転
@@ -155,6 +157,13 @@ public:
 	int m_specialAttackGauge = 0;//必殺技のゲージ
 	bool m_isGravityBulletAttack = false;//引力の必殺技の攻撃タイミングを指示する用変数。
 
+	//ノックバック関連
+	bool m_isKnockBack = false;
+	int m_isknockBackCount = 0;
+
+	//HPバー
+	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
+	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
 
 };
 

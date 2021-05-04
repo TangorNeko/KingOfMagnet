@@ -38,5 +38,9 @@ public:
 	prefab::CFontRender* m_timeFontRender = nullptr;
 	float m_timeLimit = 100;
 	float m_deltaTimeCount = 0.0f;
+
+	prefab::CSpriteRender* m_delimitLineSpriteRender = nullptr;	//‹æØ‚éü
+	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;	
+	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;
 };
 

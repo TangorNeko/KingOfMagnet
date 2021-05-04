@@ -312,6 +312,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GravityBullet.cpp" />
+    <ClCompile Include="Explosion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -954,6 +955,7 @@
     <ClInclude Include="Debris.h" />
     <ClInclude Include="DebrisBlock.h" />
     <ClInclude Include="GravityBullet.h" />
+    <ClInclude Include="Explosion.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
