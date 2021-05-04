@@ -35,6 +35,12 @@ bool Debris::Start()
 		m_moveDirection.y += 0.4f;
 		m_moveDirection.Normalize();
 		break;
+	case enSpecialCharger:
+		m_skinModelRender->Init("Assets/modelData/Gravity.tkm");
+		m_skinModelRender->SetScale({ 0.1f, 0.1f, 0.1f });
+		//投げる角度を少し上にする。
+		m_moveDirection.Normalize();
+		break;
 	default:
 		MessageBoxA(nullptr, "存在しないガレキの形状です。\n", "エラー", MB_OK);
 		break;
@@ -97,12 +103,29 @@ void Debris::AsDropBehave()
 			//バーストしてたら引っ張ってくる
 			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
 			{
-				m_position.y += 15.0f;
-
+				toPlayer.y += 10.0f;
 				Vector3 moveDir = toPlayer;
 				moveDir.Normalize();
 
-				m_position += moveDir *= 30.0f;
+				//x、zそれぞれ別々で測る
+				m_position.x += moveDir.x *= 30.0f;
+				//壁にぶつかったとき
+				Vector3 crossPoint;
+				bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+				if (isHit == true) {
+					m_position = m_oldPosition;
+				}
+				else
+					m_oldPosition = m_position;
+
+				m_position.z += moveDir.z *= 30.0f;
+				//壁にぶつかったとき
+				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+				if (isHit == true) {
+					m_position = m_oldPosition;
+				}
+				else
+					m_oldPosition = m_position;
 			}
 
 			//近くに弾があれば10発以内なら拾える
@@ -115,8 +138,51 @@ void Debris::AsDropBehave()
 				player->m_holdDebrisVector.push_back(this);
 			}
 		}
+
+		//斥力の時
+		if (player->m_magPower == 1)
+		{
+			//バーストしてたら引っ張ってくる
+			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			{
+				Vector3 moveDir = toPlayer;
+				moveDir.y = 0.0f;
+				moveDir.Normalize();
+
+				//x、zそれぞれ別々で測る
+				m_position.x += moveDir.x *= -30.0f;
+				//壁にぶつかったとき
+				Vector3 crossPoint;
+				bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+				if (isHit == true) {
+					m_position = m_oldPosition;
+				}
+				else
+					m_oldPosition = m_position;
+
+				m_position.z += moveDir.z *= -30.0f;
+				//壁にぶつかったとき
+				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+				if (isHit == true) {
+					m_position = m_oldPosition;
+				}
+				else
+					m_oldPosition = m_position;
+
+				m_position.y += 10.0f;
+			}
+			
+		}
 		return true;
 		});
+	//重力処理
+	m_position.y -= 5.0f;
+	Vector3 crossPoint;
+	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+	if (isHit == true)
+	{
+		m_position = m_oldPosition;
+	}
 }
 
 //弾として発射されている時の挙動
@@ -269,9 +335,20 @@ void Debris::AsBulletBehave()
 
 							player->Damage(100.0f);
 							break;
+						case enSpecialCharger:
+							//音を再生(仮)
+							ssHit->Init(L"Assets/sound/剣が当たる.wav");
+							ssHit->Play(false);
+
+							player->Damage(20.0f);
+							break;
 						}
 						//当たった所からポップさせる
 						m_debrisState = enPop;
+
+						//プレイヤーをノックバックさせる。
+						player->m_isKnockBack = true;
+						player->m_moveSpeed = m_moveDirection * 10.0f;
 					}
 				}
 				return true;
@@ -300,7 +377,22 @@ void Debris::AsBulletBehave()
 //プレイヤーに保持されている時の挙動
 void Debris::AsHoldBehave()
 {
-	
+	QueryGOs<Player>("Player", [this](Player* player)->bool
+		{
+			//スペシャルチャージャーを持っていると、ゲージが少しずつ溜まる。
+			if (m_debrisShape == enSpecialCharger) {
+				if (player->m_playerNum == m_parent->m_playerNum) {
+
+					m_specialChargeCount += 1.0f;
+
+					if (m_specialChargeCount == 50.0f) {
+						player->ChargeSpecialAttackGauge(1);
+						m_specialChargeCount = 0.0f;
+					}
+				}
+			}
+		return true;
+	});
 }
 
 //何かに当たった直後の挙動
@@ -314,8 +406,7 @@ void Debris::AsPopBehave()
 	if (isHit == true)
 	{
 		//当たった所にドロップさせる(TODO:空中に残るのではなく地面に落としたい)
-		m_position = crossPoint;
-		m_position.y += 10.0f;
+		m_position = m_oldPosition;
 
 		if (m_debrisShape == enGrenade) {
 			m_explosionCount++;

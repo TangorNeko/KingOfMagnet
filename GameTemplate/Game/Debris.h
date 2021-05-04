@@ -42,6 +42,7 @@ public:
 		enGrenade,//爆弾
 		enFlashGrenade,//閃光弾
 		//ここから他のアイテム(魔法の杖)など追加していく?
+		enSpecialCharger,
 	};
 
 	enDebrisShape m_debrisShape = enStone;
@@ -62,5 +63,7 @@ public:
 
 	//爆弾用
 	int m_explosionCount = 0;
+	//スペシャルチャージャー用
+	float m_specialChargeCount = 0.0f;	//スペシャルゲージを増やすまでのカウント
 };
 

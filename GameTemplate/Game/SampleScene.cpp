@@ -124,6 +124,13 @@ bool SampleScene::Start()
 	debris->m_debrisState = Debris::enDrop;
 	debris->m_position = { 300.0f,0.0f,100.0f };
 
+	//仮
+	debris = NewGO<Debris>(0, "debris");
+	debris->m_debrisState = Debris::enDrop;
+	debris->m_debrisShape = Debris::enSpecialCharger;
+	debris->m_position = { 100.0f,500.0f,100.0f };
+
+
 	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
 	rep->m_position = { 310.0f,1.0f,0.0f };
 
@@ -137,9 +144,24 @@ bool SampleScene::Start()
 	GameObjectManager::GetInstance()->Set2ScreenMode(true);
 
 	//タイムリミット表示
-	m_timeFontRender = NewGO<prefab::CFontRender>(0);
+	m_timeFontRender = NewGO<prefab::CFontRender>(4);
 	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	m_timeFontRender->SetPosition({ -30.0f, 360.0f });
+	m_timeFontRender->SetPosition({ -60.0f, 380.0f });
+	m_timeFontRender->SetScale({ 2.0f, 2.0f });
+	m_delimitLineSpriteRender = NewGO<prefab::CSpriteRender>(3);
+	m_delimitLineSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_delimitLineSpriteRender->SetPosition({ 0.0f,0.0f,0.0f });
+	m_delimitLineSpriteRender->Init("Assets/Image/Waku.dds", 40, 720);
+
+	m_HPCoverSpriteRender = NewGO<prefab::CSpriteRender>(3);
+	m_HPCoverSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_HPCoverSpriteRender->SetPosition({ 0.0f,304.0f,0.0f });
+	m_HPCoverSpriteRender->Init("Assets/Image/HP_Cover.dds", 1280, 112);
+
+	m_TimerBaseSpriteRender = NewGO<prefab::CSpriteRender>(3);
+	m_TimerBaseSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_TimerBaseSpriteRender->SetPosition({ 0.0f,300.0f,0.0f });
+	m_TimerBaseSpriteRender->Init("Assets/Image/Timer_Base.dds", 272, 120);
 
 	return true;
 }

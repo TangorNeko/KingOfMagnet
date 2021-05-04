@@ -51,6 +51,32 @@ bool Player::Start()
 	//ステージのクラスを取得
 	m_stageModel = FindGO<BackGround>("background");
 
+	//HPバー
+	m_HPBarSpriteRender = NewGO<prefab::CSpriteRender>(1);
+	m_HPBarSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	
+	m_HPBarSpriteRender->Init("Assets/Image/HP_Bar.dds",308, 32);
+	if (m_playerNum == 0) {
+		m_HPBarSpriteRender->SetPosition({ -10.0f,325.0f,0.0f });
+	}
+	else if (m_playerNum == 1) {
+		m_HPBarSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
+		m_HPBarSpriteRender->SetPosition({ 10.0f,325.0f,0.0f });
+	}
+
+	m_HPBarDarkSpriteRender = NewGO<prefab::CSpriteRender>(5);
+	m_HPBarDarkSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+
+	m_HPBarDarkSpriteRender->Init("Assets/Image/HP_Bar_Dark_12.dds", 316, 36);
+	if (m_playerNum == 0) {
+		m_HPBarDarkSpriteRender->SetPosition({ 290.0f,325.0f,0.0f });
+		//({ 290.0f,325.0f,0.0f });
+	}
+	else if (m_playerNum == 1) {
+		m_HPBarDarkSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
+		m_HPBarDarkSpriteRender->SetPosition({ -290.0f,325.0f,0.0f });
+	}
+
 	return true;
 }
 
@@ -67,45 +93,49 @@ void Player::Update()
 
 	//体力等ステータスのテキストを表示(後に画像にする。)
 	DisplayStatus();
-
-
-	//グレネード用。仮です。
-	if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-	{
-		//音
-		prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
-		ssThrow->Init(L"Assets/sound/投げる音.wav");
-		ssThrow->Play(false);
-
-		Debris* debris = NewGO<Debris>(0, "debris");
-		debris->m_debrisShape = Debris::enGrenade;
-		debris->m_debrisState = Debris::enBullet;
-		debris->m_parent = this;
-		debris->m_position = m_magPosition;
-
-		debris->m_moveDirection = m_characterDirection;
-	}
-
+	
 	//座標に応じて三角形の当たり判定の場所をセット。
 	Collision();
 
-	//移動
-	Move();
-
-	//必殺技
-	SpecialAttack();
-
-	//保持しているガレキの位置を制御する
-	HoldDebris();
-
-	//バーストを使用している?
-	if (m_isBurst == true)
-	{
-		MagneticBurst();
+	if (m_isKnockBack == true) {
+		KnockBack();
 	}
-	else
-	{
-		MagneticBehavior();
+	else if (m_isKnockBack == false){
+		//移動
+		Move();
+
+		//必殺技
+		SpecialAttack();
+
+		//保持しているガレキの位置を制御する
+		HoldDebris();
+
+		//バーストを使用している?
+		if (m_isBurst == true)
+		{
+			MagneticBurst();
+		}
+		else
+		{
+			MagneticBehavior();
+		}
+
+		//グレネード用。仮です。
+		if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+		{
+			//音
+			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
+			ssThrow->Init(L"Assets/sound/投げる音.wav");
+			ssThrow->Play(false);
+
+			Debris* debris = NewGO<Debris>(0, "debris");
+			debris->m_debrisShape = Debris::enGrenade;
+			debris->m_debrisState = Debris::enBullet;
+			debris->m_parent = this;
+			debris->m_position = m_magPosition;
+
+			debris->m_moveDirection = m_characterDirection;
+		}
 	}
 	
 	//状態更新。
@@ -148,6 +178,16 @@ void Player::DisplayStatus()
 		+ L"%\n必殺ゲージ:" + special
 		+ L"%\n\n\n\n\n\n\n\n磁力:" + powerText
 	);
+
+	if (m_playerNum == 0) {
+		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
+		//({ 290.0f,325.0f,0.0f });
+		//({ -9.0f,325.0f,0.0f })
+	}
+	else if (m_playerNum == 1) {
+		m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
+	}
+
 }
 
 //移動
@@ -914,4 +954,21 @@ bool Player::GetShootPoint(Vector3& crossPoint)
 	}
 
 	return hitFlag;
+}
+void Player::KnockBack() {
+	//ノックバックする向きを設定
+	if (m_isknockBackCount == 0) {
+		m_moveSpeed.y = 0.001f;
+	}
+	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+	m_skinModelRender->SetPosition(m_position);
+
+	m_isknockBackCount++;
+
+	if (m_isknockBackCount >= 7) {
+		m_moveSpeed = { 0.0f,0.0f,0.0f };
+		m_isknockBackCount = 0;
+		m_isKnockBack = false;
+	}
+	
 }
