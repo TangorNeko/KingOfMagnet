@@ -7,15 +7,34 @@
 #include "Debris.h"
 #include "DebrisBlock.h"
 #include "Repulsion.h"
-class GameTime;
+#include "TitleScene.h"
 
 SampleScene::~SampleScene()
 {
+	DeleteGO(m_timeFontRender);
 	DeleteGO(m_stageLight);
 	DeleteGO(m_backGround);
 	DeleteGO(m_sky);
 	DeleteGO(m_player1);
 	DeleteGO(m_player2);
+
+	QueryGOs<DebrisBlock>("debrisblock",[](DebrisBlock* debrisblock)->bool
+		{
+			DeleteGO(debrisblock);
+			return true;
+		});
+
+	QueryGOs<Debris>("debris", [](Debris* debris)->bool
+		{
+			DeleteGO(debris);
+			return true;
+		});
+
+	QueryGOs<Repulsion>("repulsion", [](Repulsion* repulsion)->bool
+		{
+			DeleteGO(repulsion);
+			return true;
+		});
 }
 
 bool SampleScene::Start()
@@ -129,7 +148,6 @@ bool SampleScene::Start()
 	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	m_timeFontRender->SetPosition({ -60.0f, 380.0f });
 	m_timeFontRender->SetScale({ 2.0f, 2.0f });
-
 	m_delimitLineSpriteRender = NewGO<prefab::CSpriteRender>(3);
 	m_delimitLineSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_delimitLineSpriteRender->SetPosition({ 0.0f,0.0f,0.0f });
@@ -154,5 +172,42 @@ void SampleScene::Update()
 	if (m_timeLimit > 0) {
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
 		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
+	}
+	else if(m_gameEndFlag == false)
+	{
+		WinnerJudge();
+		m_gameEndFlag = true;
+	}
+
+	if (m_gameEndFlag == true)
+	{
+		m_gameEndCount++;
+	}
+
+	if (m_gameEndCount == 300)
+	{
+		NewGO<TitleScene>(0, "titlescene");
+		DeleteGO(this);
+	}
+}
+
+void SampleScene::WinnerJudge()
+{
+	if (m_player1->m_hp > m_player2->m_hp)
+	{
+		//1P‚ÌŸ‚¿
+		m_player1->Win();
+		m_player2->Lose();
+
+	}
+	else if(m_player1->m_hp < m_player2->m_hp)
+	{
+		//2P‚ÌŸ‚¿
+		m_player1->Lose();
+		m_player2->Win();
+	}
+	else
+	{
+		//ˆø‚«•ª‚¯
 	}
 }

@@ -41,12 +41,6 @@ class Player : public IGameObject
 	//当たり判定
 	void Collision();
 
-	//勝利した時
-	void Win();
-
-	//敗北した時
-	void Lose();
-
 	//攻撃状態に切り替えできたら切り替える。
 	void TryChangeStatusAttack();
 
@@ -75,6 +69,12 @@ public:
 
 	//自分の体力にダメージを与える
 	void Damage(int damage);
+
+	//勝利した時
+	void Win();
+
+	//敗北した時
+	void Lose();
 
 	//必殺技ゲージをチャージする。
 	void ChargeSpecialAttackGauge(int charge);

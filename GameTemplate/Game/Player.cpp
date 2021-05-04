@@ -5,6 +5,7 @@
 #include "Debris.h"
 #include "DamageDisplay.h"
 #include "GravityBullet.h"
+#include "SampleScene.h"
 
 Player::~Player()
 {
@@ -175,7 +176,7 @@ void Player::DisplayStatus()
 	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp)
 		+ L"\n磁力ゲージ:" + charge
 		+ L"%\n必殺ゲージ:" + special
-		+ L"\n\n\n\n\n\n\n\n磁力:" + powerText
+		+ L"%\n\n\n\n\n\n\n\n磁力:" + powerText
 	);
 
 	if (m_playerNum == 0) {
@@ -762,12 +763,18 @@ void Player::Damage(int damage)
 	{
 		m_hp = 0;
 
-		//体力の更新。
-		DisplayStatus();
+		SampleScene* gameScene = FindGO<SampleScene>("gamescene");
+		if (gameScene->GetGameEndFlag() == false)
+		{
+			//体力の更新。
+			DisplayStatus();
 
-		Lose();
+			Lose();
 
-		m_enemy->Win();
+			m_enemy->Win();
+
+			gameScene->SetGameEndFlag(true);
+		}
 	}
 
 

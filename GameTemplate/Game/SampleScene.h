@@ -4,13 +4,15 @@ class Player;
 class CDirectionLight;
 class BackGround;
 class SkyBoard;
-class GameTime;
 
 class SampleScene : public IGameObject
 {
 	~SampleScene();
 	bool Start() override;
 	void Update() override;
+
+	//èüé“îªíË
+	void WinnerJudge();
 
 	Player* m_player1 = nullptr;
 	Player* m_player2 = nullptr;
@@ -21,6 +23,8 @@ class SampleScene : public IGameObject
 
 	bool m_gameEndFlag = false;
 	int m_gameEndCount = 0;
+
+	bool m_gamePauseFlag = false;
 
 public:
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TitleScene.h"
 #include "CharacterSelect.h"
+#include "SampleScene.h"
 TitleScene::~TitleScene() 
 {
 	DeleteGO(m_title_fontRender);
@@ -68,7 +69,8 @@ void TitleScene::Update()
 	//スタートでAボタンを押すとキャラ選択画面に遷移する
 	if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
 		if (m_menuselect == 0) {
-			NewGO<CharacterSelect>(0, "characterselect");
+			//NewGO<CharacterSelect>(0, "characterselect");
+			SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 			DeleteGO(this);
 		}
 	}
