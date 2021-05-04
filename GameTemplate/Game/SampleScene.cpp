@@ -6,6 +6,7 @@
 #include "SkyBoard.h"
 #include "Debris.h"
 #include "DebrisBlock.h"
+#include "Bomb.h"
 #include "Repulsion.h"
 #include "TitleScene.h"
 

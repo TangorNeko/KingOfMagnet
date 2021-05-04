@@ -3,6 +3,7 @@
 
 #include "BackGround.h"
 #include "Debris.h"
+#include "Bomb.h"
 #include "DamageDisplay.h"
 #include "GravityBullet.h"
 #include "SampleScene.h"
@@ -114,26 +115,29 @@ void Player::Update()
 			//必殺技
 			SpecialAttack();
 
-			//保持しているガレキの位置を制御する
-			HoldDebris();
+//保持している爆弾の位置を制御する
+		HoldBomb();
 
-			//バーストを使用している?
-			if (m_isBurst == true)
-			{
-				MagneticBurst();
-			}
-			else
-			{
-				MagneticBehavior();
-			}
+		//バーストを使用している?
+		if (m_isBurst == true)
+		{
+			MagneticBurst();
+		}
+		else
+		{
+			MagneticBehavior();
+		}
+//爆弾を投げる
+		ThrowBomb();
 
-			//グレネード用。仮です。
-			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-			{
-				//音
-				prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
-				ssThrow->Init(L"Assets/sound/投げる音.wav");
-				ssThrow->Play(false);
+		//グレネード用。仮です。
+		if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+		{
+			Bomb* debris = NewGO<Bomb>(0, "debris");
+			debris->m_bombShape = Bomb::enGrenade;
+			debris->m_bombState = Bomb::enDrop;
+			debris->m_parent = this;
+			debris->m_position = m_magPosition;
 
 				Debris* debris = NewGO<Debris>(0, "debris");
 				debris->m_debrisShape = Debris::enGrenade;
@@ -144,7 +148,19 @@ void Player::Update()
 				debris->m_moveDirection = m_characterDirection;
 			}
 		}
+	
 
+	//攻撃後の隙のタイマーを減らしていく
+	m_attackCount--;
+	//攻撃のクールタイムが終わると移動速度を戻す
+	if (m_attackCount <= 0)
+	{
+		m_attackCount = 0;
+
+		m_isAttacking = false;
+
+		m_characterSpeed = 6.0f;
+	}
 		//状態更新。
 		UpdateState();
 		//アニメーション選択。
@@ -246,8 +262,10 @@ void Player::Move()
 
 	//穴に落ちた時の処理
 	if (m_position.y <= -1000.0f) {
-		m_position.y += 2000.0f;
-		m_charaCon.Init(10.0f, 50.0f, m_position);
+		Damage(100);
+
+		m_position.y = 500.0f;
+		m_charaCon.SetPosition(m_position);
 		m_skinModelRender->SetPosition(m_position);
 	}
 }
@@ -255,17 +273,6 @@ void Player::Move()
 //攻撃
 void Player::Attack()
 {
-	m_attackCount--;
-	//攻撃のクールタイムが終わると移動速度を戻す
-	if (m_attackCount <= 0)
-	{
-		m_attackCount = 0;
-
-		m_isAttacking = false;
-
-		m_characterSpeed = 6.0f;
-	}
-
 	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_attackCount == 0)
 	{
 		//ガレキを一つでも持っているなら
@@ -329,7 +336,7 @@ void Player::SpecialAttack()
 		m_isGravityBulletAttack = true;
 	}
 
-	//必殺技ポイントが溜まっていて(後から追加)ボタンを押したら
+	//必殺技ポイントが溜まっていてボタンを押したら
 	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
 	{
 		//音を設定
@@ -415,6 +422,47 @@ void Player::SpecialAttack()
 	}
 }
 
+void Player::ThrowBomb()
+{
+	if (g_pad[m_playerNum]->IsPress(enButtonRB2) && m_attackCount == 0)
+	{
+		//爆弾を一つでも持っているなら
+		if (m_holdBombVector.empty() == false)
+		{
+			//音を鳴らす
+			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
+			ssThrow->Init(L"Assets/sound/投げる音.wav");
+			ssThrow->Play(false);
+
+			//選択している爆弾を発射
+			auto debris = m_holdBombVector.begin() + m_selectBombNo;
+			//保持した爆弾を発射モードにする
+			(*debris)->m_bombState = Bomb::enBullet;
+
+			//キャラクターのスピードを遅くする。
+			m_characterSpeed = 0.5f;
+
+			//攻撃中のフラグをオン
+			m_isAttacking = true;
+
+			//攻撃の隙の持続時間
+			m_attackCount = 60;
+
+			Vector3 front = g_camera3D[m_playerNum]->GetForward();
+			front.y = 0;
+			front.Normalize();
+			(*debris)->m_moveDirection = front;
+
+			//発射した爆弾を保持リストから削除
+			m_holdBombVector.erase(m_holdBombVector.begin() + m_selectBombNo);
+
+			//選択している爆弾のナンバーをリセット。
+			m_selectBombNo = 0;
+		}
+
+	}
+}
+
 //保持しているガレキの動きを制御する
 void Player::HoldDebris()
 {
@@ -470,6 +518,71 @@ void Player::HoldDebris()
 				//回転の中心点から伸ばす
 				debris->m_position = centerOfRotation + tmp;
 			}
+
+			i++;
+		}
+	}
+}
+
+//保持している爆弾を浮遊させる。
+void Player::HoldBomb()
+{
+	//選択する爆弾を決定
+	if (g_pad[m_playerNum]->IsTrigger(enButtonRight))
+	{
+		//選択している爆弾の番号がコンテナのサイズを超えていたら
+		if (++m_selectBombNo >= m_holdBombVector.size())
+		{
+			//一周回って0になる
+			m_selectBombNo = 0;
+		}
+	}
+	else if (g_pad[m_playerNum]->IsTrigger(enButtonLeft))
+	{
+		//選択している爆弾の番号がマイナスになっていたら
+		if (--m_selectBombNo < 0)
+		{
+			//一周回ってコンテナのサイズ-1になる
+			m_selectBombNo = m_holdBombVector.size() - 1;
+		}
+	}
+
+	//回転の中心を設定する。
+	Vector3 centerOfRotation = m_position;
+	centerOfRotation.y += 100.0f;
+
+	//回転の中心をプレイヤーより後ろに。
+	Vector3 cameraDir = g_camera3D[m_playerNum]->GetForward();
+	cameraDir.y = 0;
+	cameraDir.Normalize();
+	centerOfRotation -= cameraDir * 30.0f;
+
+	Vector3 toDebris = { 0.0f,30.0f,0.0f };
+
+	//保持している爆弾が1個以上あれば
+	if (m_holdBombVector.empty() == false)
+	{
+		//360度をガレキの数-1の数で割って1個あたりの角度を求める
+		//次に発射する1個は身体の前に置くので-1
+		int vectorSize = m_holdBombVector.size();
+		float degPerOneDebris = 360.0f / vectorSize;
+
+		//autoFor文の中でも回数をカウントするための変数
+		int i = 0;
+		for (auto debris : m_holdBombVector)
+		{
+			//Y方向に30のベクトルを回転させて回転の中心点から伸ばす
+			Quaternion debrisRot;
+
+			//選んでいる爆弾が常に一番上になるようにする。
+			debrisRot.SetRotationDeg(cameraDir, degPerOneDebris * (i - m_selectBombNo));
+
+			//toDebris本体に回転を適用すると他の場所にも影響が出るのでコピーしてから回転を適用する。
+			Vector3 tmp = toDebris;
+			debrisRot.Apply(tmp);
+
+			//回転の中心点から伸ばす
+			debris->m_position = centerOfRotation + tmp;
 
 			i++;
 		}
@@ -555,37 +668,52 @@ void Player::MagneticBurst()
 		{
 			m_enemy->m_charaCon.Execute(force, 1.0f);
 
-			//敵の弾をまだ奪っていないかつ、敵の保持する弾が1発以上ある時
-			if (m_isSteal == false && m_enemy->m_holdDebrisVector.size() != 0)
+			//敵の弾をまだ奪っていない時
+			if (m_isSteal == false)
 			{
-				int i = 0;
-				//持ってるガレキをドロップさせる
-				//全部ではなく3つまでにしてみる。
 
-				//敵の持っているガレキのリストを走査
-				for (auto iterator = m_enemy->m_holdDebrisVector.begin();iterator != m_enemy->m_holdDebrisVector.end();iterator++)
+				//敵の保持する弾が1発以上あるなら
+				if (m_enemy->m_holdDebrisVector.size() != 0)
 				{
-					//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
-					(*iterator)->m_debrisState = Debris::enDrop;
+					int i = 0;
+					//持ってるガレキをドロップさせる
+					//全部ではなく3つまでにしてみる。
 
-					//カウントをすすめる
-					i++;
-
-					//3になったら3つ吸ったのでブレイク。
-					if (i == 3)
+					//敵の持っているガレキのリストを走査
+					for (auto iterator = m_enemy->m_holdDebrisVector.begin(); iterator != m_enemy->m_holdDebrisVector.end(); iterator++)
 					{
-						break;
+						//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
+						(*iterator)->m_debrisState = Debris::enDrop;
+
+						//カウントをすすめる
+						i++;
+
+						//3になったら3つ吸ったのでブレイク。
+						if (i == 3)
+						{
+							break;
+						}
+					}
+
+					//コンテナのサイズが3以下なら削除
+					if (m_enemy->m_holdDebrisVector.size() < 3)
+					{
+						m_enemy->m_holdDebrisVector.clear();
+					}
+					else//3以上なら3個分削除
+					{
+						m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
 					}
 				}
 
-				//コンテナのサイズが3以下なら削除
-				if (m_enemy->m_holdDebrisVector.size() < 3)
+				//敵が1つでも爆弾を持っていれば
+				if (m_enemy->m_holdBombVector.size() != 0)
 				{
-					m_enemy->m_holdDebrisVector.clear();
-				}
-				else//3以上なら3個分削除
-				{
-					m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
+					//爆弾をドロップさせる。
+					(*m_enemy->m_holdBombVector.begin())->m_bombState = Bomb::enDrop;
+
+					//ドロップさせた爆弾を相手のコンテナから削除
+					m_enemy->m_holdBombVector.erase(m_enemy->m_holdBombVector.begin());
 				}
 
 				//もう敵の弾を奪ったのでフラグ変更
