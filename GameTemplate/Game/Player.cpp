@@ -7,6 +7,7 @@
 #include "DamageDisplay.h"
 #include "GravityBullet.h"
 #include "SampleScene.h"
+#include "MobiusGauge.h"
 
 Player::~Player()
 {
@@ -14,6 +15,9 @@ Player::~Player()
 	DeleteGO(m_statusFontRender);
 	DeleteGO(m_resultSpriteRender);
 	DeleteGO(m_crosshairRender);
+	DeleteGO(m_HPBarSpriteRender);
+	DeleteGO(m_HPBarDarkSpriteRender);
+	DeleteGO(m_mobiusGauge);
 }
 
 bool Player::Start()
@@ -35,6 +39,7 @@ bool Player::Start()
 	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
 	m_skinModelRender->SetShadowCasterFlag(true);
 	m_skinModelRender->SetScale(m_scale);
+	m_skinModelRender->SetPosition(m_position);
 
 	//キャラコンの初期化
 	m_charaCon.Init(10.0f, 50.0f, m_position);
@@ -78,6 +83,14 @@ bool Player::Start()
 		m_HPBarDarkSpriteRender->SetPosition({ -290.0f,325.0f,0.0f });
 	}
 
+	m_mobiusGauge = NewGO<MobiusGauge>(0);
+	if (m_playerNum == 0) {
+		m_mobiusGauge->SetPosition({ -525.0f,-300.0f,0.0f });
+	}
+	else if (m_playerNum == 1) {
+		m_mobiusGauge->SetPosition({ 525.0f,-300.0f,0.0f });
+	}
+
 	return true;
 }
 
@@ -115,10 +128,10 @@ void Player::Update()
 			//必殺技
 			SpecialAttack();
 
-//保持している爆弾の位置を制御する
-		HoldBomb();
+			//保持しているガレキの位置を制御する
+			HoldDebris();
 
-		//バーストを使用している?
+//バーストを使用している?
 		if (m_isBurst == true)
 		{
 			MagneticBurst();
@@ -127,38 +140,42 @@ void Player::Update()
 		{
 			MagneticBehavior();
 		}
-		ThrowBomb();
+//保持している爆弾の位置を制御する
+			HoldBomb();S
+			//バーストを使用している?
+			if (m_isBurst == true)
+			{
+				MagneticBurst();
+			}
+			else
+			{
+				MagneticBehavior();
+			}
+			//爆弾を投げる
+			ThrowBomb();
 
-		//グレネード用。仮です。
-		if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-		{
-			Bomb* debris = NewGO<Bomb>(0, "debris");
-			debris->m_bombShape = Bomb::enGrenade;
-			debris->m_bombState = Bomb::enDrop;
-			debris->m_parent = this;
-			debris->m_position = m_magPosition;
-
-				Debris* debris = NewGO<Debris>(0, "debris");
-				debris->m_debrisShape = Debris::enGrenade;
-				debris->m_debrisState = Debris::enBullet;
+			//グレネード用。仮です。
+			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+			{
+				Bomb* debris = NewGO<Bomb>(0, "debris");
+				debris->m_bombShape = Bomb::enGrenade;
+				debris->m_bombState = Bomb::enDrop;
 				debris->m_parent = this;
 				debris->m_position = m_magPosition;
-
 				debris->m_moveDirection = m_characterDirection;
 			}
 		}
 	
 
-	//攻撃後の隙のタイマーを減らしていく
-	m_attackCount--;
-	//攻撃のクールタイムが終わると移動速度を戻す
-	if (m_attackCount <= 0)
-	{
-		m_attackCount = 0;
+		//攻撃後の隙のタイマーを減らしていく
+		m_attackCount--;
+		//攻撃のクールタイムが終わると移動速度を戻す
+		if (m_attackCount <= 0)
+		{
+			m_attackCount = 0;
 
 		m_isAttacking = false;
 
-		m_characterSpeed = 6.0f;
 	}
 		//状態更新。
 		UpdateState();
@@ -174,32 +191,11 @@ void Player::Update()
 void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
-	std::wstring powerText;
-	switch (m_magPower)
-	{
-	case -1:
-		powerText = L"引力";
-		m_statusFontRender->SetColor({ 0.0f,0.0f,1.0f,1.0f });
-		break;
-	case 1:
-		powerText = L"斥力";
-		m_statusFontRender->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-		break;
-	default:
-		powerText = L"error";
-	}
-
-	wchar_t charge[256];
-	swprintf_s(charge, L"%.1f", m_charge / 10.0f);
-
 	wchar_t special[256];
 	swprintf_s(special, L"%d", m_specialAttackGauge);
 
-	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\n磁力ゲージ:" + charge
-		+ L"%\n必殺ゲージ:" + special
-		+ L"%\n\n\n\n\n\n\n\n磁力:" + powerText
-	);
+	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp) + L"%\n\n必殺ゲージ:" + special
+		+ L"%\n\n残弾数" + std::to_wstring(m_holdDebrisVector.size()));
 
 	if (m_playerNum == 0) {
 		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
@@ -210,6 +206,18 @@ void Player::DisplayStatus()
 		m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
 	}
 
+	//メビウスゲージの色を磁力から決定
+	if (m_magPower == 1)
+	{
+		m_mobiusGauge->m_isRed = true;
+	}
+	else
+	{
+		m_mobiusGauge->m_isRed = false;
+	}
+
+	//メビウスゲージに現在の必殺技のチャージ量を渡す
+	m_mobiusGauge->m_charge = m_charge;
 }
 
 //移動

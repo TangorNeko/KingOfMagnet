@@ -18,6 +18,9 @@ SampleScene::~SampleScene()
 	DeleteGO(m_sky);
 	DeleteGO(m_player1);
 	DeleteGO(m_player2);
+	DeleteGO(m_delimitLineSpriteRender);
+	DeleteGO(m_HPCoverSpriteRender);
+	DeleteGO(m_TimerBaseSpriteRender);
 
 	QueryGOs<DebrisBlock>("debrisblock",[](DebrisBlock* debrisblock)->bool
 		{
