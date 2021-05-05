@@ -14,6 +14,8 @@ Player::~Player()
 	DeleteGO(m_statusFontRender);
 	DeleteGO(m_resultSpriteRender);
 	DeleteGO(m_crosshairRender);
+	DeleteGO(m_HPBarSpriteRender);
+	DeleteGO(m_HPBarDarkSpriteRender);
 }
 
 bool Player::Start()
