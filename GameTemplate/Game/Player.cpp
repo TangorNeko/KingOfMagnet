@@ -127,7 +127,6 @@ void Player::Update()
 		{
 			MagneticBehavior();
 		}
-//爆弾を投げる
 		ThrowBomb();
 
 		//グレネード用。仮です。
