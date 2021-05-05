@@ -35,6 +35,7 @@ bool Player::Start()
 	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
 	m_skinModelRender->SetShadowCasterFlag(true);
 	m_skinModelRender->SetScale(m_scale);
+	m_skinModelRender->SetPosition(m_position);
 
 	//キャラコンの初期化
 	m_charaCon.Init(10.0f, 50.0f, m_position);
@@ -115,52 +116,48 @@ void Player::Update()
 			//必殺技
 			SpecialAttack();
 
-//保持している爆弾の位置を制御する
-		HoldBomb();
+			//保持しているガレキの位置を制御する
+			HoldDebris();
 
-		//バーストを使用している?
-		if (m_isBurst == true)
-		{
-			MagneticBurst();
-		}
-		else
-		{
-			MagneticBehavior();
-		}
-//爆弾を投げる
-		ThrowBomb();
+			//保持している爆弾の位置を制御する
+			HoldBomb();
 
-		//グレネード用。仮です。
-		if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-		{
-			Bomb* debris = NewGO<Bomb>(0, "debris");
-			debris->m_bombShape = Bomb::enGrenade;
-			debris->m_bombState = Bomb::enDrop;
-			debris->m_parent = this;
-			debris->m_position = m_magPosition;
+			//バーストを使用している?
+			if (m_isBurst == true)
+			{
+				MagneticBurst();
+			}
+			else
+			{
+				MagneticBehavior();
+			}
+			//爆弾を投げる
+			ThrowBomb();
 
-				Debris* debris = NewGO<Debris>(0, "debris");
-				debris->m_debrisShape = Debris::enGrenade;
-				debris->m_debrisState = Debris::enBullet;
+			//グレネード用。仮です。
+			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+			{
+				Bomb* debris = NewGO<Bomb>(0, "debris");
+				debris->m_bombShape = Bomb::enGrenade;
+				debris->m_bombState = Bomb::enDrop;
 				debris->m_parent = this;
 				debris->m_position = m_magPosition;
-
 				debris->m_moveDirection = m_characterDirection;
 			}
 		}
 	
 
-	//攻撃後の隙のタイマーを減らしていく
-	m_attackCount--;
-	//攻撃のクールタイムが終わると移動速度を戻す
-	if (m_attackCount <= 0)
-	{
-		m_attackCount = 0;
+		//攻撃後の隙のタイマーを減らしていく
+		m_attackCount--;
+		//攻撃のクールタイムが終わると移動速度を戻す
+		if (m_attackCount <= 0)
+		{
+			m_attackCount = 0;
 
-		m_isAttacking = false;
+			m_isAttacking = false;
 
-		m_characterSpeed = 6.0f;
-	}
+			m_characterSpeed = 6.0f;
+		}
 		//状態更新。
 		UpdateState();
 		//アニメーション選択。
