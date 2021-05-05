@@ -7,6 +7,7 @@
 #include "DamageDisplay.h"
 #include "GravityBullet.h"
 #include "SampleScene.h"
+#include "MobiusGauge.h"
 
 Player::~Player()
 {
@@ -16,6 +17,7 @@ Player::~Player()
 	DeleteGO(m_crosshairRender);
 	DeleteGO(m_HPBarSpriteRender);
 	DeleteGO(m_HPBarDarkSpriteRender);
+	DeleteGO(m_mobiusGauge);
 }
 
 bool Player::Start()
@@ -79,6 +81,14 @@ bool Player::Start()
 	else if (m_playerNum == 1) {
 		m_HPBarDarkSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
 		m_HPBarDarkSpriteRender->SetPosition({ -290.0f,325.0f,0.0f });
+	}
+
+	m_mobiusGauge = NewGO<MobiusGauge>(0);
+	if (m_playerNum == 0) {
+		m_mobiusGauge->SetPosition({ -525.0f,-300.0f,0.0f });
+	}
+	else if (m_playerNum == 1) {
+		m_mobiusGauge->SetPosition({ 525.0f,-300.0f,0.0f });
 	}
 
 	return true;
@@ -174,32 +184,11 @@ void Player::Update()
 void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
-	std::wstring powerText;
-	switch (m_magPower)
-	{
-	case -1:
-		powerText = L"引力";
-		m_statusFontRender->SetColor({ 0.0f,0.0f,1.0f,1.0f });
-		break;
-	case 1:
-		powerText = L"斥力";
-		m_statusFontRender->SetColor({ 1.0f,0.0f,0.0f,1.0f });
-		break;
-	default:
-		powerText = L"error";
-	}
-
-	wchar_t charge[256];
-	swprintf_s(charge, L"%.1f", m_charge / 10.0f);
-
 	wchar_t special[256];
 	swprintf_s(special, L"%d", m_specialAttackGauge);
 
-	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp)
-		+ L"\n磁力ゲージ:" + charge
-		+ L"%\n必殺ゲージ:" + special
-		+ L"%\n\n\n\n\n\n\n\n磁力:" + powerText
-	);
+	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp) + L"%\n\n必殺ゲージ:" + special
+		+ L"%\n\n残弾数" + std::to_wstring(m_holdDebrisVector.size()));
 
 	if (m_playerNum == 0) {
 		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
@@ -210,6 +199,18 @@ void Player::DisplayStatus()
 		m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
 	}
 
+	//メビウスゲージの色を磁力から決定
+	if (m_magPower == 1)
+	{
+		m_mobiusGauge->m_isRed = true;
+	}
+	else
+	{
+		m_mobiusGauge->m_isRed = false;
+	}
+
+	//メビウスゲージに現在の必殺技のチャージ量を渡す
+	m_mobiusGauge->m_charge = m_charge;
 }
 
 //移動

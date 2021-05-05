@@ -5,6 +5,7 @@
 class BackGround;
 class Debris;
 class Bomb;
+class MobiusGauge;
 
 class Player : public IGameObject
 {
@@ -185,6 +186,9 @@ public:
 	//HPバー
 	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
 	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
+
+	//メビウスゲージ
+	MobiusGauge* m_mobiusGauge = nullptr;
 
 };
 

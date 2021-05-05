@@ -314,6 +314,7 @@
     <ClCompile Include="GravityBullet.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="MobiusGauge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -958,6 +959,7 @@
     <ClInclude Include="GravityBullet.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="MobiusGauge.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">

@@ -326,6 +326,7 @@
     <ClCompile Include="MagInversion_item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChip2D.cpp" />
+    <ClCompile Include="MobiusGauge.cpp" />
     <ClCompile Include="MyCapsuleCollider.cpp" />
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -454,6 +455,7 @@
     <ClInclude Include="Mage.h" />
     <ClInclude Include="MagInversion_item.h" />
     <ClInclude Include="MapChip2D.h" />
+    <ClInclude Include="MobiusGauge.h" />
     <ClInclude Include="MyCapsuleCollider.h" />
     <ClInclude Include="NameKey.h" />
     <ClInclude Include="Ninja.h" />
