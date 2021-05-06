@@ -131,17 +131,6 @@ void Player::Update()
 			//保持しているガレキの位置を制御する
 			HoldDebris();
 
-//バーストを使用している?
-		if (m_isBurst == true)
-		{
-			MagneticBurst();
-		}
-		else
-		{
-			MagneticBehavior();
-		}
-//保持している爆弾の位置を制御する
-			HoldBomb();S
 			//バーストを使用している?
 			if (m_isBurst == true)
 			{
@@ -151,6 +140,9 @@ void Player::Update()
 			{
 				MagneticBehavior();
 			}
+			//保持している爆弾の位置を制御する
+			HoldBomb();
+			
 			//爆弾を投げる
 			ThrowBomb();
 
@@ -174,9 +166,9 @@ void Player::Update()
 		{
 			m_attackCount = 0;
 
-		m_isAttacking = false;
-
-	}
+			m_isAttacking = false;
+			m_characterSpeed = 6.0;
+		}
 		//状態更新。
 		UpdateState();
 		//アニメーション選択。
@@ -957,7 +949,7 @@ void Player::Lose()
 //攻撃状態に切り替えできたら切り替える。
 void Player::TryChangeStatusAttack()
 {
-	if (g_pad[m_playerNum]->IsPress(enButtonX) || g_pad[m_playerNum]->IsPress(enButtonRB1)) {
+	if (m_magPower == 1 && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
 		m_animStatus = enStatus_Attack;
 	}
 }
@@ -1118,7 +1110,11 @@ void Player::OpeningCamera()
 {
 	m_cameraLoopCount++;
 	
-	
+	if (g_pad[m_playerNum]->IsTrigger(enButtonA))
+	{
+		m_opning = false;
+		m_enemy->m_opning = false;
+	}
 	if (m_cameraLoopCount < 250)
 	{
 		Vector3 toPos = m_position;
@@ -1150,11 +1146,6 @@ void Player::OpeningCamera()
 		gain += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}	
-
-	
-	
-	//qRotY.SetRotationDeg(CVector3::AxisY, roty);
-	
 
 	
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
