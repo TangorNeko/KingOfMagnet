@@ -33,6 +33,12 @@ bool Player::Start()
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Fall].Load("Assets/animData/Mage_Fall.tka");
 	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_SpecialAttack].Load("Assets/animData/Mage_RangeAttack.tka");
+	animationClips[enAnimationClip_SpecialAttack].SetLoopFlag(true);
+	animationClips[enAnimationClip_Hit].Load("Assets/animData/Mage_Hit.tka");
+	animationClips[enAnimationClip_Hit].SetLoopFlag(false);
+	animationClips[enAnimationClip_Death].Load("Assets/animData/Mage_Death.tka");
+	animationClips[enAnimationClip_Death].SetLoopFlag(false);
 
 	//モデルの初期化
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
@@ -340,7 +346,7 @@ void Player::SpecialAttack()
 	{
 		//音を設定
 		prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
-
+		m_SpecialAttackOn = true;
 		//引力なら
 		if (m_magPower == -1)
 		{
@@ -889,7 +895,8 @@ void Player::Collision()
 void Player::Damage(int damage)
 {
 	m_hp -= damage;
-
+	m_HitOn = true;//アニメーションフラグ
+	m_Hitcount = 30;//
 	ChargeSpecialAttackGauge(10);
 	m_enemy->ChargeSpecialAttackGauge(5);
 
@@ -954,6 +961,16 @@ void Player::TryChangeStatusAttack()
 	}
 }
 
+//特殊攻撃状態に切り替える
+void Player::TryChangeStatusSpecialAttack()
+{
+	if (m_SpecialAttackOn==true)
+	{
+		m_animStatus = enStatus_SpecialAttack;
+		m_SpecialAttackOn = false;
+	}
+}
+
 //走り状態に切り替えできたら切り替える。
 void Player::TryChangeStatusRun()
 {
@@ -976,6 +993,7 @@ void Player::TryChangeStatusFall()
 	if (m_charaCon.IsOnGround() == false)
 	{
 		m_animStatus = enStatus_Fall;
+		m_HitOn = false;//被弾状態リセット
 	}
 }
 
@@ -987,6 +1005,26 @@ void Player::TryChangeStatusIdle()
 	}
 }
 
+//被弾状態に切り替える
+void Player::TryChangeStatusHit()
+{
+	if (m_HitOn == true )
+	{		
+		m_animStatus = enStatus_Hit;
+	}	
+}
+
+
+
+//死亡状態に切り替える
+void Player::TryChangeStatusDeath()
+{
+	if (m_hp <= 0)
+	{
+		m_animStatus = enStatus_Death;
+	}
+}
+
 //アニメーションの状態更新
 void Player::UpdateState()
 {
@@ -994,35 +1032,75 @@ void Player::UpdateState()
 	case enStatus_Attack:
 		TryChangeStatusFall();
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
 			m_animStatus = enStatus_Idle;
 		}
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
+		break;
+	case enStatus_SpecialAttack:
+		TryChangeStatusFall();
+		TryChangeStatusSpecialAttack();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
+			m_animStatus = enStatus_Idle;
+		}
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Run:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusRun();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Idle:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusRun();
 		TryChangeStatusWalk();
 		TryChangeStatusFall();
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Fall:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusRun();
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
+		TryChangeStatusDeath();
+		break;
+
+	case enStatus_Hit:
+		TryChangeStatusFall();
+		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
+			m_animStatus = enStatus_Idle;
+			m_HitOn = false;
+		}
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
+		break;
+	case enStatus_Death:
+		TryChangeStatusDeath();
 		break;
 	}
 }
@@ -1037,6 +1115,8 @@ void Player::AnimationSelect()
 		m_skinModelRender->m_animation_speed = 4.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
+	case enStatus_SpecialAttack:
+		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 	case enStatus_Run:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
@@ -1048,6 +1128,12 @@ void Player::AnimationSelect()
 		break;
 	case enStatus_Fall:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Fall);
+		break;
+	case enStatus_Hit:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Hit);
+		break;
+	case enStatus_Death:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Death);
 		break;
 	}
 
