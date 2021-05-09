@@ -165,5 +165,8 @@ public:
 	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
 	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
 
+	//“®‚©‚¹‚é‚©‚Ç‚¤‚©
+	bool m_canMove = false;
+
 };
 

@@ -13,6 +13,9 @@ Player::~Player()
 	DeleteGO(m_statusFontRender);
 	DeleteGO(m_resultSpriteRender);
 	DeleteGO(m_crosshairRender);
+
+	DeleteGO(m_HPBarSpriteRender);
+	DeleteGO(m_HPBarDarkSpriteRender);
 }
 
 bool Player::Start()
@@ -88,8 +91,7 @@ void Player::Update()
 		return;
 	}
 
-	//磁力の変化
-	ChangeMagnetPower();
+	
 
 	//体力等ステータスのテキストを表示(後に画像にする。)
 	DisplayStatus();
@@ -97,47 +99,62 @@ void Player::Update()
 	//座標に応じて三角形の当たり判定の場所をセット。
 	Collision();
 
-	if (m_isKnockBack == true) {
-		KnockBack();
+	if (m_canMove == false) {
+
+		m_skinModelRender->SetPosition(m_position);
+		float angle = acosf(n);//アークコサイン
+		rot.SetRotation(Vector3::AxisY, angle);
+		if (m_playerNum == 0) {
+			rot.y *= -1.0f;
+		}
+		m_skinModelRender->SetRotation(rot);
+		
 	}
-	else if (m_isKnockBack == false){
-		//移動
-		Move();
-
-		//必殺技
-		SpecialAttack();
-
-		//保持しているガレキの位置を制御する
-		HoldDebris();
-
-		//バーストを使用している?
-		if (m_isBurst == true)
-		{
-			MagneticBurst();
+	else {
+		//磁力の変化
+		ChangeMagnetPower();
+		if (m_isKnockBack == true) {
+			KnockBack();
 		}
-		else
-		{
-			MagneticBehavior();
-		}
+		else if (m_isKnockBack == false) {
+			//移動
+			Move();
 
-		//グレネード用。仮です。
-		if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-		{
-			//音
-			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
-			ssThrow->Init(L"Assets/sound/投げる音.wav");
-			ssThrow->Play(false);
+			//必殺技
+			SpecialAttack();
 
-			Debris* debris = NewGO<Debris>(0, "debris");
-			debris->m_debrisShape = Debris::enGrenade;
-			debris->m_debrisState = Debris::enBullet;
-			debris->m_parent = this;
-			debris->m_position = m_magPosition;
+			//バーストを使用している?
+			if (m_isBurst == true)
+			{
+				MagneticBurst();
+			}
+			else
+			{
+				MagneticBehavior();
+			}
 
-			debris->m_moveDirection = m_characterDirection;
+			//グレネード用。仮です。
+			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+			{
+				//音
+				prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
+				ssThrow->Init(L"Assets/sound/投げる音.wav");
+				ssThrow->Play(false);
+
+				Debris* debris = NewGO<Debris>(0, "debris");
+				debris->m_debrisShape = Debris::enGrenade;
+				debris->m_debrisState = Debris::enBullet;
+				debris->m_parent = this;
+				debris->m_position = m_magPosition;
+
+				debris->m_moveDirection = m_characterDirection;
+			}
 		}
 	}
-	
+
+	//保持しているガレキの位置を制御する
+	HoldDebris();
+
 	//状態更新。
 	UpdateState();
 	//アニメーション選択。
