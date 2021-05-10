@@ -27,6 +27,14 @@ class SampleScene : public IGameObject
 
 	bool m_gamePauseFlag = false;
 
+	//ゲームスタートカウント関連
+	void StartCountDown();
+	float m_measureSecond = 0.0f;	//秒を測る
+	int m_startCount = 4;		//ゲームスタートまでのカウント
+	prefab::CFontRender* m_startCountFontRender = nullptr;
+	bool m_isGameStart = false;
+	bool m_playCountSEFlag = false;
+
 public:
 
 	void SetGameEndFlag(bool flag)

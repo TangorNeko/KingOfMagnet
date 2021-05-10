@@ -27,6 +27,7 @@ class Player : public IGameObject
 
 	//必殺技
 	void SpecialAttack();
+	bool m_SpecialAttackOn = false;//アニメーション用フラグ
 
 	//爆弾を投げる
 	void ThrowBomb();
@@ -55,6 +56,9 @@ class Player : public IGameObject
 	//攻撃状態に切り替えできたら切り替える。
 	void TryChangeStatusAttack();
 
+	//特殊攻撃状態に切り替える
+	void TryChangeStatusSpecialAttack();
+
 	//走り状態に切り替えできたら切り替える。
 	void TryChangeStatusRun();
 
@@ -66,6 +70,14 @@ class Player : public IGameObject
 
 	//待機状態に切り替えできたら切り替える。
 	void TryChangeStatusIdle();
+
+	//被弾状態に切り替える
+	void TryChangeStatusHit();
+	bool m_HitOn = false;//被弾したかどうか
+	int m_Hitcount = 30;//被弾したときに流れるアニメーションのフレーム数
+
+	//死亡状態に切り替える
+	void TryChangeStatusDeath();
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -157,6 +169,9 @@ public:
 		enAnimationClip_Walk,
 		enAnimationClip_Move,
 		enAnimationClip_Fall,
+		enAnimationClip_SpecialAttack,
+		enAnimationClip_Hit,
+		enAnimationClip_Death,
 		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
 	};
 
@@ -168,6 +183,9 @@ public:
 		enStatus_Walk,		//歩き状態
 		enStatus_Move,		//移動アクション状態		
 		enStatus_Fall,		//落下状態
+		enStatus_SpecialAttack,//必殺技状態
+		enStatus_Hit,		//被弾状態
+		enStatus_Death,		//死亡状態
 		enStatus_Num,		//状態の数。
 	};
 
@@ -189,6 +207,7 @@ public:
 
 	//メビウスゲージ
 	MobiusGauge* m_mobiusGauge = nullptr;
-
+	//動かせるかどうか
+	bool m_canMove = false;
 };
 

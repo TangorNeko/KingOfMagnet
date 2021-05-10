@@ -17,8 +17,7 @@ Player::~Player()
 	DeleteGO(m_crosshairRender);
 	DeleteGO(m_HPBarSpriteRender);
 	DeleteGO(m_HPBarDarkSpriteRender);
-	DeleteGO(m_mobiusGauge);
-}
+	DeleteGO(m_mobiusGauge);}
 
 bool Player::Start()
 {
@@ -33,6 +32,12 @@ bool Player::Start()
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_Fall].Load("Assets/animData/Mage_Fall.tka");
 	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
+	animationClips[enAnimationClip_SpecialAttack].Load("Assets/animData/Mage_RangeAttack.tka");
+	animationClips[enAnimationClip_SpecialAttack].SetLoopFlag(true);
+	animationClips[enAnimationClip_Hit].Load("Assets/animData/Mage_Hit.tka");
+	animationClips[enAnimationClip_Hit].SetLoopFlag(false);
+	animationClips[enAnimationClip_Death].Load("Assets/animData/Mage_Death.tka");
+	animationClips[enAnimationClip_Death].SetLoopFlag(false);
 
 	//モデルの初期化
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
@@ -97,89 +102,94 @@ bool Player::Start()
 void Player::Update()
 {
 	//プレイヤー番号が与えられていなければ何もしない
-		if (m_playerNum == -1)
-		{
-			return;
-		}
+	if (m_playerNum == -1)
+	{
+		return;
+	}
 	if (m_opning == true)
 	{
 		OpeningCamera();
 	}
 	else
 	{
-		
-
-		//磁力の変化
-		ChangeMagnetPower();
-
 		//体力等ステータスのテキストを表示(後に画像にする。)
 		DisplayStatus();
-
 		//座標に応じて三角形の当たり判定の場所をセット。
 		Collision();
 
-		if (m_isKnockBack == true) {
-			KnockBack();
-		}
-		else if (m_isKnockBack == false) {
-			//移動
-			Move();
-
-			//必殺技
-			SpecialAttack();
-
-			//保持しているガレキの位置を制御する
-			HoldDebris();
-
-			//保持している爆弾の位置を制御する
-			HoldBomb();
-
-			//バーストを使用している?
-			if (m_isBurst == true)
-			{
-				MagneticBurst();
-			}
-			else
-			{
-				MagneticBehavior();
-			}
-			//爆弾を投げる
-			ThrowBomb();
-
-			//グレネード用。仮です。
-			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-			{
-				Bomb* debris = NewGO<Bomb>(0, "debris");
-				debris->m_bombShape = Bomb::enGrenade;
-				debris->m_bombState = Bomb::enDrop;
-				debris->m_parent = this;
-				debris->m_position = m_magPosition;
-				debris->m_moveDirection = m_characterDirection;
-			}
-		}
-	
-
-		//攻撃後の隙のタイマーを減らしていく
-		m_attackCount--;
-		//攻撃のクールタイムが終わると移動速度を戻す
-		if (m_attackCount <= 0)
+		if (m_canMove == false) 
 		{
-			m_attackCount = 0;
-
-			m_isAttacking = false;
-
-			m_characterSpeed = 6.0f;
+			m_skinModelRender->SetPosition(m_position);
+			float angle = acosf(n);//アークコサイン
+			rot.SetRotation(Vector3::AxisY, angle);
+			if (m_playerNum == 0)
+			{
+				rot.y *= -1.0f;
+			}
+			m_skinModelRender->SetRotation(rot);
 		}
-		//状態更新。
-		UpdateState();
-		//アニメーション選択。
-		AnimationSelect();
+		else 
+		{
+			//磁力の変化
+			ChangeMagnetPower();
+			if (m_isKnockBack == true) 
+			{
+				KnockBack();
+			}
+			else if (m_isKnockBack == false)
+			{
+				//移動
+				Move();
+				//必殺技
+				SpecialAttack();
+				//保持しているガレキの位置を制御する
+				HoldDebris();
+				//保持している爆弾の位置を制御する
+				HoldBomb();
+				//バーストを使用している?
+				if (m_isBurst == true)
+				{
+					MagneticBurst();
+				}
+				else
+				{
+					MagneticBehavior();
+				}
 
-		//カメラの移動
-		Camera();
+				//爆弾を投げる
+				ThrowBomb();
+
+				//グレネード用。仮です。
+				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+				{
+					Bomb* debris = NewGO<Bomb>(0, "debris");
+					debris->m_bombShape = Bomb::enGrenade;
+					debris->m_bombState = Bomb::enDrop;
+					debris->m_parent = this;
+					debris->m_position = m_magPosition;
+					debris->m_moveDirection = m_characterDirection;
+				}
+			}
+
+			//攻撃後の隙のタイマーを減らしていく
+			m_attackCount--;
+			//攻撃のクールタイムが終わると移動速度を戻す
+			if (m_attackCount <= 0)
+			{
+				m_attackCount = 0;
+				m_isAttacking = false;
+				m_characterSpeed = 6.0;
+			}
+			//状態更新。
+			UpdateState();
+			//アニメーション選択。
+			AnimationSelect();
+
+			//カメラの移動
+			Camera();
+		}
 	}
 }
-
 //体力、メビウスゲージの表示
 void Player::DisplayStatus()
 {
@@ -341,7 +351,7 @@ void Player::SpecialAttack()
 	{
 		//音を設定
 		prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
-
+		m_SpecialAttackOn = true;
 		//引力なら
 		if (m_magPower == -1)
 		{
@@ -890,7 +900,8 @@ void Player::Collision()
 void Player::Damage(int damage)
 {
 	m_hp -= damage;
-
+	m_HitOn = true;//アニメーションフラグ
+	m_Hitcount = 30;//
 	ChargeSpecialAttackGauge(10);
 	m_enemy->ChargeSpecialAttackGauge(5);
 
@@ -950,8 +961,18 @@ void Player::Lose()
 //攻撃状態に切り替えできたら切り替える。
 void Player::TryChangeStatusAttack()
 {
-	if (g_pad[m_playerNum]->IsPress(enButtonX) || g_pad[m_playerNum]->IsPress(enButtonRB1)) {
+	if (m_magPower == 1 && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
 		m_animStatus = enStatus_Attack;
+	}
+}
+
+//特殊攻撃状態に切り替える
+void Player::TryChangeStatusSpecialAttack()
+{
+	if (m_SpecialAttackOn==true)
+	{
+		m_animStatus = enStatus_SpecialAttack;
+		m_SpecialAttackOn = false;
 	}
 }
 
@@ -977,6 +998,7 @@ void Player::TryChangeStatusFall()
 	if (m_charaCon.IsOnGround() == false)
 	{
 		m_animStatus = enStatus_Fall;
+		m_HitOn = false;//被弾状態リセット
 	}
 }
 
@@ -988,6 +1010,26 @@ void Player::TryChangeStatusIdle()
 	}
 }
 
+//被弾状態に切り替える
+void Player::TryChangeStatusHit()
+{
+	if (m_HitOn == true )
+	{		
+		m_animStatus = enStatus_Hit;
+	}	
+}
+
+
+
+//死亡状態に切り替える
+void Player::TryChangeStatusDeath()
+{
+	if (m_hp <= 0)
+	{
+		m_animStatus = enStatus_Death;
+	}
+}
+
 //アニメーションの状態更新
 void Player::UpdateState()
 {
@@ -995,35 +1037,75 @@ void Player::UpdateState()
 	case enStatus_Attack:
 		TryChangeStatusFall();
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
 			m_animStatus = enStatus_Idle;
 		}
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
+		break;
+	case enStatus_SpecialAttack:
+		TryChangeStatusFall();
+		TryChangeStatusSpecialAttack();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
+			m_animStatus = enStatus_Idle;
+		}
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Run:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusRun();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Idle:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusRun();
 		TryChangeStatusWalk();
 		TryChangeStatusFall();
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
 		break;
 	case enStatus_Fall:
 		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
 		TryChangeStatusRun();
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
+		TryChangeStatusDeath();
+		break;
+
+	case enStatus_Hit:
+		TryChangeStatusFall();
+		TryChangeStatusAttack();
+		TryChangeStatusSpecialAttack();
+		if (m_skinModelRender->IsPlayingAnimation() == false)
+		{
+			m_animStatus = enStatus_Idle;
+			m_HitOn = false;
+		}
+		TryChangeStatusHit();
+		TryChangeStatusDeath();
+		break;
+	case enStatus_Death:
+		TryChangeStatusDeath();
 		break;
 	}
 }
@@ -1038,6 +1120,8 @@ void Player::AnimationSelect()
 		m_skinModelRender->m_animation_speed = 4.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
+	case enStatus_SpecialAttack:
+		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 	case enStatus_Run:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
@@ -1049,6 +1133,12 @@ void Player::AnimationSelect()
 		break;
 	case enStatus_Fall:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Fall);
+		break;
+	case enStatus_Hit:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Hit);
+		break;
+	case enStatus_Death:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Death);
 		break;
 	}
 
@@ -1111,7 +1201,11 @@ void Player::OpeningCamera()
 {
 	m_cameraLoopCount++;
 	
-	
+	if (g_pad[m_playerNum]->IsTrigger(enButtonA))
+	{
+		m_opning = false;
+		m_enemy->m_opning = false;
+	}
 	if (m_cameraLoopCount < 250)
 	{
 		Vector3 toPos = m_position;
@@ -1143,11 +1237,6 @@ void Player::OpeningCamera()
 		gain += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}	
-
-	
-	
-	//qRotY.SetRotationDeg(CVector3::AxisY, roty);
-	
 
 	
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
