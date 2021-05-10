@@ -8,6 +8,7 @@
 #include <x3daudio.h>
 #include <xaudio2fx.h>
 
+#include "EffectEngine.h"
 #include "SoundEngine.h"
 #include "prefab.h"
 #include "CLightManager.h"

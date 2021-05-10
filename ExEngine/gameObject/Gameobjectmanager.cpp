@@ -94,6 +94,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 					go->RenderWrapper(rc, g_camera3D[0]);
 				}
 			}
+
+			//1画面目エフェクト更新
+			EffectEngine::GetInstance()->Update(GameTime::GetInstance().GetFrameDeltaTime(),0);
+			//1画面目エフェクト描画
+			EffectEngine::GetInstance()->Draw(0);
 		}
 
 		//2P側
@@ -115,6 +120,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 					go->RenderWrapper(rc, g_camera3D[1]);
 				}
 			}
+
+			//2画面目エフェクト更新
+			EffectEngine::GetInstance()->Update(GameTime::GetInstance().GetFrameDeltaTime(), 1);
+			//2画面目エフェクト描画
+			EffectEngine::GetInstance()->Draw(1);
 		}
 	}
 	else //1画面モード
@@ -139,6 +149,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 				go->RenderWrapper(rc, g_camera3D[0]);
 			}
 		}
+
+		//1画面オンリーのエフェクト更新
+		EffectEngine::GetInstance()->Update(GameTime::GetInstance().GetFrameDeltaTime(),0);
+		//1画面オンリーのエフェクト描画
+		EffectEngine::GetInstance()->Draw(0);
 	}
 	
 	//Level2D用　
