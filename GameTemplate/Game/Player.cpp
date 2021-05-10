@@ -972,7 +972,7 @@ void Player::TryChangeStatusSpecialAttack()
 	if (m_SpecialAttackOn==true)
 	{
 		m_animStatus = enStatus_SpecialAttack;
-		m_SpecialAttackOn = false;
+		
 	}
 }
 
@@ -1051,6 +1051,7 @@ void Player::UpdateState()
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
 			m_animStatus = enStatus_Idle;
+			m_SpecialAttackOn = false;
 		}
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
@@ -1183,7 +1184,7 @@ bool Player::GetShootPoint(Vector3& crossPoint)
 void Player::KnockBack() {
 	//ノックバックする向きを設定
 	if (m_isknockBackCount == 0) {
-		m_moveSpeed.y = 0.001f;
+		m_moveSpeed.y = 0.0f;
 	}
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
 	m_skinModelRender->SetPosition(m_position);
