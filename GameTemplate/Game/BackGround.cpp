@@ -22,6 +22,7 @@ bool BackGround::Start()
 	m_pLig->SetRange(500);
 	*/
 	m_skinModelRender->Init("Assets/modelData/stage00.tkm");
+	//m_skinModelRender->Init("Assets/modelData/ministage.tkm");
 
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 

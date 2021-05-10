@@ -1,39 +1,46 @@
 #include "stdafx.h"
-#include "Debris.h"
+#include "Bomb.h"
 
 #include "Player.h"
 #include "BackGround.h"
 
 #include "Explosion.h"
 
-Debris::~Debris()
+Bomb::~Bomb()
 {
 	DeleteGO(m_skinModelRender);
 }
 
-bool Debris::Start()
+bool Bomb::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-	//ガレキの形状で読み込むモデルを分岐
-	switch (m_debrisShape)
+	//爆弾の形状で読み込むモデルを分岐
+	switch (m_bombShape)
 	{
-	case enStone:
-		//石のモデル
-		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
-		m_skinModelRender->SetScale({ 1.0f,1.0f,1.0f });
+	case enGrenade:
+		m_skinModelRender->Init("Assets/modelData/FlashGrenade.tkm");
+		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
+		//投げる角度を少し上にする。
+		m_moveDirection.y += 0.4f;
+		m_moveDirection.Normalize();
 		break;
-	case enSword:
-		//剣のモデル
+	case enFlashGrenade:
+		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
+		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
+		//投げる角度を少し上にする。
+		m_moveDirection.y += 0.4f;
+		m_moveDirection.Normalize();
+		break;
+	case enIncendiaryGrenade:
 		m_skinModelRender->Init("Assets/modelData/KnightBullet.tkm");
 		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
-		break;
-	case enSpecialCharger:
-		m_skinModelRender->Init("Assets/modelData/Gravity.tkm");
-		m_skinModelRender->SetScale({ 0.1f, 0.1f, 0.1f });
+		//投げる角度を少し上にする。
+		m_moveDirection.y += 0.4f;
+		m_moveDirection.Normalize();
 		break;
 	default:
-		MessageBoxA(nullptr, "存在しないガレキの形状です。\n", "エラー", MB_OK);
+		MessageBoxA(nullptr, "存在しない爆弾の形状です。\n", "エラー", MB_OK);
 		break;
 	}
 
@@ -43,13 +50,13 @@ bool Debris::Start()
 	return true;
 }
 
-void Debris::Update()
+void Bomb::Update()
 {
 	//前フレームの座標を記録
 	m_oldPosition = m_position;
 
-	//ガレキの状態で分岐
-	switch (m_debrisState)
+	//爆弾の状態で分岐
+	switch (m_bombState)
 	{
 	case enDrop:
 		//地面に落ちている時の挙動
@@ -68,13 +75,13 @@ void Debris::Update()
 		AsPopBehave();
 		break;
 	default:
-		MessageBoxA(nullptr, "存在しないガレキの状態です。", "エラー", MB_OK);
+		MessageBoxA(nullptr, "存在しない爆弾の状態です。", "エラー", MB_OK);
 		break;
 	}
 
 	m_skinModelRender->SetPosition(m_position);
 
-	//Debrisが穴に落ちた時、消す。
+	//Bombが穴に落ちた時、消す。
 	if (m_position.y <= -1000.0f) {
 		DeleteGO(this);
 	}
@@ -82,7 +89,7 @@ void Debris::Update()
 
 
 //地面に落ちている時の挙動
-void Debris::AsDropBehave()
+void Bomb::AsDropBehave()
 {
 	QueryGOs<Player>("Player", [this](Player* player)->bool {
 
@@ -119,14 +126,16 @@ void Debris::AsDropBehave()
 					m_oldPosition = m_position;
 			}
 
-			//近くに弾があれば10発以内なら拾える
-			if (toPlayer.Length() < 100.0f && player->m_holdDebrisVector.size() < 10)
+			//近くに弾があれば3発以内なら拾える
+			if (toPlayer.Length() < 100.0f && player->m_holdBombVector.size() < 3)
 			{
 				m_parent = player;
-				m_debrisState = enHold;
+				m_bombState = enHold;
 
-				//プレイヤーの保持するガレキコンテナに格納
-				player->m_holdDebrisVector.push_back(this);
+				//プレイヤーの保持する爆弾コンテナに格納
+				player->m_holdBombVector.push_back(this);
+				//プレイヤーが選択している爆弾をリセット。
+				player->m_selectBombNo = 0;
 			}
 		}
 
@@ -162,7 +171,7 @@ void Debris::AsDropBehave()
 
 				m_position.y += 10.0f;
 			}
-			
+
 		}
 		return true;
 		});
@@ -177,7 +186,7 @@ void Debris::AsDropBehave()
 }
 
 //弾として発射されている時の挙動
-void Debris::AsBulletBehave()
+void Bomb::AsBulletBehave()
 {
 	//プレイヤーとの当たり判定用
 	m_bulletCollider.SetStartPoint(m_oldPosition);
@@ -218,52 +227,22 @@ void Debris::AsBulletBehave()
 
 				//移動処理(TODO:撃った弾と違うプレイヤーは1人しかいないので1回しか呼ばれないので大丈夫だが、場所の移動は検討する、
 				//その場合、QueryGOsを移動処理と当たり判定処理の2回に分けてすることになるかも)
-				m_position += m_moveDirection * m_velocity;
+				m_position += m_moveDirection * m_velocity * 0.5f;
+				m_moveDirection.y -= 5.0f * 5.0f * 0.002f;
+				m_moveDirection.Normalize();
 
 				//移動先の当たり判定を更新
 				m_bulletCollider.SetEndPoint(m_position);
 
-				//当たり判定にヒットしているならダメージ。
+				//当たり判定にヒットしているなら起爆。
 				if (player->m_collider.isHitCapsule(m_bulletCollider))
 				{
-					//ヒット音
-					prefab::CSoundSource* ssHit = NewGO<prefab::CSoundSource>(0);;
-					//ガレキの形状でダメージが分岐
-					switch (m_debrisShape)
-					{
-					case enStone:
-						//音を再生
-						ssHit->Init(L"Assets/sound/ダメージ音.wav");
-						ssHit->Play(false);
-
-						player->Damage(50.0f);
-						break;
-					case enSword:
-						//音を再生
-						ssHit->Init(L"Assets/sound/剣が当たる.wav");
-						ssHit->Play(false);
-
-						player->Damage(100.0f);
-						break;
-					case enSpecialCharger:
-						//音を再生(仮)
-						ssHit->Init(L"Assets/sound/剣が当たる.wav");
-						ssHit->Play(false);
-
-						player->Damage(20.0f);
-						break;
-					}
 					//当たった所からポップさせる
-					m_debrisState = enPop;
-
-					//プレイヤーをノックバックさせる。
-					player->m_isKnockBack = true;
-					player->m_moveSpeed = m_moveDirection * 10.0f;
+					m_bombState = enPop;
 				}
 			}
 			return true;
 		});
-
 
 	//ステージとの当たり判定
 	Vector3 crossPoint;
@@ -278,34 +257,18 @@ void Debris::AsBulletBehave()
 		//当たった所より少し手前からポップさせる
 		m_position -= moveDir * 30.0f;
 
-		m_debrisState = enPop;
+		m_bombState = enPop;
 	}
 }
 
 
 //プレイヤーに保持されている時の挙動
-void Debris::AsHoldBehave()
+void Bomb::AsHoldBehave()
 {
-	QueryGOs<Player>("Player", [this](Player* player)->bool
-		{
-			//スペシャルチャージャーを持っていると、ゲージが少しずつ溜まる。
-			if (m_debrisShape == enSpecialCharger) {
-				if (player->m_playerNum == m_parent->m_playerNum) {
-
-					m_specialChargeCount += 1.0f;
-
-					if (m_specialChargeCount == 50.0f) {
-						player->ChargeSpecialAttackGauge(1);
-						m_specialChargeCount = 0.0f;
-					}
-				}
-			}
-		return true;
-	});
 }
 
 //何かに当たった直後の挙動
-void Debris::AsPopBehave()
+void Bomb::AsPopBehave()
 {
 	m_position.y -= 10.0f;
 
@@ -317,6 +280,17 @@ void Debris::AsPopBehave()
 		//当たった所にドロップさせる
 		m_position = m_oldPosition;
 
-		m_debrisState = enDrop;
+		//爆弾の種類によって分岐。
+		switch(m_bombShape)
+		{
+			case enGrenade:
+			m_explosionCount++;
+			if (m_explosionCount >= 80) {
+				Explosion* m_explosion = NewGO<Explosion>(0);
+				m_explosion->m_position = crossPoint;
+				DeleteGO(this);
+			}
+			break;
+		}
 	}
 }

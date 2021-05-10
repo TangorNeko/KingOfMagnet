@@ -4,9 +4,9 @@
 class Player;
 class BackGround;
 
-class Debris : public IGameObject
+class Bomb : public IGameObject
 {
-	~Debris();
+	~Bomb();
 	bool Start() override;
 	void Update() override;
 
@@ -23,32 +23,31 @@ class Debris : public IGameObject
 	void AsPopBehave();
 
 public:
-	//ガレキの状態
-	enum enDebrisState
+	//爆弾の状態
+	enum enBombState
 	{
 		enDrop,//落ちている。
 		enBullet,//弾として発射されている
 		enHold,//プレイヤーが保持している
-		enPop,//何かに当たった後
+		enPop,//何かに当たった　爆発寸前
 	};
 
-	enDebrisState m_debrisState = enDrop;
+	enBombState m_bombState = enDrop;
 
-	//ガレキの形
-	enum enDebrisShape
+	//爆弾の種類
+	enum enBombShape
 	{
-		enStone,//石
-		enSword,//剣
-		//ここから他のアイテム(魔法の杖)など追加していく?
-		enSpecialCharger,
+		enGrenade,//爆弾
+		enFlashGrenade,//閃光弾
+		enIncendiaryGrenade,//焼夷弾
 	};
 
-	enDebrisShape m_debrisShape = enStone;
+	enBombShape m_bombShape = enGrenade;
 
 	Vector3 m_position;//座標
 	Vector3 m_oldPosition;//前フレームの座標
 
-	prefab::CSkinModelRender* m_skinModelRender = nullptr;//ガレキのモデル
+	prefab::CSkinModelRender* m_skinModelRender = nullptr;//爆弾のモデル
 
 	Player* m_parent = nullptr;//親のプレイヤー(ホールド時、発射時に使用)
 
@@ -59,7 +58,7 @@ public:
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
 	const float m_velocity = 50.0f;//弾速
 
-	//スペシャルチャージャー用
-	float m_specialChargeCount = 0.0f;	//スペシャルゲージを増やすまでのカウント
+	//爆発までのカウント
+	int m_explosionCount = 0;
 };
 

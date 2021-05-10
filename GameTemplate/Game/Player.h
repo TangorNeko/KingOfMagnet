@@ -4,12 +4,17 @@
 
 class BackGround;
 class Debris;
+class Bomb;
+class MobiusGauge;
 
 class Player : public IGameObject
 {
 	~Player();
 	bool Start() override;
 	void Update() override;
+
+	//開始前カメラ移動
+	void OpeningCamera();
 
 	//体力、メビウスゲージの表示
 	void DisplayStatus();
@@ -22,9 +27,16 @@ class Player : public IGameObject
 
 	//必殺技
 	void SpecialAttack();
+	bool m_SpecialAttackOn = false;//アニメーション用フラグ
+
+	//爆弾を投げる
+	void ThrowBomb();
 
 	//保持しているガレキを浮遊させる。
 	void HoldDebris();
+
+	//保持している爆弾を浮遊させる。
+	void HoldBomb();
 
 	//磁力バーストを使用していない時の通常の動き
 	void MagneticBehavior();
@@ -44,6 +56,9 @@ class Player : public IGameObject
 	//攻撃状態に切り替えできたら切り替える。
 	void TryChangeStatusAttack();
 
+	//特殊攻撃状態に切り替える
+	void TryChangeStatusSpecialAttack();
+
 	//走り状態に切り替えできたら切り替える。
 	void TryChangeStatusRun();
 
@@ -55,6 +70,14 @@ class Player : public IGameObject
 
 	//待機状態に切り替えできたら切り替える。
 	void TryChangeStatusIdle();
+
+	//被弾状態に切り替える
+	void TryChangeStatusHit();
+	bool m_HitOn = false;//被弾したかどうか
+	int m_Hitcount = 30;//被弾したときに流れるアニメーションのフレーム数
+
+	//死亡状態に切り替える
+	void TryChangeStatusDeath();
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -97,6 +120,14 @@ public:
 	float n;//内積
 	float angle;//アークコサイン
 
+	Vector3 m_cameraPos;
+	Vector3 m_targetPos = { 0.0f,0.0f,0.0f };
+	float gain = 10;//カメラとターゲットとの距離
+	float factor = 0.0f;
+	float m_addY = 0.0f;
+	int m_cameraLoopCount = 0;
+	bool m_opning = true;
+
 	int m_fallLoop = 0;//落下制御用のループカウント
 	float m_characterSpeed = 6.0;//キャラクターの移動速度
 
@@ -127,6 +158,9 @@ public:
 	std::vector<Debris*> m_holdDebrisVector;//保持しているガレキが格納されるコンテナ
 	float m_holdDebrisRotateDeg = 0;//保持しているガレキの回転角度
 
+	std::vector<Bomb*> m_holdBombVector;//保持している爆弾が格納されるコンテナ
+	int m_selectBombNo = 0;//選択している爆弾の番号
+
 	//アニメーションの数
 	enum {
 		enAnimationClip_Attack,
@@ -135,6 +169,9 @@ public:
 		enAnimationClip_Walk,
 		enAnimationClip_Move,
 		enAnimationClip_Fall,
+		enAnimationClip_SpecialAttack,
+		enAnimationClip_Hit,
+		enAnimationClip_Death,
 		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
 	};
 
@@ -146,6 +183,9 @@ public:
 		enStatus_Walk,		//歩き状態
 		enStatus_Move,		//移動アクション状態		
 		enStatus_Fall,		//落下状態
+		enStatus_SpecialAttack,//必殺技状態
+		enStatus_Hit,		//被弾状態
+		enStatus_Death,		//死亡状態
 		enStatus_Num,		//状態の数。
 	};
 
@@ -165,8 +205,9 @@ public:
 	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
 	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
 
+	//メビウスゲージ
+	MobiusGauge* m_mobiusGauge = nullptr;
 	//動かせるかどうか
 	bool m_canMove = false;
-
 };
 

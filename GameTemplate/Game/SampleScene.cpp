@@ -6,6 +6,7 @@
 #include "SkyBoard.h"
 #include "Debris.h"
 #include "DebrisBlock.h"
+#include "Bomb.h"
 #include "Repulsion.h"
 #include "TitleScene.h"
 
@@ -17,6 +18,9 @@ SampleScene::~SampleScene()
 	DeleteGO(m_sky);
 	DeleteGO(m_player1);
 	DeleteGO(m_player2);
+	DeleteGO(m_delimitLineSpriteRender);
+	DeleteGO(m_HPCoverSpriteRender);
+	DeleteGO(m_TimerBaseSpriteRender);
 
 	QueryGOs<DebrisBlock>("debrisblock",[](DebrisBlock* debrisblock)->bool
 		{
@@ -49,13 +53,16 @@ bool SampleScene::Start()
 	m_stageLight->SetColor({ 0.5f,0.5f,0.5f });
 
 	m_player1 = NewGO<Player>(0, "Player");
-	m_player1->m_position = { 860.0f,0.0f,550.0f };
+	m_player1->m_position = { 860.0f,0.0f,400.0f };
+	//m_player1->m_position = { 250.0f,0.0f,250.0f };//ミニステージ
 	m_player1->m_playerNum = 0;
 	m_player1->m_magPower = 1;
 	m_player1->m_toCameraDir = { 1.0f,0.0f,0.0f };
 
 	m_player2 = NewGO<Player>(0, "Player");
-	m_player2->m_position = { -860.0f,0.0f,-550.0f };
+	m_player2->m_position = { -860.0f,0.0f,-400.0f };
+	//m_player2->m_position = { -250.0f,0.0f,-250.0f };//ミニステージ
+
 	m_player2->m_playerNum = 1;
 	m_player2->m_magPower = -1;
 	m_player2->m_toCameraDir = { -1.0f,0.0f,0.0f };

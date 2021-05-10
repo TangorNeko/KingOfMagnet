@@ -290,6 +290,7 @@
     <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CaslFile.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="MagInversion_item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChip2D.cpp" />
+    <ClCompile Include="MobiusGauge.cpp" />
     <ClCompile Include="MyCapsuleCollider.cpp" />
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -417,6 +419,7 @@
     <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h" />
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Bomb.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CaslFile.h" />
     <ClInclude Include="CDirectionLight.h" />
@@ -452,6 +455,7 @@
     <ClInclude Include="Mage.h" />
     <ClInclude Include="MagInversion_item.h" />
     <ClInclude Include="MapChip2D.h" />
+    <ClInclude Include="MobiusGauge.h" />
     <ClInclude Include="MyCapsuleCollider.h" />
     <ClInclude Include="NameKey.h" />
     <ClInclude Include="Ninja.h" />
