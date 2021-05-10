@@ -39,16 +39,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	CSoundEngine::CreateInstance();
 	CSoundEngine::GetInstance()->Init();
 
+	EffectEngine::CreateInstance();
+
 	PostEffectManager::CreateInstance();
 	//ブルームフラグ、シャドウフラグの順番
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 
 //タイトルシーンを作成。
-	TitleScene* title = NewGO<TitleScene>(0, "titlescene");
+	//TitleScene* title = NewGO<TitleScene>(0, "titlescene");
 
-	//SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
-	
+	SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
+
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////

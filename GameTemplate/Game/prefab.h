@@ -8,3 +8,4 @@
 #include "CLevelRender2D.h"
 #include "CSoundSource.h"
 #include "CLevel.h"
+#include "CEffect.h"

@@ -315,6 +315,10 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="MobiusGauge.cpp" />
+    <ClCompile Include="EffectEngine.cpp" />
+    <ClCompile Include="CEffect.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -960,6 +964,10 @@
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="MobiusGauge.h" />
+    <ClInclude Include="EffectEngine.h" />
+    <ClInclude Include="CEffect.h">
+      <Filter>ヘッダー ファイル\prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">

@@ -12,3 +12,6 @@
 
 #include "gameObject/GameObjectManager.h"
 #include "gameObject/IGameObject.h"
+
+#include "Effekseer.h"
+#include "EffekseerRendererDX12.h"
