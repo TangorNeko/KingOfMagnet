@@ -9,6 +9,15 @@ Flash::~Flash()
 }
 bool Flash::Start()
 {
+	//‰¹‚ğÄ¶
+	prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);;
+	ss1->Init(L"Assets/sound/‘MŒõ’e.wav");
+	ss1->SetVolume(0.5f);
+	ss1->Play(false);
+	prefab::CSoundSource* ss2 = NewGO<prefab::CSoundSource>(0);;
+	ss2->Init(L"Assets/sound/‘MŒõ’e2.wav");
+	ss2->Play(false);
+
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			Vector3 angle = m_position - player->m_position;

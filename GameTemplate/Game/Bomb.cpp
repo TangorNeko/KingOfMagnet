@@ -6,6 +6,7 @@
 
 #include "Explosion.h"
 #include "Flash.h"
+#include "Incendia.h"
 Bomb::~Bomb()
 {
 	DeleteGO(m_skinModelRender);
@@ -303,8 +304,8 @@ void Bomb::AsPopBehave()
 			case enIncendiaryGrenade:
 			m_explosionCount++;
 			if (m_explosionCount >= 80) {
-				Explosion* explosion = NewGO<Explosion>(0);
-				explosion->m_position = crossPoint;
+				Incendia* incendia = NewGO<Incendia>(0);
+				incendia->m_position = crossPoint;
 				DeleteGO(this);
 			}
 			break;

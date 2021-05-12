@@ -172,7 +172,7 @@ void Player::Update()
 				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 				{
 					Bomb* debris = NewGO<Bomb>(0, "debris");
-					debris->m_bombShape = Bomb::enFlashGrenade;
+					debris->m_bombShape = Bomb::enIncendiaryGrenade;
 					debris->m_bombState = Bomb::enDrop;
 					debris->m_parent = this;
 					debris->m_position = m_magPosition;
