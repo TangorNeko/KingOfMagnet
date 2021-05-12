@@ -204,7 +204,7 @@ void Bomb::AsBulletBehave()
 
 					//“G‚Æ‚Ì‹——£‚ª500–¢–ž‚È‚ç
 					if (toPlayer.Length() < 500.0f)
-					{
+					{						
 						//ˆø—Í‚È‚ç
 						if (player->m_magPower == -1)
 						{

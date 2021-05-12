@@ -206,11 +206,16 @@ void SampleScene::Update()
 	}
 
 	if (m_gameEndFlag == true)
-	{
-		m_gameEndCount++;
+	{		
+		m_player1->m_displayOff = true;
+		m_player2->m_displayOff = true;
+		if (g_pad[0]->IsTrigger(enButtonA)|| g_pad[1]->IsTrigger(enButtonA))
+		{
+			m_gameEndCount++;
+		}
 	}
 
-	if (m_gameEndCount == 300)
+	if (m_gameEndCount == 2)
 	{
 		NewGO<TitleScene>(0, "titlescene");
 		DeleteGO(this);

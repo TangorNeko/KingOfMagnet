@@ -78,6 +78,7 @@ class Player : public IGameObject
 
 	//死亡状態に切り替える
 	void TryChangeStatusDeath();
+	bool m_Lose=false;
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -98,6 +99,9 @@ public:
 
 	//敗北した時
 	void Lose();
+
+	//リザルト表示
+	void ResultDisplay();
 
 	//必殺技ゲージをチャージする。
 	void ChargeSpecialAttackGauge(int charge);
@@ -140,9 +144,11 @@ public:
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
 	prefab::CFontRender* m_statusFontRender = nullptr;//ステータス表示用のフォント
+	prefab::CFontRender* m_resultFontRender = nullptr;//リザルト表示用のフォント
+
 	prefab::CSpriteRender* m_resultSpriteRender = nullptr; //勝敗時のスプライト
 	prefab::CSpriteRender* m_crosshairRender = nullptr; //照準のスプライト
-
+	
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
 	int m_magPower;//磁力、引力状態(-1)、斥力(1)
 	float m_charge = 1000;//磁力ゲージの現在の量
@@ -209,5 +215,18 @@ public:
 	MobiusGauge* m_mobiusGauge = nullptr;
 	//動かせるかどうか
 	bool m_canMove = false;
+
+	//リザルト関連
+	Vector2 m_resultPos = { -1200.0f,100.0f };
+	bool m_resultFirstTime = true;
+	bool m_displayOff = false;
+	float m_AttackNum = 0;//攻撃回数	
+	float m_TakeAttackNum = 0; //攻撃を受けた回数
+	float m_HitRate = 0;//命中率
+	int m_BurstNum = 0;//バースト回数
+	int m_StealNum = 0;//敵の弾を奪った回数
+	int m_LandingNum = 0;//落ちた回数
+	int m_ReceivedDamage = 0;//受けたダメージ
+	int m_SaveSP = 0;//溜まった必殺技ポイント
 };
 

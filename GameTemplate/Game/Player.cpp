@@ -12,12 +12,14 @@
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_statusFontRender);
+	//DeleteGO(m_statusFontRender);
+	DeleteGO(m_resultFontRender);
 	DeleteGO(m_resultSpriteRender);
-	DeleteGO(m_crosshairRender);
+	//DeleteGO(m_crosshairRender);
 	DeleteGO(m_HPBarSpriteRender);
 	DeleteGO(m_HPBarDarkSpriteRender);
-	DeleteGO(m_mobiusGauge);}
+	//DeleteGO(m_mobiusGauge);
+}
 
 bool Player::Start()
 {
@@ -112,8 +114,15 @@ void Player::Update()
 	}
 	else
 	{
-		//体力等ステータスのテキストを表示(後に画像にする。)
-		DisplayStatus();
+		if (m_displayOff == false)
+		{
+			//体力等ステータスのテキストを表示(後に画像にする。)
+			DisplayStatus();
+		}
+		else
+		{
+			ResultDisplay();
+		}
 		//座標に応じて三角形の当たり判定の場所をセット。
 		Collision();
 
@@ -187,6 +196,7 @@ void Player::Update()
 
 			//カメラの移動
 			Camera();
+			
 		}
 	}
 }
@@ -272,6 +282,7 @@ void Player::Move()
 
 	//穴に落ちた時の処理
 	if (m_position.y <= -1000.0f) {
+		m_LandingNum++;//落ちた回数
 		Damage(100);
 
 		m_position.y = 500.0f;
@@ -288,6 +299,7 @@ void Player::Attack()
 		//ガレキを一つでも持っているなら
 		if (m_holdDebrisVector.empty() == false)
 		{
+			m_AttackNum++;//攻撃回数
 			//音を鳴らす
 			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 			ssShoot->Init(L"Assets/sound/シュート音.wav");
@@ -403,6 +415,7 @@ void Player::SpecialAttack()
 					//照準の指す方向に飛ばす
 					for (auto debris : m_holdDebrisVector)
 					{
+						m_AttackNum++;//攻撃回数
 						debris->m_debrisState = Debris::enBullet;
 						debris->m_moveDirection = crossPoint - debris->m_position;
 						debris->m_moveDirection.Normalize();
@@ -412,6 +425,7 @@ void Player::SpecialAttack()
 				{
 					for (auto debris : m_holdDebrisVector)
 					{
+						m_AttackNum++;//攻撃回数
 						debris->m_debrisState = Debris::enBullet;
 						debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
 						debris->m_moveDirection.y = 0.0f;
@@ -439,6 +453,7 @@ void Player::ThrowBomb()
 		//爆弾を一つでも持っているなら
 		if (m_holdBombVector.empty() == false)
 		{
+			m_AttackNum++;//攻撃回数
 			//音を鳴らす
 			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
 			ssThrow->Init(L"Assets/sound/投げる音.wav");
@@ -622,6 +637,7 @@ void Player::MagneticBehavior()
 	//LB1を押して攻撃中でなかった場合バースト状態に移行
 	if (g_pad[m_playerNum]->IsTrigger(enButtonLB1) && m_isAttacking == false)
 	{
+		m_BurstNum++;//バーストを使った回数
 		//磁力ゲージを300消費。
 		m_charge -= 300.0f;
 		if (m_charge < 0)
@@ -692,6 +708,7 @@ void Player::MagneticBurst()
 					//敵の持っているガレキのリストを走査
 					for (auto iterator = m_enemy->m_holdDebrisVector.begin(); iterator != m_enemy->m_holdDebrisVector.end(); iterator++)
 					{
+						m_StealNum++;//敵の弾を奪った回数
 						//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
 						(*iterator)->m_debrisState = Debris::enDrop;
 
@@ -898,7 +915,8 @@ void Player::Collision()
 
 //自分の体力にダメージを与える
 void Player::Damage(int damage)
-{
+{	
+	m_ReceivedDamage += damage;//受けたダメージ
 	m_hp -= damage;
 	m_HitOn = true;//アニメーションフラグ
 	m_Hitcount = 30;//
@@ -940,11 +958,15 @@ void Player::ChargeSpecialAttackGauge(int charge)
 	{
 		m_specialAttackGauge = 100;
 	}
+	else
+	{
+		m_SaveSP += charge;//溜まった必殺技ポイント
+	}
 }
 
 //勝利した時
 void Player::Win()
-{
+{	
 	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);
@@ -952,17 +974,20 @@ void Player::Win()
 
 //敗北した時
 void Player::Lose()
-{
+{	
+	m_Lose = true;
 	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
 }
 
+
+
 //攻撃状態に切り替えできたら切り替える。
 void Player::TryChangeStatusAttack()
 {
 	if (m_magPower == 1 && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
-		m_animStatus = enStatus_Attack;
+		m_animStatus = enStatus_Attack;		
 	}
 }
 
@@ -1024,7 +1049,7 @@ void Player::TryChangeStatusHit()
 //死亡状態に切り替える
 void Player::TryChangeStatusDeath()
 {
-	if (m_hp <= 0)
+	if (m_Lose==true)
 	{
 		m_animStatus = enStatus_Death;
 	}
@@ -1243,4 +1268,56 @@ void Player::OpeningCamera()
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
 	//MainCamera().SetPosition(bossposition + targetvec * gain);//+targerVec*gain
 
+}
+//リザルト表示
+void Player::ResultDisplay()
+{
+	if (m_resultFirstTime == true)
+	{
+		DeleteGO(m_statusFontRender);
+		DeleteGO(m_crosshairRender);
+		DeleteGO(m_mobiusGauge);
+		m_resultFirstTime = false;		
+		//ステータス表示の初期化
+		m_resultFontRender = NewGO<prefab::CFontRender>(1);
+		m_resultFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
+		m_resultFontRender->SetColor({ 1,1,1,1 });
+		
+	}
+	if (m_playerNum == 0)
+	{		
+		//命中率を計算(0で割るとバグるため＋１をしておく)
+		m_HitRate = ((m_enemy->m_TakeAttackNum+1) / (m_AttackNum+1))*100;
+		if (m_resultPos.x <= -600)
+		{
+			m_resultPos.x++;
+		}
+		m_resultFontRender->SetPosition({ m_resultPos });
+
+		//体力、チャージ、現在の自分の磁力の状態の表示
+		wchar_t HitRate[256];
+		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
+		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
+			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
+			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
+
+	}
+	if (m_playerNum == 1)
+	{
+		//命中率を計算(0で割るとバグるため＋１をしておく)
+		m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
+		if (m_resultPos.x <= -600)
+		{
+			m_resultPos.x++;
+		}
+		m_resultFontRender->SetPosition({ m_resultPos });
+
+		//体力、チャージ、現在の自分の磁力の状態の表示
+		wchar_t HitRate[256];
+		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
+		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
+			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
+			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
+
+	}
 }

@@ -25,6 +25,7 @@ void Explosion::Update()
 			if (dis <= 300.0f) 
 			{
 				player->Damage(300 - dis);
+				player->m_TakeAttackNum++;//UŒ‚‚ğó‚¯‚½‰ñ”
 			}
 			return true;
 		});

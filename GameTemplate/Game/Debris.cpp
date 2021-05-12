@@ -235,21 +235,21 @@ void Debris::AsBulletBehave()
 						//‰¹‚ðÄ¶
 						ssHit->Init(L"Assets/sound/ƒ_ƒ[ƒW‰¹.wav");
 						ssHit->Play(false);
-
+						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						player->Damage(50.0f);
 						break;
 					case enSword:
 						//‰¹‚ðÄ¶
 						ssHit->Init(L"Assets/sound/Œ•‚ª“–‚½‚é.wav");
 						ssHit->Play(false);
-
+						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						player->Damage(100.0f);
 						break;
 					case enSpecialCharger:
 						//‰¹‚ðÄ¶(‰¼)
 						ssHit->Init(L"Assets/sound/Œ•‚ª“–‚½‚é.wav");
 						ssHit->Play(false);
-
+						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						player->Damage(20.0f);
 						break;
 					}
