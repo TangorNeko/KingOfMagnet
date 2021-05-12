@@ -5,7 +5,7 @@
 #include "BackGround.h"
 
 #include "Explosion.h"
-
+#include "Flash.h"
 Bomb::~Bomb()
 {
 	DeleteGO(m_skinModelRender);
@@ -286,8 +286,25 @@ void Bomb::AsPopBehave()
 			case enGrenade:
 			m_explosionCount++;
 			if (m_explosionCount >= 80) {
-				Explosion* m_explosion = NewGO<Explosion>(0);
-				m_explosion->m_position = crossPoint;
+				Explosion* explosion = NewGO<Explosion>(0);
+				explosion->m_position = crossPoint;
+				DeleteGO(this);
+			}
+			break;
+			case enFlashGrenade:
+			m_explosionCount++;
+			if (m_explosionCount >= 80) {
+				Flash* flash = NewGO<Flash>(0);
+				flash->m_position = crossPoint;
+				flash->m_parentNum = m_parent->m_playerNum;
+				DeleteGO(this);
+			}
+			break;
+			case enIncendiaryGrenade:
+			m_explosionCount++;
+			if (m_explosionCount >= 80) {
+				Explosion* explosion = NewGO<Explosion>(0);
+				explosion->m_position = crossPoint;
 				DeleteGO(this);
 			}
 			break;

@@ -39,7 +39,7 @@ void FlashGrenade_item::Update()
 			if (player->m_collider.isHitCapsule(m_collider))
 			{
 				Flash* flash=NewGO<Flash>(0);
-				flash->m_affectPlayerNum = player->m_enemy->m_playerNum;
+				//flash->m_affectPlayerNum = player->m_enemy->m_playerNum;
 				DeleteGO(this);				
 			}
 			return true;

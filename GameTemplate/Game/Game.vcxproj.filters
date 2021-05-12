@@ -172,9 +172,6 @@
     <ClCompile Include="DropItem_base.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Flash.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="FlashGrenade_item.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -319,6 +316,7 @@
     <ClCompile Include="CEffect.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
+    <ClCompile Include="Flash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -806,9 +804,6 @@
     <ClInclude Include="DropItem_base.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Flash.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="FlashGrenade_item.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -968,6 +963,7 @@
     <ClInclude Include="CEffect.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
     </ClInclude>
+    <ClInclude Include="Flash.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
