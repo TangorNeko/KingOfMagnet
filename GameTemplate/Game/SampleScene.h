@@ -30,7 +30,7 @@ class SampleScene : public IGameObject
 	//ゲームスタートカウント関連
 	void StartCountDown();
 	float m_measureSecond = 0.0f;	//秒を測る
-	int m_startCount = 4;		//ゲームスタートまでのカウント
+	int m_startCount = 7;		//ゲームスタートまでのカウント
 	prefab::CFontRender* m_startCountFontRender = nullptr;
 	bool m_isGameStart = false;
 	bool m_playCountSEFlag = false;

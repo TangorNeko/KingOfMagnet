@@ -35,7 +35,7 @@ bool Player::Start()
 	animationClips[enAnimationClip_Fall].Load("Assets/animData/Mage_Fall.tka");
 	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_SpecialAttack].Load("Assets/animData/Mage_RangeAttack.tka");
-	animationClips[enAnimationClip_SpecialAttack].SetLoopFlag(true);
+	animationClips[enAnimationClip_SpecialAttack].SetLoopFlag(false);
 	animationClips[enAnimationClip_Hit].Load("Assets/animData/Mage_Hit.tka");
 	animationClips[enAnimationClip_Hit].SetLoopFlag(false);
 	animationClips[enAnimationClip_Death].Load("Assets/animData/Mage_Death.tka");
@@ -172,7 +172,7 @@ void Player::Update()
 				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 				{
 					Bomb* debris = NewGO<Bomb>(0, "debris");
-					debris->m_bombShape = Bomb::enIncendiaryGrenade;
+					debris->m_bombShape = Bomb::enGrenade;
 					debris->m_bombState = Bomb::enDrop;
 					debris->m_parent = this;
 					debris->m_position = m_magPosition;
@@ -996,8 +996,8 @@ void Player::TryChangeStatusSpecialAttack()
 {
 	if (m_SpecialAttackOn==true)
 	{
-		m_animStatus = enStatus_SpecialAttack;
-		
+		m_animStatus = enStatus_SpecialAttack;	
+		m_SpecialAttackOn = false;	
 	}
 }
 
@@ -1061,8 +1061,7 @@ void Player::UpdateState()
 	switch (m_animStatus) {
 	case enStatus_Attack:
 		TryChangeStatusFall();
-		TryChangeStatusAttack();
-		TryChangeStatusSpecialAttack();
+		TryChangeStatusAttack();	
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
 			m_animStatus = enStatus_Idle;
@@ -1075,8 +1074,7 @@ void Player::UpdateState()
 		TryChangeStatusSpecialAttack();
 		if (m_skinModelRender->IsPlayingAnimation() == false)
 		{
-			m_animStatus = enStatus_Idle;
-			m_SpecialAttackOn = false;
+			m_animStatus = enStatus_Idle;			
 		}
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
@@ -1148,6 +1146,7 @@ void Player::AnimationSelect()
 		break;
 	case enStatus_SpecialAttack:
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
+		break;
 	case enStatus_Run:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
@@ -1225,13 +1224,8 @@ void Player::KnockBack() {
 }
 void Player::OpeningCamera()
 {
-	m_cameraLoopCount++;
+	m_cameraLoopCount++;	
 	
-	if (g_pad[m_playerNum]->IsTrigger(enButtonA))
-	{
-		m_opning = false;
-		m_enemy->m_opning = false;
-	}
 	if (m_cameraLoopCount < 250)
 	{
 		Vector3 toPos = m_position;
@@ -1249,8 +1243,8 @@ void Player::OpeningCamera()
 	else
 	{
 		Vector3 PlayerPos = m_position;
-		PlayerPos.y = m_position.y + 90.0f;
-		m_targetPos *= factor;
+		PlayerPos.y = m_position.y + 90.0f;//プレイヤーの頭の位置
+		
 		if (factor < 1.0f)
 			factor += 0.01f;
 		Vector3 targetVec = PlayerPos - m_cameraPos;
@@ -1262,12 +1256,8 @@ void Player::OpeningCamera()
 		m_cameraPos += targetVec*gain;
 		gain += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
-	}	
-
-	
-	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
-	//MainCamera().SetPosition(bossposition + targetvec * gain);//+targerVec*gain
-
+	}		
+	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);	
 }
 //リザルト表示
 void Player::ResultDisplay()
@@ -1285,7 +1275,7 @@ void Player::ResultDisplay()
 		
 	}
 	if (m_playerNum == 0)
-	{		
+	{
 		//命中率を計算(0で割るとバグるため＋１をしておく)
 		m_HitRate = ((m_enemy->m_TakeAttackNum+1) / (m_AttackNum+1))*100;
 		if (m_resultPos.x <= -600)

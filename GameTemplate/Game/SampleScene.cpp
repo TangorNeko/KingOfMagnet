@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "SampleScene.h"
-
 #include "Player.h"
 #include "BackGround.h"
 #include "SkyBoard.h"
@@ -206,7 +205,7 @@ void SampleScene::Update()
 	}
 
 	if (m_gameEndFlag == true)
-	{		
+	{	
 		m_player1->m_displayOff = true;
 		m_player2->m_displayOff = true;
 		if (g_pad[0]->IsTrigger(enButtonA)|| g_pad[1]->IsTrigger(enButtonA))
