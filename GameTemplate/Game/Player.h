@@ -92,7 +92,8 @@ private:
 	//発射先の計算。
 	bool GetShootPoint(Vector3& crossPoint);
 
-	prefab::CPointLight* m_pointLight = nullptr;
+	//ライト
+	prefab::CSpotLight* m_spotLight = nullptr;
 
 public:
 
