@@ -9,9 +9,12 @@ class MobiusGauge;
 
 class Player : public IGameObject
 {
+public:
+	Player();
 	~Player();
 	bool Start() override;
 	void Update() override;
+private:
 
 	//開始前カメラ移動
 	void OpeningCamera();
@@ -88,6 +91,8 @@ class Player : public IGameObject
 
 	//発射先の計算。
 	bool GetShootPoint(Vector3& crossPoint);
+
+	prefab::CPointLight* m_pointLight = nullptr;
 
 public:
 

@@ -9,6 +9,9 @@
 #include "SampleScene.h"
 #include "MobiusGauge.h"
 
+Player::Player()
+{
+}
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
@@ -97,6 +100,11 @@ bool Player::Start()
 	else if (m_playerNum == 1) {
 		m_mobiusGauge->SetPosition({ 525.0f,-300.0f,0.0f });
 	}
+
+	//プレイヤーのライト
+	/*m_pointLight = NewGO<prefab::CPointLight>(0);
+	m_pointLight->SetColor({ 1.0f,1.0f,1.0f });
+	m_pointLight->SetRange(200.0f);*/
 
 	return true;
 }
@@ -199,6 +207,11 @@ void Player::Update()
 			
 		}
 	}
+	//ライト
+	//m_pointLight->SetDirection(front * -1.0f);
+	/*Vector3 frontPos = m_position + front * 10.0f;
+	frontPos.y += 100.0f;
+	m_pointLight->SetPosition(frontPos);*/
 }
 //体力、メビウスゲージの表示
 void Player::DisplayStatus()
@@ -771,7 +784,6 @@ void Player::MagneticBurst()
 	if (m_burstCount <= 0)
 	{
 		m_isBurst = false;
-
 		//敵の弾を奪ったフラグをリセット。
 		m_isSteal = false;
 
@@ -940,7 +952,6 @@ void Player::Damage(int damage)
 			gameScene->SetGameEndFlag(true);
 		}
 	}
-
 
 	//与えたダメージ量を相手に表示する
 	DamageDisplay* damagedisplay = NewGO<DamageDisplay>(0, "damagedisplay");
