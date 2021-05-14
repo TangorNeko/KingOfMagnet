@@ -168,7 +168,7 @@ bool SampleScene::Start()
 	//HPのカバー
 	m_HPCoverSpriteRender = NewGO<prefab::CSpriteRender>(3);
 	m_HPCoverSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-	m_HPCoverSpriteRender->SetPosition({ 0.0f,304.0f,0.0f });
+	m_HPCoverSpriteRender->SetPosition({ 0.0f,304.0f,0.0f });//y304
 	m_HPCoverSpriteRender->Init("Assets/Image/HP_Cover.dds", 1280, 112);
 
 	//タイマーの枠
@@ -207,7 +207,8 @@ void SampleScene::Update()
 	if (m_gameEndFlag == true)
 	{	
 		m_player1->m_displayOff = true;
-		m_player2->m_displayOff = true;
+		m_player2->m_displayOff = true;		
+		
 		if (g_pad[0]->IsTrigger(enButtonA)|| g_pad[1]->IsTrigger(enButtonA))
 		{
 			m_gameEndCount++;

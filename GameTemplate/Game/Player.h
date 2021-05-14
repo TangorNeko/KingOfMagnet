@@ -101,7 +101,8 @@ public:
 	void Lose();
 
 	//リザルト表示
-	void ResultDisplay();
+	//void ResultDisplay();
+	void FinalHit();
 
 	//必殺技ゲージをチャージする。
 	void ChargeSpecialAttackGauge(int charge);
@@ -144,6 +145,7 @@ public:
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
 	prefab::CFontRender* m_statusFontRender = nullptr;//ステータス表示用のフォント
+	prefab::CFontRender* m_bulletNumber = nullptr;//残弾数
 	prefab::CFontRender* m_resultFontRender = nullptr;//リザルト表示用のフォント
 
 	prefab::CSpriteRender* m_resultSpriteRender = nullptr; //勝敗時のスプライト

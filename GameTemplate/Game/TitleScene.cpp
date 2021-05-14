@@ -8,16 +8,17 @@ TitleScene::~TitleScene()
 	DeleteGO(m_start_fontRender);
 	DeleteGO(m_description_fontRender);
 	DeleteGO(m_option_fontRender);
+	DeleteGO(m_titleSpriteRender);
 }
-bool TitleScene::Start() 
+bool TitleScene::Start()
 {
 	//文字表示
-	m_title_fontRender = NewGO<prefab::CFontRender>(0);
+	/*m_title_fontRender = NewGO<prefab::CFontRender>(0);
 	m_title_fontRender->SetPosition({ -200.0f, 200.0f });
 	m_title_fontRender->SetText(L"磁界之王");
-	m_title_fontRender->SetScale({ 2.0f,2.0f });
+	m_title_fontRender->SetScale({ 2.0f,2.0f });*/
 
-	m_start_fontRender = NewGO<prefab::CFontRender>(0);
+	m_start_fontRender = NewGO<prefab::CFontRender>(1);
 	m_start_fontRender->SetPosition({ -100.0f, 0.0f });//上
 	m_start_fontRender->SetText(L"スタート");
 
@@ -28,6 +29,13 @@ bool TitleScene::Start()
 	m_option_fontRender = NewGO<prefab::CFontRender>(0);	
 	m_option_fontRender->SetPosition({ -100.0f, -200.0f });//下
 	m_option_fontRender->SetText(L"オプション");
+
+	//タイトルロゴ
+	m_titleSpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_titleSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_titleSpriteRender->SetPosition({ 0.0f,180.0f,0.0f });
+	m_titleSpriteRender->Init("Assets/Image/Zikai_Rogo.dds", 960, 720);
+
 	return true;
 }
 void TitleScene::Update()

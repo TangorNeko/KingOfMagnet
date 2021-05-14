@@ -13,8 +13,8 @@ bool MobiusGauge::Start()
     baseInitData.m_ddsFilePath[0] = "Assets/Image/Mobius_Base.dds";
     baseInitData.m_fxFilePath = "Assets/shader/sprite.fx";
     baseInitData.m_psEntryPoinFunc = "PSMain";
-    baseInitData.m_width = 197.0f;
-    baseInitData.m_height = 77.0f;
+    baseInitData.m_width = 212.0f;//197.0f
+    baseInitData.m_height = 140.0f;//77.0f
     baseInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
     //ゲージの背景の初期化
@@ -26,8 +26,8 @@ bool MobiusGauge::Start()
     coverInitData.m_ddsFilePath[0] = "Assets/image/Mobius_Cover.dds";
     coverInitData.m_fxFilePath = "Assets/shader/sprite.fx";
     coverInitData.m_psEntryPoinFunc = "PSMain";
-    coverInitData.m_width = 208.0f;
-    coverInitData.m_height = 94.0f;
+    coverInitData.m_width = 212.0f;
+    coverInitData.m_height = 140.0f;   
     coverInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
     //ゲージのカバーの初期化
@@ -80,7 +80,7 @@ bool MobiusGauge::Start()
     //左側のゲージの初期化
     m_mobiusGaugeLeftSide.Init(leftGaugeInitData);
 
-
+    //SP
 	return true;
 }
 
@@ -133,13 +133,13 @@ void MobiusGauge::SetPosition(const Vector3& pos)
 {
     //ゲージの各スプライトの位置を設定。ピボットが効いていないのでpositionを直接ずらしている
     m_mobiusBaseSprite.Update(pos, Quaternion::Identity, Vector3::One, { 0.5f,0.5f });
-    m_mobiusCoverSprite.Update({ pos.x,pos.y -3.0f,pos.z }, Quaternion::Identity, Vector3::One, { 0.5f,0.5f });
-    m_mobiusGaugeRightSide.Update({ pos.x + 50.0f,pos.y,pos.z }, Quaternion::Identity, Vector3::One, { 0.0f,0.5f });
-    m_mobiusGaugeLeftSide.Update({ pos.x - 49.0f,pos.y,pos.z }, Quaternion::Identity, Vector3::One, { 1.0f,0.5f });
+    m_mobiusCoverSprite.Update({ pos.x,pos.y,pos.z }, Quaternion::Identity, Vector3::One, { 0.5f,0.5f });
+    m_mobiusGaugeRightSide.Update({ pos.x + 50.0f,pos.y - 20.0f,pos.z }, Quaternion::Identity, Vector3::One, { 0.0f,0.5f });
+    m_mobiusGaugeLeftSide.Update({ pos.x - 49.0f,pos.y - 20.0f,pos.z }, Quaternion::Identity, Vector3::One, { 1.0f,0.5f });
 
     //回転のゲージの回転の中心位置もずらす。
-    m_rightGaugeDatas.rotateOrigin = { 685.0f + pos.x,360.0f - pos.y };
-    m_leftGaugeDatas.rotateOrigin = { 595.0f + pos.x,360.0f - pos.y };
+    m_rightGaugeDatas.rotateOrigin = { 685.0f + pos.x,380.0f - pos.y };//360.0f
+    m_leftGaugeDatas.rotateOrigin = { 595.0f + pos.x,380.0f - pos.y };
 }
 
 void MobiusGauge::PostRender(RenderContext& rc, Camera* camera)

@@ -12,13 +12,14 @@
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
-	//DeleteGO(m_statusFontRender);
+	DeleteGO(m_statusFontRender);
+	DeleteGO(m_bulletNumber);
 	DeleteGO(m_resultFontRender);
 	DeleteGO(m_resultSpriteRender);
-	//DeleteGO(m_crosshairRender);
+	DeleteGO(m_crosshairRender);
 	DeleteGO(m_HPBarSpriteRender);
 	DeleteGO(m_HPBarDarkSpriteRender);
-	//DeleteGO(m_mobiusGauge);
+	DeleteGO(m_mobiusGauge);
 }
 
 bool Player::Start()
@@ -55,7 +56,12 @@ bool Player::Start()
 	m_statusFontRender = NewGO<prefab::CFontRender>(1);
 	m_statusFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_statusFontRender->SetPosition({ -625.0f, 350.0f });
-
+	//残弾数表示の初期化
+	m_bulletNumber = NewGO<prefab::CFontRender>(1);
+	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
+	m_bulletNumber->SetPosition({ -625.0f, -300.0f });
+	m_bulletNumber->SetScale({ 1.5f,1.5f });
+	m_bulletNumber->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
 	//照準表示の初期化
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
@@ -91,11 +97,11 @@ bool Player::Start()
 	}
 
 	m_mobiusGauge = NewGO<MobiusGauge>(0);
-	if (m_playerNum == 0) {
-		m_mobiusGauge->SetPosition({ -525.0f,-300.0f,0.0f });
+	if (m_playerNum == 0) {		
+		m_mobiusGauge->SetPosition({ -525.0f,-280.0f,0.0f });
 	}
 	else if (m_playerNum == 1) {
-		m_mobiusGauge->SetPosition({ 525.0f,-300.0f,0.0f });
+		m_mobiusGauge->SetPosition({ 525.0f,-280.0f,0.0f });
 	}
 
 	return true;
@@ -121,7 +127,7 @@ void Player::Update()
 		}
 		else
 		{
-			ResultDisplay();
+			FinalHit();
 		}
 		//座標に応じて三角形の当たり判定の場所をセット。
 		Collision();
@@ -209,7 +215,7 @@ void Player::DisplayStatus()
 
 	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp) + L"%\n\n必殺ゲージ:" + special
 		+ L"%\n\n残弾数" + std::to_wstring(m_holdDebrisVector.size()));
-
+	m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()));
 	if (m_playerNum == 0) {
 		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
 		//({ 290.0f,325.0f,0.0f });
@@ -1259,55 +1265,66 @@ void Player::OpeningCamera()
 	}		
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);	
 }
-//リザルト表示
-void Player::ResultDisplay()
+
+void Player::FinalHit()
 {
-	if (m_resultFirstTime == true)
-	{
-		DeleteGO(m_statusFontRender);
-		DeleteGO(m_crosshairRender);
-		DeleteGO(m_mobiusGauge);
-		m_resultFirstTime = false;		
-		//ステータス表示の初期化
-		m_resultFontRender = NewGO<prefab::CFontRender>(1);
-		m_resultFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
-		m_resultFontRender->SetColor({ 1,1,1,1 });
-		
-	}
-	if (m_playerNum == 0)
-	{
-		//命中率を計算(0で割るとバグるため＋１をしておく)
-		m_HitRate = ((m_enemy->m_TakeAttackNum+1) / (m_AttackNum+1))*100;
-		if (m_resultPos.x <= -600)
-		{
-			m_resultPos.x++;
-		}
-		m_resultFontRender->SetPosition({ m_resultPos });
+	//画面分割を終了
+	GameObjectManager::GetInstance()->Set2ScreenMode(false);
 
-		//体力、チャージ、現在の自分の磁力の状態の表示
-		wchar_t HitRate[256];
-		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
-		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
-			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
-			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
-
-	}
-	if (m_playerNum == 1)
-	{
-		//命中率を計算(0で割るとバグるため＋１をしておく)
-		m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
-		if (m_resultPos.x <= -600)
-		{
-			m_resultPos.x++;
-		}
-		m_resultFontRender->SetPosition({ m_resultPos });
-
-		//体力、チャージ、現在の自分の磁力の状態の表示
-		wchar_t HitRate[256];
-		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
-		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
-			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
-			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
-
-	}
+	//HPバー、画面分割線、メビウスゲージを消す
+	//敗北者にカメラをよせる
+	//スローにさせる
+	//勝者を写す
 }
+//リザルト表示
+//void Player::ResultDisplay()
+//{
+//	if (m_resultFirstTime == true)
+//	{
+//		DeleteGO(m_statusFontRender);
+//		DeleteGO(m_crosshairRender);
+//		DeleteGO(m_mobiusGauge);
+//		m_resultFirstTime = false;		
+//		//ステータス表示の初期化
+//		m_resultFontRender = NewGO<prefab::CFontRender>(1);
+//		m_resultFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
+//		m_resultFontRender->SetColor({ 1,1,1,1 });
+//		
+//	}
+//	if (m_playerNum == 0)
+//	{
+//		//命中率を計算(0で割るとバグるため＋１をしておく)
+//		m_HitRate = ((m_enemy->m_TakeAttackNum+1) / (m_AttackNum+1))*100;
+//		if (m_resultPos.x <= -600)
+//		{
+//			m_resultPos.x++;
+//		}
+//		m_resultFontRender->SetPosition({ m_resultPos });
+//
+//		//体力、チャージ、現在の自分の磁力の状態の表示
+//		wchar_t HitRate[256];
+//		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
+//		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
+//			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
+//			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
+//
+//	}
+//	if (m_playerNum == 1)
+//	{
+//		//命中率を計算(0で割るとバグるため＋１をしておく)
+//		m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
+//		if (m_resultPos.x <= -600)
+//		{
+//			m_resultPos.x++;
+//		}
+//		m_resultFontRender->SetPosition({ m_resultPos });
+//
+//		//体力、チャージ、現在の自分の磁力の状態の表示
+//		wchar_t HitRate[256];
+//		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
+//		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
+//			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
+//			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
+//
+//	}
+//}
