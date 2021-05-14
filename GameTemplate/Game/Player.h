@@ -117,7 +117,7 @@ public:
 
 public:
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
-	Quaternion rot;//キャラクターの回転
+	Quaternion m_rot;//キャラクターの回転
 	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
@@ -235,5 +235,10 @@ public:
 	int m_LandingNum = 0;//落ちた回数
 	int m_ReceivedDamage = 0;//受けたダメージ
 	int m_SaveSP = 0;//溜まった必殺技ポイント
+
+	//ファイナルヒット関連
+	bool m_FirstTime = true;
+	int m_winnerNum = 0;
+	int m_loserNum = 0;
 };
 

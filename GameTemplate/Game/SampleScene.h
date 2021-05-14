@@ -34,7 +34,7 @@ class SampleScene : public IGameObject
 	prefab::CFontRender* m_startCountFontRender = nullptr;
 	bool m_isGameStart = false;
 	bool m_playCountSEFlag = false;
-
+	bool m_GEfirstLoop = true;
 public:
 
 	void SetGameEndFlag(bool flag)

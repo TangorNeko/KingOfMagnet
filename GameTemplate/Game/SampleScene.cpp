@@ -10,17 +10,12 @@
 #include "TitleScene.h"
 
 SampleScene::~SampleScene()
-{
-	DeleteGO(m_timeFontRender);
+{	
 	DeleteGO(m_stageLight);
 	DeleteGO(m_backGround);
 	DeleteGO(m_sky);
 	DeleteGO(m_player1);
 	DeleteGO(m_player2);
-	DeleteGO(m_delimitLineSpriteRender);
-	DeleteGO(m_HPCoverSpriteRender);
-	DeleteGO(m_TimerBaseSpriteRender);
-
 	QueryGOs<DebrisBlock>("debrisblock",[](DebrisBlock* debrisblock)->bool
 		{
 			DeleteGO(debrisblock);
@@ -38,10 +33,9 @@ SampleScene::~SampleScene()
 			DeleteGO(repulsion);
 			return true;
 		});
-
-	DeleteGO(m_delimitLineSpriteRender);
+	/*DeleteGO(m_delimitLineSpriteRender);
 	DeleteGO(m_HPCoverSpriteRender);
-	DeleteGO(m_TimerBaseSpriteRender);
+	DeleteGO(m_TimerBaseSpriteRender);*/
 }
 
 bool SampleScene::Start()
@@ -194,7 +188,7 @@ void SampleScene::Update()
 	}
 
 	//§ŒÀŽžŠÔ‚Ì•\Ž¦
-	if (m_timeLimit > 0) {
+	if (m_timeLimit > 0 && m_gameEndFlag == false) {
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
 		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
 	}
@@ -206,9 +200,16 @@ void SampleScene::Update()
 
 	if (m_gameEndFlag == true)
 	{	
-		m_player1->m_displayOff = true;
-		m_player2->m_displayOff = true;		
-		
+		if (m_GEfirstLoop == true)
+		{
+			DeleteGO(m_delimitLineSpriteRender);
+			DeleteGO(m_HPCoverSpriteRender);
+			DeleteGO(m_TimerBaseSpriteRender);
+			DeleteGO(m_timeFontRender);
+			m_player1->m_displayOff = true;
+			m_player2->m_displayOff = true;
+			m_GEfirstLoop = false;
+		}
 		if (g_pad[0]->IsTrigger(enButtonA)|| g_pad[1]->IsTrigger(enButtonA))
 		{
 			m_gameEndCount++;

@@ -15,14 +15,14 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_statusFontRender);
+	/*DeleteGO(m_statusFontRender);
 	DeleteGO(m_bulletNumber);
 	DeleteGO(m_resultFontRender);
 	DeleteGO(m_resultSpriteRender);
 	DeleteGO(m_crosshairRender);
 	DeleteGO(m_HPBarSpriteRender);
 	DeleteGO(m_HPBarDarkSpriteRender);
-	DeleteGO(m_mobiusGauge);
+	DeleteGO(m_mobiusGauge);*/
 }
 
 bool Player::Start()
@@ -60,9 +60,12 @@ bool Player::Start()
 	m_statusFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
 	m_statusFontRender->SetPosition({ -625.0f, 350.0f });
 	//残弾数表示の初期化
-	m_bulletNumber = NewGO<prefab::CFontRender>(1);
+	m_bulletNumber = NewGO<prefab::CFontRender>(6);
 	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
-	m_bulletNumber->SetPosition({ -625.0f, -300.0f });
+	if(m_playerNum==0)
+		m_bulletNumber->SetPosition({ -550.0f, -200.0f });
+	if(m_playerNum==1)
+		m_bulletNumber->SetPosition({ 500.0f, -200.0f });
 	m_bulletNumber->SetScale({ 1.5f,1.5f });
 	m_bulletNumber->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
 	//照準表示の初期化
@@ -128,12 +131,17 @@ void Player::Update()
 	}
 	else
 	{
+		//デバック用///////////////////////////////////
+		if (g_pad[m_playerNum]->IsTrigger(enButtonLB2))
+			Damage(200);		
+		///////////////////////////////////////////////
+		
 		if (m_displayOff == false)
 		{
 			//体力等ステータスのテキストを表示(後に画像にする。)
 			DisplayStatus();
 		}
-		else
+		else//決着がついたとき
 		{
 			FinalHit();
 		}
@@ -144,12 +152,13 @@ void Player::Update()
 		{
 			m_skinModelRender->SetPosition(m_position);
 			float angle = acosf(n);//アークコサイン
-			rot.SetRotation(Vector3::AxisY, angle);
+			m_rot.SetRotation(Vector3::AxisY, angle);
 			if (m_playerNum == 0)
 			{
-				rot.y *= -1.0f;
+				m_rot.y *= -1.0f;
 			}
-			m_skinModelRender->SetRotation(rot);
+			m_skinModelRender->SetRotation(m_rot);
+			//g_camera3D[m_playerNum]->SetTarget(0, 0, 0);
 		}
 		else 
 		{
@@ -207,10 +216,11 @@ void Player::Update()
 			UpdateState();
 			//アニメーション選択。
 			AnimationSelect();
-
-			//カメラの移動
-			Camera();
-			
+			if (m_displayOff == false)
+			{
+				//カメラの移動
+				Camera();
+			}
 		}
 	}
 	//ライト
@@ -268,8 +278,8 @@ void Player::Move()
 	if (front.x < 0) {
 		angle *= -1;
 	}
-	rot.SetRotation(Vector3::AxisY, angle);
-	m_skinModelRender->SetRotation(rot);
+	m_rot.SetRotation(Vector3::AxisY, angle);
+	m_skinModelRender->SetRotation(m_rot);
 	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + right * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
 	if (m_charaCon.IsOnGround() == false)
 	{
@@ -987,6 +997,7 @@ void Player::Win()
 	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);
+	m_winnerNum = m_playerNum;
 }
 
 //敗北した時
@@ -996,6 +1007,7 @@ void Player::Lose()
 	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
+	m_loserNum = m_playerNum;
 }
 
 
@@ -1274,16 +1286,39 @@ void Player::OpeningCamera()
 		gain += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}		
-	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);	
+	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
 }
 
 void Player::FinalHit()
 {
-	//画面分割を終了
-	GameObjectManager::GetInstance()->Set2ScreenMode(false);
+	if (m_FirstTime == true) {
+		//画面分割を終了
+		GameObjectManager::GetInstance()->Set2ScreenMode(false);
 
-	//HPバー、画面分割線、メビウスゲージを消す
-	//敗北者にカメラをよせる
+		//HPバー、画面分割線、メビウスゲージを消す
+		DeleteGO(m_statusFontRender);
+		DeleteGO(m_bulletNumber);
+		DeleteGO(m_resultFontRender);
+		DeleteGO(m_resultSpriteRender);
+		DeleteGO(m_crosshairRender);
+		DeleteGO(m_HPBarSpriteRender);
+		DeleteGO(m_HPBarDarkSpriteRender);
+		DeleteGO(m_mobiusGauge);
+		m_FirstTime = false;
+	}
+			
+	if (m_playerNum == m_loserNum)
+	{		
+		Vector3 targetPos = m_position;
+		targetPos.y += 90;		
+		m_cameraPos = targetPos;
+		
+		g_camera3D[m_playerNum]->SetTarget(targetPos);
+		g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+
+	}
+	
+	
 	//スローにさせる
 	//勝者を写す
 }
