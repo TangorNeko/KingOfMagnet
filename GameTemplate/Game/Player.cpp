@@ -111,9 +111,9 @@ bool Player::Start()
 	}
 
 	//プレイヤーのライト
-	m_spotLight = NewGO<prefab::CSpotLight>(0);
+	/*m_spotLight = NewGO<prefab::CSpotLight>(0);
 	m_spotLight->SetColor({ 1.0f,1.0f,1.0f });
-	m_spotLight->SetRange(200.0f);
+	m_spotLight->SetRange(200.0f);*/
 	
 	return true;
 }
@@ -224,11 +224,11 @@ void Player::Update()
 		}
 	}
 	//ライト
-	m_spotLight->SetAngle(0.5);
-	m_spotLight->SetDirection(front * -1.0f);
-	Vector3 frontPos = m_position + front * 10.0f;
-	frontPos.y += 100.0f;
-	m_spotLight->SetPosition(frontPos);
+	//m_spotLight->SetAngle(0.5);
+	//m_spotLight->SetDirection(front); // * -1.0f);
+	//Vector3 frontPos = m_position - front * 10.0f;
+	//frontPos.y += 100.0f;
+	//m_spotLight->SetPosition(frontPos);
 }
 //体力、メビウスゲージの表示
 void Player::DisplayStatus()

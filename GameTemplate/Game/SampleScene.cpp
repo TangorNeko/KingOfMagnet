@@ -221,6 +221,16 @@ void SampleScene::Update()
 		NewGO<TitleScene>(0, "titlescene");
 		DeleteGO(this);
 	}
+
+	if (g_pad[0]->IsTrigger(enButtonB)) {
+		Player* pl = FindGO<Player>("Player");
+
+		prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
+		effect->Init(u"Assets/effect/ˆø—Í’e2.efk");
+		effect->SetPosition(pl->m_position);
+		effect->SetScale({ 10.0f, 10.0f, 10.0f });
+		effect->Play();
+	}
 }
 
 void SampleScene::WinnerJudge()
