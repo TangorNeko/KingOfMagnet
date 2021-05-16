@@ -975,6 +975,27 @@ void Player::Damage(int damage)
 	damagedisplay->m_damagePos = m_position;
 	damagedisplay->m_enemyNum = m_enemy->m_playerNum;
 	damagedisplay->m_damage = damage;
+
+	//ダメージエフェクト
+	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
+	effect->Init(u"Assets/effect/ダメージ.efk");
+	effect->SetPosition({ m_position.x, m_position.y + 50, m_position.z });
+
+	//カメラの前方向
+	m_damegeEffectFront.y = 0.0f;
+	m_damegeEffectFront.Normalize();
+
+	float innerProduct = m_damegeEffectFront.Dot(Vector3::AxisZ); //内積
+	float angle = acosf(innerProduct);//アークコサイン
+	/*if (m_damegeEffectFront.x < 0) {
+		angle *= -1;
+	}*/
+	Quaternion rot;
+	rot.SetRotation(Vector3::AxisY, angle);
+
+	effect->SetRotation(rot);
+	effect->SetScale({ 10.0f, 10.0f, 10.0f });
+	effect->Play();
 }
 
 //必殺技ゲージをチャージする。

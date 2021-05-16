@@ -241,5 +241,8 @@ public:
 	bool m_FirstTime = true;
 	int m_winnerNum = 0;
 	int m_loserNum = 0;
+
+	//ダメージエフェクト関連
+	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 };
 

@@ -226,9 +226,9 @@ void SampleScene::Update()
 		Player* pl = FindGO<Player>("Player");
 
 		prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-		effect->Init(u"Assets/effect/ˆø—Í’e2.efk");
+		effect->Init(u"Assets/effect/ÄˆÎ.efk");
 		effect->SetPosition(pl->m_position);
-		effect->SetScale({ 10.0f, 10.0f, 10.0f });
+		effect->SetScale({ 30.0f, 30.0f, 30.0f });
 		effect->Play();
 	}
 }

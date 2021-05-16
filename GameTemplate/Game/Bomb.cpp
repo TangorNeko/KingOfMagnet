@@ -229,7 +229,7 @@ void Bomb::AsBulletBehave()
 				//移動処理(TODO:撃った弾と違うプレイヤーは1人しかいないので1回しか呼ばれないので大丈夫だが、場所の移動は検討する、
 				//その場合、QueryGOsを移動処理と当たり判定処理の2回に分けてすることになるかも)
 				m_position += m_moveDirection * m_velocity * 0.5f;
-				m_moveDirection.y -= 5.0f * 5.0f * 0.002f;
+				m_moveDirection.y -= 2.0f * 2.0f * 0.002f;
 				m_moveDirection.Normalize();
 
 				//移動先の当たり判定を更新
