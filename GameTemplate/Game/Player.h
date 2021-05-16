@@ -95,6 +95,7 @@ private:
 	//ライト
 	prefab::CSpotLight* m_spotLight = nullptr;
 
+
 public:
 
 	//自分の体力にダメージを与える
@@ -244,5 +245,12 @@ public:
 
 	//ダメージエフェクト関連
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
+
+	//斥力・引力エフェクト関連
+	prefab::CEffect* magEffect[3] = { nullptr,nullptr,nullptr };		//三つのエフェクトを連続で再生し続ける。
+	int m_magEffectCallCount = 60;		//磁力エフェクトを呼ぶまでの時間
+
+	//斥力・引力バースト エフェクト関連
+	prefab::CEffect* burstEffect = nullptr;
 };
 

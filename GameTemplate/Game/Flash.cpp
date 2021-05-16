@@ -18,6 +18,14 @@ bool Flash::Start()
 	ss2->Init(L"Assets/sound/閃光弾2.wav");
 	ss2->Play(false);
 
+	//エフェクトを再生
+	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
+	effect->Init(u"Assets/effect/閃光.efk");
+	effect->SetPosition(m_position);
+	effect->SetScale({ 25.0f, 25.0f, 25.0f });
+	effect->Play();
+
+
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			Vector3 angle = m_position - player->m_position;

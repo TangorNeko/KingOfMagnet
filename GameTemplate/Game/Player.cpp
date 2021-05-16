@@ -23,6 +23,10 @@ Player::~Player()
 	DeleteGO(m_HPBarSpriteRender);
 	DeleteGO(m_HPBarDarkSpriteRender);
 	DeleteGO(m_mobiusGauge);*/
+
+	//DeleteGO(redEffect[0]);
+	//DeleteGO(redEffect[1]);
+	//DeleteGO(redEffect[2]);
 }
 
 bool Player::Start()
@@ -115,6 +119,17 @@ bool Player::Start()
 	m_spotLight->SetColor({ 1.0f,1.0f,1.0f });
 	m_spotLight->SetRange(200.0f);*/
 	
+	//エフェクト関連
+	magEffect[0] = NewGO<prefab::CEffect>(0);
+	magEffect[1] = NewGO<prefab::CEffect>(0);
+	magEffect[2] = NewGO<prefab::CEffect>(0);
+	magEffect[0]->SetScale({ 25.0f, 25.0f, 25.0f });
+	magEffect[1]->SetScale({ 25.0f, 25.0f, 25.0f });
+	magEffect[2]->SetScale({ 25.0f, 25.0f, 25.0f });
+
+	burstEffect = NewGO<prefab::CEffect>(0);
+	burstEffect->SetScale({ 40.0f, 40.0f, 40.0f });
+
 	return true;
 }
 
@@ -160,11 +175,11 @@ void Player::Update()
 			m_skinModelRender->SetRotation(m_rot);
 			//g_camera3D[m_playerNum]->SetTarget(0, 0, 0);
 		}
-		else 
+		else
 		{
 			//磁力の変化
 			ChangeMagnetPower();
-			if (m_isKnockBack == true) 
+			if (m_isKnockBack == true)
 			{
 				KnockBack();
 			}
@@ -195,7 +210,7 @@ void Player::Update()
 				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 				{
 					Bomb* debris = NewGO<Bomb>(0, "debris");
-					debris->m_bombShape = Bomb::enGrenade;
+					debris->m_bombShape = Bomb::enIncendiaryGrenade;
 					debris->m_bombState = Bomb::enDrop;
 					debris->m_parent = this;
 					debris->m_position = m_magPosition;
@@ -221,7 +236,36 @@ void Player::Update()
 				//カメラの移動
 				Camera();
 			}
-		}
+
+			//斥力・引力エフェクト			
+			if (m_magPower == 1) {
+				magEffect[0]->Init(u"Assets/effect/斥力.efk");
+				magEffect[1]->Init(u"Assets/effect/斥力.efk");
+				magEffect[2]->Init(u"Assets/effect/斥力.efk");
+			}
+			else if (m_magPower == -1) {
+				magEffect[0]->Init(u"Assets/effect/引力.efk");
+				magEffect[1]->Init(u"Assets/effect/引力.efk");
+				magEffect[2]->Init(u"Assets/effect/引力.efk");
+			}
+			//磁力エフェクトを再生
+			if (m_magEffectCallCount == 40) {
+				magEffect[2]->Play();
+			}
+			else if (m_magEffectCallCount == 20) {
+				magEffect[1]->Play();
+			}
+			else if (m_magEffectCallCount <= 0) {
+				magEffect[0]->Play();
+				m_magEffectCallCount = 60;
+			}
+			m_magEffectCallCount -= 1;
+
+			magEffect[0]->SetPosition(m_position);
+			magEffect[1]->SetPosition(m_position);
+			magEffect[2]->SetPosition(m_position);
+		}				
+			
 	}
 	//ライト
 	//m_spotLight->SetAngle(0.5);
@@ -686,12 +730,19 @@ void Player::MagneticBehavior()
 		case -1://引力
 			//バースト音を再生
 			ssBurst->Init(L"Assets/sound/引力バースト音.wav");
-			ssBurst->Play(false);
+			ssBurst->Play(false);		
+			//エフェクトを表示
+			burstEffect->Init(u"Assets/effect/引力バースト.efk");
+			burstEffect->Play();
 			break;
+
 		case 1://斥力
 			//バースト音を再生
 			ssBurst->Init(L"Assets/sound/斥力バースト音.wav");
 			ssBurst->Play(false);
+			//エフェクトを表示
+			burstEffect->Init(u"Assets/effect/斥力バースト.efk");
+			burstEffect->Play();
 			break;
 		}
 	}
@@ -700,6 +751,9 @@ void Player::MagneticBehavior()
 //磁力バースト
 void Player::MagneticBurst()
 {
+	//バーストエフェクトの位置を設定
+	burstEffect->SetPosition(m_position);
+
 	//バースト中は移動速度は0に
 	m_characterSpeed = 0.0f;
 
