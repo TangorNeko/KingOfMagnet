@@ -146,7 +146,7 @@ bool SampleScene::Start()
 
 	//すべて作成し終わった所で2画面にする。
 	GameObjectManager::GetInstance()->Set2ScreenMode(true);
-
+	
 	//タイムリミット表示
 	m_timeFontRender = NewGO<prefab::CFontRender>(4);
 	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
@@ -209,6 +209,16 @@ void SampleScene::Update()
 			m_player1->m_displayOff = true;
 			m_player2->m_displayOff = true;
 			m_GEfirstLoop = false;
+			if (m_player1->m_Lose == true)
+			{
+				m_player1->m_loserNum = 0;
+				m_player2->m_loserNum = 0;
+			}
+			else if (m_player2->m_Lose == true)
+			{
+				m_player1->m_loserNum = 1;
+				m_player2->m_loserNum = 1;
+			}
 		}
 		if (g_pad[0]->IsTrigger(enButtonA)|| g_pad[1]->IsTrigger(enButtonA))
 		{

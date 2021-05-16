@@ -81,7 +81,7 @@ private:
 
 	//死亡状態に切り替える
 	void TryChangeStatusDeath();
-	bool m_Lose=false;
+	
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -124,7 +124,7 @@ public:
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };//カメラへの向き
 
-	Vector3 front;//カメラの前方向
+	Vector3 m_front;//カメラの前方向
 	Vector3 right;//カメラの右方向
 	Vector3 cameraPos;//カメラのポジション
 	Quaternion qRotY;
@@ -133,8 +133,7 @@ public:
 
 	Vector3 m_cameraPos;
 	Vector3 m_targetPos = { 0.0f,0.0f,0.0f };
-	float gain = 10;//カメラとターゲットとの距離
-	float factor = 0.0f;
+	float gain = 10;//カメラとターゲットとの距離	
 	float m_addY = 0.0f;
 	int m_cameraLoopCount = 0;
 	bool m_opning = true;
@@ -238,8 +237,20 @@ public:
 	int m_SaveSP = 0;//溜まった必殺技ポイント
 
 	//ファイナルヒット関連
+	bool m_Lose = false;
+	bool m_LoseCameraFlag = true;
+	bool m_doryInOn = true;
+	int m_LoseCameraLoop = 0;
 	bool m_FirstTime = true;
 	int m_winnerNum = 0;
 	int m_loserNum = 0;
+	int m_LastCameraStatus = 0;
+	float m_coef = 0.0f;
+	Vector3 m_LastFront;
+	Vector3 m_LastRight;
+	Vector3 m_enemyLine;
+	Vector3 m_enemyFrontPos;
+	Vector3 m_enemyHeadPos;
+	Vector3 m_enemyWaistPos;
 };
 

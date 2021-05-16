@@ -23,7 +23,7 @@ bool Flash::Start()
 			Vector3 angle = m_position - player->m_position;
 			angle.Normalize();
 
-			float n = player->front.Dot(angle);
+			float n = player->m_front.Dot(angle);
 
 			if (m_parentNum != player->m_playerNum &&
 				n > 0.2)

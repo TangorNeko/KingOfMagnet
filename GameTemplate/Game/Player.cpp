@@ -133,7 +133,7 @@ void Player::Update()
 	{
 		//デバック用///////////////////////////////////
 		if (g_pad[m_playerNum]->IsTrigger(enButtonLB2))
-			Damage(200);		
+			Damage(200);
 		///////////////////////////////////////////////
 		
 		if (m_displayOff == false)
@@ -151,14 +151,18 @@ void Player::Update()
 		if (m_canMove == false) 
 		{
 			m_skinModelRender->SetPosition(m_position);
-			float angle = acosf(n);//アークコサイン
-			m_rot.SetRotation(Vector3::AxisY, angle);
-			if (m_playerNum == 0)
-			{
-				m_rot.y *= -1.0f;
-			}
-			m_skinModelRender->SetRotation(m_rot);
+			//float angle = acosf(n);//アークコサイン
+			//m_rot.SetRotation(Vector3::AxisY, angle);
+			//if (m_playerNum == 0)
+			//{
+			//	m_rot.y *= -1.0f;
+			//}
+			//m_skinModelRender->SetRotation(m_rot);
 			//g_camera3D[m_playerNum]->SetTarget(0, 0, 0);
+			//状態更新。
+			UpdateState();
+			//アニメーション選択。
+			AnimationSelect();
 		}
 		else 
 		{
@@ -225,8 +229,8 @@ void Player::Update()
 	}
 	//ライト
 	m_spotLight->SetAngle(0.5);
-	m_spotLight->SetDirection(front * -1.0f);
-	Vector3 frontPos = m_position + front * 10.0f;
+	m_spotLight->SetDirection(m_front * -1.0f);
+	Vector3 frontPos = m_position + m_front * 10.0f;
 	frontPos.y += 100.0f;
 	m_spotLight->SetPosition(frontPos);
 }
@@ -267,21 +271,21 @@ void Player::DisplayStatus()
 void Player::Move()
 {
 	//カメラの前方向
-	front = m_position - g_camera3D[m_playerNum]->GetPosition();
-	front.y = 0.0f;
-	front.Normalize();
+	m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
+	m_front.y = 0.0f;
+	m_front.Normalize();
 
 	//カメラの右方向
-	right = Cross(g_vec3AxisY, front);
+	right = Cross(g_vec3AxisY, m_front);
 
-	n = front.Dot(Vector3::AxisZ);//内積
+	n = m_front.Dot(Vector3::AxisZ);//内積
 	float angle = acosf(n);//アークコサイン
-	if (front.x < 0) {
+	if (m_front.x < 0) {
 		angle *= -1;
 	}
 	m_rot.SetRotation(Vector3::AxisY, angle);
 	m_skinModelRender->SetRotation(m_rot);
-	m_moveSpeed = front * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + right * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
+	m_moveSpeed = m_front * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + right * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
 	if (m_charaCon.IsOnGround() == false)
 	{
 		if (m_fallLoop < 75)
@@ -995,20 +999,22 @@ void Player::ChargeSpecialAttackGauge(int charge)
 //勝利した時
 void Player::Win()
 {	
-	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
+	/*m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
-	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);
-	m_winnerNum = m_playerNum;
+	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);*/
+	//m_winnerNum = m_playerNum;
+	m_LastFront = m_front;
 }
 
 //敗北した時
 void Player::Lose()
 {	
 	m_Lose = true;
-	m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
+	/*m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
-	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);
-	m_loserNum = m_playerNum;
+	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);*/
+	//m_loserNum = m_playerNum;
+	m_LastFront = m_front;
 }
 
 
@@ -1081,7 +1087,7 @@ void Player::TryChangeStatusDeath()
 {
 	if (m_Lose==true)
 	{
-		m_animStatus = enStatus_Death;
+		m_animStatus = enStatus_Death;				
 	}
 }
 
@@ -1165,19 +1171,21 @@ void Player::UpdateState()
 }
 
 void Player::AnimationSelect()
-{
-	m_skinModelRender->m_animation_speed = 1.0;
-
+{	
+	if (m_LoseCameraFlag == false)
+		m_skinModelRender->m_animation_speed = 0.1f;
+	else
+		m_skinModelRender->m_animation_speed = 1.0;
 	switch (m_animStatus)
 	{
 	case enStatus_Attack:
 		m_skinModelRender->m_animation_speed = 4.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
-	case enStatus_SpecialAttack:
+	case enStatus_SpecialAttack:		
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 		break;
-	case enStatus_Run:
+	case enStatus_Run:		
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
 	case enStatus_Walk:
@@ -1192,7 +1200,7 @@ void Player::AnimationSelect()
 	case enStatus_Hit:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Hit);
 		break;
-	case enStatus_Death:
+	case enStatus_Death:		
 		m_skinModelRender->PlayAnimation(enAnimationClip_Death);
 		break;
 	}
@@ -1249,8 +1257,7 @@ void Player::KnockBack() {
 		m_moveSpeed = { 0.0f,0.0f,0.0f };
 		m_isknockBackCount = 0;
 		m_isKnockBack = false;
-	}
-	
+	}	
 }
 void Player::OpeningCamera()
 {
@@ -1275,10 +1282,9 @@ void Player::OpeningCamera()
 		Vector3 PlayerPos = m_position;
 		PlayerPos.y = m_position.y + 90.0f;//プレイヤーの頭の位置
 		
-		if (factor < 1.0f)
-			factor += 0.01f;
+		
 		Vector3 targetVec = PlayerPos - m_cameraPos;
-		if (targetVec.Length() < 50)
+		if (targetVec.Length() < 250)
 		{
 			m_opning = false;
 		}
@@ -1291,7 +1297,7 @@ void Player::OpeningCamera()
 }
 
 void Player::FinalHit()
-{
+{	
 	if (m_FirstTime == true) {
 		//画面分割を終了
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
@@ -1300,26 +1306,102 @@ void Player::FinalHit()
 		DeleteGO(m_statusFontRender);
 		DeleteGO(m_bulletNumber);
 		DeleteGO(m_resultFontRender);
-		DeleteGO(m_resultSpriteRender);
+		//DeleteGO(m_resultSpriteRender);
 		DeleteGO(m_crosshairRender);
 		DeleteGO(m_HPBarSpriteRender);
 		DeleteGO(m_HPBarDarkSpriteRender);
 		DeleteGO(m_mobiusGauge);
 		m_FirstTime = false;
+		m_canMove = false;
 	}
 			
-	if (m_playerNum == m_loserNum)
-	{		
+	if (m_playerNum == m_loserNum)//敗者を写す
+	{	
+		m_LastRight = Cross(g_vec3AxisY, m_LastFront);
 		Vector3 targetPos = m_position;
-		targetPos.y += 90;		
 		m_cameraPos = targetPos;
-		
-		g_camera3D[m_playerNum]->SetTarget(targetPos);
-		g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+		targetPos.y += 20;
+		targetPos += m_LastFront * -30;		
+		m_cameraPos.y += 100;
+		if (m_LoseCameraLoop > 0)
+		{
+			m_LoseCameraFlag = false;
+			m_LastCameraStatus = 0;
+			}
+		if(m_LoseCameraLoop > 50)
+		{ 
+			m_LastCameraStatus = 1;
+			}
+		if (m_LoseCameraLoop > 100)
+		{
+			m_LastCameraStatus = 2;
+			}
+		if (m_LoseCameraLoop > 150)
+		{
+			m_LastCameraStatus = 3;
+			m_LoseCameraFlag = true;
+		}
+		if (m_LoseCameraLoop > 200)
+		{
+			m_LastCameraStatus = 4;
+		}
+		if (m_doryInOn == false)
+		{
+			m_LastCameraStatus = 5;
+		}
 
+		switch (m_LastCameraStatus)
+		{
+		case 0:
+			m_cameraPos += m_LastRight * 200;//右
+			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			break;
+		case 1:
+			m_cameraPos += m_LastRight * -200;//左
+			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			break;
+		case 2:
+			m_cameraPos += m_LastFront * 200;//正面
+			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			break;
+		case 3:
+			m_enemyHeadPos = m_enemy->m_position;
+			m_enemyHeadPos.y += 50;//勝者の頭の位置
+			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
+			m_enemyLine=(m_enemyHeadPos + m_enemy->m_LastFront * 200) - m_position;
+			m_enemyLine.Normalize();
+			m_cameraPos += m_enemyLine*-200;//後ろ
+			g_camera3D[m_playerNum]->SetTarget(m_enemy->m_position);
+			break;
+		case 4:			
+			//カメラを敵の前まで移動させる				
+			m_enemyFrontPos = (m_enemy->m_position + m_enemy->m_LastFront * 150 ) - (m_position + m_enemyLine * -200);//
+			//m_enemyFrontPos = m_enemyHeadPos - m_cameraPos;
+			if (m_enemyFrontPos.Length() < 100)
+			{
+				m_doryInOn = false;				
+			}
+			//m_enemyFrontPos.Normalize();
+			if (m_coef < 1.0f)
+				m_coef += 0.01f;
+			/*else
+				m_doryInOn = false;*/
+			m_cameraPos += (m_enemyFrontPos * (pow(m_coef,2)) + m_enemyLine * -200);//
+			m_enemyWaistPos = m_enemy->m_position;
+			m_enemyWaistPos.y += 30;
+			g_camera3D[m_playerNum]->SetTarget(m_enemyWaistPos);
+			break;
+		case 5:
+			break;
+		default:
+			break;
+		}
+		
+		g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+		m_LoseCameraLoop++;
+		
+			
 	}
-	
-	
 	//スローにさせる
 	//勝者を写す
 }
