@@ -8,11 +8,9 @@ public:
 
 	Vector3 m_position;
 
-	int m_deletetime = 500;
-
 	//ダメージを受けるまでのカウント(2キャラ分)
 	int m_damageCountdown[2] = {0,0};
 
 	//燃え続ける時間
-	int m_deleteCountdown = 500;
+	int m_deleteCountdown = 180;
 };

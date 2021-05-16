@@ -56,5 +56,7 @@ public:
 	prefab::CSpriteRender* m_delimitLineSpriteRender = nullptr;	//‹æØ‚éü
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;	
 	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;
+
+	int t = 0;
 };
 

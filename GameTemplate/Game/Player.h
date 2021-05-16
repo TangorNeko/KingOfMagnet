@@ -95,6 +95,7 @@ private:
 	//ライト
 	prefab::CSpotLight* m_spotLight = nullptr;
 
+
 public:
 
 	//自分の体力にダメージを与える
@@ -244,13 +245,20 @@ public:
 	bool m_FirstTime = true;
 	int m_winnerNum = 0;
 	int m_loserNum = 0;
-	int m_LastCameraStatus = 0;
+int m_LastCameraStatus = 0;
 	float m_coef = 0.0f;
 	Vector3 m_LastFront;
 	Vector3 m_LastRight;
 	Vector3 m_enemyLine;
 	Vector3 m_enemyFrontPos;
 	Vector3 m_enemyHeadPos;
-	Vector3 m_enemyWaistPos;
-};
+	Vector3 m_enemyWaistPos;//ダメージエフェクト関連
+	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
+
+	//斥力・引力エフェクト関連
+	prefab::CEffect* magEffect[3] = { nullptr,nullptr,nullptr };		//三つのエフェクトを連続で再生し続ける。
+	int m_magEffectCallCount = 60;		//磁力エフェクトを呼ぶまでの時間
+
+	//斥力・引力バースト エフェクト関連
+	prefab::CEffect* burstEffect = nullptr;};
 

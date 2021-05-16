@@ -253,6 +253,7 @@ void Debris::AsBulletBehave()
 						player->Damage(20.0f);
 						break;
 					}
+					player->m_damegeEffectFront = m_moveDirection * -1.0f;
 					//“–‚½‚Á‚½Š‚©‚çƒ|ƒbƒv‚³‚¹‚é
 					m_debrisState = enPop;
 

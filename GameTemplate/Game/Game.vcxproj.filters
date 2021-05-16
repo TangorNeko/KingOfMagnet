@@ -316,8 +316,8 @@
     <ClCompile Include="CEffect.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
-    <ClCompile Include="Flash.cpp" />
     <ClCompile Include="Incendia.cpp" />
+    <ClCompile Include="Flash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
