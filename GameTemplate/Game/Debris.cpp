@@ -227,28 +227,38 @@ void Debris::AsBulletBehave()
 				if (player->m_collider.isHitCapsule(m_bulletCollider))
 				{
 					//ヒット音
-					prefab::CSoundSource* ssHit = NewGO<prefab::CSoundSource>(0);;
+					prefab::CSoundSource* ssHit = NewGO<prefab::CSoundSource>(0);
+
 					//ガレキの形状でダメージが分岐
 					switch (m_debrisShape)
 					{
 					case enStone:
 						//音を再生
-						ssHit->Init(L"Assets/sound/ダメージ音.wav");
-						ssHit->Play(false);
+						if (player->m_hp > 0) {
+							ssHit->Init(L"Assets/sound/ダメージ音.wav");
+							ssHit->SetVolume(1.2f);
+							ssHit->Play(false);
+						}
 						player->m_TakeAttackNum++;//攻撃を受けた回数
 						player->Damage(50.0f);
 						break;
 					case enSword:
 						//音を再生
-						ssHit->Init(L"Assets/sound/剣が当たる.wav");
-						ssHit->Play(false);
+						if (player->m_hp > 0) {
+							ssHit->Init(L"Assets/sound/剣が当たる.wav");
+							ssHit->SetVolume(1.5f);
+							ssHit->Play(false);
+						}
 						player->m_TakeAttackNum++;//攻撃を受けた回数
 						player->Damage(100.0f);
 						break;
 					case enSpecialCharger:
 						//音を再生(仮)
-						ssHit->Init(L"Assets/sound/剣が当たる.wav");
-						ssHit->Play(false);
+						if (player->m_hp > 0) {
+							ssHit->Init(L"Assets/sound/剣が当たる.wav");
+							ssHit->SetVolume(1.5f);
+							ssHit->Play(false);
+						}
 						player->m_TakeAttackNum++;//攻撃を受けた回数
 						player->Damage(20.0f);
 						break;

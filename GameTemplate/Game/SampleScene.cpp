@@ -44,6 +44,9 @@ SampleScene::~SampleScene()
 	/*DeleteGO(m_delimitLineSpriteRender);
 	DeleteGO(m_HPCoverSpriteRender);
 	DeleteGO(m_TimerBaseSpriteRender);*/
+
+	DeleteGO(ssBGM);
+			
 }
 
 bool SampleScene::Start()
@@ -184,6 +187,12 @@ bool SampleScene::Start()
 	m_startCountFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	m_startCountFontRender->SetPosition({ -185.0f, 130.0f });
 	m_startCountFontRender->SetScale({ 3.0f, 3.0f });
+
+	//音を再生
+	ssBGM = NewGO<prefab::CSoundSource>(0);;
+	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
+	ssBGM->SetVolume(0.3f);
+	ssBGM->Play(true);
 
 	return true;
 }

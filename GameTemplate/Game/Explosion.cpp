@@ -11,13 +11,14 @@ bool Explosion::Start()
 	//音を再生
 	prefab::CSoundSource* ssExplosion = NewGO<prefab::CSoundSource>(0);;
 	ssExplosion->Init(L"Assets/sound/爆発音.wav");
+	ssExplosion->SetVolume(1.1f);
 	ssExplosion->Play(false);
 
 	//エフェクトを再生
 	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
 	effect->Init(u"Assets/effect/爆発.efk");
 	effect->SetPosition(m_position);
-	effect->SetScale({ 25.0f, 25.0f, 25.0f });
+	effect->SetScale({ 35.0f, 35.0f, 35.0f });
 	effect->Play();
 
 	return true;
