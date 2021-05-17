@@ -63,19 +63,15 @@ bool Player::Start()
 	//キャラコンの初期化
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
-	//ステータス表示の初期化
-	m_statusFontRender = NewGO<prefab::CFontRender>(1);
-	m_statusFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
-	m_statusFontRender->SetPosition({ -625.0f, 350.0f });
 	//残弾数表示の初期化
 	m_bulletNumber = NewGO<prefab::CFontRender>(6);
-	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
+	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	if(m_playerNum==0)
-		m_bulletNumber->SetPosition({ -550.0f, -200.0f });
+		m_bulletNumber->SetPosition({ -550.0f, -180.0f });
 	if(m_playerNum==1)
-		m_bulletNumber->SetPosition({ 500.0f, -200.0f });
+		m_bulletNumber->SetPosition({ 500.0f, -180.0f });
 	m_bulletNumber->SetScale({ 1.5f,1.5f });
-	m_bulletNumber->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
+	m_bulletNumber->SetColor({ 1.0f,0.0f, 0.0f,1.0f });
 	//照準表示の初期化
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
@@ -224,7 +220,7 @@ void Player::Update()
 				//グレネード用。仮です。
 				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 				{
-					Bomb* debris = NewGO<Bomb>(0, "debris");
+					Bomb* debris = NewGO<Bomb>(0, "bomb");
 					debris->m_bombShape = Bomb::enIncendiaryGrenade;
 					debris->m_bombState = Bomb::enDrop;
 					debris->m_parent = this;
@@ -293,11 +289,6 @@ void Player::Update()
 void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
-	wchar_t special[256];
-	swprintf_s(special, L"%d", m_specialAttackGauge);
-
-	m_statusFontRender->SetText(L"HP:" + std::to_wstring(m_hp) + L"%\n\n必殺ゲージ:" + special
-		+ L"%\n\n残弾数" + std::to_wstring(m_holdDebrisVector.size()));
 	m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()));
 	if (m_playerNum == 0) {
 		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
@@ -320,6 +311,8 @@ void Player::DisplayStatus()
 
 	//メビウスゲージに現在の必殺技のチャージ量を渡す
 	m_mobiusGauge->m_charge = m_charge;
+
+	m_mobiusGauge->m_spCharge = m_specialAttackGauge;
 }
 
 //移動
@@ -1404,7 +1397,6 @@ void Player::FinalHit()
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
 
 		//HPバー、画面分割線、メビウスゲージを消す
-		DeleteGO(m_statusFontRender);
 		DeleteGO(m_bulletNumber);
 		DeleteGO(m_resultFontRender);
 		//DeleteGO(m_resultSpriteRender);
@@ -1510,7 +1502,6 @@ void Player::FinalHit()
 //{
 //	if (m_resultFirstTime == true)
 //	{
-//		DeleteGO(m_statusFontRender);
 //		DeleteGO(m_crosshairRender);
 //		DeleteGO(m_mobiusGauge);
 //		m_resultFirstTime = false;		

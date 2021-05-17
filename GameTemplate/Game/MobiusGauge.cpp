@@ -80,8 +80,26 @@ bool MobiusGauge::Start()
     //左側のゲージの初期化
     m_mobiusGaugeLeftSide.Init(leftGaugeInitData);
 
-    //SP
-	return true;
+    //必殺技ゲージの初期化データ
+    SpriteInitData spInitData;
+    spInitData.m_ddsFilePath[0] = "Assets/Image/Mobius_SP_Bar.dds";
+    spInitData.m_fxFilePath = "Assets/shader/ringUI.fx";
+    spInitData.m_width = 88.0f;
+    spInitData.m_height = 52.0f;
+    spInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+
+    //NOTE:上からスタートにしたいが上下の情報が反対になるのでyは-1.0f、表記の食い違いが気になる
+    m_spGaugeDatas.spriteStartDir = { 0.0f,-1.0f,0.0f };
+    //NOTE:ゲージの進行方向は時計周りにしたいが今回は増えていくゲージなのでfalse...表記の食い違いが気になる
+    m_spGaugeDatas.isClockwise = false;
+
+    spInitData.m_expandConstantBuffer = &m_spGaugeDatas;
+    spInitData.m_expandConstantBufferSize = sizeof(m_spGaugeDatas);
+
+    //必殺技ゲージの初期化
+    m_spGaugeSprite.Init(spInitData);
+
+    return true;
 }
 
 void MobiusGauge::Update()
@@ -127,6 +145,11 @@ void MobiusGauge::Update()
         //右側のゲージと同期をとるために+15.0している
         m_leftGaugeDatas.gaugeProgress = count - 360.0f + 15.0f;
     }
+
+
+    //必殺技ゲージの表示
+
+    m_spGaugeDatas.gaugeProgress = 360 - m_spCharge / 100 * 360;
 }
 
 void MobiusGauge::SetPosition(const Vector3& pos)
@@ -137,9 +160,12 @@ void MobiusGauge::SetPosition(const Vector3& pos)
     m_mobiusGaugeRightSide.Update({ pos.x + 50.0f,pos.y - 20.0f,pos.z }, Quaternion::Identity, Vector3::One, { 0.0f,0.5f });
     m_mobiusGaugeLeftSide.Update({ pos.x - 49.0f,pos.y - 20.0f,pos.z }, Quaternion::Identity, Vector3::One, { 1.0f,0.5f });
 
+    m_spGaugeSprite.Update({ pos.x,pos.y + 37.5f,pos.z }, Quaternion::Identity, Vector3::One, { 0.5f,0.5f });
+
     //回転のゲージの回転の中心位置もずらす。
     m_rightGaugeDatas.rotateOrigin = { 685.0f + pos.x,380.0f - pos.y };//360.0f
     m_leftGaugeDatas.rotateOrigin = { 595.0f + pos.x,380.0f - pos.y };
+    m_spGaugeDatas.rotateOrigin = { 645.0f + pos.x,320.0f - pos.y };
 }
 
 void MobiusGauge::PostRender(RenderContext& rc, Camera* camera)
@@ -150,6 +176,7 @@ void MobiusGauge::PostRender(RenderContext& rc, Camera* camera)
         m_mobiusBaseSprite.Draw(rc);
         m_mobiusGaugeRightSide.Draw(rc);
         m_mobiusGaugeLeftSide.Draw(rc);
+        m_spGaugeSprite.Draw(rc);
         m_mobiusCoverSprite.Draw(rc);
     }
 }

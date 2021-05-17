@@ -29,15 +29,19 @@ public:
 
 	GaugeDatas m_rightGaugeDatas;//右側のゲージのデータ
 	GaugeDatas m_leftGaugeDatas;//左側のゲージのデータ
+	GaugeDatas m_spGaugeDatas;//必殺技ゲージのデータ
 
 	Sprite m_mobiusBaseSprite;//メビウスゲージの背景。
 	Sprite m_mobiusCoverSprite;//メビウスゲージの外側のカバー。
 	Sprite m_mobiusGaugeRightSide;//メビウスゲージ(右側)
 	Sprite m_mobiusGaugeLeftSide;//メビウスゲージ(左側)
+	Sprite m_spGaugeSprite;//必殺技ゲージ
 
 	DrawScreen m_drawScreen = AllScreen;//描画先
 
-	float m_charge;
-	bool m_isRed = false;
+	float m_charge;//磁力ゲージの溜まり具合
+	bool m_isRed = false;//磁力ゲージは赤色(斥力)か?
+
+	float m_spCharge;//必殺技ゲージの溜まり具合
 };
 

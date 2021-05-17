@@ -154,7 +154,6 @@ public:
 	MyCapsuleCollider m_collider;//カプセル状の当たり判定(弾の当たり判定に使う)
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
-	prefab::CFontRender* m_statusFontRender = nullptr;//ステータス表示用のフォント
 	prefab::CFontRender* m_bulletNumber = nullptr;//残弾数
 	prefab::CFontRender* m_resultFontRender = nullptr;//リザルト表示用のフォント
 
