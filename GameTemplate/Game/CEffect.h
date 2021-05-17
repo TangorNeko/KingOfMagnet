@@ -30,6 +30,10 @@ namespace prefab
 		/// この関数を呼び出すとエフェクトの再生が開始されます。
 		/// </remark>
 		void Play();
+
+		//再生を停止
+		void Stop();
+
 		/*!
 		*@brief	座標を設定。
 		*/

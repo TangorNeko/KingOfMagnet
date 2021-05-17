@@ -29,6 +29,13 @@ namespace prefab
 		//新しく再生。
 		m_handle = EffectEngine::GetInstance()->Play(m_effect);
 	}
+
+	void CEffect::Stop()
+	{
+		//再生中のエフェクトを停止する。
+		EffectEngine::GetInstance()->Stop(m_handle);
+	}
+
 	void CEffect::Update()
 	{
 		EffectEngine::GetInstance()->UpdateEffectWorldMatrix(

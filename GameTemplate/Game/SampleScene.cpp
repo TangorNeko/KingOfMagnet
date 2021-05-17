@@ -22,6 +22,14 @@ SampleScene::~SampleScene()
 			return true;
 		});
 
+	
+	QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
+		{
+			DeleteGO(bomb);
+			return true;
+		});
+		
+
 	QueryGOs<Debris>("debris", [](Debris* debris)->bool
 		{
 			DeleteGO(debris);
