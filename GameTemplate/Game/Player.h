@@ -82,6 +82,8 @@ private:
 	//死亡状態に切り替える
 	void TryChangeStatusDeath();
 	
+	//勝利状態に切り替える
+	void TryChangeStatusWin();
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -118,6 +120,8 @@ public:
 	void KnockBack();
 
 public:
+	prefab::CSkinModelRender* m_weaponModel = nullptr;//武器を持つ
+
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion m_rot;//キャラクターの回転
 	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率
@@ -186,6 +190,7 @@ public:
 		enAnimationClip_SpecialAttack,
 		enAnimationClip_Hit,
 		enAnimationClip_Death,
+		enAnimationClip_Winner,
 		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
 	};
 
@@ -200,6 +205,7 @@ public:
 		enStatus_SpecialAttack,//必殺技状態
 		enStatus_Hit,		//被弾状態
 		enStatus_Death,		//死亡状態
+		enStatus_Winner,		//勝利状態
 		enStatus_Num,		//状態の数。
 	};
 
@@ -241,17 +247,20 @@ public:
 	bool m_Lose = false;
 	bool m_LoseCameraFlag = true;
 	bool m_doryInOn = true;
+	bool m_WinAnimOn = false;
 	int m_LoseCameraLoop = 0;
 	bool m_FirstTime = true;
 	int m_winnerNum = 0;
 	int m_loserNum = 0;
-int m_LastCameraStatus = 0;
+	int m_LastCameraStatus = 0;
 	float m_coef = 0.0f;
 	Vector3 m_LastFront;
 	Vector3 m_LastRight;
 	Vector3 m_enemyLine;
 	Vector3 m_enemyFrontPos;
 	Vector3 m_enemyHeadPos;
+
+
 	Vector3 m_enemyWaistPos;//ダメージエフェクト関連
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 

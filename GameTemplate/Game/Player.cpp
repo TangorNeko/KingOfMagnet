@@ -15,6 +15,8 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
+	DeleteGO(m_weaponModel);
+	//手のボーンのワールド行列を取得
 	/*DeleteGO(m_statusFontRender);
 	DeleteGO(m_bulletNumber);
 	DeleteGO(m_resultFontRender);
@@ -48,7 +50,9 @@ bool Player::Start()
 	animationClips[enAnimationClip_Hit].SetLoopFlag(false);
 	animationClips[enAnimationClip_Death].Load("Assets/animData/Mage_Death.tka");
 	animationClips[enAnimationClip_Death].SetLoopFlag(false);
-
+	animationClips[enAnimationClip_Winner].Load("Assets/animData/Mage_Winner.tka");
+	animationClips[enAnimationClip_Winner].SetLoopFlag(false);	//ループモーションにする。
+	
 	//モデルの初期化
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
@@ -130,11 +134,14 @@ bool Player::Start()
 	burstEffect = NewGO<prefab::CEffect>(0);
 	burstEffect->SetScale({ 40.0f, 40.0f, 40.0f });
 
+	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
+	m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
 	return true;
 }
 
 void Player::Update()
 {
+	
 	//プレイヤー番号が与えられていなければ何もしない
 	if (m_playerNum == -1)
 	{
@@ -178,6 +185,10 @@ void Player::Update()
 			UpdateState();
 			//アニメーション選択。
 			AnimationSelect();
+			//手のボーンのワールド行列を取得
+			Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
+			m_weaponModel->SetMatrix(handmatrix);
+
 		}
 		else
 		{
@@ -367,6 +378,10 @@ void Player::Move()
 		m_charaCon.SetPosition(m_position);
 		m_skinModelRender->SetPosition(m_position);
 	}
+	//手のボーンのワールド行列を取得
+	Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
+	m_weaponModel->SetMatrix(handmatrix);
+
 }
 
 //攻撃
@@ -1155,8 +1170,6 @@ void Player::TryChangeStatusHit()
 	}	
 }
 
-
-
 //死亡状態に切り替える
 void Player::TryChangeStatusDeath()
 {
@@ -1164,6 +1177,13 @@ void Player::TryChangeStatusDeath()
 	{
 		m_animStatus = enStatus_Death;				
 	}
+}
+
+//勝利状態に切り替える
+void Player::TryChangeStatusWin()
+{
+	if(m_WinAnimOn==true)
+	m_animStatus = enStatus_Winner;
 }
 
 //アニメーションの状態更新
@@ -1216,6 +1236,7 @@ void Player::UpdateState()
 		TryChangeStatusFall();
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_Fall:
 		TryChangeStatusAttack();
@@ -1242,6 +1263,8 @@ void Player::UpdateState()
 	case enStatus_Death:
 		TryChangeStatusDeath();
 		break;
+	case enStatus_Winner:
+		TryChangeStatusWin();
 	}
 }
 
@@ -1277,6 +1300,9 @@ void Player::AnimationSelect()
 		break;
 	case enStatus_Death:		
 		m_skinModelRender->PlayAnimation(enAnimationClip_Death);
+		break;
+	case enStatus_Winner:
+		m_skinModelRender->PlayAnimation(enAnimationClip_Winner);
 		break;
 	}
 
@@ -1459,23 +1485,22 @@ void Player::FinalHit()
 			//m_enemyFrontPos.Normalize();
 			if (m_coef < 1.0f)
 				m_coef += 0.01f;
+			if (m_coef < 0.5f)
+				m_enemy->m_WinAnimOn = true;
 			/*else
 				m_doryInOn = false;*/
 			m_cameraPos += (m_enemyFrontPos * (pow(m_coef,2)) + m_enemyLine * -200);//
 			m_enemyWaistPos = m_enemy->m_position;
-			m_enemyWaistPos.y += 30;
+			m_enemyWaistPos.y += 20;
 			g_camera3D[0]->SetTarget(m_enemyWaistPos);
 			break;
 		case 5:
 			break;
 		default:
 			break;
-		}
-		
+		}		
 		g_camera3D[0]->SetPosition(m_cameraPos);
 		m_LoseCameraLoop++;
-		
-			
 	}
 	//スローにさせる
 	//勝者を写す

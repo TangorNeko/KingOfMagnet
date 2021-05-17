@@ -63,7 +63,7 @@ bool SampleScene::Start()
 	//各プレイヤーに敵を渡す
 	m_player2->m_enemy = m_player1;
 	m_player1->m_enemy = m_player2;
-
+	
 	//ステージの表示
 	m_backGround = NewGO<BackGround>(0, "background");
 
