@@ -225,7 +225,7 @@ void Player::Update()
 			//攻撃後の隙のタイマーを減らしていく
 			m_attackCount--;
 			//攻撃のクールタイムが終わると移動速度を戻す
-			if (m_attackCount <= 0)
+			if (m_attackCount <= 0 && m_isBurst == false)
 			{
 				m_attackCount = 0;
 				m_isAttacking = false;
@@ -276,7 +276,8 @@ void Player::Update()
 	//m_spotLight->SetDirection(front); // * -1.0f);
 	//Vector3 frontPos = m_position - front * 10.0f;
 	//frontPos.y += 100.0f;
-	//m_spotLight->SetPosition(frontPos);}
+	//m_spotLight->SetPosition(frontPos);
+}
 //体力、メビウスゲージの表示
 void Player::DisplayStatus()
 {
@@ -1428,15 +1429,15 @@ void Player::FinalHit()
 		{
 		case 0:
 			m_cameraPos += m_LastRight * 200;//右
-			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 1:
 			m_cameraPos += m_LastRight * -200;//左
-			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 2:
 			m_cameraPos += m_LastFront * 200;//正面
-			g_camera3D[m_playerNum]->SetTarget(targetPos);
+			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 3:
 			m_enemyHeadPos = m_enemy->m_position;
@@ -1445,7 +1446,7 @@ void Player::FinalHit()
 			m_enemyLine=(m_enemyHeadPos + m_enemy->m_LastFront * 200) - m_position;
 			m_enemyLine.Normalize();
 			m_cameraPos += m_enemyLine*-200;//後ろ
-			g_camera3D[m_playerNum]->SetTarget(m_enemy->m_position);
+			g_camera3D[0]->SetTarget(m_enemy->m_position);
 			break;
 		case 4:			
 			//カメラを敵の前まで移動させる				
@@ -1463,7 +1464,7 @@ void Player::FinalHit()
 			m_cameraPos += (m_enemyFrontPos * (pow(m_coef,2)) + m_enemyLine * -200);//
 			m_enemyWaistPos = m_enemy->m_position;
 			m_enemyWaistPos.y += 30;
-			g_camera3D[m_playerNum]->SetTarget(m_enemyWaistPos);
+			g_camera3D[0]->SetTarget(m_enemyWaistPos);
 			break;
 		case 5:
 			break;
@@ -1471,7 +1472,7 @@ void Player::FinalHit()
 			break;
 		}
 		
-		g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+		g_camera3D[0]->SetPosition(m_cameraPos);
 		m_LoseCameraLoop++;
 		
 			
