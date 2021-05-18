@@ -31,6 +31,7 @@ Player::~Player()
 	DeleteGO(m_magEffect[2]);
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
+	DeleteGO(m_SPEffect);
 }
 
 bool Player::Start()
@@ -136,6 +137,8 @@ bool Player::Start()
 	m_hitEffect->Init(u"Assets/effect/ダメージ.efk");
 	m_hitEffect->SetScale({ 10.0f, 10.0f, 10.0f });
 
+	m_SPEffect = NewGO<prefab::CEffect>(0);
+	m_SPEffect->SetScale({ 20.0f, 20.0f, 20.0f });
 
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
@@ -476,13 +479,13 @@ void Player::SpecialAttack()
 		}
 	}
 
-	if (m_specialShotCount >= 35) {
-		//音を設定
-		prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
+	if (m_specialShotCount >= 35) 
+	{
 		//引力なら
 		if (m_magPower == -1)
 		{
 			//音を鳴らす
+			prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);
 			ssSPAttack->Init(L"Assets/sound/暗黒魔法.wav");
 			ssSPAttack->Play(false);
 
@@ -519,8 +522,18 @@ void Player::SpecialAttack()
 			if (m_holdDebrisVector.size() != 0)
 			{
 				//音を鳴らす
+				prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
 				ssSPAttack->Init(L"Assets/sound/気弾1.wav");
 				ssSPAttack->Play(false);
+
+				
+				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
+				m_SPEffect->SetPosition({ 
+					m_position.x + m_front.x * 50.0f,
+					m_position.y += 50.0f,
+					m_position.z + m_front.z * 50.0f
+					});
+				m_SPEffect->Play();
 
 				//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 				Vector3 crossPoint;

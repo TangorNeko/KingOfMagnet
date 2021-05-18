@@ -274,6 +274,9 @@ public:
 
 	//ダメージエフェクト
 	prefab::CEffect* m_hitEffect = nullptr;
+
+	//必殺技のエフェクト
+	prefab::CEffect* m_SPEffect = nullptr;
 };
 
 
