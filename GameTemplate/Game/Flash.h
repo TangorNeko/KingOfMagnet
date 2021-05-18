@@ -15,5 +15,8 @@ public:
 	int m_deletetime = 500;
 	float m_Alpha = 1.0;
 	bool m_flashFlag = false;
+
+	//エフェクト
+	prefab::CEffect* m_effect = nullptr;
 };
 

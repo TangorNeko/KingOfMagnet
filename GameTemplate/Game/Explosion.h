@@ -10,4 +10,6 @@ public:
 
 	int m_deletetime = 500;
 
+	//エフェクト
+	prefab::CEffect* m_effect = nullptr;
 };

@@ -31,6 +31,8 @@ private:
 	//必殺技
 	void SpecialAttack();
 	bool m_SpecialAttackOn = false;//アニメーション用フラグ
+	int m_specialShotFlag = false;
+	int m_specialShotCount = 0;
 
 	//爆弾を投げる
 	void ThrowBomb();
@@ -264,9 +266,14 @@ public:
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 
 	//斥力・引力エフェクト関連
-	prefab::CEffect* magEffect[3] = { nullptr,nullptr,nullptr };		//三つのエフェクトを連続で再生し続ける。
+	prefab::CEffect* m_magEffect[3] = { nullptr,nullptr,nullptr };		//三つのエフェクトを連続で再生し続ける。
 	int m_magEffectCallCount = 60;		//磁力エフェクトを呼ぶまでの時間
 
 	//斥力・引力バースト エフェクト関連
-	prefab::CEffect* burstEffect = nullptr;};
+	prefab::CEffect* m_burstEffect = nullptr;
+
+	//ダメージエフェクト
+	prefab::CEffect* m_hitEffect = nullptr;
+};
+
 

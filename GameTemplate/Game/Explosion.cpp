@@ -5,6 +5,7 @@
 
 Explosion::~Explosion()
 {
+	DeleteGO(m_effect);
 }
 bool Explosion::Start()
 {
@@ -15,11 +16,11 @@ bool Explosion::Start()
 	ssExplosion->Play(false);
 
 	//エフェクトを再生
-	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-	effect->Init(u"Assets/effect/爆発.efk");
-	effect->SetPosition(m_position);
-	effect->SetScale({ 35.0f, 35.0f, 35.0f });
-	effect->Play();
+	m_effect = NewGO<prefab::CEffect>(0);
+	m_effect->Init(u"Assets/effect/爆発.efk");
+	m_effect->SetPosition(m_position);
+	m_effect->SetScale({ 35.0f, 35.0f, 35.0f });
+	m_effect->Play();
 
 	return true;
 }
