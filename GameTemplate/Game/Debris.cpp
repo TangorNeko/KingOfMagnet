@@ -13,7 +13,10 @@ Debris::~Debris()
 	
 	//ゲームシーンの弾の数を減らす。
 	SampleScene* gameScene = FindGO<SampleScene>("gamescene");
-	gameScene->BulletDecrease();
+	if (gameScene != nullptr)
+	{
+		gameScene->BulletDecrease();
+	}
 }
 
 bool Debris::Start()
