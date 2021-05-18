@@ -28,7 +28,8 @@ bool Debris::Start()
 	{
 	case enStone:
 		//Î‚Ìƒ‚ƒfƒ‹
-		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
+		m_skinModelRender->Init("Assets/modelData/gear.tkm");
+		//m_skinModelRender->Init("Assets/modelData/neji.tkm");
 		m_skinModelRender->SetScale({ 1.0f,1.0f,1.0f });
 		break;
 	case enSword:
