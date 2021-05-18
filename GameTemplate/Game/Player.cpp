@@ -830,6 +830,9 @@ void Player::MagneticBurst()
 					{
 						m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
 					}
+
+					//もう敵の弾を奪ったのでフラグ変更
+					m_isSteal = true;
 				}
 
 				//敵が1つでも爆弾を持っていれば
@@ -840,13 +843,16 @@ void Player::MagneticBurst()
 
 					//ドロップさせた爆弾を相手のコンテナから削除
 					m_enemy->m_holdBombVector.erase(m_enemy->m_holdBombVector.begin());
+
+					//もう敵の弾を奪ったのでフラグ変更
+					m_isSteal = true;
 				}
 
-				//もう敵の弾を奪ったのでフラグ変更
-				m_isSteal = true;
-
-				//リスクのある行動を成功させたので必殺技ゲージをプラス。
-				ChargeSpecialAttackGauge(25);
+				if (m_isSteal == true)
+				{
+					//リスクのある行動を成功させたので必殺技ゲージをプラス。
+					ChargeSpecialAttackGauge(25);
+				}
 			}
 		}
 
