@@ -23,7 +23,7 @@ SampleScene::~SampleScene()
 		});
 
 	
-	QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
+	/*QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
 		{
 			DeleteGO(bomb);
 			return true;
@@ -34,7 +34,7 @@ SampleScene::~SampleScene()
 		{
 			DeleteGO(debris);
 			return true;
-		});
+		});*/
 
 	QueryGOs<Repulsion>("repulsion", [](Repulsion* repulsion)->bool
 		{
@@ -81,34 +81,34 @@ bool SampleScene::Start()
 	DebrisBlock* debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { -700.0f,0.0f,600.0f };
 
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	/*debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { -750.0f,0.0f,600.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { -700.0f,0.0f,550.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -750.0f,0.0f,550.0f };
+	debrisblock->m_position = { -750.0f,0.0f,550.0f };*/
 
 
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 700.0f,0.0f,-600.0f };
 
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	/*debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 750.0f,0.0f,-600.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 700.0f,0.0f,-550.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 750.0f,0.0f,-550.0f };
+	debrisblock->m_position = { 750.0f,0.0f,-550.0f };*/
 
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 0.0f,160.0f,0.0f };
 
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
+	/*debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 50.0f,160.0f,50.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
@@ -118,10 +118,10 @@ bool SampleScene::Start()
 	debrisblock->m_position = { -50.0f,160.0f,50.0f };
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -50.0f,160.0f,-50.0f };
+	debrisblock->m_position = { -50.0f,160.0f,-50.0f };*/
 
 	//ÉKÉåÉLÅB
-	Debris* debris = NewGO<Debris>(0, "debris");
+	/*Debris* debris = NewGO<Debris>(0, "debris");
 	debris->m_debrisState = Debris::enDrop;
 	debris->m_position = { 0.0f,0.0f,0.0f };
 
@@ -142,7 +142,7 @@ bool SampleScene::Start()
 	debris = NewGO<Debris>(0, "debris");
 	debris->m_debrisState = Debris::enDrop;
 	debris->m_debrisShape = Debris::enSpecialCharger;
-	debris->m_position = { 100.0f,500.0f,100.0f };
+	debris->m_position = { 100.0f,500.0f,100.0f };*/
 
 
 	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");

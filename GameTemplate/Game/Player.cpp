@@ -1452,6 +1452,16 @@ void Player::FinalHit()
 		DeleteGO(m_HPBarSpriteRender);
 		DeleteGO(m_HPBarDarkSpriteRender);
 		DeleteGO(m_mobiusGauge);
+		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
+			{
+				DeleteGO(bomb);
+				return true;
+			});
+		QueryGOs<Debris>("debris", [](Debris* debris)->bool
+			{
+				DeleteGO(debris);
+				return true;
+			});
 		m_FirstTime = false;
 		m_canMove = false;
 	}
