@@ -12,10 +12,11 @@ bool Flash::Start()
 	//‰¹‚ğÄ¶
 	prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);;
 	ss1->Init(L"Assets/sound/‘MŒõ’e.wav");
-	ss1->SetVolume(0.5f);
+	ss1->SetVolume(0.3f);
 	ss1->Play(false);
 	prefab::CSoundSource* ss2 = NewGO<prefab::CSoundSource>(0);;
 	ss2->Init(L"Assets/sound/‘MŒõ’e2.wav");
+	ss2->SetVolume(0.4f);
 	ss2->Play(false);
 
 	//ƒGƒtƒFƒNƒg‚ğÄ¶
@@ -34,7 +35,7 @@ bool Flash::Start()
 			float n = player->m_front.Dot(angle);
 
 			if (m_parentNum != player->m_playerNum &&
-				n > 0.2)
+				n > 0.2f)
 			{
 				m_flashFlag = true;
 				m_spriteRender = NewGO<prefab::CSpriteRender>(0);

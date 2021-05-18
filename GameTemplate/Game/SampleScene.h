@@ -57,6 +57,7 @@ public:
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;	
 	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;
 
-	int t = 0;
+	//BGM
+	prefab::CSoundSource* ssBGM = nullptr;
 };
 

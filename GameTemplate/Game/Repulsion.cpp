@@ -47,8 +47,8 @@ void Repulsion::Update()
 					{
 						prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
 						ss1->Init(L"Assets/sound/マジックウェーブ.wav");
+						ss1->SetVolume(1.5f);
 						ss1->Play(false);
-						ss1->SetVolume(0.8f);
 						m_isPlayss1[player->m_playerNum] = true;
 					}
 
@@ -56,13 +56,14 @@ void Repulsion::Update()
 					if (m_isPlayss2[player->m_playerNum] == false) {												
 						m_ss2[player->m_playerNum] = NewGO<prefab::CSoundSource>(0);
 						m_ss2[player->m_playerNum]->Init(L"Assets/sound/UFO.wav");
+						m_ss2[player->m_playerNum]->SetVolume(1.5f);
 						m_ss2[player->m_playerNum]->Play(true);	
 						m_isPlayss2[player->m_playerNum] = true;
 					}
-					//ss2がまだ鳴っているのならば、音量を1.0fにする。
+					//ss2がまだ鳴っているのならば、音量を1.5fにする。
 					m_ss2Volume[player->m_playerNum] += 0.1f;
-					if (m_ss2Volume[player->m_playerNum] >= 1.0f) {
-						m_ss2Volume[player->m_playerNum] = 1.0f;
+					if (m_ss2Volume[player->m_playerNum] >= 1.5f) {
+						m_ss2Volume[player->m_playerNum] = 1.5f;
 					}
 					m_ss2[player->m_playerNum]->SetVolume(m_ss2Volume[player->m_playerNum]);
 

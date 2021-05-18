@@ -26,9 +26,9 @@ Player::~Player()
 	DeleteGO(m_HPBarDarkSpriteRender);
 	DeleteGO(m_mobiusGauge);*/
 
-	//DeleteGO(redEffect[0]);
-	//DeleteGO(redEffect[1]);
-	//DeleteGO(redEffect[2]);
+	/*DeleteGO(magEffect[0]);
+	DeleteGO(magEffect[1]);
+	DeleteGO(magEffect[2]);*/
 }
 
 bool Player::Start()
@@ -221,7 +221,7 @@ void Player::Update()
 				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 				{
 					Bomb* debris = NewGO<Bomb>(0, "bomb");
-					debris->m_bombShape = Bomb::enIncendiaryGrenade;
+					debris->m_bombShape = Bomb::enGrenade;
 					debris->m_bombState = Bomb::enDrop;
 					debris->m_parent = this;
 					debris->m_position = m_magPosition;
@@ -389,6 +389,7 @@ void Player::Attack()
 			//音を鳴らす
 			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 			ssShoot->Init(L"Assets/sound/シュート音.wav");
+			ssShoot->SetVolume(0.5f);
 			ssShoot->Play(false);
 
 			//一番最初に保持したガレキを発射
@@ -742,6 +743,7 @@ void Player::MagneticBehavior()
 		case -1://引力
 			//バースト音を再生
 			ssBurst->Init(L"Assets/sound/引力バースト音.wav");
+			ssBurst->SetVolume(1.5);
 			ssBurst->Play(false);		
 			//エフェクトを表示
 			burstEffect->Init(u"Assets/effect/引力バースト.efk");
@@ -751,6 +753,7 @@ void Player::MagneticBehavior()
 		case 1://斥力
 			//バースト音を再生
 			ssBurst->Init(L"Assets/sound/斥力バースト音.wav");
+			ssBurst->SetVolume(1.5);
 			ssBurst->Play(false);
 			//エフェクトを表示
 			burstEffect->Init(u"Assets/effect/斥力バースト.efk");
@@ -1416,6 +1419,7 @@ void Player::FinalHit()
 		targetPos.y += 20;
 		targetPos += m_LastFront * -30;		
 		m_cameraPos.y += 100;
+
 		if (m_LoseCameraLoop > 0)
 		{
 			m_LoseCameraFlag = false;
@@ -1491,6 +1495,33 @@ void Player::FinalHit()
 		default:
 			break;
 		}		
+
+		//SE
+		if (m_LoseCameraLoop == 0)
+		{
+			//音を再生
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/K.O..wav");
+			ss->SetVolume(1.5f);
+			ss->Play(false);
+		}
+		if (m_LoseCameraLoop == 50)
+		{
+			//音を再生
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/K.O..wav");
+			ss->SetVolume(1.5f);
+			ss->Play(false);
+		}
+		if (m_LoseCameraLoop == 100)
+		{
+			//音を再生
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/K.O..wav");
+			ss->SetVolume(1.5f);
+			ss->Play(false);
+		}
+
 		g_camera3D[0]->SetPosition(m_cameraPos);
 		m_LoseCameraLoop++;
 	}
