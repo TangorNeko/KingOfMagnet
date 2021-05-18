@@ -1232,6 +1232,7 @@ void Player::UpdateState()
 		}
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_SpecialAttack:
 		TryChangeStatusFall();
@@ -1242,6 +1243,7 @@ void Player::UpdateState()
 		}
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_Run:
 		TryChangeStatusAttack();
@@ -1251,6 +1253,7 @@ void Player::UpdateState()
 		TryChangeStatusFall();
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
@@ -1260,6 +1263,7 @@ void Player::UpdateState()
 		TryChangeStatusFall();
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_Idle:
 		TryChangeStatusAttack();
@@ -1279,6 +1283,7 @@ void Player::UpdateState()
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 
 	case enStatus_Hit:
@@ -1292,9 +1297,11 @@ void Player::UpdateState()
 		}
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_Death:
 		TryChangeStatusDeath();
+		TryChangeStatusWin();
 		break;
 	case enStatus_Winner:
 		TryChangeStatusWin();
