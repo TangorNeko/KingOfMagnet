@@ -26,39 +26,22 @@ bool BackGround::Start()
 
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 
-	/*-
-	m_level.Init("Assets/modelData/level_00.tkl", [&](prefab::LevelObjectData& objData) {
-		if (strcmp(objData.name,"repulsion0") == 0) {//斥力床
-			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
-			gimmick->m_position = objData.position;//
-			gimmick->m_rot = objData.rotation;
-			gimmick->m_scale = objData.scale;
-			gimmick->m_objNum = 0;
-			m_repulsion.push_back(gimmick);
-			return true;
-		}
-		if (strcmp(objData.name, "repulsion1") == 0) {//斥力床
-			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
-			gimmick->m_position = objData.position;//
-			gimmick->m_rot = objData.rotation;
-			gimmick->m_scale = objData.scale;
-			gimmick->m_objNum = 1;
-			m_repulsion.push_back(gimmick);
-			return true;
-		}
-		
-		if (strcmp(objData.name, "turret") == 0) {//斥力床
-			Repulsion* gimmick = NewGO<Repulsion>(0, "repulsion");
-			gimmick->m_position = objData.position;//
-			gimmick->m_rot = objData.rotation;
-			gimmick->m_scale = objData.scale;
-			gimmick->m_objNum = 1;
-			m_repulsion.push_back(gimmick);
+	
+	m_level.Init("Assets/modelData/Level_00.tkl", [&](prefab::LevelObjectData& objData) {
+		if (strcmp(objData.name, "ResPos") == 0) {//リスポーン地点
+			
+			char buff[256];
+			sprintf(buff, "x = %f, y = %f, z = %f\n", objData.position.x, objData.position.y, objData.position.z);
+			OutputDebugStringA(buff);
+
+			//リスポーン地点の候補に追加していく。
+			m_respawnPoints.push_back({ objData.position.x,0.0f,objData.position.z });
+			
 			return true;
 		}
 		return false;
 	});
-	*/
+	
 	return true;
 }
 void BackGround::Update()
@@ -68,4 +51,26 @@ void BackGround::Update()
 bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector3& crossPoint)
 {
 	return m_skinModelRender->isLineHitModel(start, end, crossPoint);
+}
+
+Vector3 BackGround::GetRespawnPoint(const Vector3& enemyPos)
+{
+	Vector3 respawnpoint;
+	float distance = 0;
+	for (auto ResPos : m_respawnPoints)
+	{
+		Vector3 diff = ResPos - enemyPos;
+
+		if (diff.Length() > distance)
+		{
+			respawnpoint = ResPos;
+			distance = diff.Length();
+		}
+	}
+
+	char buff[256];
+	sprintf(buff, "決定地点、x = %f, y = %f, z = %f\n", respawnpoint.x, respawnpoint.y, respawnpoint.z);
+	OutputDebugStringA(buff);
+
+	return respawnpoint;
 }
