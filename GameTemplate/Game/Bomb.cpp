@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "BackGround.h"
+#include "SampleScene.h"
 
 #include "Explosion.h"
 #include "Flash.h"
@@ -10,6 +11,13 @@
 Bomb::~Bomb()
 {
 	DeleteGO(m_skinModelRender);
+
+	//ゲームシーンの弾の数を減らす。
+	SampleScene* gameScene = FindGO<SampleScene>("gamescene");
+	if (gameScene != nullptr)
+	{
+		gameScene->BulletDecrease();
+	}
 }
 
 bool Bomb::Start()

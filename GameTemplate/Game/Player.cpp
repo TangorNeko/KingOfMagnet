@@ -363,13 +363,18 @@ void Player::Move()
 	m_skinModelRender->SetPosition(m_position);
 
 	//穴に落ちた時の処理
-	if (m_position.y <= -1000.0f) {
+	if (m_position.y <= -750.0f) {
 		m_LandingNum++;//落ちた回数
 		Damage(100);
 
-		m_position.y = 500.0f;
+		//敵から最も遠いリスポーン地点に移動する。
+		Vector3 respawnPoint = m_stageModel->GetRespawnPoint(m_enemy->m_position);
+		m_position = respawnPoint;
 		m_charaCon.SetPosition(m_position);
 		m_skinModelRender->SetPosition(m_position);
+
+		//リスポーンしたので落下加速用のカウントをリセット。
+		m_fallLoop = 0;
 	}
 	//手のボーンのワールド行列を取得
 	Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
@@ -830,6 +835,9 @@ void Player::MagneticBurst()
 					{
 						m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
 					}
+
+					//もう敵の弾を奪ったのでフラグ変更
+					m_isSteal = true;
 				}
 
 				//敵が1つでも爆弾を持っていれば
@@ -840,13 +848,16 @@ void Player::MagneticBurst()
 
 					//ドロップさせた爆弾を相手のコンテナから削除
 					m_enemy->m_holdBombVector.erase(m_enemy->m_holdBombVector.begin());
+
+					//もう敵の弾を奪ったのでフラグ変更
+					m_isSteal = true;
 				}
 
-				//もう敵の弾を奪ったのでフラグ変更
-				m_isSteal = true;
-
-				//リスクのある行動を成功させたので必殺技ゲージをプラス。
-				ChargeSpecialAttackGauge(25);
+				if (m_isSteal == true)
+				{
+					//リスクのある行動を成功させたので必殺技ゲージをプラス。
+					ChargeSpecialAttackGauge(25);
+				}
 			}
 		}
 

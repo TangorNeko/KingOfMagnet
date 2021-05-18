@@ -35,6 +35,8 @@ class SampleScene : public IGameObject
 	bool m_isGameStart = false;
 	bool m_playCountSEFlag = false;
 	bool m_GEfirstLoop = true;
+
+	int m_bulletNum = 0;//ゲームシーンに存在する弾、グレネードの総数;
 public:
 
 	void SetGameEndFlag(bool flag)
@@ -46,6 +48,27 @@ public:
 	{
 		return m_gameEndFlag;
 	}
+
+	//現在のゲームシーンに存在する弾数を増やす(弾、グレネードを作った時に呼ぶ)
+	void BulletIncrease()
+	{
+		m_bulletNum++;
+	}
+
+	//現在のゲームシーンに存在する弾数を減らす(弾、グレネードが消えた時に呼ぶ)
+	void BulletDecrease()
+	{
+		m_bulletNum--;
+	}
+
+	//現在のゲームシーンに存在する弾数を取得
+	int GetBulletNum()
+	{
+		return m_bulletNum;
+	}
+
+	//ゲームシーンに存在できる弾数の最大数
+	const int MAXBULLETNUM = 30;
 
 	
 	//制限時間
