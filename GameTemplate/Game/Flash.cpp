@@ -6,6 +6,7 @@
 Flash::~Flash()
 {
 	DeleteGO(m_spriteRender);
+	DeleteGO(m_effect);
 }
 bool Flash::Start()
 {
@@ -20,12 +21,11 @@ bool Flash::Start()
 	ss2->Play(false);
 
 	//エフェクトを再生
-	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-	effect->Init(u"Assets/effect/閃光.efk");
-	effect->SetPosition(m_position);
-	effect->SetScale({ 25.0f, 25.0f, 25.0f });
-	effect->Play();
-
+	m_effect = NewGO<prefab::CEffect>(0);
+	m_effect->Init(u"Assets/effect/閃光.efk");
+	m_effect->SetPosition(m_position);
+	m_effect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_effect->Play();
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{

@@ -26,9 +26,11 @@ Player::~Player()
 	DeleteGO(m_HPBarDarkSpriteRender);
 	DeleteGO(m_mobiusGauge);*/
 
-	/*DeleteGO(magEffect[0]);
-	DeleteGO(magEffect[1]);
-	DeleteGO(magEffect[2]);*/
+	DeleteGO(m_magEffect[0]);
+	DeleteGO(m_magEffect[1]);
+	DeleteGO(m_magEffect[2]);
+	DeleteGO(m_burstEffect);
+	DeleteGO(m_hitEffect);
 }
 
 bool Player::Start()
@@ -120,15 +122,20 @@ bool Player::Start()
 	m_spotLight->SetRange(200.0f);*/
 	
 	//エフェクト関連
-	magEffect[0] = NewGO<prefab::CEffect>(0);
-	magEffect[1] = NewGO<prefab::CEffect>(0);
-	magEffect[2] = NewGO<prefab::CEffect>(0);
-	magEffect[0]->SetScale({ 25.0f, 25.0f, 25.0f });
-	magEffect[1]->SetScale({ 25.0f, 25.0f, 25.0f });
-	magEffect[2]->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_magEffect[0] = NewGO<prefab::CEffect>(0);
+	m_magEffect[1] = NewGO<prefab::CEffect>(0);
+	m_magEffect[2] = NewGO<prefab::CEffect>(0);
+	m_magEffect[0]->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_magEffect[1]->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_magEffect[2]->SetScale({ 25.0f, 25.0f, 25.0f });
 
-	burstEffect = NewGO<prefab::CEffect>(0);
-	burstEffect->SetScale({ 40.0f, 40.0f, 40.0f });
+	m_burstEffect = NewGO<prefab::CEffect>(0);
+	m_burstEffect->SetScale({ 50.0f, 50.0f, 50.0f });
+
+	m_hitEffect = NewGO<prefab::CEffect>(0);
+	m_hitEffect->Init(u"Assets/effect/ダメージ.efk");
+	m_hitEffect->SetScale({ 10.0f, 10.0f, 10.0f });
+
 
 	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
 	m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
@@ -250,31 +257,31 @@ void Player::Update()
 
 			//斥力・引力エフェクト			
 			if (m_magPower == 1) {
-				magEffect[0]->Init(u"Assets/effect/斥力.efk");
-				magEffect[1]->Init(u"Assets/effect/斥力.efk");
-				magEffect[2]->Init(u"Assets/effect/斥力.efk");
+				m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
+				m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
+				m_magEffect[2]->Init(u"Assets/effect/斥力.efk");
 			}
 			else if (m_magPower == -1) {
-				magEffect[0]->Init(u"Assets/effect/引力.efk");
-				magEffect[1]->Init(u"Assets/effect/引力.efk");
-				magEffect[2]->Init(u"Assets/effect/引力.efk");
+				m_magEffect[0]->Init(u"Assets/effect/引力.efk");
+				m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+				m_magEffect[2]->Init(u"Assets/effect/引力.efk");
 			}
 			//磁力エフェクトを再生
 			if (m_magEffectCallCount == 40) {
-				magEffect[2]->Play();
+				m_magEffect[2]->Play();
 			}
 			else if (m_magEffectCallCount == 20) {
-				magEffect[1]->Play();
+				m_magEffect[1]->Play();
 			}
 			else if (m_magEffectCallCount <= 0) {
-				magEffect[0]->Play();
+				m_magEffect[0]->Play();
 				m_magEffectCallCount = 60;
 			}
 			m_magEffectCallCount -= 1;
 
-			magEffect[0]->SetPosition(m_position);
-			magEffect[1]->SetPosition(m_position);
-			magEffect[2]->SetPosition(m_position);
+			m_magEffect[0]->SetPosition(m_position);
+			m_magEffect[1]->SetPosition(m_position);
+			m_magEffect[2]->SetPosition(m_position);
 		}				
 			
 	}
@@ -451,11 +458,27 @@ void Player::SpecialAttack()
 	}
 
 	//必殺技ポイントが溜まっていてボタンを押したら
+	//アニメーションに発射タイミングを合わせる。
 	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
 	{
+		m_SpecialAttackOn = true;
+		m_specialShotFlag = true;
+	}
+	if (m_specialShotFlag == true)
+	{
+		m_specialShotCount += 1;
+
+		//発射前にダメージを受けたらキャンセル
+		if (m_HitOn == true) 
+		{
+			m_specialShotFlag = false;
+			m_specialShotCount = 0;
+		}
+	}
+
+	if (m_specialShotCount >= 35) {
 		//音を設定
 		prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
-		m_SpecialAttackOn = true;
 		//引力なら
 		if (m_magPower == -1)
 		{
@@ -487,6 +510,8 @@ void Player::SpecialAttack()
 
 			//撃ったので必殺技ゲージを0に
 			m_specialAttackGauge = 0;
+			m_specialShotFlag = false;
+			m_specialShotCount = 0;
 		}
 		else//斥力なら
 		{
@@ -529,10 +554,14 @@ void Player::SpecialAttack()
 
 				//撃ったので必殺技ゲージを0に
 				m_specialAttackGauge = 0;
+				m_specialShotFlag = false;
+				m_specialShotCount = 0;
 			}
 			else
 			{
 				//1発も弾持ってないから不発にする。エラー音?ゲージも消費しなくていい
+				m_specialShotFlag = false;
+				m_specialShotCount = 0;
 			}
 		}
 	}
@@ -751,8 +780,8 @@ void Player::MagneticBehavior()
 			ssBurst->SetVolume(1.5);
 			ssBurst->Play(false);		
 			//エフェクトを表示
-			burstEffect->Init(u"Assets/effect/引力バースト.efk");
-			burstEffect->Play();
+			m_burstEffect->Init(u"Assets/effect/引力バースト.efk");
+			m_burstEffect->Play();
 			break;
 
 		case 1://斥力
@@ -761,8 +790,8 @@ void Player::MagneticBehavior()
 			ssBurst->SetVolume(1.5);
 			ssBurst->Play(false);
 			//エフェクトを表示
-			burstEffect->Init(u"Assets/effect/斥力バースト.efk");
-			burstEffect->Play();
+			m_burstEffect->Init(u"Assets/effect/斥力バースト.efk");
+			m_burstEffect->Play();
 			break;
 		}
 	}
@@ -772,7 +801,7 @@ void Player::MagneticBehavior()
 void Player::MagneticBurst()
 {
 	//バーストエフェクトの位置を設定
-	burstEffect->SetPosition(m_position);
+	m_burstEffect->SetPosition(m_position);
 
 	//バースト中は移動速度は0に
 	m_characterSpeed = 0.0f;
@@ -1057,9 +1086,7 @@ void Player::Damage(int damage)
 	damagedisplay->m_damage = damage;
 
 	//ダメージエフェクト
-	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-	effect->Init(u"Assets/effect/ダメージ.efk");
-	effect->SetPosition({ m_position.x, m_position.y + 50, m_position.z });
+	m_hitEffect->SetPosition({ m_position.x, m_position.y + 50, m_position.z });
 
 	//カメラの前方向
 	m_damegeEffectFront.y = 0.0f;
@@ -1073,9 +1100,8 @@ void Player::Damage(int damage)
 	Quaternion rot;
 	rot.SetRotation(Vector3::AxisY, angle);
 
-	effect->SetRotation(rot);
-	effect->SetScale({ 10.0f, 10.0f, 10.0f });
-	effect->Play();
+	m_hitEffect->SetRotation(rot);
+	m_hitEffect->Play();
 }
 
 //必殺技ゲージをチャージする。
@@ -1295,6 +1321,7 @@ void Player::AnimationSelect()
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
 	case enStatus_SpecialAttack:		
+		m_skinModelRender->m_animation_speed = 2.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 		break;
 	case enStatus_Run:		

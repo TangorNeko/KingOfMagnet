@@ -46,7 +46,6 @@ SampleScene::~SampleScene()
 	DeleteGO(m_TimerBaseSpriteRender);*/
 
 	DeleteGO(ssBGM);
-			
 }
 
 bool SampleScene::Start()
@@ -255,14 +254,18 @@ void SampleScene::Update()
 		DeleteGO(this);
 	}
 
+	//エフェクト試す用
 	if (g_pad[0]->IsTrigger(enButtonB)) {
 		Player* pl = FindGO<Player>("Player");
 
 		prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-		effect->Init(u"Assets/effect/焼夷.efk");
+		effect->Init(u"Assets/effect/引力弾2.efk");
 		effect->SetPosition(pl->m_position);
 		effect->SetScale({ 30.0f, 30.0f, 30.0f });
 		effect->Play();
+
+		pl->ChargeSpecialAttackGauge(100);
+
 	}
 }
 
@@ -288,15 +291,15 @@ void SampleScene::WinnerJudge()
 }
 
 void SampleScene::StartCountDown() {
-	m_measureSecond += GameTime::GetInstance().GetFrameDeltaTime();
 
+	m_measureSecond += GameTime::GetInstance().GetFrameDeltaTime();		//一秒を測る。
 	if (m_measureSecond >= 1.0f) {
 		m_startCount -= 1;
 		m_measureSecond = 0.0f;
 		m_playCountSEFlag = true;
 	}
-
-	if (m_startCount >= 1 && m_startCount < 4) {
+	if (m_startCount >= 1 && m_startCount < 4) {	
+		//3・2・1のカウント表示
 		m_startCountFontRender->SetText(L"  " + std::to_wstring(m_startCount));
 	}
 
@@ -316,13 +319,16 @@ void SampleScene::StartCountDown() {
 
 	if (m_playCountSEFlag == true) {
 		prefab::CSoundSource* ssCount = NewGO<prefab::CSoundSource>(0);;
-
 		if (m_startCount >= 1 && m_startCount < 4) 
+		{
 			ssCount->Init(L"Assets/sound/カウント音.wav");
-
+			ssCount->SetVolume(0.8f);
+		}
 		else if (m_startCount == 0)
+		{
 			ssCount->Init(L"Assets/sound/エアーホーン.wav");
-
+			ssCount->SetVolume(0.8f);
+		}
 		ssCount->Play(false);
 		m_playCountSEFlag = false;
 	}

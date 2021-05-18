@@ -13,4 +13,7 @@ public:
 
 	//燃え続ける時間
 	int m_deleteCountdown = 180;
+
+	//エフェクト
+	prefab::CEffect* m_effect = nullptr;
 };
