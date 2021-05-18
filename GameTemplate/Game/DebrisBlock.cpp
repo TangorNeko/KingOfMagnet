@@ -15,7 +15,7 @@ DebrisBlock::~DebrisBlock()
 bool DebrisBlock::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/yuka.tkm");
+	m_skinModelRender->Init("Assets/modelData/scrap.tkm");
 
 	m_gameScene = FindGO<SampleScene>("gamescene");
 
