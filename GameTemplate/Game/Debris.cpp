@@ -3,12 +3,17 @@
 
 #include "Player.h"
 #include "BackGround.h"
+#include "SampleScene.h"
 
 #include "Explosion.h"
 
 Debris::~Debris()
 {
 	DeleteGO(m_skinModelRender);
+	
+	//ゲームシーンの弾の数を減らす。
+	SampleScene* gameScene = FindGO<SampleScene>("gamescene");
+	gameScene->BulletDecrease();
 }
 
 bool Debris::Start()
