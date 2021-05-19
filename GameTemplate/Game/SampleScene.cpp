@@ -212,6 +212,10 @@ void SampleScene::Update()
 	//制限時間の表示
 	if (m_timeLimit > 0 && m_gameEndFlag == false) {
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
+		if ((int)m_timeLimit == 9) //一桁になったら表示位置を真ん中に。
+		{
+			m_timeFontRender->SetPosition({ -35.0f, 380.0f });
+		}
 		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
 	}
 	else if(m_gameEndFlag == false)

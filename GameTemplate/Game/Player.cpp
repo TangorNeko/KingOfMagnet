@@ -464,7 +464,7 @@ void Player::SpecialAttack()
 	//アニメーションに発射タイミングを合わせる。
 	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
 	{
-		m_SpecialAttackOn = true;
+		m_SpecialAttackOn = true;		//アニメーションを必殺技にする。
 		m_specialShotFlag = true;
 	}
 	if (m_specialShotFlag == true)
@@ -940,8 +940,11 @@ void Player::ChangeMagnetPower()
 		m_charge = 0;
 	}
 
-	//磁力ゲージが0以下かつ、バースト中でなければ
-	if (m_charge <= 0 && m_isBurst == false)
+	//磁力ゲージが0以下かつ、バースト中や必殺技発動中でなければ
+	if (m_charge <= 0 && 
+		m_isBurst == false &&
+		m_specialShotFlag == false	
+		)
 	{
 		//磁力の状態が-1か1なので、-1を掛ければ反転する。
 		//普通にswitchしてもいいかも。
@@ -954,7 +957,7 @@ void Player::ChangeMagnetPower()
 		}
 
 		//チャージを回復。
-		m_charge = 1000;
+		m_charge = 1000.0f;
 	}
 }
 
