@@ -166,7 +166,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	crossPoint += end;
 
 	//crossからの長さで平行光源でもしっかり深度がわかる(はず)
-	float depth = length(psIn.worldPos - crossPoint)/1000.0f;
+	float depth = length(psIn.worldPos - crossPoint)/2000.0f;
 
 	//ここまで平行光源の深度チェックのテスト用。
 	return float4(depth,depth*depth,0.0f,1.0f);

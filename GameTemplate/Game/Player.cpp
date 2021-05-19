@@ -69,10 +69,14 @@ bool Player::Start()
 	//残弾数表示の初期化
 	m_bulletNumber = NewGO<prefab::CFontRender>(6);
 	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	if(m_playerNum==0)
+	if (m_playerNum == 0)
+	{
 		m_bulletNumber->SetPosition({ -550.0f, -180.0f });
-	if(m_playerNum==1)
+	}
+	else
+	{
 		m_bulletNumber->SetPosition({ 500.0f, -180.0f });
+	}
 	m_bulletNumber->SetScale({ 1.5f,1.5f });
 	m_bulletNumber->SetColor({ 1.0f,0.0f, 0.0f,1.0f });
 	//照準表示の初期化
@@ -303,6 +307,30 @@ void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
 	m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()));
+
+	if (m_playerNum == 0)
+	{
+		if (m_holdDebrisVector.size() >= 10)
+		{
+			m_bulletNumber->SetPosition({ -570.0f, -180.0f });
+		}
+		else
+		{
+			m_bulletNumber->SetPosition({ -550.0f, -180.0f });
+		}
+	}
+	else
+	{
+		if (m_holdDebrisVector.size() >= 10)
+		{
+			m_bulletNumber->SetPosition({ 480.0f, -180.0f });;
+		}
+		else
+		{
+			m_bulletNumber->SetPosition({ 500.0f, -180.0f });;
+		}
+	}
+
 	if (m_playerNum == 0) {
 		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
 		//({ 290.0f,325.0f,0.0f });
@@ -473,7 +501,7 @@ void Player::SpecialAttack()
 	//アニメーションに発射タイミングを合わせる。
 	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
 	{
-		m_SpecialAttackOn = true;
+		m_SpecialAttackOn = true;		//アニメーションを必殺技にする。
 		m_specialShotFlag = true;
 	}
 	if (m_specialShotFlag == true)
@@ -949,9 +977,11 @@ void Player::ChangeMagnetPower()
 		m_charge = 0;
 	}
 
-	//磁力ゲージが0以下かつ、バースト中でなければ
-	if (m_charge <= 0 && m_isBurst == false)
-	{
+	//磁力ゲージが0以下かつ、バースト中や必殺技発動中でなければ
+	if (m_charge <= 0 && 
+		m_isBurst == false &&
+		m_specialShotFlag == false	
+		)	{
 		//磁力の状態が-1か1なので、-1を掛ければ反転する。
 		//普通にswitchしてもいいかも。
 		m_magPower *= -1;
@@ -963,7 +993,7 @@ void Player::ChangeMagnetPower()
 		}
 
 		//チャージを回復。
-		m_charge = 1000;
+		m_charge = 1000.0f;
 	}
 }
 

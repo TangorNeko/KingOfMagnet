@@ -36,70 +36,76 @@ void DebrisBlock::Update()
 			Vector3 toPlayer = player->m_position - m_position;
 
 			//引力バーストしているプレイヤーが距離500以内に近づき、タイマーが上がっていて、ゲームに存在できる最大数未満であれば新しくガレキを生成
-			if (player->m_magPower == -1 && player->m_isBurst == true && m_factoryTimer <= 0 && toPlayer.Length() < 500.0f && m_gameScene->GetBulletNum() < m_gameScene->MAXBULLETNUM)
+			if (player->m_magPower == -1 && player->m_isBurst == true && m_factoryTimer <= 0 && toPlayer.Length() < 500.0f)
 			{
 				for (int i = 0; i < 5; i++)//弾を拾う数
 				{
-
-					//ゲームシーンの弾の数を増やす。
-					//弾のStart関数で増やすと生成フレームの後に増やされるので制限数を超えてしまう。
-					m_gameScene->BulletIncrease();
-
-					std::random_device device;
-					std::mt19937_64 rnd(device());
-
-					//第一抽選、ガレキか、爆弾か?
-					int bulletLottery = rnd() % 100;//0~99
-
-					if (bulletLottery <= 90)
+					if (m_gameScene->GetBulletNum() < m_gameScene->MAXBULLETNUM)
 					{
-						//ガレキ
-						Debris* debris = NewGO<Debris>(0, "debris");
-						debris->m_debrisState = Debris::enDrop;
-						debris->m_position = m_position;
+						//ゲームシーンの弾の数を増やす。
+						//弾のStart関数で増やすと生成フレームの後に増やされるので制限数を超えてしまう。
+						m_gameScene->BulletIncrease();
 
-						//第二抽選、ガレキの形状は?
-						int shapeLottery = rnd() % 100;//0~99
-						if (shapeLottery <= 75)
+						std::random_device device;
+						std::mt19937_64 rnd(device());
+
+						//第一抽選、ガレキか、爆弾か?
+						int bulletLottery = rnd() % 100;//0~99
+
+						if (bulletLottery <= 90)
 						{
-							//石
-							debris->m_debrisShape = Debris::enStone;
-						}
-						else if (shapeLottery <= 90)
-						{
-							//剣
-							debris->m_debrisShape = Debris::enSword;
+							//ガレキ
+							Debris* debris = NewGO<Debris>(0, "debris");
+							debris->m_debrisState = Debris::enDrop;
+							debris->m_position = m_position;
+
+							//第二抽選、ガレキの形状は?
+							int shapeLottery = rnd() % 100;//0~99
+							if (shapeLottery <= 75)
+							{
+								//石
+								debris->m_debrisShape = Debris::enStone;
+							}
+							else if (shapeLottery <= 90)
+							{
+								//剣
+								debris->m_debrisShape = Debris::enSword;
+							}
+							else
+							{
+								//必殺技チャージ
+								debris->m_debrisShape = Debris::enSpecialCharger;
+							}
 						}
 						else
 						{
-							//必殺技チャージ
-							debris->m_debrisShape = Debris::enSpecialCharger;
+							//爆弾
+							Bomb* bomb = NewGO<Bomb>(0, "bomb");
+							bomb->m_bombState = Bomb::enDrop;
+							bomb->m_position = m_position;
+
+							//第二抽選、爆弾の形状は?
+							int shapeLottery = rnd() % 100;//0~99
+							if (shapeLottery <= 33)
+							{
+								//手榴弾
+								bomb->m_bombShape = Bomb::enGrenade;
+							}
+							else if (shapeLottery <= 66)
+							{
+								//フラッシュグレネード
+								bomb->m_bombShape = Bomb::enFlashGrenade;
+							}
+							else
+							{
+								//焼夷弾
+								bomb->m_bombShape = Bomb::enIncendiaryGrenade;
+							}
 						}
 					}
 					else
 					{
-						//爆弾
-						Bomb* bomb = NewGO<Bomb>(0, "bomb");
-						bomb->m_bombState = Bomb::enDrop;
-						bomb->m_position = m_position;
-
-						//第二抽選、爆弾の形状は?
-						int shapeLottery = rnd() % 100;//0~99
-						if (shapeLottery <= 33)
-						{
-							//手榴弾
-							bomb->m_bombShape = Bomb::enGrenade;
-						}
-						else if (shapeLottery <= 66)
-						{
-							//フラッシュグレネード
-							bomb->m_bombShape = Bomb::enFlashGrenade;
-						}
-						else
-						{
-							//焼夷弾
-							bomb->m_bombShape = Bomb::enIncendiaryGrenade;
-						}
+						break;
 					}
 				}
 				//生成タイマーをセット

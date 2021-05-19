@@ -12,7 +12,8 @@ BackGround::~BackGround()
 bool BackGround::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_sLigR = NewGO<prefab::CSpotLight>(0);
+
+	m_skinModelRender->SetShadowCasterFlag(true);	m_sLigR = NewGO<prefab::CSpotLight>(0);
 	m_sLigR->SetPosition({ 0.0f,-20.0f,270.0f });
 	m_sLigR->SetColor({ 1.0f,1.0f,1.0f });
 	m_sLigR->SetRange(1000);
@@ -23,8 +24,7 @@ bool BackGround::Start()
 	m_sLigL->SetColor({ 1.0f,1.0f,1.0f });
 	m_sLigL->SetRange(1000);
 	m_sLigL->SetDirection({ 0.0f,1.0f,0.0f });
-	m_sLigL->SetAngleDeg(180.0f);
-	//アイテムをランダムに出現させる
+	m_sLigL->SetAngleDeg(180.0f);	//アイテムをランダムに出現させる
 	//popranditem = NewGO<PopRandItem>(0, "popranditem");
 
 	/*
