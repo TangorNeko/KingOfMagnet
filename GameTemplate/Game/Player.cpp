@@ -114,7 +114,7 @@ bool Player::Start()
 	}
 
 	m_mobiusGauge = NewGO<MobiusGauge>(0);
-	if (m_playerNum == 0) {		
+	if (m_playerNum == 0) {
 		m_mobiusGauge->SetPosition({ -525.0f,-280.0f,0.0f });
 	}
 	else if (m_playerNum == 1) {
@@ -122,9 +122,11 @@ bool Player::Start()
 	}
 
 	//プレイヤーのライト
-	/*m_spotLight = NewGO<prefab::CSpotLight>(0);
-	m_spotLight->SetColor({ 1.0f,1.0f,1.0f });
-	m_spotLight->SetRange(200.0f);*/
+	m_spotLight = NewGO<prefab::CSpotLight>(0);
+	m_spotLight->SetColor({ 10.0f,10.0f,10.0f });
+	m_spotLight->SetRange(250.0f);
+	m_spotLight->SetAngleDeg(30.0f);
+	
 	
 	//エフェクト関連
 	m_magEffect[0] = NewGO<prefab::CEffect>(0);
@@ -198,7 +200,13 @@ void Player::Update()
 			//手のボーンのワールド行列を取得
 			Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
 			m_weaponModel->SetMatrix(handmatrix);
-
+			//ライト
+			Vector3 PlayerWaistPos = m_position;
+			PlayerWaistPos.y += 40;
+			Vector3 Direction = PlayerWaistPos - cameraPos;
+			Direction.Normalize();
+			m_spotLight->SetDirection(Direction);
+			m_spotLight->SetPosition(m_LastFront*100);
 		}
 		else
 		{
@@ -292,12 +300,7 @@ void Player::Update()
 		}				
 			
 	}
-	//ライト
-//m_spotLight->SetAngle(0.5);
-	//m_spotLight->SetDirection(front); // * -1.0f);
-	//Vector3 frontPos = m_position - front * 10.0f;
-	//frontPos.y += 100.0f;
-	//m_spotLight->SetPosition(frontPos);
+	
 }
 //体力、メビウスゲージの表示
 void Player::DisplayStatus()
@@ -417,7 +420,13 @@ void Player::Move()
 	//手のボーンのワールド行列を取得
 	Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
 	m_weaponModel->SetMatrix(handmatrix);
-
+	//ライト
+	Vector3 PlayerWaistPos = m_position;
+	PlayerWaistPos.y += 40;
+	Vector3 Direction = PlayerWaistPos - cameraPos;
+	Direction.Normalize();
+	m_spotLight->SetDirection(Direction);
+	m_spotLight->SetPosition(cameraPos);
 }
 
 //攻撃
@@ -1481,12 +1490,12 @@ void Player::OpeningCamera()
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
 }
 
-void Player::FinalHit()
+void Player::FinalHit()//決着がついたときのカメラ
 {	
-	if (m_FirstTime == true) {
+	if (m_FirstTime == true) {//一回だけ流れるループ
 		//画面分割を終了
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
-
+		//画面に出ているやつを消す
 		//HPバー、画面分割線、メビウスゲージを消す
 		DeleteGO(m_bulletNumber);
 		DeleteGO(m_resultFontRender);
@@ -1495,6 +1504,7 @@ void Player::FinalHit()
 		DeleteGO(m_HPBarSpriteRender);
 		DeleteGO(m_HPBarDarkSpriteRender);
 		DeleteGO(m_mobiusGauge);
+		//弾も消す
 		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
 			{
 				DeleteGO(bomb);
@@ -1506,93 +1516,82 @@ void Player::FinalHit()
 				return true;
 			});
 		m_FirstTime = false;
-		m_canMove = false;
+		m_canMove = false;//動けなくする
 	}
-			
+	Vector3 LastRight;
+	Vector3 winnerVec;
+	Vector3 winnerFrontPos;
+	Vector3 winnerHeadPos;
 	if (m_playerNum == m_loserNum)//敗者を写す
 	{	
-		m_LastRight = Cross(g_vec3AxisY, m_LastFront);
-		Vector3 targetPos = m_position;
-		m_cameraPos = targetPos;
-		targetPos.y += 20;
-		targetPos += m_LastFront * -30;		
-		m_cameraPos.y += 100;
-
+		LastRight = Cross(g_vec3AxisY, m_LastFront);//最後に向いていた向きの右ベクトル
+		Vector3 targetPos = m_position;//ターゲットポジション
+		m_cameraPos = targetPos;//カメラのポジション
+		targetPos.y += 20;//少し上に設定する
+		targetPos += m_LastFront * -30;//キャラの少し後ろに伸ばす	
+		m_cameraPos.y += 100;//キャラより少し上くらい
+		//ループの値に合わせてステータスを変える
 		if (m_LoseCameraLoop > 0)
 		{
-			m_LoseCameraFlag = false;
+			m_LoseCameraFlag = false;//アニメーションの再生速度を変える
 			m_LastCameraStatus = 0;
-			}
+		}
 		if(m_LoseCameraLoop > 50)
 		{ 
 			m_LastCameraStatus = 1;
-			}
+		}
 		if (m_LoseCameraLoop > 100)
 		{
 			m_LastCameraStatus = 2;
-			}
+		}
 		if (m_LoseCameraLoop > 150)
 		{
 			m_LastCameraStatus = 3;
-			m_LoseCameraFlag = true;
+			m_LoseCameraFlag = true;//アニメーションの再生速度を戻す
 		}
 		if (m_LoseCameraLoop > 200)
 		{
 			m_LastCameraStatus = 4;
-		}
-		if (m_doryInOn == false)
-		{
-			m_LastCameraStatus = 5;
-		}
-
+		}		
+		
 		switch (m_LastCameraStatus)
 		{
-		case 0:
-			m_cameraPos += m_LastRight * 200;//右
+		case 0://右からのカメラ
+			m_cameraPos += LastRight * 200;//右
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
-		case 1:
-			m_cameraPos += m_LastRight * -200;//左
+		case 1://左からのカメラ
+			m_cameraPos += LastRight * -200;//左
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
-		case 2:
+		case 2://前からのカメラ
 			m_cameraPos += m_LastFront * 200;//正面
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
-		case 3:
-			m_enemyHeadPos = m_enemy->m_position;
-			m_enemyHeadPos.y += 50;//勝者の頭の位置
+		case 3://自分を写しながら敵を向いたカメラ
+			winnerHeadPos = m_enemy->m_position;
+			winnerHeadPos.y += 50;//勝者の頭の位置
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
-			m_enemyLine=(m_enemyHeadPos + m_enemy->m_LastFront * 200) - m_position;
-			m_enemyLine.Normalize();
-			m_cameraPos += m_enemyLine*-200;//後ろ
+			winnerVec=(winnerHeadPos + m_enemy->m_LastFront * 200) - m_position;
+			winnerVec.Normalize();
+			m_cameraPos += winnerVec*-200;//後ろ
 			g_camera3D[0]->SetTarget(m_enemy->m_position);
 			break;
-		case 4:			
+		case 4://敵の前まで移動する
 			//カメラを敵の前まで移動させる				
-			m_enemyFrontPos = (m_enemy->m_position + m_enemy->m_LastFront * 150 ) - (m_position + m_enemyLine * -200);//
-			//m_enemyFrontPos = m_enemyHeadPos - m_cameraPos;
-			if (m_enemyFrontPos.Length() < 100)
-			{
-				m_doryInOn = false;				
-			}
-			//m_enemyFrontPos.Normalize();
-			if (m_coef < 1.0f)
+			winnerFrontPos = (m_enemy->m_position + m_enemy->m_LastFront * 150 ) - (m_position + winnerVec * -200);			
+			if (m_coef < 1.0f)//ベクトルに掛ける値
 				m_coef += 0.01f;
-			if (m_coef < 0.5f)
-				m_enemy->m_WinAnimOn = true;
-			/*else
-				m_doryInOn = false;*/
-			m_cameraPos += (m_enemyFrontPos * (pow(m_coef,2)) + m_enemyLine * -200);//
-			m_enemyWaistPos = m_enemy->m_position;
+			if (m_coef < 0.5f)//カメラが半分の距離まで行くとアニメーションを再生する
+				m_enemy->m_WinAnimOn = true;			
+			m_cameraPos += (winnerFrontPos * (pow(m_coef,2)) + winnerVec * -200);//
+			m_enemyWaistPos = m_enemy->m_position;//敵の腰の位置
 			m_enemyWaistPos.y += 20;
 			g_camera3D[0]->SetTarget(m_enemyWaistPos);
 			break;
-		case 5:
-			break;
 		default:
 			break;
-		}		
+		}
 
 		//SE
 		if (m_LoseCameraLoop == 0)
@@ -1623,8 +1622,6 @@ void Player::FinalHit()
 		g_camera3D[0]->SetPosition(m_cameraPos);
 		m_LoseCameraLoop++;
 	}
-	//スローにさせる
-	//勝者を写す
 }
 //リザルト表示
 //void Player::ResultDisplay()
