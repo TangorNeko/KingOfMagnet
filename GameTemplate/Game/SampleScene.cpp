@@ -212,9 +212,12 @@ void SampleScene::Update()
 	//制限時間の表示
 	if (m_timeLimit > 0 && m_gameEndFlag == false) {
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
+		if ((int)m_timeLimit == 9) //一桁になったら表示位置を真ん中に。
+		{
+			m_timeFontRender->SetPosition({ -35.0f, 380.0f });
+		}
 		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
 
-		//一桁になったら表示位置を真ん中に。
 		if (m_timeLimit >= 10)
 		{
 			m_timeFontRender->SetPosition({ -60.0f, 380.0f });
@@ -270,11 +273,11 @@ void SampleScene::Update()
 		Player* pl = FindGO<Player>("Player");
 
 		prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-		effect->Init(u"Assets/effect/斥力弾発射.efk");
+		effect->Init(u"Assets/effect/引力弾.efk");
 		effect->SetPosition(pl->m_position);
 		effect->SetScale({ 30.0f, 30.0f, 30.0f });
 		effect->Play();
-
+		//必殺技試す用
 		pl->ChargeSpecialAttackGauge(100);
 
 	}

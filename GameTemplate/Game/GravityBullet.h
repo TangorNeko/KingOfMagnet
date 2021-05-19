@@ -54,5 +54,9 @@ public:
 	int m_gravityTimeCount = 0;//引力で拘束する時間のカウント
 
 	const float m_bacuumSpeed = 6.5f;//プレイヤーを引き寄せるスピード。
+
+	prefab::CEffect* m_effect = nullptr;	//エフェクト
+	prefab::CEffect* m_effect2 = nullptr;	//エフェクト
+	prefab::CEffect* m_finishEffect = nullptr;	//エフェクト
 };
 
