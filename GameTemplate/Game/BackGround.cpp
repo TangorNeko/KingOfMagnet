@@ -12,6 +12,7 @@ BackGround::~BackGround()
 bool BackGround::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	m_skinModelRender->SetShadowCasterFlag(true);
 	//アイテムをランダムに出現させる
 	//popranditem = NewGO<PopRandItem>(0, "popranditem");
 

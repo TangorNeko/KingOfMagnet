@@ -179,7 +179,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	crossPoint *= b / (a+b);
 	crossPoint += end;
 
-	psIn.posInLVP.z = length(psIn.worldPos - crossPoint)/1000.0f;
+	psIn.posInLVP.z = length(psIn.worldPos - crossPoint)/2000.0f;
 	//ここまで平行光源の深度チェックのテスト用。
 	return psIn;
 }

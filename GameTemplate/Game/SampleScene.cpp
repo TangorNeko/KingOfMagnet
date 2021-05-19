@@ -213,6 +213,16 @@ void SampleScene::Update()
 	if (m_timeLimit > 0 && m_gameEndFlag == false) {
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
 		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
+
+		if (m_timeLimit >= 10)
+		{
+			m_timeFontRender->SetPosition({ -60.0f, 380.0f });
+		}
+		else
+		{
+			m_timeFontRender->SetPosition({ -35.0f, 380.0f });
+		}
+
 	}
 	else if(m_gameEndFlag == false)
 	{
