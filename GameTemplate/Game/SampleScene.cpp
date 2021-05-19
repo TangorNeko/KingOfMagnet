@@ -147,10 +147,10 @@ bool SampleScene::Start()
 
 	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
 	rep->m_position = { 310.0f,1.0f,0.0f };
-
+	rep->m_rot.SetRotationDeg(Vector3::AxisY,-90.0f);
 	rep = NewGO<Repulsion>(0, "repulsion");
 	rep->m_position = { -310.0f,1.0f,0.0f };
-
+	rep->m_rot.SetRotationDeg(Vector3::AxisY,90.0f);
 	//空を作成。キューブマップじゃなくてただの板ポリ。
 	m_sky = NewGO<SkyBoard>(0);
 
