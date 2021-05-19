@@ -16,6 +16,8 @@ class BackGround : public IGameObject
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 	prefab::CPointLight* m_pLig = nullptr;
+	prefab::CSpotLight* m_sLigL = nullptr;
+	prefab::CSpotLight* m_sLigR = nullptr;
 	PhysicsStaticObject m_physicsStaticObject;
 	std::vector<Vector3> m_respawnPoints;//リスポーン地点の候補を格納するコンテナ
 public:
