@@ -969,7 +969,7 @@ void Player::ChangeMagnetPower()
 	}
 
 	//磁力ゲージが0以下かつ、バースト中でなければ
-	if (m_charge <= 0 && m_isBurst == false)
+	if (m_charge <= 0 && m_isBurst == false && m_specialShotFlag == false)
 	{
 		//磁力の状態が-1か1なので、-1を掛ければ反転する。
 		//普通にswitchしてもいいかも。
