@@ -9,7 +9,7 @@ class Repulsion : public IGameObject
 public:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;
 
-	Vector3 m_position;
+	Vector3 m_position;	
 	Vector3 m_scale = Vector3::One;
 	Vector3 diff;
 	Vector3 diff1;
