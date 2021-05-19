@@ -214,6 +214,7 @@ void SampleScene::Update()
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
 		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
 
+		//一桁になったら表示位置を真ん中に。
 		if (m_timeLimit >= 10)
 		{
 			m_timeFontRender->SetPosition({ -60.0f, 380.0f });
