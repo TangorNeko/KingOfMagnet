@@ -22,28 +22,11 @@ SampleScene::~SampleScene()
 			return true;
 		});
 
-	
-	/*QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
-		{
-			DeleteGO(bomb);
-			return true;
-		});
-		
-
-	QueryGOs<Debris>("debris", [](Debris* debris)->bool
-		{
-			DeleteGO(debris);
-			return true;
-		});*/
-
 	QueryGOs<Repulsion>("repulsion", [](Repulsion* repulsion)->bool
 		{
 			DeleteGO(repulsion);
 			return true;
 		});
-	/*DeleteGO(m_delimitLineSpriteRender);
-	DeleteGO(m_HPCoverSpriteRender);
-	DeleteGO(m_TimerBaseSpriteRender);*/
 
 	DeleteGO(ssBGM);
 }
@@ -61,6 +44,7 @@ bool SampleScene::Start()
 	m_player1->m_playerNum = 0;
 	m_player1->m_magPower = 1;
 	m_player1->m_toCameraDir = { 1.0f,0.0f,0.0f };
+	m_player1->m_characterDirection = { -1.0f,0.0f,0.0f };
 
 	m_player2 = NewGO<Player>(0, "Player");
 	m_player2->m_position = { -860.0f,0.0f,-400.0f };
@@ -69,6 +53,7 @@ bool SampleScene::Start()
 	m_player2->m_playerNum = 1;
 	m_player2->m_magPower = -1;
 	m_player2->m_toCameraDir = { -1.0f,0.0f,0.0f };
+	m_player2->m_characterDirection = { 1.0f,0.0f,0.0f };
 
 	//各プレイヤーに敵を渡す
 	m_player2->m_enemy = m_player1;
@@ -81,69 +66,11 @@ bool SampleScene::Start()
 	DebrisBlock* debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { -700.0f,0.0f,600.0f };
 
-	/*debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -750.0f,0.0f,600.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -700.0f,0.0f,550.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -750.0f,0.0f,550.0f };*/
-
-
-
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 700.0f,0.0f,-600.0f };
 
-	/*debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 750.0f,0.0f,-600.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 700.0f,0.0f,-550.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 750.0f,0.0f,-550.0f };*/
-
-
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
 	debrisblock->m_position = { 0.0f,160.0f,0.0f };
-
-	/*debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 50.0f,160.0f,50.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { 50.0f,160.0f,-50.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -50.0f,160.0f,50.0f };
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = { -50.0f,160.0f,-50.0f };*/
-
-	//ガレキ。
-	/*Debris* debris = NewGO<Debris>(0, "debris");
-	debris->m_debrisState = Debris::enDrop;
-	debris->m_position = { 0.0f,0.0f,0.0f };
-
-	debris = NewGO<Debris>(0, "debris");
-	debris->m_debrisState = Debris::enDrop;
-	debris->m_debrisShape = Debris::enSword;
-	debris->m_position = { 200.0f,0.0f,0.0f };
-
-	debris = NewGO<Debris>(0, "debris");
-	debris->m_debrisState = Debris::enDrop;
-	debris->m_position = { 300.0f,0.0f,0.0f };
-
-	debris = NewGO<Debris>(0, "debris");
-	debris->m_debrisState = Debris::enDrop;
-	debris->m_position = { 300.0f,0.0f,100.0f };
-
-	//仮
-	debris = NewGO<Debris>(0, "debris");
-	debris->m_debrisState = Debris::enDrop;
-	debris->m_debrisShape = Debris::enSpecialCharger;
-	debris->m_position = { 100.0f,500.0f,100.0f };*/
-
 
 	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
 	rep->m_position = { 310.0f,1.0f,0.0f };
@@ -204,13 +131,14 @@ void SampleScene::Update()
 	sprintf_s(buff, "現在のゲームシーンに存在する弾数 = %d\n", m_bulletNum);
 	OutputDebugStringA(buff);
 
-	if (m_isGameStart == false) {
+	//スタートダウンカウントダウン
+	if (m_gameState == enStartCountDown) {
 		StartCountDown();
 		return;
 	}
 
 	//制限時間の表示
-	if (m_timeLimit > 0 && m_gameEndFlag == false) {
+	if (m_timeLimit > 0 && m_gameState == enPlaying) {
 		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
 		if ((int)m_timeLimit == 9) //一桁になったら表示位置を真ん中に。
 		{
@@ -227,14 +155,16 @@ void SampleScene::Update()
 			m_timeFontRender->SetPosition({ -35.0f, 380.0f });
 		}
 
-	}
-	else if(m_gameEndFlag == false)
+	}//時間切れでも勝敗がついていない場合
+	else if(m_timeLimit <= 0 && m_gameState != enResult)
 	{
+		//勝者判定
 		WinnerJudge();
-		m_gameEndFlag = true;
+		//リザルトシーンに移行
+		m_gameState = enResult;
 	}
 
-	if (m_gameEndFlag == true)
+	if (m_gameState == enResult)
 	{	
 		if (m_GEfirstLoop == true)
 		{
@@ -242,8 +172,8 @@ void SampleScene::Update()
 			DeleteGO(m_HPCoverSpriteRender);
 			DeleteGO(m_TimerBaseSpriteRender);
 			DeleteGO(m_timeFontRender);
-			m_player1->m_displayOff = true;
-			m_player2->m_displayOff = true;
+			//m_player1->m_displayOff = true;
+			//m_player2->m_displayOff = true;
 			m_GEfirstLoop = false;
 			if (m_player1->m_Lose == true)
 			{
@@ -260,12 +190,12 @@ void SampleScene::Update()
 		{
 			m_gameEndCount++;
 		}
-	}
 
-	if (m_gameEndCount == 2)
-	{
-		NewGO<TitleScene>(0, "titlescene");
-		DeleteGO(this);
+		if (m_gameEndCount == 2)
+		{
+			NewGO<TitleScene>(0, "titlescene");
+			DeleteGO(this);
+		}
 	}
 
 	//エフェクト試す用
@@ -273,7 +203,7 @@ void SampleScene::Update()
 		Player* pl = FindGO<Player>("Player");
 
 		prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-		effect->Init(u"Assets/effect/引力弾.efk");
+		effect->Init(u"Assets/effect/Blackhole3.efk");
 		effect->SetPosition(pl->m_position);
 		effect->SetScale({ 30.0f, 30.0f, 30.0f });
 		effect->Play();
@@ -323,12 +253,7 @@ void SampleScene::StartCountDown() {
 
 	else if (m_startCount < 0) {
 		DeleteGO(m_startCountFontRender);
-		m_isGameStart = true;
-
-		QueryGOs<Player>("Player", [this](Player* player)->bool {
-			player->m_canMove = true;
-			return true;
-			});
+		m_gameState = enPlaying;
 	}
 
 	if (m_playCountSEFlag == true) {

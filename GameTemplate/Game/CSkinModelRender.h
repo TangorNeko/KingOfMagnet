@@ -67,6 +67,7 @@ namespace prefab
 		{
 			m_animation.Play(animationNo, interpolateTime);
 			m_animation.Progress(m_animation_speed /60.0f);
+			UpdateModel();
 		}
 
 		/// <summary>

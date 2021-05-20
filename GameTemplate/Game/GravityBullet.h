@@ -35,7 +35,7 @@ public:
 
 	enGravityBulletState m_gravityBulletState = enBullet;
 
-	Vector3 m_position;//座標
+	Vector3 m_position = {0.0f,0.0f,0.0f};//座標
 	Vector3 m_oldPosition;//前フレームの座標
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//引力弾のモデル
@@ -57,6 +57,10 @@ public:
 
 	prefab::CEffect* m_effect = nullptr;	//エフェクト
 	prefab::CEffect* m_effect2 = nullptr;	//エフェクト
-	prefab::CEffect* m_finishEffect = nullptr;	//エフェクト
+	prefab::CEffect* m_inflateEffect = nullptr;	//膨張エフェクト
+
+	prefab::CEffect* m_wearingEffect = nullptr;	//発射時に弾が纏うエフェクト
+
+	float angle = 0.0f;
 };
 

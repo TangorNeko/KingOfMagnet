@@ -15,7 +15,6 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_weaponModel);
 	//手のボーンのワールド行列を取得
 	/*DeleteGO(m_statusFontRender);
 	DeleteGO(m_bulletNumber);
@@ -150,159 +149,155 @@ bool Player::Start()
 	m_SPEffect = NewGO<prefab::CEffect>(0);
 	m_SPEffect->SetScale({ 20.0f, 20.0f, 20.0f });
 
-	m_weaponModel = NewGO<prefab::CSkinModelRender>(1);
-	m_weaponModel->Init("Assets/modelData/Mage_Weapon.tkm");
+	m_gameScene = FindGO<SampleScene>("gamescene");
 	return true;
 }
 
 void Player::Update()
 {
-	
-	//プレイヤー番号が与えられていなければ何もしない
-	if (m_playerNum == -1)
-	{
-		return;
-	}
-	if (m_opning == true)
+	//オープニングカメラ。
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enBirdseye)
 	{
 		OpeningCamera();
 	}
-	else
+	//スタートダウンカウントダウン中
+	else if (m_gameScene->GetGameState() == SampleScene::GameState::enStartCountDown)
 	{
-		//デバック用///////////////////////////////////
+		//カメラの移動。
+		Camera();
+
+		//キャラを前に向かせる
+
+		//カメラの前方向
+		m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		m_front.y = 0.0f;
+		m_front.Normalize();
+
+		//カメラの右方向
+		right = Cross(g_vec3AxisY, m_front);
+
+		n = m_front.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(n);//アークコサイン
+		if (m_front.x < 0) {
+			angle *= -1;
+		}
+		m_rot.SetRotation(Vector3::AxisY, angle);
+		m_skinModelRender->SetRotation(m_rot);
+
+		//状態更新。
+		UpdateState();
+		//アニメーション選択。
+		AnimationSelect();
+	}
+	else if(m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
+	{
+		//デバッグ用///////////////////////////////////
 		if (g_pad[m_playerNum]->IsTrigger(enButtonLB2))
 			Damage(200);
 		///////////////////////////////////////////////
 		
-		if (m_displayOff == false)
-		{
-			//体力等ステータスのテキストを表示(後に画像にする。)
-			DisplayStatus();
-		}
-		else//決着がついたとき
-		{
-			FinalHit();
-		}
+		//体力等ステータスのテキストを表示(後に画像にする。)
+		DisplayStatus();
+
 		//座標に応じて三角形の当たり判定の場所をセット。
 		Collision();
 
-		if (m_canMove == false) 
+		//磁力の変化
+		ChangeMagnetPower();
+		if (m_isKnockBack == true)
 		{
-			m_skinModelRender->SetPosition(m_position);
-			//float angle = acosf(n);//アークコサイン
-			//m_rot.SetRotation(Vector3::AxisY, angle);
-			//if (m_playerNum == 0)
-			//{
-			//	m_rot.y *= -1.0f;
-			//}
-			//m_skinModelRender->SetRotation(m_rot);
-			//g_camera3D[m_playerNum]->SetTarget(0, 0, 0);
-			//状態更新。
-			UpdateState();
-			//アニメーション選択。
-			AnimationSelect();
-			//手のボーンのワールド行列を取得
-			Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
-			m_weaponModel->SetMatrix(handmatrix);
-			//ライト
-			Vector3 PlayerWaistPos = m_position;
-			PlayerWaistPos.y += 40;
-			Vector3 Direction = PlayerWaistPos - cameraPos;
-			Direction.Normalize();
-			m_spotLight->SetDirection(Direction);
-			m_spotLight->SetPosition(m_LastFront*100);
+			KnockBack();
 		}
-		else
+		else if (m_isKnockBack == false)
 		{
-			//磁力の変化
-			ChangeMagnetPower();
-			if (m_isKnockBack == true)
+			//移動
+			Move();
+			//必殺技
+			SpecialAttack();
+			//保持しているガレキの位置を制御する
+			HoldDebris();
+			//保持している爆弾の位置を制御する
+			HoldBomb();
+			//バーストを使用している?
+			if (m_isBurst == true)
 			{
-				KnockBack();
+				MagneticBurst();
 			}
-			else if (m_isKnockBack == false)
+			else
 			{
-				//移動
-				Move();
-				//必殺技
-				SpecialAttack();
-				//保持しているガレキの位置を制御する
-				HoldDebris();
-				//保持している爆弾の位置を制御する
-				HoldBomb();
-				//バーストを使用している?
-				if (m_isBurst == true)
-				{
-					MagneticBurst();
-				}
-				else
-				{
-					MagneticBehavior();
-				}
-
-				//爆弾を投げる
-				ThrowBomb();
-
-				//グレネード用。仮です。
-				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-				{
-					Bomb* debris = NewGO<Bomb>(0, "bomb");
-					debris->m_bombShape = Bomb::enIncendiaryGrenade;
-					debris->m_bombState = Bomb::enDrop;
-					debris->m_parent = this;
-					debris->m_position = m_magPosition;
-					debris->m_moveDirection = m_characterDirection;
-				}
+				MagneticBehavior();
 			}
 
-			//攻撃後の隙のタイマーを減らしていく
-			m_attackCount--;
-			//攻撃のクールタイムが終わると移動速度を戻す
-			if (m_attackCount <= 0 && m_isBurst == false)
+			//爆弾を投げる
+			ThrowBomb();
+
+			//グレネード用。仮です。
+			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 			{
-				m_attackCount = 0;
-				m_isAttacking = false;
-				m_characterSpeed = 6.0;
+				Bomb* debris = NewGO<Bomb>(0, "bomb");
+				debris->m_bombShape = Bomb::enIncendiaryGrenade;
+				debris->m_bombState = Bomb::enDrop;
+				debris->m_parent = this;
+				debris->m_position = m_magPosition;
+				debris->m_moveDirection = m_characterDirection;
 			}
-			//状態更新。
-			UpdateState();
-			//アニメーション選択。
-			AnimationSelect();
-			if (m_displayOff == false)
-			{
-				//カメラの移動
-				Camera();
-			}
+		}
 
-			//斥力・引力エフェクト			
-			if (m_magPower == 1) {
-				m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
-				m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
-				m_magEffect[2]->Init(u"Assets/effect/斥力.efk");
-			}
-			else if (m_magPower == -1) {
-				m_magEffect[0]->Init(u"Assets/effect/引力.efk");
-				m_magEffect[1]->Init(u"Assets/effect/引力.efk");
-				m_magEffect[2]->Init(u"Assets/effect/引力.efk");
-			}
-			//磁力エフェクトを再生
-			if (m_magEffectCallCount == 40) {
-				m_magEffect[2]->Play();
-			}
-			else if (m_magEffectCallCount == 20) {
-				m_magEffect[1]->Play();
-			}
-			else if (m_magEffectCallCount <= 0) {
-				m_magEffect[0]->Play();
-				m_magEffectCallCount = 60;
-			}
-			m_magEffectCallCount -= 1;
+		//攻撃後の隙のタイマーを減らしていく
+		m_attackCount--;
+		//攻撃のクールタイムが終わると移動速度を戻す
+		if (m_attackCount <= 0 && m_isBurst == false)
+		{
+			m_attackCount = 0;
+			m_isAttacking = false;
+			m_characterSpeed = 6.0;
+		}
+		//状態更新。
+		UpdateState();
+		//アニメーション選択。
+		AnimationSelect();
 
-			m_magEffect[0]->SetPosition(m_position);
-			m_magEffect[1]->SetPosition(m_position);
-			m_magEffect[2]->SetPosition(m_position);
-		}				
-			
+		//カメラの移動
+		Camera();
+
+		//斥力・引力エフェクト			
+		if (m_magPower == 1) {
+			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
+			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
+			m_magEffect[2]->Init(u"Assets/effect/斥力.efk");
+		}
+		else if (m_magPower == -1) {
+			m_magEffect[0]->Init(u"Assets/effect/引力.efk");
+			m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+			m_magEffect[2]->Init(u"Assets/effect/引力.efk");
+		}
+		//磁力エフェクトを再生
+		if (m_magEffectCallCount == 40) {
+			m_magEffect[2]->Play();
+		}
+		else if (m_magEffectCallCount == 20) {
+			m_magEffect[1]->Play();
+		}
+		else if (m_magEffectCallCount <= 0) {
+			m_magEffect[0]->Play();
+			m_magEffectCallCount = 60;
+		}
+		m_magEffectCallCount -= 1;
+
+		m_magEffect[0]->SetPosition(m_position);
+		m_magEffect[1]->SetPosition(m_position);
+		m_magEffect[2]->SetPosition(m_position);
+					
+		
+	}
+	else if(m_gameScene->GetGameState() == SampleScene::GameState::enResult)
+	{
+		//ファイナルヒットカメラ。
+		FinalHit();
+		//状態更新。
+		UpdateState();
+		//アニメーション選択。
+		AnimationSelect();
 	}
 	
 }
@@ -421,9 +416,6 @@ void Player::Move()
 		//リスポーンしたので落下加速用のカウントをリセット。
 		m_fallLoop = 0;
 	}
-	//手のボーンのワールド行列を取得
-	Matrix handmatrix = m_skinModelRender->GetWorldMatrixFromBoneName(L"B_R_Hand");
-	m_weaponModel->SetMatrix(handmatrix);
 	//ライト
 	Vector3 PlayerWaistPos = m_position;
 	PlayerWaistPos.y += 40;
@@ -1120,19 +1112,15 @@ void Player::Damage(int damage)
 	if (m_hp <= 0)
 	{
 		m_hp = 0;
+		
+		//体力の更新。
+		DisplayStatus();
 
-		SampleScene* gameScene = FindGO<SampleScene>("gamescene");
-		if (gameScene->GetGameEndFlag() == false)
-		{
-			//体力の更新。
-			DisplayStatus();
+		Lose();
 
-			Lose();
+		m_enemy->Win();
 
-			m_enemy->Win();
-
-			gameScene->SetGameEndFlag(true);
-		}
+		m_gameScene->SetGameState(SampleScene::GameState::enResult);
 	}
 
 	//与えたダメージ量を相手に表示する
@@ -1460,6 +1448,11 @@ void Player::KnockBack() {
 void Player::OpeningCamera()
 {
 	m_cameraLoopCount++;	
+
+	if (g_pad[m_playerNum]->IsTrigger(enButtonA))
+	{
+		m_gameScene->SetGameState(SampleScene::GameState::enStartCountDown);
+	}
 	
 	if (m_cameraLoopCount < 250)
 	{
@@ -1484,7 +1477,7 @@ void Player::OpeningCamera()
 		Vector3 targetVec = PlayerPos - m_cameraPos;
 		if (targetVec.Length() < 250)
 		{
-			m_opning = false;
+			m_gameScene->SetGameState(SampleScene::GameState::enStartCountDown);
 		}
 		targetVec.Normalize();
 		m_cameraPos += targetVec*gain;
@@ -1492,6 +1485,19 @@ void Player::OpeningCamera()
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}		
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+
+
+	//キャラを初期方向に向かせる
+
+	//キャラの前方向はm_characterDirection;
+
+	n = m_characterDirection.Dot(Vector3::AxisZ);//内積
+	float angle = acosf(n);//アークコサイン
+	if (m_characterDirection.x < 0) {
+		angle *= -1;
+	}
+	m_rot.SetRotation(Vector3::AxisY, angle);
+	m_skinModelRender->SetRotation(m_rot);
 }
 
 void Player::FinalHit()//決着がついたときのカメラ
@@ -1520,7 +1526,6 @@ void Player::FinalHit()//決着がついたときのカメラ
 				return true;
 			});
 		m_FirstTime = false;
-		m_canMove = false;//動けなくする
 	}
 	Vector3 LastRight;
 	Vector3 winnerVec;

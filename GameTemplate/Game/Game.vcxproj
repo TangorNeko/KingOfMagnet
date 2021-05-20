@@ -342,6 +342,7 @@
     <ClCompile Include="ShowSprite.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
+    <ClCompile Include="SpriteSupporter.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -475,6 +476,7 @@
     <ClInclude Include="ShowSprite.h" />
     <ClInclude Include="SkyBoard.h" />
     <ClInclude Include="SoundEngine.h" />
+    <ClInclude Include="SpriteSupporter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="prefab.h" />
