@@ -1,4 +1,7 @@
 #pragma once
+
+class SampleScene;
+
 class Incendia :public IGameObject
 {
 	~Incendia();
@@ -16,4 +19,7 @@ public:
 
 	//エフェクト
 	prefab::CEffect* m_effect = nullptr;
+
+	//ゲームシーン
+	SampleScene* m_gameScene = nullptr;
 };

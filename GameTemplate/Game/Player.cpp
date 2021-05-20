@@ -15,16 +15,38 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
-	//手のボーンのワールド行列を取得
-	/*DeleteGO(m_statusFontRender);
-	DeleteGO(m_bulletNumber);
-	DeleteGO(m_resultFontRender);
-	DeleteGO(m_resultSpriteRender);
-	DeleteGO(m_crosshairRender);
-	DeleteGO(m_HPBarSpriteRender);
-	DeleteGO(m_HPBarDarkSpriteRender);
-	DeleteGO(m_mobiusGauge);*/
 
+	if (m_bulletNumber != nullptr)
+	{
+		DeleteGO(m_bulletNumber);
+	}
+
+	if (m_crosshairRender != nullptr)
+	{
+		DeleteGO(m_crosshairRender);
+	}
+
+	if (m_HPBarSpriteRender != nullptr)
+	{
+		DeleteGO(m_HPBarSpriteRender);
+	}
+
+	if (m_HPBarDarkSpriteRender != nullptr)
+	{
+		DeleteGO(m_HPBarDarkSpriteRender);
+	}
+
+	if (m_mobiusGauge != nullptr)
+	{
+		DeleteGO(m_mobiusGauge);
+	}
+
+	m_magEffect[0]->Stop();
+	m_magEffect[1]->Stop();
+	m_magEffect[2]->Stop();
+	m_burstEffect->Stop();
+	m_hitEffect->Stop();
+	m_SPEffect->Stop();
 	DeleteGO(m_magEffect[0]);
 	DeleteGO(m_magEffect[1]);
 	DeleteGO(m_magEffect[2]);
@@ -156,6 +178,12 @@ bool Player::Start()
 
 void Player::Update()
 {
+	//ポーズ中ならスキップ。
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	{
+		return;
+	}
+
 	//オープニングカメラ。
 	if (m_gameScene->GetGameState() == SampleScene::GameState::enBirdseye)
 	{
@@ -300,6 +328,39 @@ void Player::Update()
 		//アニメーション選択。
 		AnimationSelect();
 	}
+	else if (m_gameScene->GetGameState() == SampleScene::GameState::enDraw)
+	{
+		//保持しているガレキを浮遊させる。
+		HoldDebris();
+
+		//保持している爆弾を浮遊させる。
+		HoldBomb();
+
+		//カメラの移動。
+		Camera();
+
+		//キャラを前に向かせる
+
+		//カメラの前方向
+		m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
+		m_front.y = 0.0f;
+		m_front.Normalize();
+
+		//カメラの右方向
+		right = Cross(g_vec3AxisY, m_front);
+
+		n = m_front.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(n);//アークコサイン
+		if (m_front.x < 0) {
+			angle *= -1;
+		}
+		m_rot.SetRotation(Vector3::AxisY, angle);
+		m_skinModelRender->SetRotation(m_rot);
+
+		m_animStatus = enStatus_Idle;
+		//アニメーション選択。
+		AnimationSelect();
+	}
 	
 }
 //体力、メビウスゲージの表示
@@ -417,13 +478,6 @@ void Player::Move()
 		//リスポーンしたので落下加速用のカウントをリセット。
 		m_fallLoop = 0;
 	}
-	//ライト
-	Vector3 PlayerWaistPos = m_position;
-	PlayerWaistPos.y += 40;
-	Vector3 Direction = PlayerWaistPos - cameraPos;
-	Direction.Normalize();
-	m_spotLight->SetDirection(Direction);
-	m_spotLight->SetPosition(cameraPos);
 }
 
 //攻撃
@@ -1053,6 +1107,14 @@ void Player::Camera()
 
 	g_camera3D[m_playerNum]->SetPosition(cameraPos);
 	g_camera3D[m_playerNum]->SetTarget(targetPos);
+
+	//ライト
+	Vector3 PlayerWaistPos = m_position;
+	PlayerWaistPos.y += 40;
+	Vector3 Direction = PlayerWaistPos - cameraPos;
+	Direction.Normalize();
+	m_spotLight->SetDirection(Direction);
+	m_spotLight->SetPosition(cameraPos);
 }
 
 //当たり判定
@@ -1171,6 +1233,27 @@ void Player::Win()
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);*/
 	//m_winnerNum = m_playerNum;
+	Vector3 crossPoint;
+	bool hitflag = false;
+
+	Vector3 linestart = m_position;
+	Vector3 lineend = m_position;
+	linestart.y += 50.0f;
+	lineend.y -= 1000.0f;
+
+	hitflag = m_stageModel->isLineHitModel(linestart, lineend, crossPoint);
+
+	if (hitflag == true)
+	{
+		m_position = crossPoint;
+	}
+	else
+	{
+		m_position = m_stageModel->GetRespawnPoint(m_enemy->m_position);
+	}
+
+	m_skinModelRender->SetPosition(m_position);
+
 	m_LastFront = m_front;
 }
 
@@ -1182,6 +1265,32 @@ void Player::Lose()
 	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);*/
 	//m_loserNum = m_playerNum;
+
+
+	//空中で倒れた時用に、現在位置から下方向に向かってレイを飛ばす。
+	Vector3 crossPoint;
+	bool hitflag = false;
+
+	Vector3 linestart = m_position;
+	Vector3 lineend = m_position;
+	linestart.y += 50.0f;
+	lineend.y -= 1000.0f;
+
+	hitflag = m_stageModel->isLineHitModel(linestart, lineend, crossPoint);
+
+	if (hitflag == true)
+	{
+		//レイがヒットしているならヒットした位置に移動。
+		m_position = crossPoint;
+	}
+	else
+	{
+		//ヒットしないということは穴の上なのでリスポーン位置にプレイヤーの位置を移動。
+		m_position = m_stageModel->GetRespawnPoint(m_enemy->m_position);
+	}
+
+	m_skinModelRender->SetPosition(m_position);
+
 	m_LastFront = m_front;
 }
 
@@ -1509,12 +1618,15 @@ void Player::FinalHit()//決着がついたときのカメラ
 		//画面に出ているやつを消す
 		//HPバー、画面分割線、メビウスゲージを消す
 		DeleteGO(m_bulletNumber);
-		DeleteGO(m_resultFontRender);
-		//DeleteGO(m_resultSpriteRender);
+		m_bulletNumber = nullptr;
 		DeleteGO(m_crosshairRender);
+		m_crosshairRender = nullptr;
 		DeleteGO(m_HPBarSpriteRender);
+		m_HPBarSpriteRender = nullptr;
 		DeleteGO(m_HPBarDarkSpriteRender);
+		m_HPBarDarkSpriteRender = nullptr;
 		DeleteGO(m_mobiusGauge);
+		m_mobiusGauge = nullptr;
 		//弾も消す
 		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
 			{

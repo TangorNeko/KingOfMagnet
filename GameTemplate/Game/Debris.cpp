@@ -12,10 +12,9 @@ Debris::~Debris()
 	DeleteGO(m_skinModelRender);
 	
 	//ゲームシーンの弾の数を減らす。
-	SampleScene* gameScene = FindGO<SampleScene>("gamescene");
-	if (gameScene != nullptr)
+	if (m_gameScene != nullptr)
 	{
-		gameScene->BulletDecrease();
+		m_gameScene->BulletDecrease();
 	}
 }
 
@@ -55,11 +54,19 @@ bool Debris::Start()
 	//ステージとの当たり判定用
 	m_stageModel = FindGO<BackGround>("background");
 
+	m_gameScene = FindGO<SampleScene>("gamescene");
+
 	return true;
 }
 
 void Debris::Update()
 {
+	//ポーズ中ならスキップ。
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	{
+		return;
+	}
+
 	//前フレームの座標を記録
 	m_oldPosition = m_position;
 
