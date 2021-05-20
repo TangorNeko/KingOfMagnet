@@ -58,7 +58,11 @@ bool Player::Start()
 	
 	//ƒ‚ƒfƒ‹‚Ì‰Šú‰»
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/Mage.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
+	if(m_playerNum == 0)
+		m_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
+	if (m_playerNum == 1)
+		m_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
+
 	m_skinModelRender->SetShadowCasterFlag(true);
 	m_skinModelRender->SetScale(m_scale);
 	m_skinModelRender->SetPosition(m_position);
