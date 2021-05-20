@@ -7,29 +7,39 @@
 
 GravityBullet::~GravityBullet()
 {
-	DeleteGO(m_skinModelRender);
 	DeleteGO(m_effect);
+
+	DeleteGO(m_effect2);
+	DeleteGO(m_wearingEffect);
 }
 
 bool GravityBullet::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
-	m_skinModelRender->Init("Assets/modelData/Gravity.tkm");
-	m_skinModelRender->SetScale({ 0.1f,0.1f,0.1f, });
+	m_skinModelRender->Init("Assets/modelData/Gravity2.tkm");
+	m_skinModelRender->SetScale({ 0.05f,0.05f,0.05f, });
 
 	m_stageModel = FindGO<BackGround>("background");
 
-	//エフェクトを再生
+	//エフェクト
 	m_effect = NewGO<prefab::CEffect>(0);
 	m_effect->Init(u"Assets/effect/引力弾.efk");
 	m_effect->SetScale({ 25.0f, 25.0f, 25.0f });
+
 	m_effect2 = NewGO<prefab::CEffect>(0);
 	m_effect2->Init(u"Assets/effect/引力弾.efk");
 	m_effect2->SetScale({ 25.0f, 25.0f, 25.0f });
-	m_finishEffect = NewGO<prefab::CEffect>(0);
-	m_finishEffect->Init(u"Assets/effect/引力弾2.efk");
-	m_finishEffect->SetScale({ 25.0f, 25.0f, 25.0f });
+
+	m_inflateEffect = NewGO<prefab::CEffect>(0);
+	m_inflateEffect->Init(u"Assets/effect/引力弾2.efk");
+	m_inflateEffect->SetScale({ 25.0f, 25.0f, 25.0f });
+
+	m_wearingEffect = NewGO<prefab::CEffect>(0);
+	m_wearingEffect->Init(u"Assets/effect/Blackhole3.efk");
+	m_wearingEffect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_wearingEffect->SetPosition(m_position);
+	m_wearingEffect->Play();
 
 	return true;
 }
@@ -97,6 +107,17 @@ void GravityBullet::AsBulletBehave()
 		//ステージのどこかに当たったので爆発。
 		m_gravityBulletState = enExplode;
 	}
+
+	//弾が纏うエフェクトのポジション
+	m_wearingEffect->SetPosition(m_position);
+
+	//弾を回転させる。
+	angle += 0.2f;
+	if (angle >= 360.0f)
+		angle = 0.0f;
+	Quaternion qRot;
+	qRot.SetRotation(Vector3::AxisY, angle);
+	m_skinModelRender->SetRotation(qRot);
 }
 
 void GravityBullet::AsExplodeBehave()
@@ -119,13 +140,16 @@ void GravityBullet::AsExplodeBehave()
 			return true;
 		});
 
-	//爆発の瞬間に仮モデルを大きく(TODO:エフェクトにしたいね)
-	m_skinModelRender->SetScale({ 0.25f,0.25f,0.25f });
+	//爆発の瞬間にエフェクトを発生させる。
 	m_effect->SetPosition(m_position);
 	m_effect->Play();
-	//爆発の瞬間に仮モデルを大きく(TODO:エフェクトにしたいね)
-	m_finishEffect->SetPosition(m_position);
-	m_finishEffect->Play();
+	m_inflateEffect->SetPosition(m_position);
+	m_inflateEffect->Play();
+
+	//弾が纏うエフェクトをストップ
+	m_wearingEffect->Stop();
+	//弾のモデルは削除
+	DeleteGO(m_skinModelRender);
 
 	//爆発したので引力を発生させる状態へ
 	m_gravityBulletState = enGravity;

@@ -318,6 +318,9 @@
     </ClCompile>
     <ClCompile Include="Incendia.cpp" />
     <ClCompile Include="Flash.cpp" />
+    <ClCompile Include="SpriteSupporter.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -966,6 +969,9 @@
     </ClInclude>
     <ClInclude Include="Flash.h" />
     <ClInclude Include="Incendia.h" />
+    <ClInclude Include="SpriteSupporter.h">
+      <Filter>ヘッダー ファイル\prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">

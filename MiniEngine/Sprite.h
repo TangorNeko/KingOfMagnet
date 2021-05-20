@@ -73,6 +73,10 @@ public:
 	{
 		m_constantBufferCPU.mulColor = mulColor;
 	}
+	Vector4 GetMulColor()
+	{
+		return m_constantBufferCPU.mulColor;
+	}
 private:
 	/// <summary>
 	/// テクスチャを初期化。
