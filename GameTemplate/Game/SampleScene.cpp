@@ -8,6 +8,7 @@
 #include "Bomb.h"
 #include "Repulsion.h"
 #include "TitleScene.h"
+#include "ResultScene.h"
 
 SampleScene::~SampleScene()
 {	
@@ -190,10 +191,10 @@ void SampleScene::Update()
 		{
 			m_gameEndCount++;
 		}
-
-		if (m_gameEndCount == 2)
+		m_gameEndLoop++;
+		if (m_gameEndCount == 2||m_gameEndLoop>1500)
 		{
-			NewGO<TitleScene>(0, "titlescene");
+			NewGO<ResultScene>(0, "resultscene");
 			DeleteGO(this);
 		}
 	}

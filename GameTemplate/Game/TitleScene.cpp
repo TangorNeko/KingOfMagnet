@@ -4,20 +4,14 @@
 #include "SampleScene.h"
 TitleScene::~TitleScene() 
 {
-	DeleteGO(m_title_fontRender);
 	DeleteGO(m_start_fontRender);
 	DeleteGO(m_exit_fontRender);
 	DeleteGO(m_option_fontRender);
 	DeleteGO(m_titleSpriteRender);
+	DeleteGO(m_dot_fontRender);
 }
 bool TitleScene::Start()
 {
-	//•¶Žš•\Ž¦
-	/*m_title_fontRender = NewGO<prefab::CFontRender>(0);
-	m_title_fontRender->SetPosition({ -200.0f, 200.0f });
-	m_title_fontRender->SetText(L"Ž¥ŠE”V‰¤");
-	m_title_fontRender->SetScale({ 2.0f,2.0f });*/
-
 	m_option_fontRender = NewGO<prefab::CFontRender>(0);	
 	m_option_fontRender->SetPosition({ m_optionX, m_optionY });//ã
 	m_option_fontRender->SetText(L"OPTION");

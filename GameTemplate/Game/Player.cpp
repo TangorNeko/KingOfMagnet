@@ -31,6 +31,7 @@ Player::~Player()
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
+	DeleteGO(m_spotLight);
 }
 
 bool Player::Start()
@@ -1528,7 +1529,6 @@ void Player::FinalHit()//決着がついたときのカメラ
 		m_FirstTime = false;
 	}
 	Vector3 LastRight;
-	Vector3 winnerVec;
 	Vector3 winnerFrontPos;
 	Vector3 winnerHeadPos;
 	if (m_playerNum == m_loserNum)//敗者を写す
@@ -1581,19 +1581,20 @@ void Player::FinalHit()//決着がついたときのカメラ
 			winnerHeadPos = m_enemy->m_position;
 			winnerHeadPos.y += 50;//勝者の頭の位置
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
-			winnerVec=(winnerHeadPos + m_enemy->m_LastFront * 200) - m_position;
-			winnerVec.Normalize();
-			m_cameraPos += winnerVec*-200;//後ろ
+			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFront * 200) - m_position;
+			m_winnerVec.Normalize();
+			m_cameraPos += m_winnerVec*-200;//後ろ
 			g_camera3D[0]->SetTarget(m_enemy->m_position);
 			break;
 		case 4://敵の前まで移動する
 			//カメラを敵の前まで移動させる				
-			winnerFrontPos = (m_enemy->m_position + m_enemy->m_LastFront * 150 ) - (m_position + winnerVec * -200);			
+			winnerFrontPos = (m_enemy->m_position + m_enemy->m_LastFront * 150 ) - (m_position + m_winnerVec * -200);			
 			if (m_coef < 1.0f)//ベクトルに掛ける値
 				m_coef += 0.01f;
-			if (m_coef < 0.5f)//カメラが半分の距離まで行くとアニメーションを再生する
-				m_enemy->m_WinAnimOn = true;			
-			m_cameraPos += (winnerFrontPos * (pow(m_coef,2)) + winnerVec * -200);//
+			if (m_coef > 0.5f)//カメラが半分の距離まで行くとアニメーションを再生する
+				m_enemy->m_WinAnimOn = true;
+			m_cameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//+ (winnerVec * 200)
+			m_cameraPos += m_winnerVec * -200;//後ろ
 			m_enemyWaistPos = m_enemy->m_position;//敵の腰の位置
 			m_enemyWaistPos.y += 20;
 			g_camera3D[0]->SetTarget(m_enemyWaistPos);

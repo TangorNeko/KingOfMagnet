@@ -23,7 +23,7 @@ class SampleScene : public IGameObject
 	SkyBoard* m_sky = nullptr;
 
 	int m_gameEndCount = 0;
-
+	int m_gameEndLoop = 0;
 	//ゲームスタートカウント関連
 	void StartCountDown();
 	float m_measureSecond = 0.0f;	//秒を測る

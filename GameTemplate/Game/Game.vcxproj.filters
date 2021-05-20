@@ -321,6 +321,7 @@
     <ClCompile Include="SpriteSupporter.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
+    <ClCompile Include="ResultScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -972,6 +973,7 @@
     <ClInclude Include="SpriteSupporter.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
     </ClInclude>
+    <ClInclude Include="ResultScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
