@@ -6,6 +6,7 @@ class BackGround;
 class Debris;
 class Bomb;
 class MobiusGauge;
+class SampleScene;
 
 class Player : public IGameObject
 {
@@ -122,8 +123,6 @@ public:
 	void KnockBack();
 
 public:
-	prefab::CSkinModelRender* m_weaponModel = nullptr;//武器を持つ
-
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion m_rot;//キャラクターの回転
 	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率
@@ -149,6 +148,8 @@ public:
 	float m_characterSpeed = 6.0;//キャラクターの移動速度
 
 	bool m_isLock = false; //ロックしているか。
+
+	SampleScene* m_gameScene = nullptr;
 
 	BackGround* m_stageModel;//背景のモデル(当たり判定用)
 	CharacterController m_charaCon;//プレイヤーのキャラコン
@@ -228,8 +229,6 @@ public:
 
 	//メビウスゲージ
 	MobiusGauge* m_mobiusGauge = nullptr;
-	//動かせるかどうか
-	bool m_canMove = false;
 
 	//リザルト関連
 	Vector2 m_resultPos = { -1200.0f,100.0f };
