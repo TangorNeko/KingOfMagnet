@@ -36,7 +36,7 @@ class SampleScene : public IGameObject
 
 	//§ŒÀŠÔ
 	prefab::CFontRender* m_timeFontRender = nullptr;
-	float m_timeLimit = 5;
+	float m_timeLimit = 100;
 	float m_deltaTimeCount = 0.0f;
 
 	prefab::CSpriteRender* m_delimitLineSpriteRender = nullptr;	//‹æØ‚éü

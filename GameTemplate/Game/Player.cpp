@@ -15,15 +15,31 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
-	//手のボーンのワールド行列を取得
-	/*DeleteGO(m_statusFontRender);
-	DeleteGO(m_bulletNumber);
-	DeleteGO(m_resultFontRender);
-	DeleteGO(m_resultSpriteRender);
-	DeleteGO(m_crosshairRender);
-	DeleteGO(m_HPBarSpriteRender);
-	DeleteGO(m_HPBarDarkSpriteRender);
-	DeleteGO(m_mobiusGauge);*/
+
+	if (m_bulletNumber != nullptr)
+	{
+		DeleteGO(m_bulletNumber);
+	}
+
+	if (m_crosshairRender != nullptr)
+	{
+		DeleteGO(m_crosshairRender);
+	}
+
+	if (m_HPBarSpriteRender != nullptr)
+	{
+		DeleteGO(m_HPBarSpriteRender);
+	}
+
+	if (m_HPBarDarkSpriteRender != nullptr)
+	{
+		DeleteGO(m_HPBarDarkSpriteRender);
+	}
+
+	if (m_mobiusGauge != nullptr)
+	{
+		DeleteGO(m_mobiusGauge);
+	}
 
 	m_magEffect[0]->Stop();
 	m_magEffect[1]->Stop();
@@ -1602,12 +1618,15 @@ void Player::FinalHit()//決着がついたときのカメラ
 		//画面に出ているやつを消す
 		//HPバー、画面分割線、メビウスゲージを消す
 		DeleteGO(m_bulletNumber);
-		DeleteGO(m_resultFontRender);
-		//DeleteGO(m_resultSpriteRender);
+		m_bulletNumber = nullptr;
 		DeleteGO(m_crosshairRender);
+		m_crosshairRender = nullptr;
 		DeleteGO(m_HPBarSpriteRender);
+		m_HPBarSpriteRender = nullptr;
 		DeleteGO(m_HPBarDarkSpriteRender);
+		m_HPBarDarkSpriteRender = nullptr;
 		DeleteGO(m_mobiusGauge);
+		m_mobiusGauge = nullptr;
 		//弾も消す
 		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
 			{
