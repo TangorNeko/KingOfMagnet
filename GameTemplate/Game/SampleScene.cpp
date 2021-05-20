@@ -119,7 +119,7 @@ bool SampleScene::Start()
 	m_TimerBaseSpriteRender = NewGO<prefab::CSpriteRender>(3);
 	m_TimerBaseSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_TimerBaseSpriteRender->SetPosition({ 0.0f,300.0f,0.0f });
-	m_TimerBaseSpriteRender->Init("Assets/Image/6.dds", 500, 500);
+	m_TimerBaseSpriteRender->Init("Assets/Image/Timer_Base.dds", 272, 120);
 
 	//ゲームスタートカウント
 	m_startCountFontRender = NewGO<prefab::CFontRender>(4);
