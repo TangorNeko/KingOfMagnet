@@ -113,7 +113,9 @@ public:
 	void Lose();
 
 	//リザルト表示
-	//void ResultDisplay();
+	void ResultDisplay();
+
+	//ファイナルカメラ
 	void FinalHit();
 
 	//必殺技ゲージをチャージする。

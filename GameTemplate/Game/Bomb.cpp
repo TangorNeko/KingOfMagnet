@@ -28,21 +28,21 @@ bool Bomb::Start()
 	switch (m_bombShape)
 	{
 	case enGrenade:
-		m_skinModelRender->Init("Assets/modelData/FlashGrenade.tkm");
+		m_skinModelRender->Init("Assets/modelData/Grenade.tkm");
 		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
 		//投げる角度を少し上にする。
 		m_moveDirection.y += 0.4f;
 		m_moveDirection.Normalize();
 		break;
 	case enFlashGrenade:
-		m_skinModelRender->Init("Assets/modelData/MageBullet.tkm");
+		m_skinModelRender->Init("Assets/modelData/FlashGrenade.tkm");
 		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
 		//投げる角度を少し上にする。
 		m_moveDirection.y += 0.4f;
 		m_moveDirection.Normalize();
 		break;
 	case enIncendiaryGrenade:
-		m_skinModelRender->Init("Assets/modelData/KnightBullet.tkm");
+		m_skinModelRender->Init("Assets/modelData/SmokeGrenade.tkm");
 		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
 		//投げる角度を少し上にする。
 		m_moveDirection.y += 0.4f;
