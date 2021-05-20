@@ -8,6 +8,7 @@
 GravityBullet::~GravityBullet()
 {
 	DeleteGO(m_skinModelRender);
+	DeleteGO(m_effect);
 }
 
 bool GravityBullet::Start()
@@ -18,6 +19,17 @@ bool GravityBullet::Start()
 	m_skinModelRender->SetScale({ 0.1f,0.1f,0.1f, });
 
 	m_stageModel = FindGO<BackGround>("background");
+
+	//エフェクトを再生
+	m_effect = NewGO<prefab::CEffect>(0);
+	m_effect->Init(u"Assets/effect/引力弾.efk");
+	m_effect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_effect2 = NewGO<prefab::CEffect>(0);
+	m_effect2->Init(u"Assets/effect/引力弾.efk");
+	m_effect2->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_finishEffect = NewGO<prefab::CEffect>(0);
+	m_finishEffect->Init(u"Assets/effect/引力弾2.efk");
+	m_finishEffect->SetScale({ 25.0f, 25.0f, 25.0f });
 
 	return true;
 }
@@ -109,6 +121,11 @@ void GravityBullet::AsExplodeBehave()
 
 	//爆発の瞬間に仮モデルを大きく(TODO:エフェクトにしたいね)
 	m_skinModelRender->SetScale({ 0.25f,0.25f,0.25f });
+	m_effect->SetPosition(m_position);
+	m_effect->Play();
+	//爆発の瞬間に仮モデルを大きく(TODO:エフェクトにしたいね)
+	m_finishEffect->SetPosition(m_position);
+	m_finishEffect->Play();
 
 	//爆発したので引力を発生させる状態へ
 	m_gravityBulletState = enGravity;
@@ -157,6 +174,16 @@ void GravityBullet::AsGravityBehave()
 				}
 				return true;
 			});
+	}
+	if (m_gravityTimeCount % 60 == 0) 
+	{
+		m_effect2->SetPosition(m_position);
+		m_effect2->Play();
+	}
+	else if (m_gravityTimeCount % 30 == 0)
+	{
+		m_effect->SetPosition(m_position);
+		m_effect->Play();
 	}
 }
 

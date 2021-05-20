@@ -23,6 +23,7 @@ Bomb::~Bomb()
 bool Bomb::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
+	m_skinModelRender->SetShadowCasterFlag(true);
 
 	//”š’e‚ÌŒ`ó‚Å“Ç‚İ‚Şƒ‚ƒfƒ‹‚ğ•ªŠò
 	switch (m_bombShape)

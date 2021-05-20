@@ -243,7 +243,7 @@ void Player::Update()
 				if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 				{
 					Bomb* debris = NewGO<Bomb>(0, "bomb");
-					debris->m_bombShape = Bomb::enGrenade;
+					debris->m_bombShape = Bomb::enIncendiaryGrenade;
 					debris->m_bombState = Bomb::enDrop;
 					debris->m_parent = this;
 					debris->m_position = m_magPosition;
@@ -563,7 +563,7 @@ void Player::SpecialAttack()
 				ssSPAttack->Init(L"Assets/sound/気弾1.wav");
 				ssSPAttack->Play(false);
 
-				
+				//発射エフェクト
 				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
 				m_SPEffect->SetPosition({ 
 					m_position.x + m_front.x * 50.0f,
