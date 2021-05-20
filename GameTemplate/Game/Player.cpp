@@ -58,7 +58,7 @@ bool Player::Start()
 	
 	//モデルの初期化
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	if(m_playerNum == 0)
+	if (m_playerNum == 0)//プレイヤーの色を変える
 		m_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
 	if (m_playerNum == 1)
 		m_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
