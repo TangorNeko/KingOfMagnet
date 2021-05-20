@@ -255,7 +255,7 @@ public:
 	int m_LastCameraStatus = 0;
 	float m_coef = 0.0f;
 	Vector3 m_LastFront;
-
+	Vector3 m_winnerVec;
 	Vector3 m_enemyWaistPos;//ダメージエフェクト関連
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 

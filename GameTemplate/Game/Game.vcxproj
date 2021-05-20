@@ -337,6 +337,7 @@
     <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="Psychokinesis.cpp" />
     <ClCompile Include="Repulsion.cpp" />
+    <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="SampleScene.cpp" />
     <ClCompile Include="ShowModel.cpp" />
     <ClCompile Include="ShowSprite.cpp" />
@@ -471,6 +472,7 @@
     <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="Psychokinesis.h" />
     <ClInclude Include="Repulsion.h" />
+    <ClInclude Include="ResultScene.h" />
     <ClInclude Include="SampleScene.h" />
     <ClInclude Include="ShowModel.h" />
     <ClInclude Include="ShowSprite.h" />
