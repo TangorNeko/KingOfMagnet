@@ -146,12 +146,18 @@ public:
 	/// <returns>bool</returns>
 	bool Get2ScreenMode() { return m_2screenMode; }
 	
+	/// <summary>
+	/// レンダリングコンテキストを返す
+	/// </summary>
+	RenderContext* GetRenderContext() { return m_rc; }
+
 private:
 	enum { GAME_OBJECT_PRIO_MAX = 255 };		//!<ゲームオブジェクトの優先度の最大値。
 	typedef std::list<IGameObject*>	 GameObjectList;
 	std::array<GameObjectList, GAME_OBJECT_PRIO_MAX>	m_gameObjectListArray;							//!<ゲームオブジェクトの優先度付きリスト。
 	static GameObjectManager* m_instance;		//唯一のインスタンスのアドレスを記録する変数。
 	bool m_2screenMode = false;
+	RenderContext* m_rc = nullptr;
 };
 
 

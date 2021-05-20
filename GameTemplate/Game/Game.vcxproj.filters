@@ -321,6 +321,9 @@
     <ClCompile Include="SpriteSupporter.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
+    <ClCompile Include="TransitionGenerator.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -971,6 +974,9 @@
     <ClInclude Include="Incendia.h" />
     <ClInclude Include="SpriteSupporter.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="TransitionGenerator.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

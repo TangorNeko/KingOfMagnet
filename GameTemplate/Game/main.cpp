@@ -6,6 +6,7 @@
 
 #include "GameScene.h"
 #include "Player.h"
+#include "TransitionGenerator.h"
 
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -47,6 +48,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ブルームフラグ、シャドウフラグの順番
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
+
+	TransitionGenerator* tg = NewGO<TransitionGenerator>(10, "TransitionGenerator");
 
 //タイトルシーンを作成。
 	//TitleScene* title = NewGO<TitleScene>(0, "titlescene");
