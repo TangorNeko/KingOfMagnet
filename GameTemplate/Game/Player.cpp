@@ -8,6 +8,7 @@
 #include "GravityBullet.h"
 #include "SampleScene.h"
 #include "MobiusGauge.h"
+#include "ResultScene.h"
 
 Player::Player()
 {
@@ -1746,54 +1747,24 @@ void Player::FinalHit()//決着がついたときのカメラ
 		m_LoseCameraLoop++;
 	}
 }
-//リザルト表示
-//void Player::ResultDisplay()
-//{
-//	if (m_resultFirstTime == true)
-//	{
-//		DeleteGO(m_crosshairRender);
-//		DeleteGO(m_mobiusGauge);
-//		m_resultFirstTime = false;		
-//		//ステータス表示の初期化
-//		m_resultFontRender = NewGO<prefab::CFontRender>(1);
-//		m_resultFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)m_playerNum);
-//		m_resultFontRender->SetColor({ 1,1,1,1 });
-//		
-//	}
-//	if (m_playerNum == 0)
-//	{
-//		//命中率を計算(0で割るとバグるため＋１をしておく)
-//		m_HitRate = ((m_enemy->m_TakeAttackNum+1) / (m_AttackNum+1))*100;
-//		if (m_resultPos.x <= -600)
-//		{
-//			m_resultPos.x++;
-//		}
-//		m_resultFontRender->SetPosition({ m_resultPos });
-//
-//		//体力、チャージ、現在の自分の磁力の状態の表示
-//		wchar_t HitRate[256];
-//		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
-//		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
-//			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
-//			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
-//
-//	}
-//	if (m_playerNum == 1)
-//	{
-//		//命中率を計算(0で割るとバグるため＋１をしておく)
-//		m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
-//		if (m_resultPos.x <= -600)
-//		{
-//			m_resultPos.x++;
-//		}
-//		m_resultFontRender->SetPosition({ m_resultPos });
-//
-//		//体力、チャージ、現在の自分の磁力の状態の表示
-//		wchar_t HitRate[256];
-//		swprintf_s(HitRate, L"\n命中率%d%%", int(m_HitRate));
-//		m_resultFontRender->SetText(L"攻撃回数" + std::to_wstring(int(m_AttackNum)) + HitRate + L"\nバースト回数" + std::to_wstring(m_BurstNum)
-//			+ L"\n弾を奪った回数" + std::to_wstring(m_StealNum) + L"\n穴から落ちた回数" + std::to_wstring(m_LandingNum)
-//			+ L"\n受けたダメージ量" + std::to_wstring(m_ReceivedDamage) + L"\n溜まった必殺技ポイント" + std::to_wstring(m_SaveSP));
-//
-//	}
-//}
+void Player::ResultDisplay()
+{
+	if (m_resultFirstTime == true)
+	{
+		m_resultFirstTime = false;
+		if (m_playerNum == 0)
+		{
+			//命中率を計算(0で割るとバグるため＋１をしておく)
+			m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
+
+			//体力、チャージ、現在の自分の磁力の状態の表示
+
+		}
+		if (m_playerNum == 1)
+		{
+			//命中率を計算(0で割るとバグるため＋１をしておく)
+			m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
+
+		}
+	}
+}

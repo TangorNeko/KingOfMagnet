@@ -17,7 +17,16 @@ namespace prefab
 
 		initData.m_vsEntryPointFunc = "VSMain";
 
-		initData.m_psEntryPoinFunc = "PSMain";
+		switch (m_spriteMode)
+		{
+		case prefab::CSpriteRender::Normal:
+			initData.m_psEntryPoinFunc = "PSMain";
+			break;
+		case prefab::CSpriteRender::Transition:
+			initData.m_psEntryPoinFunc = "PS_Transition";
+			m_sprite.SetAlpha(0.0f);
+			break;
+		}
 
 		initData.m_fxFilePath = "Assets/shader/sprite.fx";
 

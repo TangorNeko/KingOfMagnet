@@ -58,7 +58,7 @@ void DebrisBlock::Update()
 						//第一抽選、ガレキか、爆弾か?
 						int bulletLottery = rnd() % 100;//0~99
 
-						if (bulletLottery <= 90)
+						if (bulletLottery <= 1)
 						{
 							//ガレキ
 							Debris* debris = NewGO<Debris>(0, "debris");

@@ -12,6 +12,11 @@ namespace prefab
 			Screen2,//右画面
 			AllScreen//画面全体
 		};
+		enum SpriteMode
+		{
+			Normal,		//通常
+			Transition,	//トランジション用
+		};
 	private:
 		Sprite m_sprite;
 
@@ -20,6 +25,8 @@ namespace prefab
 		Vector3 m_scale;
 		Vector2 m_pivot;
 		DrawScreen m_drawScreen = AllScreen;
+
+		SpriteMode m_spriteMode = Normal;
 
 	public:
 		CSpriteRender() :m_position(Vector3::Zero), m_qRot(Quaternion::Identity), m_scale(Vector3::One), m_pivot({ 0.5f,0.5f }) {}
@@ -35,6 +42,8 @@ namespace prefab
 		void SetScale(Vector3 scale);
 		void SetPivot(Vector2 pivot);
 		void SetDrawScreen(DrawScreen screen) { m_drawScreen = screen; }
+		void SetSpriteMode(SpriteMode sm) { m_spriteMode = sm; }
+		void SetTransitionBorder(const float& border) {m_sprite.SetAlpha(border); }
 		void SetMulColor(const Vector4& mulColor)
 		{
 			m_sprite.SetMulColor(mulColor);

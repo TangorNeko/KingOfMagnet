@@ -187,6 +187,10 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 
 void GameObjectManager::ExecutePostRender(RenderContext& rc)
 {
+	if (m_rc == nullptr) {
+		m_rc = &rc;
+	}
+
 	if (m_2screenMode)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
