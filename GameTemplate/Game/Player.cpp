@@ -1584,7 +1584,9 @@ void Player::FinalHit()//Œˆ’…‚ª‚Â‚¢‚½‚Æ‚«‚ÌƒJƒƒ‰
 			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFront * 200) - m_position;
 			m_winnerVec.Normalize();
 			m_cameraPos += m_winnerVec*-200;//Œã‚ë
-			g_camera3D[0]->SetTarget(m_enemy->m_position);
+			m_enemyWaistPos = m_enemy->m_position;//“G‚Ì˜‚ÌˆÊ’u
+			m_enemyWaistPos.y += 20;
+			g_camera3D[0]->SetTarget(m_enemyWaistPos);
 			break;
 		case 4://“G‚Ì‘O‚Ü‚ÅˆÚ“®‚·‚é
 			//ƒJƒƒ‰‚ð“G‚Ì‘O‚Ü‚ÅˆÚ“®‚³‚¹‚é				
@@ -1595,8 +1597,7 @@ void Player::FinalHit()//Œˆ’…‚ª‚Â‚¢‚½‚Æ‚«‚ÌƒJƒƒ‰
 				m_enemy->m_WinAnimOn = true;
 			m_cameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//+ (winnerVec * 200)
 			m_cameraPos += m_winnerVec * -200;//Œã‚ë
-			m_enemyWaistPos = m_enemy->m_position;//“G‚Ì˜‚ÌˆÊ’u
-			m_enemyWaistPos.y += 20;
+			
 			g_camera3D[0]->SetTarget(m_enemyWaistPos);
 			break;
 		default:
