@@ -15,11 +15,17 @@ bool Repulsion::Start()
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_rot);
 	m_skinModelRender->SetScale(m_scale);
-	//m_gameScene = FindGO<GameScene>("gamescene");
+	m_gameScene = FindGO<SampleScene>("gamescene");
 	return true;
 }
 void Repulsion::Update()
 {	
+	//ポーズ中ならスキップ。
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	{
+		return;
+	}
+
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{			
 			//恐らくプレイヤーが二人いるから上手く行かない。

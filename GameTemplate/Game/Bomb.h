@@ -3,6 +3,7 @@
 
 class Player;
 class BackGround;
+class SampleScene;
 
 class Bomb : public IGameObject
 {
@@ -54,6 +55,8 @@ public:
 	MyCapsuleCollider m_bulletCollider;//プレイヤーとの当たり判定用のカプセル状の当たり判定
 
 	BackGround* m_stageModel = nullptr;//当たり判定用のステージのクラス
+
+	SampleScene* m_gameScene = nullptr;
 
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
 	const float m_velocity = 50.0f;//弾速

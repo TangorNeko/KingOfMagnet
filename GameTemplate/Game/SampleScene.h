@@ -23,11 +23,11 @@ class SampleScene : public IGameObject
 	SkyBoard* m_sky = nullptr;
 
 	int m_gameEndCount = 0;
-
+	int m_gameEndLoop = 0;
 	//ゲームスタートカウント関連
 	void StartCountDown();
 	float m_measureSecond = 0.0f;	//秒を測る
-	int m_startCount = 3;		//ゲームスタートまでのカウント
+	int m_startCount = 4;		//ゲームスタートまでのカウント
 	prefab::CFontRender* m_startCountFontRender = nullptr;
 	bool m_playCountSEFlag = false;
 	bool m_GEfirstLoop = true;
@@ -43,6 +43,9 @@ class SampleScene : public IGameObject
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;
 	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;
 
+	prefab::CFontRender* m_drawFontRender = nullptr;
+	int m_drawFontCount = 300;
+
 	//BGM
 	prefab::CSoundSource* ssBGM = nullptr;
 public:
@@ -53,6 +56,7 @@ public:
 		enPlaying,//プレイ中
 		enPause,//ポーズ中
 		enResult,//リザルト中
+		enDraw
 	};
 
 private:

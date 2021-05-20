@@ -158,9 +158,7 @@ public:
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
 	prefab::CFontRender* m_bulletNumber = nullptr;//残弾数
-	prefab::CFontRender* m_resultFontRender = nullptr;//リザルト表示用のフォント
 
-	prefab::CSpriteRender* m_resultSpriteRender = nullptr; //勝敗時のスプライト
 	prefab::CSpriteRender* m_crosshairRender = nullptr; //照準のスプライト
 	
 	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
@@ -255,7 +253,7 @@ public:
 	int m_LastCameraStatus = 0;
 	float m_coef = 0.0f;
 	Vector3 m_LastFront;
-
+	Vector3 m_winnerVec;
 	Vector3 m_enemyWaistPos;//ダメージエフェクト関連
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 
