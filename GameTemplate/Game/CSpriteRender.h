@@ -1,4 +1,5 @@
 #pragma once
+#include "SpriteSupporter.h"
 
 namespace prefab
 {
@@ -27,6 +28,8 @@ namespace prefab
 
 		void Init(const char* spritePath, UINT width, UINT height);
 
+		void Update()override;
+
 		void SetPosition(Vector3 pos);
 		void SetRotation(Quaternion qRot);
 		void SetScale(Vector3 scale);
@@ -42,6 +45,19 @@ namespace prefab
 		Vector3 GetScale() { return m_scale; }
 		Vector2 GetPivot() { return m_pivot; }
 		DrawScreen GetDrawScreen() { return m_drawScreen; }
+		Vector4 GetMulColor() { return m_sprite.GetMulColor(); }
+
+		/// <summary>
+		/// スプライトを楽に動かすクラスを呼び出せるぞ
+		/// </summary>
+		/// <remarks>
+		/// 
+		/// ☆サンプルコード☆
+		/// render->m_spriteSupporter.SpriteMove(設定値);
+		/// 
+		/// </remarks>
+		SpriteSupporter m_spriteSupporter;		//スプライトサポーター本体
+
 	};
 }
 

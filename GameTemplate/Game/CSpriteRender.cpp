@@ -30,6 +30,18 @@ namespace prefab
 		initData.m_colorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		m_sprite.Init(initData);
+
+		//スプライトサポーターに自分の存在を伝える
+		m_spriteSupporter.SpriteRenderSetting(this);
+	}
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	void CSpriteRender::Update()
+	{
+		//スプライトサポーターの更新
+		m_spriteSupporter.SpriteSupporter_Update();
 	}
 
 	//スプライトのドローコール
