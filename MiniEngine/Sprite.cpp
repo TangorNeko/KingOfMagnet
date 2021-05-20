@@ -164,6 +164,7 @@
 	{
 		//定数バッファの初期化。
 		m_constantBufferGPU.Init(sizeof(m_constantBufferCPU), nullptr);
+
 		//ユーザー拡張の定数バッファが指定されている。
 		if (initData.m_expandConstantBuffer != nullptr){
 			m_userExpandConstantBufferCPU = initData.m_expandConstantBuffer;
@@ -255,8 +256,13 @@
 		m_constantBufferCPU.screenParam.z = FRAME_BUFFER_W;
 		m_constantBufferCPU.screenParam.w = FRAME_BUFFER_H;
 
+		if (m_transitionFlag == true) {
+			m_constantBufferCPU.mulColor.w = m_alpha;
+		}
+
 		//定数バッファを更新。
 		m_constantBufferGPU.CopyToVRAM(&m_constantBufferCPU);
+		//ユーザー拡張の定数バッファを更新。
 		if (m_userExpandConstantBufferCPU != nullptr) {
 			m_userExpandConstantBufferGPU.CopyToVRAM(m_userExpandConstantBufferCPU);
 		}

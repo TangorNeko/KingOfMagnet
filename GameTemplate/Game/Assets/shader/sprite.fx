@@ -30,3 +30,19 @@ float4 PSMain( PSInput In ) : SV_Target0
 {
 	return colorTexture.Sample(Sampler, In.uv) * mulColor;
 }
+
+float4 PS_Transition(PSInput In) : SV_Target0{
+	//トランジション用
+	float4 color = colorTexture.Sample(Sampler, In.uv);
+	float4 finalColor = { 0.0f,0.0f,0.0f,1.0f };
+	color.r += 0.2f;
+
+	//調整
+	finalColor.a = color.r * mulColor.w;
+
+	if (finalColor.a > 1.0f) {
+		finalColor.a = 1.0f;
+	}
+
+	return finalColor;
+}

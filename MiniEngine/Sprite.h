@@ -77,6 +77,12 @@ public:
 	{
 		return m_constantBufferCPU.mulColor;
 	}
+	//トランジション用
+	void SetAlpha(const float alpha) {
+		m_transitionFlag = true;
+		m_alpha = alpha;
+	}
+
 private:
 	/// <summary>
 	/// テクスチャを初期化。
@@ -118,11 +124,16 @@ private:
 	Quaternion m_rotation ;			//回転。
 	Matrix m_world;					//ワールド行列。
 
+	//トランジション用に追加
+	bool m_transitionFlag = false;	//trueならこいつはトランジション用（トランジションシェーダーを使用し、↓のa_alphaを渡す）
+	float m_alpha = 0.0f;			//トランジションの基準
+
 	struct LocalConstantBuffer {
 		Matrix mvp;
 		Vector4 mulColor = { 1.0f,1.0f,1.0f,1.0f };
 		Vector4 screenParam;
 	};
+
 	LocalConstantBuffer m_constantBufferCPU;	//CPU側の定数バッファ。
 	ConstantBuffer		m_constantBufferGPU;	//GPU側の定数バッファ。
 	ConstantBuffer		m_userExpandConstantBufferGPU;	//ユーザー拡張の定数バッファ(GPU側)
