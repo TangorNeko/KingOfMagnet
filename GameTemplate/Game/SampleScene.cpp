@@ -122,10 +122,61 @@ bool SampleScene::Start()
 	m_TimerBaseSpriteRender->Init("Assets/Image/Timer_Base.dds", 272, 120);
 
 	//ゲームスタートカウント
-	m_startCountFontRender = NewGO<prefab::CFontRender>(4);
-	m_startCountFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	m_startCountFontRender->SetPosition({ -185.0f, 130.0f });
-	m_startCountFontRender->SetScale({ 3.0f, 3.0f });
+	//m_startCountFontRender = NewGO<prefab::CFontRender>(4);
+	//m_startCountFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	//m_startCountFontRender->SetPosition({ -185.0f, 130.0f });
+	//m_startCountFontRender->SetScale({ 3.0f, 3.0f });
+
+	//カウント3
+	m_CountDown_3_1 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_3_1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_3_1->SetPosition({ -900.0f,100.0f,0.0f });
+	m_CountDown_3_1->Init("Assets/Image/Count/CountLine.dds", 100, 24);
+	//
+	m_CountDown_3_2 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_3_2->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_3_2->SetPosition({ 900.0f,0.0f,0.0f });
+	m_CountDown_3_2->Init("Assets/Image/Count/CountLine.dds", 100, 24);
+	//
+	m_CountDown_3_3 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_3_3->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_3_3->SetPosition({ -900.0f,-100.0f,0.0f });
+	m_CountDown_3_3->Init("Assets/Image/Count/CountLine.dds", 100, 24);
+	//
+	m_CountDown_3_4 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_3_4->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_3_4->SetPosition({ 50.0f,-600.0f,0.0f });
+	m_CountDown_3_4->Init("Assets/Image/Count/CountLine.dds", 24, 200);
+	//カウント2
+	m_CountDown_2_1 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_2_1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_2_1->SetPosition({ 900.0f,100.0f,0.0f });
+	m_CountDown_2_1->Init("Assets/Image/Count/CountLine.dds", 100, 24);
+	//
+	m_CountDown_2_2 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_2_2->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_2_2->SetPosition({ -900.0f,0.0f,0.0f });
+	m_CountDown_2_2->Init("Assets/Image/Count/CountLine.dds", 100, 24);
+	//
+	m_CountDown_2_3 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_2_3->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_2_3->SetPosition({ 900.0f,-100.0f,0.0f });
+	m_CountDown_2_3->Init("Assets/Image/Count/CountLine.dds", 100, 24);
+	//
+	m_CountDown_2_4 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_2_4->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_2_4->SetPosition({ 50.0f,-550.0f,0.0f });
+	m_CountDown_2_4->Init("Assets/Image/Count/CountLine.dds", 24, 100);
+	//
+	m_CountDown_2_5 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_2_5->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_2_5->SetPosition({ -50.0f,550.0f,0.0f });
+	m_CountDown_2_5->Init("Assets/Image/Count/CountLine.dds", 24, 100);
+	//カウント1
+	m_CountDown_1_1 = NewGO<prefab::CSpriteRender>(3);
+	m_CountDown_1_1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_CountDown_1_1->SetPosition({ 0.0f,600.0f,0.0f });
+	m_CountDown_1_1->Init("Assets/Image/Count/CountLine.dds", 36, 200);
 
 	//音を再生
 	ssBGM = NewGO<prefab::CSoundSource>(0);;
@@ -302,15 +353,76 @@ void SampleScene::StartCountDown() {
 	}
 	if (m_startCount >= 1 && m_startCount < 4) {	
 		//3・2・1のカウント表示
-		m_startCountFontRender->SetText(L"  " + std::to_wstring(m_startCount));
+		//m_startCountFontRender->SetText(L"  " + std::to_wstring(m_startCount));
 	}
 
+	//カウントダウン
+	if (m_startCount == 3 && m_count3_Flag == false) {
+		m_CountDown_3_1->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 0, true);
+		m_CountDown_3_1->m_spriteSupporter.SpriteMove({ 10.0f,0.0f }, 48, 12, true);
+		m_CountDown_3_1->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 60, true);
+
+		m_CountDown_3_2->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 0, true);
+		m_CountDown_3_2->m_spriteSupporter.SpriteMove({ -10.0f,0.0f }, 48, 12, true);
+		m_CountDown_3_2->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 60, true);
+
+		m_CountDown_3_3->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 0, true);
+		m_CountDown_3_3->m_spriteSupporter.SpriteMove({ 10.0f,0.0f }, 48, 12, true);
+		m_CountDown_3_3->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 60, true);
+
+		m_CountDown_3_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 0, true);
+		m_CountDown_3_4->m_spriteSupporter.SpriteMove({ 0.0f,10.0f }, 48, 12, true);
+		m_CountDown_3_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 60, true);
+
+		m_count3_Flag = true;
+	}
+	if (m_startCount == 2 && m_count2_Flag == false) {
+
+		m_CountDown_2_1->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 0, true);
+		m_CountDown_2_1->m_spriteSupporter.SpriteMove({ -10.0f,0.0f }, 48, 12, true);
+		m_CountDown_2_1->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 60, true);
+
+		m_CountDown_2_2->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 0, true);
+		m_CountDown_2_2->m_spriteSupporter.SpriteMove({ 10.0f,0.0f }, 48, 12, true);
+		m_CountDown_2_2->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 60, true);
+
+		m_CountDown_2_3->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 0, true);
+		m_CountDown_2_3->m_spriteSupporter.SpriteMove({ -10.0f,0.0f }, 48, 12, true);
+		m_CountDown_2_3->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 60, true);
+
+		m_CountDown_2_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 0, true);
+		m_CountDown_2_4->m_spriteSupporter.SpriteMove({ 0.0f,10.0f }, 48, 12, true);
+		m_CountDown_2_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 60, true);
+
+		m_CountDown_2_5->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 0, true);
+		m_CountDown_2_5->m_spriteSupporter.SpriteMove({ 0.0f,-10.0f }, 48, 12, true);
+		m_CountDown_2_5->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 60, true);
+
+		m_count2_Flag = true;
+	}
+	if (m_startCount == 1 && m_count1_Flag == false) {
+
+		m_CountDown_1_1->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 0, true);
+		m_CountDown_1_1->m_spriteSupporter.SpriteMove({ 0.0f,-10.0f }, 48, 12, true);
+		m_CountDown_1_1->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 60, true);
+
+		m_count1_Flag = true;
+	}
 	else if ( m_startCount == 0) {
-		m_startCountFontRender->SetText(L"Start!");
+		//m_startCountFontRender->SetText(L"Start!");
 	}
 
 	else if (m_startCount < 0) {
-		DeleteGO(m_startCountFontRender);
+		DeleteGO(m_CountDown_3_1);
+		DeleteGO(m_CountDown_3_2);
+		DeleteGO(m_CountDown_3_3);
+		DeleteGO(m_CountDown_3_4);
+		DeleteGO(m_CountDown_2_1);
+		DeleteGO(m_CountDown_2_2);
+		DeleteGO(m_CountDown_2_3);
+		DeleteGO(m_CountDown_2_4);
+		DeleteGO(m_CountDown_2_5);
+		DeleteGO(m_CountDown_1_1);
 		m_gameState = enPlaying;
 	}
 

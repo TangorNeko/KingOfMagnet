@@ -28,7 +28,7 @@ class SampleScene : public IGameObject
 	void StartCountDown();
 	float m_measureSecond = 0.0f;	//秒を測る
 	int m_startCount = 4;		//ゲームスタートまでのカウント
-	prefab::CFontRender* m_startCountFontRender = nullptr;
+	//prefab::CFontRender* m_startCountFontRender = nullptr;
 	bool m_playCountSEFlag = false;
 	bool m_GEfirstLoop = true;
 
@@ -45,6 +45,24 @@ class SampleScene : public IGameObject
 
 	prefab::CFontRender* m_drawFontRender = nullptr;
 	int m_drawFontCount = 300;
+
+	//カウントダウン
+	bool m_count3_Flag = false;
+	bool m_count2_Flag = false;
+	bool m_count1_Flag = false;
+	prefab::CSpriteRender* m_CountDown_3_1 = nullptr;
+	prefab::CSpriteRender* m_CountDown_3_2 = nullptr;
+	prefab::CSpriteRender* m_CountDown_3_3 = nullptr;
+	prefab::CSpriteRender* m_CountDown_3_4 = nullptr;
+	//
+	prefab::CSpriteRender* m_CountDown_2_1 = nullptr;
+	prefab::CSpriteRender* m_CountDown_2_2 = nullptr;
+	prefab::CSpriteRender* m_CountDown_2_3 = nullptr;
+	prefab::CSpriteRender* m_CountDown_2_4 = nullptr;
+	prefab::CSpriteRender* m_CountDown_2_5 = nullptr;
+	//
+	prefab::CSpriteRender* m_CountDown_1_1 = nullptr;
+
 
 	//BGM
 	prefab::CSoundSource* ssBGM = nullptr;
