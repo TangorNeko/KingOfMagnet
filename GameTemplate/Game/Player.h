@@ -275,6 +275,10 @@ public:
 
 	//必殺ゲージが最大まで溜まった時のエフェクト
 	prefab::CEffect* m_SPGaugeMaxEffect = nullptr;
+
+	//必殺技を放つ前隙のときのエフェクト
+	prefab::CEffect* m_SPFirstEffectRed = nullptr;
+	prefab::CEffect* m_SPFirstEffectBlue = nullptr;
 };
 
 
