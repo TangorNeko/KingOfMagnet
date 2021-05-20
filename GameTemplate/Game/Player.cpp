@@ -173,6 +173,10 @@ bool Player::Start()
 	m_SPEffect = NewGO<prefab::CEffect>(0);
 	m_SPEffect->SetScale({ 20.0f, 20.0f, 20.0f });
 
+	m_SPGaugeMaxEffect = NewGO<prefab::CEffect>(0);
+	m_SPGaugeMaxEffect->Init(u"Assets/effect/キュピーン.efk");
+	m_SPGaugeMaxEffect->SetScale({ 5.0f, 5.0f, 5.0f });
+
 	m_gameScene = FindGO<SampleScene>("gamescene");
 	return true;
 }
@@ -317,8 +321,10 @@ void Player::Update()
 		m_magEffect[0]->SetPosition(m_position);
 		m_magEffect[1]->SetPosition(m_position);
 		m_magEffect[2]->SetPosition(m_position);
-					
-		
+			
+		if(m_SPGaugeMaxEffect->IsPlay())
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+	
 	}
 	else if(m_gameScene->GetGameState() == SampleScene::GameState::enResult)
 	{
@@ -1216,15 +1222,31 @@ void Player::Damage(int damage)
 void Player::ChargeSpecialAttackGauge(int charge)
 {
 	m_specialAttackGauge += charge;
-
+	
 	if (m_specialAttackGauge >= 100)
 	{
 		m_specialAttackGauge = 100;
+
+		if (m_oldSpecialAttackGauge <= 100)
+		{
+			//エフェクト
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+			m_SPGaugeMaxEffect->Play();
+			//SE
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/きらーん.wav");
+			ss->SetVolume(0.5f);
+			ss->Play(false);
+		}
 	}
 	else
 	{
 		m_SaveSP += charge;//溜まった必殺技ポイント
 	}
+
+	
+
+	m_oldSpecialAttackGauge = m_specialAttackGauge;
 }
 
 //勝利した時
