@@ -24,6 +24,12 @@ bool DebrisBlock::Start()
 
 void DebrisBlock::Update()
 {
+	//ポーズ中ならスキップ。
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	{
+		return;
+	}
+
 	//生成タイマーを減らしていく。
 	m_factoryTimer--;
 	if (m_factoryTimer < 0)

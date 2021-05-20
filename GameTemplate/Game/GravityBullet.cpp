@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "BackGround.h"
+#include "SampleScene.h"
 #include "Debris.h"
 
 GravityBullet::~GravityBullet()
@@ -21,6 +22,8 @@ bool GravityBullet::Start()
 	m_skinModelRender->SetScale({ 0.05f,0.05f,0.05f, });
 
 	m_stageModel = FindGO<BackGround>("background");
+
+	m_gameScene = FindGO<SampleScene>("gamescene");
 
 	//エフェクト
 	m_effect = NewGO<prefab::CEffect>(0);
@@ -46,6 +49,12 @@ bool GravityBullet::Start()
 
 void GravityBullet::Update()
 {
+	//ポーズ中ならスキップ。
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	{
+		return;
+	}
+
 	//前フレームの座標を記録
 	m_oldPosition = m_position;
 

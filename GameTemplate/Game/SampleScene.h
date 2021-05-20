@@ -27,7 +27,7 @@ class SampleScene : public IGameObject
 	//ゲームスタートカウント関連
 	void StartCountDown();
 	float m_measureSecond = 0.0f;	//秒を測る
-	int m_startCount = 3;		//ゲームスタートまでのカウント
+	int m_startCount = 4;		//ゲームスタートまでのカウント
 	prefab::CFontRender* m_startCountFontRender = nullptr;
 	bool m_playCountSEFlag = false;
 	bool m_GEfirstLoop = true;
@@ -36,12 +36,15 @@ class SampleScene : public IGameObject
 
 	//制限時間
 	prefab::CFontRender* m_timeFontRender = nullptr;
-	float m_timeLimit = 100;
+	float m_timeLimit = 5;
 	float m_deltaTimeCount = 0.0f;
 
 	prefab::CSpriteRender* m_delimitLineSpriteRender = nullptr;	//区切る線
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;
 	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;
+
+	prefab::CFontRender* m_drawFontRender = nullptr;
+	int m_drawFontCount = 300;
 
 	//BGM
 	prefab::CSoundSource* ssBGM = nullptr;
@@ -53,6 +56,7 @@ public:
 		enPlaying,//プレイ中
 		enPause,//ポーズ中
 		enResult,//リザルト中
+		enDraw
 	};
 
 private:

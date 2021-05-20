@@ -1,5 +1,5 @@
 #pragma once
-class GameScene;
+class SampleScene;
 
 class Repulsion : public IGameObject
 {
@@ -16,7 +16,7 @@ public:
 	Quaternion m_rot;
 
 
-	GameScene* m_gameScene = nullptr;
+	SampleScene* m_gameScene = nullptr;
 
 	//SE‚ğ–Â‚ç‚µ‚½‚©‚Ç‚¤‚©(2ƒvƒŒƒCƒ„[•ª)
 	bool m_isPlayss1[2] = { false,false };	//ss1

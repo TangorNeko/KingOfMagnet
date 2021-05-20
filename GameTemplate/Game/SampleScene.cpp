@@ -22,6 +22,18 @@ SampleScene::~SampleScene()
 			return true;
 		});
 
+	QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
+		{
+			DeleteGO(bomb);
+			return true;
+		});
+
+	QueryGOs<Debris>("debris", [](Debris* debris)->bool
+		{
+			DeleteGO(debris);
+			return true;
+		});
+
 	QueryGOs<Repulsion>("repulsion", [](Repulsion* repulsion)->bool
 		{
 			DeleteGO(repulsion);
@@ -156,12 +168,27 @@ void SampleScene::Update()
 		}
 
 	}//時間切れでも勝敗がついていない場合
-	else if(m_timeLimit <= 0 && m_gameState != enResult)
+	else if(m_timeLimit <= 0 && m_gameState != enResult && m_gameState != enDraw)
 	{
 		//勝者判定
 		WinnerJudge();
-		//リザルトシーンに移行
-		m_gameState = enResult;
+	}
+
+	//ポーズ関連。
+	//ポーズ。
+	if (m_gameState == enPlaying && (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart)))
+	{
+		m_gameState = enPause;
+
+		return;
+	}
+
+	//ポーズ復帰。
+	if (m_gameState == enPause && (g_pad[0]->IsTrigger(enButtonStart) || g_pad[1]->IsTrigger(enButtonStart)))
+	{
+		m_gameState = enPlaying;
+
+		return;
 	}
 
 	if (m_gameState == enResult)
@@ -198,6 +225,23 @@ void SampleScene::Update()
 		}
 	}
 
+	//引き分け時
+	if (m_gameState == enDraw)
+	{
+		m_drawFontCount--;
+
+		if (m_drawFontCount == 0)
+		{
+			DeleteGO(m_delimitLineSpriteRender);
+			DeleteGO(m_HPCoverSpriteRender);
+			DeleteGO(m_TimerBaseSpriteRender);
+			DeleteGO(m_timeFontRender);
+			DeleteGO(m_drawFontRender);
+			NewGO<SampleScene>(0, "gamescene");
+			DeleteGO(this);
+		}
+	}
+
 	//エフェクト試す用
 	if (g_pad[0]->IsTrigger(enButtonB)) {
 		Player* pl = FindGO<Player>("Player");
@@ -221,16 +265,29 @@ void SampleScene::WinnerJudge()
 		m_player1->Win();
 		m_player2->Lose();
 
+		//リザルトシーンに移行
+		m_gameState = enResult;
+
 	}
 	else if(m_player1->m_hp < m_player2->m_hp)
 	{
 		//2Pの勝ち
 		m_player1->Lose();
 		m_player2->Win();
+
+		//リザルトシーンに移行
+		m_gameState = enResult;
 	}
 	else
 	{
 		//引き分け
+		m_gameState = enDraw;
+
+		m_drawFontRender = NewGO<prefab::CFontRender>(4);
+		m_drawFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+		m_drawFontRender->SetPosition({ -185.0f, 130.0f });
+		m_drawFontRender->SetScale({ 3.0f, 3.0f });
+		m_drawFontRender->SetText(L"Draw!");
 	}
 }
 
