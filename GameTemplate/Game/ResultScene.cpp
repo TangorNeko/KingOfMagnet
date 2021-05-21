@@ -83,7 +83,7 @@ void ResultScene::Update()
 		if (m_menuselect == 2) {
 			//ƒŠƒUƒ‹ƒg•\Ž¦
 			//ResultDisplay();
-		}		
+		}
 	}
 }
 
