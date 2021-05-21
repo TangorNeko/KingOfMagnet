@@ -4,94 +4,73 @@
 #include "SampleScene.h"
 TitleScene::~TitleScene() 
 {
-	DeleteGO(m_start_fontRender);
-	DeleteGO(m_exit_fontRender);
-	DeleteGO(m_option_fontRender);
-	DeleteGO(m_titleSpriteRender);
-	DeleteGO(m_dot_fontRender);
+	DeleteGO(m_BG_SpriteRender);
+	DeleteGO(m_Monitor_SpriteRender);
+	DeleteGO(m_MonitorLine_SpriteRender);
+	DeleteGO(m_Rogo_SpriteRender);
+	DeleteGO(m_Option_SpriteRender);
+	DeleteGO(m_Start_SpriteRender);
+	DeleteGO(m_Exit_SpriteRender);
+	DeleteGO(m_Arrow_SpriteRender);
 }
 bool TitleScene::Start()
-{
-	m_option_fontRender = NewGO<prefab::CFontRender>(0);	
-	m_option_fontRender->SetPosition({ m_optionX, m_optionY });//上
-	m_option_fontRender->SetText(L"OPTION");
+{	
+	//背景
+	m_BG_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_BG_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_BG_SpriteRender->SetPosition({ Vector3::Zero });
+	m_BG_SpriteRender->Init("Assets/Image/TitleBG.dds", 1280, 720);
 
-	m_start_fontRender = NewGO<prefab::CFontRender>(1);
-	m_start_fontRender->SetPosition({ m_startX, m_startY });//中
-	m_start_fontRender->SetText(L"START");
+	//モニター
+	m_Monitor_SpriteRender =NewGO<prefab::CSpriteRender>(0);
+	m_Monitor_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Monitor_SpriteRender->SetPosition({ -265,-20,0 });
+	m_Monitor_SpriteRender->Init("Assets/Image/Title_Monitor.dds", 752, 620);
 
-	m_exit_fontRender = NewGO<prefab::CFontRender>(0);	
-	m_exit_fontRender->SetPosition({ m_exitX, m_exitY });//下
-	m_exit_fontRender->SetText(L"EXIT");
-
-	m_dot_fontRender = NewGO<prefab::CFontRender>(0);
-	m_dot_fontRender->SetPosition({ 500.0f, m_startY });//下
-	m_dot_fontRender->SetText(L"・");
+	//モニターライン
+	m_MonitorLine_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_MonitorLine_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_MonitorLine_SpriteRender->SetPosition({ -290,-21,0 });
+	m_MonitorLine_SpriteRender->Init("Assets/Image/Title_MonitorLine.dds", 704, 560);
 
 	//タイトルロゴ
-	m_titleSpriteRender = NewGO<prefab::CSpriteRender>(0);
-	m_titleSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-	m_titleSpriteRender->SetPosition({ -200.0f,0.0f,0.0f });
-	m_titleSpriteRender->SetScale({ 0.7f,0.7f,1.0 });
-	m_titleSpriteRender->Init("Assets/Image/Zikai_Rogo.dds", 960, 720);
+	m_Rogo_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Rogo_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Rogo_SpriteRender->SetPosition({ -320,10,0 });
+	m_Rogo_SpriteRender->Init("Assets/Image/Zikai_Rogo.dds", 660, 495);
 
+	//オプション
+	m_Option_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Option_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Option_SpriteRender->SetPosition({ m_topPos });
+	m_Option_SpriteRender->Init("Assets/Image/Title_Option.dds", 500, 188);
+	m_Option_SpriteRender->SetMulColor({ m_semitrans });
+	m_Option_SpriteRender->SetScale({ m_smallScale });
+	//始める
+	m_Start_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Start_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Start_SpriteRender->SetPosition({ m_centerPos });
+	m_Start_SpriteRender->Init("Assets/Image/Title_Start.dds", 500, 188);
+	
+	//やめる
+	m_Exit_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Exit_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Exit_SpriteRender->SetPosition({ m_bottomPos });
+	m_Exit_SpriteRender->Init("Assets/Image/Title_Exit.dds", 500, 188);
+	m_Exit_SpriteRender->SetMulColor({ m_semitrans });
+	m_Exit_SpriteRender->SetScale({ m_smallScale });
+
+	//矢印
+	m_Arrow_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Arrow_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Arrow_SpriteRender->SetPosition({ 600,0,0 });
+	m_Arrow_SpriteRender->Init("Assets/Image/Title_Arrow.dds", 48, 88);
 	return true;
 }
 void TitleScene::Update()
 {
-	
-	if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[1]->IsTrigger(enButtonDown)) {
-		m_menuselect--;
-		if (m_menuselect <= -1) {
-			m_menuselect = 2;//下まで行くと上からになる
-		}
-	}
-	if (g_pad[0]->IsTrigger(enButtonDown) || g_pad[1]->IsTrigger(enButtonUp)) {
-		m_menuselect++;
-		
-		if (m_menuselect >= 3) {
-			m_menuselect = 0;//上まで行くと下からになる
-		}
-	}
-	m_optionX = 400.0f;
-	m_startX = 400.0f;
-	m_exitX = 400.0f;
-	//選択している部分が赤になる
-	switch (m_menuselect)
-	{
-	case 0://上が赤
-		m_option_fontRender->SetColor({ red });
-		m_start_fontRender->SetColor({ blue });
-		m_exit_fontRender->SetColor({ blue });	
-		m_optionX -= 50.0f;
-		m_dot_fontRender->SetPosition({ 500.0f, m_optionY });
-		break; 
-	case 1://中が赤
-		m_option_fontRender->SetColor({ blue });
-		m_start_fontRender->SetColor({ red });
-		m_exit_fontRender->SetColor({ blue });
-		m_startX -= 50.0f;
-		m_dot_fontRender->SetPosition({ 500.0f, m_startY });
-		break;
-	case 2://下が赤
-		m_option_fontRender->SetColor({ blue });
-		m_start_fontRender->SetColor({ blue });
-		m_exit_fontRender->SetColor({ red });
-		m_exitX -= 50.0f;
-		m_dot_fontRender->SetPosition({ 500.0f, m_exitY });
-		break;
-	default:
-		break;
-	}
-	m_option_fontRender->SetPosition({ m_optionX,m_optionY });
-	m_start_fontRender->SetPosition({ m_startX,m_startY });
-	m_exit_fontRender->SetPosition({ m_exitX,m_exitY });
-	//スタートでAボタンを押すとキャラ選択画面に遷移する
 	if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
-		if (m_menuselect == 1) {
-			//NewGO<CharacterSelect>(0, "characterselect");
-			SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
-			DeleteGO(this);
-		}
+		SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
+		DeleteGO(this);
 	}
 }

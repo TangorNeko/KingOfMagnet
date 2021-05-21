@@ -3,26 +3,23 @@ class TitleScene:public IGameObject
 {
 	bool Start() override;
 	void Update() override;
-public:
 	~TitleScene();
-	prefab::CFontRender* m_start_fontRender = nullptr;//始める
-	prefab::CFontRender* m_exit_fontRender = nullptr;//操作説明
-	prefab::CFontRender* m_option_fontRender = nullptr;//オプション
-	prefab::CFontRender* m_dot_fontRender = nullptr;//オプション
+public:
+	prefab::CSpriteRender* m_BG_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Monitor_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_MonitorLine_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Rogo_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Option_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Start_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Exit_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Arrow_SpriteRender = nullptr;
 
-	prefab::CSpriteRender* m_titleSpriteRender = nullptr;
-
-	int m_menuselect = 1;//項目選択
-	const Vector4 red = { 1,0,0,1 };//色
-	const Vector4 blue = { 0,0,1,1 };
-	/*Vector2 m_option={};
-	Vector2 m_start={};
-	Vector2 m_exit={};*/
-	float m_optionX = 400.0f;
-	float m_startX = 400.0f;
-	float m_exitX = 400.0f;
-	float m_optionY = 100.0f;
-	float m_startY = 0.0f;
-	float m_exitY = -100.0f;
+	Vector4 m_semitrans = { 1, 1, 1, 0.7f };//半透明
+	Vector3 m_smallScale = { 0.7f,0.7f,1.0f };//上下のメニューバーの拡大率
+	//メニューバーの位置
+	Vector3 m_topPos = { 440.0f,200.0f,0.0f };//上
+	Vector3 m_centerPos = { 320.0f,0.0f,0.0f };//中
+	Vector3 m_bottomPos = { 440.0f,-200.0f,0.0f };//下
+	
 };
 

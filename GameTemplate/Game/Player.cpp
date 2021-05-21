@@ -279,7 +279,7 @@ void Player::Update()
 			ThrowBomb();
 
 			//グレネード用。仮です。
-			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+			/*if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 			{
 				Bomb* debris = NewGO<Bomb>(0, "bomb");
 				debris->m_bombShape = Bomb::enIncendiaryGrenade;
@@ -287,7 +287,7 @@ void Player::Update()
 				debris->m_parent = this;
 				debris->m_position = m_magPosition;
 				debris->m_moveDirection = m_characterDirection;
-			}
+			}*/
 		}
 
 		//攻撃後の隙のタイマーを減らしていく
