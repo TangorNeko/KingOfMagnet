@@ -48,13 +48,17 @@ Player::~Player()
 	m_burstEffect->Stop();
 	m_hitEffect->Stop();
 	m_SPEffect->Stop();
+	m_SPGaugeMaxEffect->Stop();
 	DeleteGO(m_magEffect[0]);
 	DeleteGO(m_magEffect[1]);
 	DeleteGO(m_magEffect[2]);
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
+	DeleteGO(m_SPGaugeMaxEffect);
+
 	DeleteGO(m_spotLight);
+	
 }
 
 bool Player::Start()
@@ -172,6 +176,19 @@ bool Player::Start()
 
 	m_SPEffect = NewGO<prefab::CEffect>(0);
 	m_SPEffect->SetScale({ 20.0f, 20.0f, 20.0f });
+
+	m_SPGaugeMaxEffect = NewGO<prefab::CEffect>(0);
+	m_SPGaugeMaxEffect->Init(u"Assets/effect/キュピーン.efk");
+	m_SPGaugeMaxEffect->SetScale({ 8.0f, 8.0f, 8.0f });
+
+	m_SPFirstEffectRed = NewGO<prefab::CEffect>(0);
+	m_SPFirstEffectRed->SetScale({ 70.0f, 70.0f, 70.0f });
+	m_SPFirstEffectRed->Init(u"Assets/effect/斥力チャージ.efk");
+
+	m_SPFirstEffectBlue = NewGO<prefab::CEffect>(0);
+	m_SPFirstEffectBlue->SetScale({ 70.0f, 70.0f, 70.0f });
+	m_SPFirstEffectBlue->Init(u"Assets/effect/引力チャージ.efk");
+	//ここまでエフェクト
 
 	m_gameScene = FindGO<SampleScene>("gamescene");
 	return true;
@@ -317,8 +334,10 @@ void Player::Update()
 		m_magEffect[0]->SetPosition(m_position);
 		m_magEffect[1]->SetPosition(m_position);
 		m_magEffect[2]->SetPosition(m_position);
-					
-		
+			
+		if(m_SPGaugeMaxEffect->IsPlay())
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+	
 	}
 	else if(m_gameScene->GetGameState() == SampleScene::GameState::enResult)
 	{
@@ -479,6 +498,38 @@ void Player::Move()
 		//リスポーンしたので落下加速用のカウントをリセット。
 		m_fallLoop = 0;
 	}
+
+	if (g_pad[m_playerNum]->GetLStickXF() || g_pad[m_playerNum]->GetLStickYF())
+	{
+		m_footstepsTimer++;
+		
+		if (m_animStatus == enStatus_Walk) {
+			if (m_footstepsTimer >= 25)
+			{
+				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->SetVolume(0.2f);
+				ssShoot->Play(false);
+
+				m_footstepsTimer = 0;
+			}
+		}
+		if (m_animStatus == enStatus_Run) {
+			if (m_footstepsTimer >= 17)
+			{
+				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->SetVolume(0.2f);
+				ssShoot->Play(false);
+				
+				m_footstepsTimer = 0;
+			}
+		}
+		
+	}
+	else
+		m_footstepsTimer = 0;
+		
 }
 
 //攻撃
@@ -558,6 +609,27 @@ void Player::SpecialAttack()
 	}
 	if (m_specialShotFlag == true)
 	{
+		//発射する前に、チャージするようなエフェクト
+		switch (m_magPower)
+		{
+		case -1:
+			m_SPFirstEffectBlue->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
+			if (m_specialShotCount == 0)
+				m_SPFirstEffectBlue->Play();
+			break;
+		case 1:
+			m_SPFirstEffectRed->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
+			if (m_specialShotCount == 0)
+				m_SPFirstEffectRed->Play();		
+			break;
+		}
+		if (m_specialShotCount == 0)
+		{
+			prefab::CSoundSource* ssSPCharge = NewGO<prefab::CSoundSource>(0);
+			ssSPCharge->Init(L"Assets/sound/パワーチャージ.wav");
+			ssSPCharge->Play(false);
+		}
+
 		m_specialShotCount += 1;
 
 		//発射前にダメージを受けたらキャンセル
@@ -573,10 +645,21 @@ void Player::SpecialAttack()
 		//引力なら
 		if (m_magPower == -1)
 		{
+			//m_SPFirstEffectBlue->Stop();
 			//音を鳴らす
-			prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);
-			ssSPAttack->Init(L"Assets/sound/暗黒魔法.wav");
-			ssSPAttack->Play(false);
+			prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);
+			ssSPShot->Init(L"Assets/sound/引力弾発射.wav");
+			ssSPShot->SetVolume(0.8f);
+			ssSPShot->Play(false);
+
+			//発射エフェクト
+			m_SPEffect->Init(u"Assets/effect/引力弾発射.efk");
+			m_SPEffect->SetPosition({
+				m_position.x + m_front.x * 50.0f,
+				m_position.y + 50.0f,
+				m_position.z + m_front.z * 50.0f
+				});
+			m_SPEffect->Play();
 
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
 			gravityBullet->m_position = m_magPosition;
@@ -607,19 +690,20 @@ void Player::SpecialAttack()
 		}
 		else//斥力なら
 		{
+			//m_SPFirstEffectRed->Stop();
 			//弾を1発でも持ってる?
 			if (m_holdDebrisVector.size() != 0)
 			{
 				//音を鳴らす
-				prefab::CSoundSource* ssSPAttack = NewGO<prefab::CSoundSource>(0);;
-				ssSPAttack->Init(L"Assets/sound/気弾1.wav");
-				ssSPAttack->Play(false);
+				prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);;
+				ssSPShot->Init(L"Assets/sound/気弾1.wav");
+				ssSPShot->Play(false);
 
 				//発射エフェクト
 				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
 				m_SPEffect->SetPosition({ 
 					m_position.x + m_front.x * 50.0f,
-					m_position.y += 50.0f,
+					m_position.y + 50.0f,
 					m_position.z + m_front.z * 50.0f
 					});
 				m_SPEffect->Play();
@@ -1216,15 +1300,31 @@ void Player::Damage(int damage)
 void Player::ChargeSpecialAttackGauge(int charge)
 {
 	m_specialAttackGauge += charge;
-
+	
 	if (m_specialAttackGauge >= 100)
 	{
 		m_specialAttackGauge = 100;
+
+		if (m_oldSpecialAttackGauge < 100)
+		{
+			//エフェクト
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+			m_SPGaugeMaxEffect->Play();
+			//SE
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/きらーん.wav");
+			ss->SetVolume(0.5f);
+			ss->Play(false);
+		}
 	}
 	else
 	{
 		m_SaveSP += charge;//溜まった必殺技ポイント
 	}
+
+	
+
+	m_oldSpecialAttackGauge = m_specialAttackGauge;
 }
 
 //勝利した時

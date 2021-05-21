@@ -217,6 +217,7 @@ public:
 	Player* m_enemy = nullptr; //敵
 
 	int m_specialAttackGauge = 0;//必殺技のゲージ
+	int m_oldSpecialAttackGauge = 0;
 	bool m_isGravityBulletAttack = false;//引力の必殺技の攻撃タイミングを指示する用変数。
 
 	//ノックバック関連
@@ -271,6 +272,17 @@ public:
 
 	//必殺技のエフェクト
 	prefab::CEffect* m_SPEffect = nullptr;
+
+	//必殺ゲージが最大まで溜まった時のエフェクト
+	prefab::CEffect* m_SPGaugeMaxEffect = nullptr;
+
+	//必殺技を放つ前隙のときのエフェクト
+	prefab::CEffect* m_SPFirstEffectRed = nullptr;
+	prefab::CEffect* m_SPFirstEffectBlue = nullptr;
+
+	//足音
+	int m_footstepsTimer = 0;
 };
+
 
 
