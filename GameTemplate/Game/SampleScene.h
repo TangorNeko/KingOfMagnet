@@ -14,6 +14,12 @@ class SampleScene : public IGameObject
 	//勝者判定
 	void WinnerJudge();
 
+	//タイムリミット
+	void TimeLimitCount();
+	void TimeLimitChangesSprits(int num, int numPlace);	//numはスプライトにしたい数字、一桁ならば0を送り、二桁ならばnumPlaceにはその数字が一の位なら1を、十のくらいなら10を送る。
+	int m_oldTimeLimit = 0;
+	prefab::CSpriteRender* m_onesPlaceSpriteRender = nullptr;
+	prefab::CSpriteRender* m_tensPlaceSpriteRender = nullptr;
 	
 	Player* m_player1 = nullptr;
 	Player* m_player2 = nullptr;

@@ -525,7 +525,6 @@ void Player::Move()
 				m_footstepsTimer = 0;
 			}
 		}
-		
 	}
 	else
 		m_footstepsTimer = 0;
@@ -1308,7 +1307,7 @@ void Player::ChargeSpecialAttackGauge(int charge)
 		if (m_oldSpecialAttackGauge < 100)
 		{
 			//エフェクト
-			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
 			m_SPGaugeMaxEffect->Play();
 			//SE
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
