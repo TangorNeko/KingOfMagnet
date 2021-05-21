@@ -282,6 +282,9 @@ public:
 
 	//足音
 	int m_footstepsTimer = 0;
+
+	//必殺技ゲージがどれだけ溜まっているかを表示
+	prefab::CFontRender* m_ChargeSPFontRender = nullptr;
 };
 
 

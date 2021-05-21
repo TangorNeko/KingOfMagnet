@@ -324,6 +324,7 @@
     <ClCompile Include="TransitionGenerator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ResultScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -978,6 +979,7 @@
     <ClInclude Include="TransitionGenerator.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ResultScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
@@ -1025,5 +1027,8 @@
     <Filter Include="ヘッダー ファイル\prefab">
       <UniqueIdentifier>{fbcc8401-c261-42d8-be0c-fdd20d76c163}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\tkEngine2\GameTemplate\Game\Assets\modelData\preset\skyCubeMap.dds" />
   </ItemGroup>
 </Project>

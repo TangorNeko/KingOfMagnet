@@ -401,7 +401,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 			float lit_factor = variance / (variance + md * md);
 
 			//影の色を求める
-			float3 shadowColor = finalColor.xyz * 0.5f;
+			float3 shadowColor = finalColor.xyz * 0.3f;
 			
 			//光が当たる確率を使って通常カラーとシャドウカラーを線形補間
 			finalColor.xyz = lerp(shadowColor,finalColor.xyz,lit_factor);

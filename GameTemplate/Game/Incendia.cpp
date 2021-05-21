@@ -11,7 +11,7 @@ Incendia::~Incendia()
 bool Incendia::Start()
 {
 	//音を再生
-	prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+	prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);
 	ss->Init(L"Assets/sound/炎.wav");
 	ss->Play(false);
 
@@ -35,8 +35,7 @@ void Incendia::Update()
 	}
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
-		{
-			
+		{		
 			//ダメージを食らう間隔
 			if (m_damageCountdown[player->m_playerNum] > 0)
 				m_damageCountdown[player->m_playerNum]--;
