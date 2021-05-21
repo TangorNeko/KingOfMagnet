@@ -48,14 +48,17 @@ Player::~Player()
 	m_burstEffect->Stop();
 	m_hitEffect->Stop();
 	m_SPEffect->Stop();
+	m_SPGaugeMaxEffect->Stop();
 	DeleteGO(m_magEffect[0]);
 	DeleteGO(m_magEffect[1]);
 	DeleteGO(m_magEffect[2]);
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
-	DeleteGO(m_spotLight);
 	DeleteGO(m_SPGaugeMaxEffect);
+
+	DeleteGO(m_spotLight);
+	
 }
 
 bool Player::Start()
@@ -495,6 +498,38 @@ void Player::Move()
 		//リスポーンしたので落下加速用のカウントをリセット。
 		m_fallLoop = 0;
 	}
+
+	if (g_pad[m_playerNum]->GetLStickXF() || g_pad[m_playerNum]->GetLStickYF())
+	{
+		m_footstepsTimer++;
+		
+		if (m_animStatus == enStatus_Walk) {
+			if (m_footstepsTimer >= 25)
+			{
+				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->SetVolume(0.2f);
+				ssShoot->Play(false);
+
+				m_footstepsTimer = 0;
+			}
+		}
+		if (m_animStatus == enStatus_Run) {
+			if (m_footstepsTimer >= 17)
+			{
+				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->SetVolume(0.2f);
+				ssShoot->Play(false);
+				
+				m_footstepsTimer = 0;
+			}
+		}
+		
+	}
+	else
+		m_footstepsTimer = 0;
+		
 }
 
 //攻撃
@@ -574,7 +609,7 @@ void Player::SpecialAttack()
 	}
 	if (m_specialShotFlag == true)
 	{
-		//チャージするようなエフェクト
+		//発射する前に、チャージするようなエフェクト
 		switch (m_magPower)
 		{
 		case -1:
@@ -616,6 +651,15 @@ void Player::SpecialAttack()
 			ssSPShot->Init(L"Assets/sound/引力弾発射.wav");
 			ssSPShot->SetVolume(0.8f);
 			ssSPShot->Play(false);
+
+			//発射エフェクト
+			m_SPEffect->Init(u"Assets/effect/引力弾発射.efk");
+			m_SPEffect->SetPosition({
+				m_position.x + m_front.x * 50.0f,
+				m_position.y + 50.0f,
+				m_position.z + m_front.z * 50.0f
+				});
+			m_SPEffect->Play();
 
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
 			gravityBullet->m_position = m_magPosition;
@@ -659,7 +703,7 @@ void Player::SpecialAttack()
 				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
 				m_SPEffect->SetPosition({ 
 					m_position.x + m_front.x * 50.0f,
-					m_position.y += 50.0f,
+					m_position.y + 50.0f,
 					m_position.z + m_front.z * 50.0f
 					});
 				m_SPEffect->Play();
