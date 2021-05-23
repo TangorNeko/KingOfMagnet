@@ -3,7 +3,7 @@
 
 #include "TitleScene.h"
 #include "SampleScene.h"
-
+#include "ResultScene.h"
 #include "GameScene.h"
 #include "Player.h"
 #include "TransitionGenerator.h"
@@ -56,7 +56,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 	
-	
+	//ResultScene* resultscene = NewGO<ResultScene>(0, "resultscene");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

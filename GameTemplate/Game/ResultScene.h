@@ -6,18 +6,19 @@ class ResultScene:public IGameObject
 public:
 	~ResultScene();
 	void ResultDisplay();
-	prefab::CFontRender* m_title_fontRender = nullptr;//タイトル。
-	prefab::CFontRender* m_replay_fontRender = nullptr;//もう一度遊ぶ
-	prefab::CFontRender* m_detail_fontRender = nullptr;//詳細表示
-	prefab::CFontRender* m_result_fontRender = nullptr;//詳細内容
-	int m_menuselect = 1;//項目選択
-	const Vector4 red = { 1,0,0,1 };//色
-	const Vector4 blue = { 0,0,1,1 };
-	float m_titleX = 0.0f;
-	float m_titleY = 100.0f;
-	float m_replayX = 0.0f;
-	float m_replayY = 0.0f;
-	float m_detailX = 0.0f;	
-	float m_detailY = -100.0f;
+	prefab::CSpriteRender* m_Down_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Up_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Under_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Lose_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Win_SpriteRender = nullptr;
+	prefab::CSpriteRender* m_Command_SpriteRender = nullptr;
+
+	Vector3 m_DownPos = { Vector3::Zero };
+	Vector3 m_UpPos = { Vector3::Zero };
+	Vector3 m_UnderPos = { Vector3::Zero };
+	Vector3 m_LosePos = { 350.0f,220.0f,0.0f };
+	Vector3 m_WinPos = { -200.0f,280.0f,0.0f };
+	Vector3 m_CommandPos = { 0.0f,-275.0f,0.0f };
+	bool m_RetryOn = true;
 };
 
