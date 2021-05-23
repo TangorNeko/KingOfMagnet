@@ -29,7 +29,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
-	CLightManager::GetInstance()->SetLightCameraPosition({ 0.0f,500.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraPosition({ 500.0f,500.0f,-500.0f });
 	CLightManager::GetInstance()->SetLightCameraTarget({ 0.0f,0.0f,0.0f });
 	CLightManager::GetInstance()->SetLightCameraUp({ 1.0f,0.0f,0.0f });
 	CLightManager::GetInstance()->SetLightCameraUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
@@ -51,7 +51,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	TransitionGenerator* tg = NewGO<TransitionGenerator>(10, "TransitionGenerator");
 
-//タイトルシーンを作成。
+	//タイトルシーンを作成。
 	TitleScene* title = NewGO<TitleScene>(0, "titlescene");
 
 	//SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");

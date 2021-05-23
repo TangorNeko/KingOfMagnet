@@ -19,7 +19,5 @@ public:
 	float m_replayY = 0.0f;
 	float m_detailX = 0.0f;	
 	float m_detailY = -100.0f;
-
-
 };
 

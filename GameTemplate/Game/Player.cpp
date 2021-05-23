@@ -48,14 +48,19 @@ Player::~Player()
 	m_burstEffect->Stop();
 	m_hitEffect->Stop();
 	m_SPEffect->Stop();
+	m_SPGaugeMaxEffect->Stop();
 	DeleteGO(m_magEffect[0]);
 	DeleteGO(m_magEffect[1]);
 	DeleteGO(m_magEffect[2]);
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
-	DeleteGO(m_spotLight);
 	DeleteGO(m_SPGaugeMaxEffect);
+
+	DeleteGO(m_spotLight);
+
+	if (m_ChargeSPFontRender != nullptr)
+		DeleteGO(m_ChargeSPFontRender);
 }
 
 bool Player::Start()
@@ -99,14 +104,30 @@ bool Player::Start()
 	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	if (m_playerNum == 0)
 	{
-		m_bulletNumber->SetPosition({ -550.0f, -180.0f });
+		m_bulletNumber->SetPosition({ -200.0f, -270.0f });
 	}
 	else
 	{
-		m_bulletNumber->SetPosition({ 500.0f, -180.0f });
+		m_bulletNumber->SetPosition({ 20.0f, -270.0f });
 	}
-	m_bulletNumber->SetScale({ 1.5f,1.5f });
-	m_bulletNumber->SetColor({ 1.0f,0.0f, 0.0f,1.0f });
+	m_bulletNumber->SetScale({ 1.0f,1.0f });
+	m_bulletNumber->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
+
+	//必殺ゲージの溜まり具合を表示するフォント
+	m_ChargeSPFontRender = NewGO<prefab::CFontRender>(6);
+	m_ChargeSPFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	if (m_playerNum == 0)
+	{
+		m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
+	}
+	else
+	{
+		m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
+	}
+	m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+	m_ChargeSPFontRender->SetColor({ 1.0f,1.0f, 0.0f,1.0f });
+	m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+
 	//照準表示の初期化
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
@@ -276,7 +297,7 @@ void Player::Update()
 			ThrowBomb();
 
 			//グレネード用。仮です。
-			if (g_pad[m_playerNum]->IsTrigger(enButtonY))
+			/*if (g_pad[m_playerNum]->IsTrigger(enButtonY))
 			{
 				Bomb* debris = NewGO<Bomb>(0, "bomb");
 				debris->m_bombShape = Bomb::enIncendiaryGrenade;
@@ -284,7 +305,7 @@ void Player::Update()
 				debris->m_parent = this;
 				debris->m_position = m_magPosition;
 				debris->m_moveDirection = m_characterDirection;
-			}
+			}*/
 		}
 
 		//攻撃後の隙のタイマーを減らしていく
@@ -384,30 +405,7 @@ void Player::Update()
 void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
-	m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()));
-
-	if (m_playerNum == 0)
-	{
-		if (m_holdDebrisVector.size() >= 10)
-		{
-			m_bulletNumber->SetPosition({ -570.0f, -180.0f });
-		}
-		else
-		{
-			m_bulletNumber->SetPosition({ -550.0f, -180.0f });
-		}
-	}
-	else
-	{
-		if (m_holdDebrisVector.size() >= 10)
-		{
-			m_bulletNumber->SetPosition({ 480.0f, -180.0f });;
-		}
-		else
-		{
-			m_bulletNumber->SetPosition({ 500.0f, -180.0f });;
-		}
-	}
+	m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
 
 	if (m_playerNum == 0) {
 		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
@@ -437,6 +435,8 @@ void Player::DisplayStatus()
 //移動
 void Player::Move()
 {
+	Vector3 oldPos = m_position;
+
 	//カメラの前方向
 	m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
 	m_front.y = 0.0f;
@@ -495,6 +495,45 @@ void Player::Move()
 		//リスポーンしたので落下加速用のカウントをリセット。
 		m_fallLoop = 0;
 	}
+
+	//足音
+	if (g_pad[m_playerNum]->GetLStickXF() || g_pad[m_playerNum]->GetLStickYF())
+	{
+		m_footstepsTimer++;
+		
+		if (m_animStatus == enStatus_Walk) {
+			if (m_footstepsTimer >= 25)
+			{
+				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->SetVolume(0.2f);
+				ssShoot->Play(false);
+
+				m_footstepsTimer = 0;
+			}
+		}
+		if (m_animStatus == enStatus_Run) {
+			if (m_footstepsTimer >= 17)
+			{
+				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->SetVolume(0.2f);
+				ssShoot->Play(false);
+				
+				m_footstepsTimer = 0;
+			}
+		}
+	}
+	else
+		m_footstepsTimer = 0;
+
+	if (oldPos.y >= -50.0f && m_position.y < -50.0f)
+	{
+		prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
+		ssShoot->Init(L"Assets/sound/落下音.wav");
+		ssShoot->SetVolume(0.5f);
+		ssShoot->Play(false);
+	}	
 }
 
 //攻撃
@@ -574,7 +613,7 @@ void Player::SpecialAttack()
 	}
 	if (m_specialShotFlag == true)
 	{
-		//チャージするようなエフェクト
+		//発射する前に、チャージするようなエフェクト
 		switch (m_magPower)
 		{
 		case -1:
@@ -617,6 +656,15 @@ void Player::SpecialAttack()
 			ssSPShot->SetVolume(0.8f);
 			ssSPShot->Play(false);
 
+			//発射エフェクト
+			m_SPEffect->Init(u"Assets/effect/引力弾発射.efk");
+			m_SPEffect->SetPosition({
+				m_position.x + m_front.x * 50.0f,
+				m_position.y + 50.0f,
+				m_position.z + m_front.z * 50.0f
+				});
+			m_SPEffect->Play();
+
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
 			gravityBullet->m_position = m_magPosition;
 			gravityBullet->m_parent = this;
@@ -643,6 +691,16 @@ void Player::SpecialAttack()
 			m_specialAttackGauge = 0;
 			m_specialShotFlag = false;
 			m_specialShotCount = 0;
+			if (m_playerNum == 0)
+			{
+				m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
+				m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+			}
+			else
+			{
+				m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
+				m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+			}
 		}
 		else//斥力なら
 		{
@@ -659,7 +717,7 @@ void Player::SpecialAttack()
 				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
 				m_SPEffect->SetPosition({ 
 					m_position.x + m_front.x * 50.0f,
-					m_position.y += 50.0f,
+					m_position.y + 50.0f,
 					m_position.z + m_front.z * 50.0f
 					});
 				m_SPEffect->Play();
@@ -698,6 +756,16 @@ void Player::SpecialAttack()
 				m_specialAttackGauge = 0;
 				m_specialShotFlag = false;
 				m_specialShotCount = 0;
+				if (m_playerNum == 0)
+				{
+					m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
+					m_ChargeSPFontRender->SetScale({1.0f,1.0f});
+				}
+				else
+				{
+					m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
+					m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+				}
 			}
 			else
 			{
@@ -1264,21 +1332,47 @@ void Player::ChargeSpecialAttackGauge(int charge)
 		if (m_oldSpecialAttackGauge < 100)
 		{
 			//エフェクト
-			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
 			m_SPGaugeMaxEffect->Play();
 			//SE
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
 			ss->Init(L"Assets/sound/きらーん.wav");
 			ss->SetVolume(0.5f);
 			ss->Play(false);
+
+			m_ChargeSPFontRender->SetText(L"MAX");
+			if (m_playerNum == 0)
+			{
+				m_ChargeSPFontRender->SetPosition({ -580.0f, -180.0f });
+			}
+			else
+			{
+				m_ChargeSPFontRender->SetPosition({ 470.0f, -180.0f });
+			}
+			m_ChargeSPFontRender->SetScale({1.5f,1.5f});
 		}
 	}
 	else
 	{
 		m_SaveSP += charge;//溜まった必殺技ポイント
-	}
 
-	
+		m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+
+		if (m_playerNum == 0)
+		{
+			if (m_specialAttackGauge < 10)
+				m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
+			else
+				m_ChargeSPFontRender->SetPosition({ -560.0f, -210.0f });
+		}
+		else
+		{
+			if (m_specialAttackGauge < 10)
+				m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
+			else
+				m_ChargeSPFontRender->SetPosition({ 490.0f, -210.0f });
+		}
+	}
 
 	m_oldSpecialAttackGauge = m_specialAttackGauge;
 }
@@ -1683,6 +1777,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		DeleteGO(m_HPBarDarkSpriteRender);
 		m_HPBarDarkSpriteRender = nullptr;
 		DeleteGO(m_mobiusGauge);
+		DeleteGO(m_ChargeSPFontRender);
+		m_ChargeSPFontRender = nullptr;
 		m_mobiusGauge = nullptr;
 		//弾も消す
 		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool

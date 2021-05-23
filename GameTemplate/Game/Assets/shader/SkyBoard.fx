@@ -135,9 +135,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//環境光
 	float3 ambientLig = 1.0f;
-	finalColor.xyz += ambientLig;
+	finalColor.xyz += ambientLig ;
 
 	finalColor *= albedoColor;
+
 
 	return finalColor;
 }

@@ -14,7 +14,15 @@ class SampleScene : public IGameObject
 	//勝者判定
 	void WinnerJudge();
 
-	
+	//タイムリミット関連
+	float m_timeLimit = 100;
+	float m_deltaTimeCount = 0.0f;
+	void TimeLimitCount();
+	void TimeLimitChangesSprits(int num, int numPlace);	//numはスプライトにしたい数字、numPlaceは一桁ならば0を送り、二桁ならば送る数字が一の位なら1を、十のくらいなら10を送る。
+	int m_oldTimeLimit = 0;
+	prefab::CSpriteRender* m_onesPlaceSpriteRender = nullptr;	//タイムリミットの一桁目を表示するスプライト
+	prefab::CSpriteRender* m_tensPlaceSpriteRender = nullptr;	//タイムリミットの二桁目を表示するスプライト
+
 	Player* m_player1 = nullptr;
 	Player* m_player2 = nullptr;
 
@@ -33,11 +41,6 @@ class SampleScene : public IGameObject
 	bool m_GEfirstLoop = true;
 
 	int m_bulletNum = 0;//ゲームシーンに存在する弾、グレネードの総数;
-
-	//制限時間
-	prefab::CFontRender* m_timeFontRender = nullptr;
-	float m_timeLimit = 100;
-	float m_deltaTimeCount = 0.0f;
 
 	prefab::CSpriteRender* m_delimitLineSpriteRender = nullptr;	//区切る線
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;

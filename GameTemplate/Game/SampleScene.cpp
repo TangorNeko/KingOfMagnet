@@ -42,14 +42,18 @@ SampleScene::~SampleScene()
 		});
 
 	DeleteGO(ssBGM);
+
+	DeleteGO(m_onesPlaceSpriteRender);
+	if (int(m_timeLimit) >= 10)
+		DeleteGO(m_tensPlaceSpriteRender);
 }
 
 bool SampleScene::Start()
 {
 	//ステージのライトを作成
 	m_stageLight = NewGO<prefab::CDirectionLight>(0);
-	m_stageLight->SetDirection({ 0.0f,-1.0f,0.0f });
-	m_stageLight->SetColor({ 0.5f,0.5f,0.5f });
+	m_stageLight->SetDirection({ -1.0f,-1.0f,1.0f });
+	m_stageLight->SetColor({ 0.8f,0.8f,0.8f });
 
 	m_player1 = NewGO<Player>(0, "Player");
 	m_player1->m_position = { 860.0f,0.0f,400.0f };
@@ -96,12 +100,6 @@ bool SampleScene::Start()
 
 	//すべて作成し終わった所で2画面にする。
 	GameObjectManager::GetInstance()->Set2ScreenMode(true);
-	
-	//タイムリミット表示
-	m_timeFontRender = NewGO<prefab::CFontRender>(4);
-	m_timeFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	m_timeFontRender->SetPosition({ -60.0f, 380.0f });
-	m_timeFontRender->SetScale({ 2.0f, 2.0f });
 	
 	//画面を区切る線
 	m_delimitLineSpriteRender = NewGO<prefab::CSpriteRender>(3);
@@ -178,11 +176,24 @@ bool SampleScene::Start()
 	m_CountDown_1_1->SetPosition({ 0.0f,600.0f,0.0f });
 	m_CountDown_1_1->Init("Assets/Image/Count/CountLine.dds", 36, 200);
 
+	//
+	m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+	m_onesPlaceSpriteRender->SetPosition({ 27.0f, 315.0f, 0.0f });
+	m_onesPlaceSpriteRender->SetScale({0.25f,0.25f,1.0f});
+	m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
+
+	m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+	m_tensPlaceSpriteRender->SetPosition({ -27.0f, 315.0f, 0.0f });
+	m_tensPlaceSpriteRender->SetScale({ 0.25f,0.25f,1.0f });
+	m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_tensPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
+
 	//音を再生
-	ssBGM = NewGO<prefab::CSoundSource>(0);;
+	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
 	ssBGM->SetVolume(0.3f);
-	ssBGM->Play(true);
+	//ssBGM->Play(true);
 
 	return true;
 }
@@ -200,27 +211,10 @@ void SampleScene::Update()
 		StartCountDown();
 		return;
 	}
+	TimeLimitCount();
 
-	//制限時間の表示
-	if (m_timeLimit > 0 && m_gameState == enPlaying) {
-		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
-		if ((int)m_timeLimit == 9) //一桁になったら表示位置を真ん中に。
-		{
-			m_timeFontRender->SetPosition({ -35.0f, 380.0f });
-		}
-		m_timeFontRender->SetText(std::to_wstring((int)m_timeLimit));
-
-		if (m_timeLimit >= 10)
-		{
-			m_timeFontRender->SetPosition({ -60.0f, 380.0f });
-		}
-		else
-		{
-			m_timeFontRender->SetPosition({ -35.0f, 380.0f });
-		}
-
-	}//時間切れでも勝敗がついていない場合
-	else if(m_timeLimit <= 0 && m_gameState != enResult && m_gameState != enDraw)
+	//時間切れでも勝敗がついていない場合
+	if(m_timeLimit <= 0 && m_gameState != enResult && m_gameState != enDraw)
 	{
 		//勝者判定
 		WinnerJudge();
@@ -250,7 +244,9 @@ void SampleScene::Update()
 			DeleteGO(m_delimitLineSpriteRender);
 			DeleteGO(m_HPCoverSpriteRender);
 			DeleteGO(m_TimerBaseSpriteRender);
-			DeleteGO(m_timeFontRender);
+			DeleteGO(m_onesPlaceSpriteRender);
+			if (int(m_timeLimit) >= 10)
+				DeleteGO(m_tensPlaceSpriteRender);
 			//m_player1->m_displayOff = true;
 			//m_player2->m_displayOff = true;
 			m_GEfirstLoop = false;
@@ -287,7 +283,7 @@ void SampleScene::Update()
 			DeleteGO(m_delimitLineSpriteRender);
 			DeleteGO(m_HPCoverSpriteRender);
 			DeleteGO(m_TimerBaseSpriteRender);
-			DeleteGO(m_timeFontRender);
+			DeleteGO(m_onesPlaceSpriteRender);
 			DeleteGO(m_drawFontRender);
 			NewGO<SampleScene>(0, "gamescene");
 			DeleteGO(this);
@@ -440,5 +436,221 @@ void SampleScene::StartCountDown() {
 		}
 		ssCount->Play(false);
 		m_playCountSEFlag = false;
+	}
+}
+void SampleScene::TimeLimitCount()
+{
+	//制限時間の表示
+	if (m_timeLimit > 0 && m_gameState == enPlaying) {
+		m_timeLimit -= GameTime::GetInstance().GetFrameDeltaTime();
+		//タイムリミットが二桁の時
+		if (m_timeLimit >= 10)
+		{
+			//一の位
+			int Number = (int)m_timeLimit % 10;
+			TimeLimitChangesSprits(Number,1);
+			//十の位
+			Number = (int)m_timeLimit / 10;
+			TimeLimitChangesSprits(Number,10);
+		}
+		//タイムリミットが一桁の時
+		else if ((int)m_timeLimit < 10)
+		{
+			int Number = (int)m_timeLimit;
+			TimeLimitChangesSprits(Number, 0);
+		}
+	}
+	m_oldTimeLimit = m_timeLimit;
+}
+
+void SampleScene::TimeLimitChangesSprits(int num, int numPlace)
+{
+	//タイムリミットが前フレームと異なるとき(一秒経ったとき)
+	if ((int)m_timeLimit != m_oldTimeLimit)
+	{
+		//numが0～9のどの数字かによって、Initするスプライトを変える。
+		switch (num)
+		{
+		case 0:
+			if (numPlace == 1)	//numが一の位の時
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+
+			}
+			else if (numPlace == 10)	//numが十の位の時
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/0.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 0)		//numが一桁の時(タイムリミットが10以下の時)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 1:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/1.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/1.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/1.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 2:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/2.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/2.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/2.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 3:
+			if (numPlace == 1)
+			{			
+				m_onesPlaceSpriteRender->Init("Assets/Image/3.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/3.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);				
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/3.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 4:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/4.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);			
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/4.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/4.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);		
+			}
+			break;
+		case 5:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/5.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);				
+			}
+			else if (numPlace == 10)
+			{			
+				m_tensPlaceSpriteRender->Init("Assets/Image/5.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/5.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 6:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/6.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/6.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/6.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 7:
+			if (numPlace == 1)
+			{			
+				m_onesPlaceSpriteRender->Init("Assets/Image/7.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/7.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/7.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);				
+			}
+			break;
+		case 8:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/8.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);			
+			}
+			else if (numPlace == 10)
+			{			
+				m_tensPlaceSpriteRender->Init("Assets/Image/8.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+
+			}
+			else if (numPlace == 0)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/8.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		case 9:
+			if (numPlace == 1)
+			{
+				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 10)
+			{
+				m_tensPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
+				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			else if (numPlace == 0)
+			{
+				//一桁になったら、十の位表示位置を真ん中に。
+				DeleteGO(m_tensPlaceSpriteRender);
+				m_onesPlaceSpriteRender->SetPosition({ 0.0f, 315.0f, 0.0f });
+				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
+				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }

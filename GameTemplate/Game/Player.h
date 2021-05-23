@@ -279,6 +279,12 @@ public:
 	//必殺技を放つ前隙のときのエフェクト
 	prefab::CEffect* m_SPFirstEffectRed = nullptr;
 	prefab::CEffect* m_SPFirstEffectBlue = nullptr;
+
+	//足音
+	int m_footstepsTimer = 0;
+
+	//必殺技ゲージがどれだけ溜まっているかを表示
+	prefab::CFontRender* m_ChargeSPFontRender = nullptr;
 };
 
 

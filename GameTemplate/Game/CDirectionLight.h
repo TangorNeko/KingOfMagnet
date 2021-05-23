@@ -28,7 +28,10 @@ namespace prefab
 		int GetLigDataSize() { return sizeof(dirLigData); }
 
 		//Œü‚«‚Ìİ’è‚Ææ“¾
-		void SetDirection(Vector3 dir) { dirLigData.ligDir = dir; }
+		void SetDirection(Vector3 dir) { 
+			dirLigData.ligDir = dir;
+			dirLigData.ligDir.Normalize();
+		}
 		Vector3 GetDirecion() { return dirLigData.ligDir; }
 
 		//F‚Ìİ’è‚Ææ“¾
