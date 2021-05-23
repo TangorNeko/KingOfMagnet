@@ -633,6 +633,8 @@ void Player::SpecialAttack()
 		//発射前にダメージを受けたらキャンセル
 		if (m_HitOn == true) 
 		{
+			//ゲージも0に。
+			m_specialAttackGauge = 0;
 			m_specialShotFlag = false;
 			m_specialShotCount = 0;
 		}
