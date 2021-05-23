@@ -294,6 +294,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CaslFile.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
+    <ClCompile Include="CEffect2D.cpp" />
     <ClCompile Include="CFontRender.cpp" />
     <ClCompile Include="CharacterSelect.cpp" />
     <ClCompile Include="Character_base.cpp" />
@@ -429,6 +430,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CaslFile.h" />
     <ClInclude Include="CDirectionLight.h" />
+    <ClInclude Include="CEffect2D.h" />
     <ClInclude Include="CFontRender.h" />
     <ClInclude Include="CharacterSelect.h" />
     <ClInclude Include="Character_base.h" />

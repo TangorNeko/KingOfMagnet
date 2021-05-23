@@ -9,3 +9,4 @@
 #include "CSoundSource.h"
 #include "CLevel.h"
 #include "CEffect.h"
+#include "CEffect2D.h"

@@ -280,5 +280,10 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 				go->PostRenderWrapper(rc, g_camera3D[0]);
 			}
 		}
+
+		//2Dエフェクト更新
+		EffectEngine::GetInstance()->Update2D(GameTime::GetInstance().GetFrameDeltaTime());
+		//2Dエフェクト描画
+		EffectEngine::GetInstance()->Draw2D();
 	}
 }

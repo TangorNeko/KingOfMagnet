@@ -34,9 +34,10 @@ namespace prefab
 		//再生を停止
 		void Stop();
 
-		/*!
-		*@brief	座標を設定。
-		*/
+		/// <summary>
+		/// 座標の設定。g_camera2Dは{0,0,1}から{0,0,0}を見ているので映らなかったらZ座標をマイナスにしてみるとうまく表示されるかもしれません。
+		/// </summary>
+		/// <param name="pos">エフェクトの2D座標</param>
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
