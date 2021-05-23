@@ -6,6 +6,7 @@
 Flash::~Flash()
 {
 	DeleteGO(m_spriteRender);
+	m_effect->Stop();
 	DeleteGO(m_effect);
 }
 bool Flash::Start()
@@ -50,16 +51,24 @@ bool Flash::Start()
 }
 void Flash::Update()
 {
-	if (m_flashFlag == true) 
+	if (m_deleteFlag == false)
 	{
-		//Alpha‚ðŒ¸‚ç‚µ‚Ä™X‚É‰æ‘œ‚ð”–‚­‚·‚é
-		m_spriteRender->SetMulColor({ 1.0f,1.0f,1.0f,m_Alpha });
-		m_Alpha -= 0.002;
-		if (m_Alpha < 0)
+		if (m_flashFlag == true)
 		{
-			DeleteGO(this);
+			//Alpha‚ðŒ¸‚ç‚µ‚Ä™X‚É‰æ‘œ‚ð”–‚­‚·‚é
+			m_spriteRender->SetMulColor({ 1.0f,1.0f,1.0f,m_Alpha });
+			m_Alpha -= 0.002;
+			if (m_Alpha < 0)
+			{
+				m_deleteFlag = true;
+			}
 		}
+		else
+			m_deleteFlag = true;
 	}
-	else 
+
+	else if (m_deleteFlag == true && m_effect->IsPlay() == false)
+	{
 		DeleteGO(this);
+	}
 }

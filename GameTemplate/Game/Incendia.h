@@ -22,4 +22,6 @@ public:
 
 	//ƒQ[ƒ€ƒV[ƒ“
 	SampleScene* m_gameScene = nullptr;
+
+	bool m_deleteFlag = false;
 };

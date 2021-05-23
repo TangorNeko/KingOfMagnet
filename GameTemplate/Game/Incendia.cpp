@@ -6,6 +6,7 @@
 
 Incendia::~Incendia()
 {
+	m_effect->Stop();
 	DeleteGO(m_effect);
 }
 bool Incendia::Start()
@@ -33,34 +34,41 @@ void Incendia::Update()
 	{
 		return;
 	}
-
-	QueryGOs<Player>("Player", [this](Player* player)->bool
-		{		
-			//ダメージを食らう間隔
-			if (m_damageCountdown[player->m_playerNum] > 0)
-				m_damageCountdown[player->m_playerNum]--;
-
-			//プレイヤーが近ければ
-			Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
-			float dis = diff.Length();		//disはdistance(距離)
-			dis = fabsf(dis);
-			if (dis <= 250.0f)
+	if (m_deleteFlag == false)
+	{
+		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
-				//少しずつダメージを受ける。		
-				if (m_damageCountdown[player->m_playerNum] <= 0) 
-				{
-					player->Damage(30);
-					player->m_TakeAttackNum++;//攻撃を受けた回数
-					//次に炎上ダメージを受けるまでの間隔を設定
-					m_damageCountdown[player->m_playerNum] = 30;
-				}
-			}
-			return true;
-		}
-	);
+				//ダメージを食らう間隔
+				if (m_damageCountdown[player->m_playerNum] > 0)
+					m_damageCountdown[player->m_playerNum]--;
 
-	//炎が消えるまでのカウント
-	m_deleteCountdown--;
-	if (m_deleteCountdown <= 0)
+				//プレイヤーが近ければ
+				Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
+				float dis = diff.Length();		//disはdistance(距離)
+				dis = fabsf(dis);
+				if (dis <= 250.0f)
+				{
+					//少しずつダメージを受ける。		
+					if (m_damageCountdown[player->m_playerNum] <= 0)
+					{
+						player->Damage(30);
+						player->m_TakeAttackNum++;//攻撃を受けた回数
+						//次に炎上ダメージを受けるまでの間隔を設定
+						m_damageCountdown[player->m_playerNum] = 30;
+					}
+				}
+				return true;
+			}
+		);
+
+		//炎が消えるまでのカウント
+		m_deleteCountdown--;
+		if (m_deleteCountdown <= 0)
+			m_deleteFlag = true;
+	}
+
+	else if (m_deleteFlag == true && m_effect->IsPlay() == false	)
+	{
 		DeleteGO(this);
+	}
 }

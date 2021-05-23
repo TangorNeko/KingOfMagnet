@@ -193,7 +193,7 @@ bool SampleScene::Start()
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
 	ssBGM->SetVolume(0.3f);
-	//ssBGM->Play(true);
+	ssBGM->Play(true);
 
 	return true;
 }

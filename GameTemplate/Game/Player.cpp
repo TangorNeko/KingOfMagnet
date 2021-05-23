@@ -695,11 +695,13 @@ void Player::SpecialAttack()
 			{
 				m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
 				m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
 				m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
 				m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 		}
 		else//Ë—Í‚È‚ç
@@ -760,11 +762,13 @@ void Player::SpecialAttack()
 				{
 					m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
 					m_ChargeSPFontRender->SetScale({1.0f,1.0f});
+					m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 				else
 				{
 					m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
 					m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+					m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 			}
 			else

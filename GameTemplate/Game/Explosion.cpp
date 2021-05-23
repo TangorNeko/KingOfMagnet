@@ -5,6 +5,7 @@
 
 Explosion::~Explosion()
 {
+	m_effect->Stop();
 	DeleteGO(m_effect);
 }
 bool Explosion::Start()
@@ -26,18 +27,25 @@ bool Explosion::Start()
 }
 void Explosion::Update()
 {
-	QueryGOs<Player>("Player", [this](Player* player)->bool
-		{
-			//プレイヤーが近ければ
-			Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
-			float dis = diff.Length();		//disはdistance(距離)
-			dis = fabsf(dis);
-			if (dis <= 300.0f) 
+	if (m_deleteFlag == false)
+	{
+		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
-				player->Damage(300 - dis);
-				player->m_TakeAttackNum++;//攻撃を受けた回数
-			}
-			return true;
-		});
-	DeleteGO(this);
+				//プレイヤーが近ければ
+				Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
+				float dis = diff.Length();		//disはdistance(距離)
+				dis = fabsf(dis);
+				if (dis <= 300.0f)
+				{
+					player->Damage(300 - dis);
+					player->m_TakeAttackNum++;//攻撃を受けた回数
+				}
+				return true;
+			});
+		m_deleteFlag = true;
+	}
+	else if (m_deleteFlag == true && m_effect->IsPlay() == false)
+	{
+		DeleteGO(this);
+	}
 }

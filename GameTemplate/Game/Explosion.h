@@ -12,4 +12,6 @@ public:
 
 	//エフェクト
 	prefab::CEffect* m_effect = nullptr;
+
+	bool m_deleteFlag = false;
 };
