@@ -111,7 +111,8 @@ bool Player::Start()
 		m_bulletNumber->SetPosition({ 20.0f, -270.0f });
 	}
 	m_bulletNumber->SetScale({ 1.0f,1.0f });
-	m_bulletNumber->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
+	m_bulletNumber->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
+	m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
 
 	//必殺ゲージの溜まり具合を表示するフォント
 	m_ChargeSPFontRender = NewGO<prefab::CFontRender>(6);
@@ -139,7 +140,7 @@ bool Player::Start()
 	//HPバー
 	m_HPBarSpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_HPBarSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
-	
+
 	m_HPBarSpriteRender->Init("Assets/Image/HP_Bar.dds",308, 32);
 	if (m_playerNum == 0) {
 		m_HPBarSpriteRender->SetPosition({ -10.0f,325.0f,0.0f });
@@ -405,16 +406,6 @@ void Player::Update()
 void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
-	m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
-
-	if (m_playerNum == 0) {
-		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
-		//({ 290.0f,325.0f,0.0f });
-		//({ -9.0f,325.0f,0.0f })
-	}
-	else if (m_playerNum == 1) {
-		m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
-	}
 
 	//メビウスゲージの色を磁力から決定
 	if (m_magPower == 1)
@@ -586,6 +577,9 @@ void Player::Attack()
 
 			//発射したガレキを保持リストから削除
 			m_holdDebrisVector.erase(m_holdDebrisVector.begin());
+
+			//テキスト更新
+			m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
 		}
 
 	}
@@ -753,6 +747,9 @@ void Player::SpecialAttack()
 				}
 
 				m_holdDebrisVector.clear();
+
+				//テキスト更新
+				m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
 
 				//撃ったので必殺技ゲージを0に
 				m_specialAttackGauge = 0;
@@ -1305,6 +1302,14 @@ void Player::Damage(int damage)
 	damagedisplay->m_enemyNum = m_enemy->m_playerNum;
 	damagedisplay->m_damage = damage;
 
+	//HPバー更新
+	if (m_playerNum == 0) {
+		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
+	}
+	else if (m_playerNum == 1) {
+		m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
+	}
+
 	//ダメージエフェクト
 	m_hitEffect->SetPosition({ m_position.x, m_position.y + 50, m_position.z });
 
@@ -1322,6 +1327,7 @@ void Player::Damage(int damage)
 
 	m_hitEffect->SetRotation(rot);
 	m_hitEffect->Play();
+	//ここまでエフェクト処理
 }
 
 //必殺技ゲージをチャージする。
