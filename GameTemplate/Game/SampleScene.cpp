@@ -269,6 +269,8 @@ void SampleScene::Update()
 		if (m_gameEndCount == 2||m_gameEndLoop>1500)
 		{
 			NewGO<ResultScene>(0, "resultscene");
+			ResultScene* resultscene = FindGO<ResultScene>("resultscene");
+			resultscene->m_loserNum = m_player1->m_loserNum;
 			DeleteGO(this);
 		}
 	}
@@ -475,170 +477,136 @@ void SampleScene::TimeLimitChangesSprits(int num, int numPlace)
 			if (numPlace == 1)	//numが一の位の時
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-
 			}
 			else if (numPlace == 10)	//numが十の位の時
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/0.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 0)		//numが一桁の時(タイムリミットが10以下の時)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 1:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/1.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/1.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/1.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 2:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/2.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/2.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/2.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 3:
 			if (numPlace == 1)
 			{			
 				m_onesPlaceSpriteRender->Init("Assets/Image/3.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/3.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);				
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/3.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 4:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/4.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);			
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/4.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/4.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);		
 			}
 			break;
 		case 5:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/5.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);				
 			}
 			else if (numPlace == 10)
 			{			
 				m_tensPlaceSpriteRender->Init("Assets/Image/5.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/5.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 6:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/6.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/6.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/6.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 7:
 			if (numPlace == 1)
 			{			
 				m_onesPlaceSpriteRender->Init("Assets/Image/7.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/7.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/7.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);				
 			}
 			break;
 		case 8:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/8.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);			
 			}
 			else if (numPlace == 10)
 			{			
 				m_tensPlaceSpriteRender->Init("Assets/Image/8.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-
 			}
 			else if (numPlace == 0)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/8.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		case 9:
 			if (numPlace == 1)
 			{
 				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 10)
 			{
 				m_tensPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
-				m_tensPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			else if (numPlace == 0)
 			{
@@ -646,7 +614,6 @@ void SampleScene::TimeLimitChangesSprits(int num, int numPlace)
 				DeleteGO(m_tensPlaceSpriteRender);
 				m_onesPlaceSpriteRender->SetPosition({ 0.0f, 315.0f, 0.0f });
 				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
-				m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 			}
 			break;
 		default:

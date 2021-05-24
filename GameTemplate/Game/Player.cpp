@@ -60,7 +60,7 @@ Player::~Player()
 	DeleteGO(m_spotLight);
 
 	if (m_ChargeSPFontRender != nullptr)
-		DeleteGO(m_ChargeSPFontRender);
+		DeleteGO(m_ChargeSPFontRender);	
 }
 
 bool Player::Start()

@@ -19,6 +19,7 @@ public:
 
 	prefab::CSkinModelRender* m_P1_skinModelRender = nullptr;
 	prefab::CSkinModelRender* m_P2_skinModelRender = nullptr;
+	//‰¼‚Ìƒ|ƒWƒVƒ‡ƒ“
 	Vector3 m_WinnerPos = { 100,50,0 };
 	Vector3 m_LoserPos = { -100,50,0 };
 	Vector3 m_cameraPos = { 0,90,250 };
@@ -30,5 +31,6 @@ public:
 	Vector3 m_WinPos = { -200.0f,280.0f,0.0f };
 	Vector3 m_CommandPos = { 0.0f,-275.0f,0.0f };
 	bool m_RetryOn = true;
+	int m_loserNum = 0;
 };
 

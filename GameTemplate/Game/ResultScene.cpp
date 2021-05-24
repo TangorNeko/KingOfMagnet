@@ -10,7 +10,10 @@ ResultScene::~ResultScene()
 	DeleteGO(m_Lose_SpriteRender);
 	DeleteGO(m_Win_SpriteRender);
 	DeleteGO(m_Command_SpriteRender);
-}
+	DeleteGO(m_BG_SpriteRender);
+	DeleteGO(m_P1_skinModelRender);
+	DeleteGO(m_P2_skinModelRender);
+}			 
 bool ResultScene::Start()
 {	
 	//背景
@@ -51,7 +54,7 @@ bool ResultScene::Start()
 	m_Command_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
 	m_Command_SpriteRender->SetPosition({ m_CommandPos });
-
+	
 	//後でアニメーション入れる
 	m_P1_skinModelRender = NewGO<prefab::CSkinModelRender>(3);
 	m_P1_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks");//, animationClips, enAnimationClip_num
@@ -60,7 +63,16 @@ bool ResultScene::Start()
 	m_P2_skinModelRender = NewGO<prefab::CSkinModelRender>(3);
 	m_P2_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks");//, animationClips, enAnimationClip_num
 	m_P2_skinModelRender->SetPosition(m_LoserPos);
-
+	if (m_loserNum == 0)
+	{
+		m_P1_skinModelRender->SetPosition(m_LoserPos);
+		m_P2_skinModelRender->SetPosition(m_WinnerPos);
+	}
+	else
+	{
+		m_P1_skinModelRender->SetPosition(m_WinnerPos);
+		m_P2_skinModelRender->SetPosition(m_LoserPos);
+	}
 	m_Down_SpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_Down_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Down_SpriteRender->Init("Assets/Image/Result_Down.dds", 1280, 720);
