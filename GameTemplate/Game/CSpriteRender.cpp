@@ -54,9 +54,18 @@ namespace prefab
 	}
 
 	//スプライトのドローコール
+	void CSpriteRender::Render(RenderContext& rc, Camera* camera)
+	{
+		if (rc.GetRenderStep() == m_drawScreen && m_isPostRender == false)
+		{
+			m_sprite.Draw(rc);
+		}
+	}
+
+	//スプライトのドローコール
 	void CSpriteRender::PostRender(RenderContext& rc, Camera* camera)
 	{
-		if (rc.GetRenderStep() == m_drawScreen)
+		if (rc.GetRenderStep() == m_drawScreen && m_isPostRender == true)
 		{
 			m_sprite.Draw(rc);
 		}

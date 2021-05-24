@@ -171,13 +171,11 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
-		/*
 		for (auto& goList : m_gameObjectListArray) {
 			for (auto& go : goList) {
 				go->RenderWrapper(rc, g_camera3D[0]);
 			}
 		}
-		*/
 	}
 	
 	//ポストエフェクト用。Render後の処理

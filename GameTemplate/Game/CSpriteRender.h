@@ -28,8 +28,12 @@ namespace prefab
 
 		SpriteMode m_spriteMode = Normal;
 
+		bool m_isPostRender = true;
+
 	public:
 		CSpriteRender() :m_position(Vector3::Zero), m_qRot(Quaternion::Identity), m_scale(Vector3::One), m_pivot({ 0.5f,0.5f }) {}
+
+		void Render(RenderContext& rc, Camera* camera) override;
 
 		void PostRender(RenderContext& rc, Camera* camera) override;
 
@@ -42,6 +46,8 @@ namespace prefab
 		void SetScale(Vector3 scale);
 		void SetPivot(Vector2 pivot);
 		void SetDrawScreen(DrawScreen screen) { m_drawScreen = screen; }
+		//trueならPostRender,falseならRender(PostRenderならモデルの描画後、Renderならモデルの描画前にスプライトを描画できる)
+		void SetPostRenderMode(bool mode) { m_isPostRender = mode; }
 		void SetSpriteMode(SpriteMode sm) { m_spriteMode = sm; }
 		void SetTransitionBorder(const float& border) {m_sprite.SetAlpha(border); }
 		void SetMulColor(const Vector4& mulColor)

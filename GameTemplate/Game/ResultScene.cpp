@@ -22,12 +22,16 @@ bool ResultScene::Start()
 	m_Up_SpriteRender = NewGO<prefab::CSpriteRender>(0);
 	m_Up_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Up_SpriteRender->Init("Assets/Image/Result_Up.dds", 1280, 720);
+	//モデルの描画前にスプライトを描画できるようにする。
+	m_Up_SpriteRender->SetPostRenderMode(false);
 	m_Up_SpriteRender->SetPosition({ m_UpPos });
 
 
 	m_Under_SpriteRender = NewGO<prefab::CSpriteRender>(0);
 	m_Under_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Under_SpriteRender->Init("Assets/Image/Result_Under.dds", 1280, 720);
+	//モデルの描画前にスプライトを描画できるようにする。
+	m_Under_SpriteRender->SetPostRenderMode(false);
 	m_Under_SpriteRender->SetPosition({ m_UnderPos });
 
 	m_Lose_SpriteRender = NewGO<prefab::CSpriteRender>(0);
