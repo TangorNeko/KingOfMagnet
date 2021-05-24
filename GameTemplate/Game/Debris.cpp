@@ -150,7 +150,7 @@ void Debris::AsDropBehave()
 				//プレイヤーの保持するガレキコンテナに格納
 				player->m_holdDebrisVector.push_back(this);
 				//テキスト更新
-				player->m_bulletNumber->SetText(L"弾数:" + std::to_wstring(player->m_holdDebrisVector.size()));
+				player->m_bulletNumber->SetText(std::to_wstring(player->m_holdDebrisVector.size()) + L"/10");
 			}
 		}
 

@@ -112,7 +112,7 @@ bool Player::Start()
 	}
 	m_bulletNumber->SetScale({ 1.0f,1.0f });
 	m_bulletNumber->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
-	m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
+	m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()) + +L"/10");
 
 	//必殺ゲージの溜まり具合を表示するフォント
 	m_ChargeSPFontRender = NewGO<prefab::CFontRender>(6);
@@ -579,7 +579,7 @@ void Player::Attack()
 			m_holdDebrisVector.erase(m_holdDebrisVector.begin());
 
 			//テキスト更新
-			m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
+			m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()) + L"/10");
 		}
 
 	}
@@ -751,7 +751,7 @@ void Player::SpecialAttack()
 				m_holdDebrisVector.clear();
 
 				//テキスト更新
-				m_bulletNumber->SetText(L"弾数:" + std::to_wstring(m_holdDebrisVector.size()));
+				m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()) + L"/10");
 
 				//撃ったので必殺技ゲージを0に
 				m_specialAttackGauge = 0;
