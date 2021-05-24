@@ -12,42 +12,69 @@ ResultScene::~ResultScene()
 	DeleteGO(m_Command_SpriteRender);
 }
 bool ResultScene::Start()
-{
-	m_Down_SpriteRender = NewGO<prefab::CSpriteRender>(1);
-	m_Down_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-	m_Down_SpriteRender->Init("Assets/Image/Result_Down.dds", 1280, 720);
-	m_Down_SpriteRender->SetPosition({ m_DownPos });
+{	
+	//背景
+	m_BG_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_BG_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)0);
+	m_BG_SpriteRender->SetPosition({ Vector3::Zero });
+	m_BG_SpriteRender->Init("Assets/Image/TitleBG.dds", 1280, 720);
+	//モデルの描画前にスプライトを描画できるようにする。
+	m_BG_SpriteRender->SetPostRenderMode(false);
+	m_BG_SpriteRender->SetPosition({ m_UpPos });
 
-
-	m_Up_SpriteRender = NewGO<prefab::CSpriteRender>(0);
-	m_Up_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Up_SpriteRender = NewGO<prefab::CSpriteRender>(1);
+	m_Up_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)0);
 	m_Up_SpriteRender->Init("Assets/Image/Result_Up.dds", 1280, 720);
 	//モデルの描画前にスプライトを描画できるようにする。
 	m_Up_SpriteRender->SetPostRenderMode(false);
 	m_Up_SpriteRender->SetPosition({ m_UpPos });
 
 
-	m_Under_SpriteRender = NewGO<prefab::CSpriteRender>(0);
-	m_Under_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Under_SpriteRender = NewGO<prefab::CSpriteRender>(1);
+	m_Under_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)0);
 	m_Under_SpriteRender->Init("Assets/Image/Result_Under.dds", 1280, 720);
 	//モデルの描画前にスプライトを描画できるようにする。
 	m_Under_SpriteRender->SetPostRenderMode(false);
 	m_Under_SpriteRender->SetPosition({ m_UnderPos });
 
-	m_Lose_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Lose_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Lose_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Lose_SpriteRender->Init("Assets/Image/Result_Lose.dds", 372, 132);
 	m_Lose_SpriteRender->SetPosition({ m_LosePos });
 
-	m_Win_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Win_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Win_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Win_SpriteRender->Init("Assets/Image/Result_Win.dds", 300, 112);
 	m_Win_SpriteRender->SetPosition({ m_WinPos });
 
-	m_Command_SpriteRender = NewGO<prefab::CSpriteRender>(0);
+	m_Command_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Command_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
 	m_Command_SpriteRender->SetPosition({ m_CommandPos });
+
+	//後でアニメーション入れる
+	m_P1_skinModelRender = NewGO<prefab::CSkinModelRender>(3);
+	m_P1_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks");//, animationClips, enAnimationClip_num
+	m_P1_skinModelRender->SetPosition(m_WinnerPos);
+	//m_P1_skinModelRender->SetRotation(Quaternion::Identity);
+	m_P2_skinModelRender = NewGO<prefab::CSkinModelRender>(3);
+	m_P2_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks");//, animationClips, enAnimationClip_num
+	m_P2_skinModelRender->SetPosition(m_LoserPos);
+
+	m_Down_SpriteRender = NewGO<prefab::CSpriteRender>(2);
+	m_Down_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_Down_SpriteRender->Init("Assets/Image/Result_Down.dds", 1280, 720);
+	m_Down_SpriteRender->SetPosition({ m_DownPos });
+
+	g_camera3D[0]->SetPosition(m_cameraPos);
+	g_camera3D[0]->SetTarget({ 0,90,0 });
+
+	/*m_Down_SpriteRender->SetScale({ 0,0,0 });
+	m_Up_SpriteRender->SetScale({ 0,0,0 });
+	m_Under_SpriteRender->SetScale({ 0,0,0 });
+	m_Lose_SpriteRender->SetScale({ 0,0,0 });
+	m_Win_SpriteRender->SetScale({ 0,0,0 });
+	m_Command_SpriteRender->SetScale({ 0,0,0 });*/
 
 	return true;
 }
