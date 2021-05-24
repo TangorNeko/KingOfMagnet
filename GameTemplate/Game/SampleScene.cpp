@@ -426,7 +426,7 @@ void SampleScene::StartCountDown() {
 		prefab::CSoundSource* ssCount = NewGO<prefab::CSoundSource>(0);;
 		if (m_startCount >= 1 && m_startCount < 4) 
 		{
-			ssCount->Init(L"Assets/sound/カウント音.wav");
+			ssCount->Init(L"Assets/sound/カウント音2.wav");
 			ssCount->SetVolume(0.8f);
 		}
 		else if (m_startCount == 0)
