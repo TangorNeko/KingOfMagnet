@@ -150,7 +150,22 @@ void Debris::AsDropBehave()
 				//プレイヤーの保持するガレキコンテナに格納
 				player->m_holdDebrisVector.push_back(this);
 				//テキスト更新
-				player->m_bulletNumber->SetText(std::to_wstring(player->m_holdDebrisVector.size()) + L"/10");
+				player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
+				if (player->m_playerNum == 0)
+				{
+					if (player->m_holdDebrisVector.size() >= 10)
+						player->m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+
+					else
+						player->m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+				}
+				else
+				{
+					if (player->m_holdDebrisVector.size() >= 10)
+						player->m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+					else
+						player->m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+				}
 			}
 		}
 
