@@ -1205,7 +1205,7 @@ void Player::Camera()
 		qRotX.Apply(checkToCamera);
 		checkToCamera.Normalize();
 		float t = checkToCamera.Dot(Vector3::Up);
-		if (t > 0.99f || t < -0.99f)
+		if (t > 0.9999f || t < -0.9999f)
 		{
 
 		}

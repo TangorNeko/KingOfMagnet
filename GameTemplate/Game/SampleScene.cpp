@@ -42,10 +42,6 @@ SampleScene::~SampleScene()
 		});
 
 	DeleteGO(ssBGM);
-
-	DeleteGO(m_onesPlaceSpriteRender);
-	if (int(m_timeLimit) >= 10)
-		DeleteGO(m_tensPlaceSpriteRender);
 }
 
 bool SampleScene::Start()
@@ -285,6 +281,8 @@ void SampleScene::Update()
 			DeleteGO(m_HPCoverSpriteRender);
 			DeleteGO(m_TimerBaseSpriteRender);
 			DeleteGO(m_onesPlaceSpriteRender);
+			if (int(m_timeLimit) >= 10)
+				DeleteGO(m_tensPlaceSpriteRender);
 			DeleteGO(m_drawFontRender);
 			NewGO<SampleScene>(0, "gamescene");
 			DeleteGO(this);
