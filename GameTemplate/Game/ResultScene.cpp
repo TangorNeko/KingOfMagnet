@@ -13,6 +13,7 @@ ResultScene::~ResultScene()
 	DeleteGO(m_BG_SpriteRender);
 	DeleteGO(m_P1_skinModelRender);
 	DeleteGO(m_P2_skinModelRender);
+	DeleteGO(m_winnerDirectionLight);
 }			 
 bool ResultScene::Start()
 {	
@@ -55,14 +56,16 @@ bool ResultScene::Start()
 	m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
 	m_Command_SpriteRender->SetPosition({ m_CommandPos });
 	
-	//後でアニメーション入れる
+	//勝者、敗者のモデル
+	m_animationClips[enAnimationClip_Win].Load("Assets/animData/Mage_SpecialAttack2.tka");
+	m_animationClips[enAnimationClip_Win].SetLoopFlag(true);
+	m_animationClips[enAnimationClip_Lose].Load("Assets/animData/Mage_Stunned.tka");
+	m_animationClips[enAnimationClip_Lose].SetLoopFlag(true);
 	m_P1_skinModelRender = NewGO<prefab::CSkinModelRender>(3);
-	m_P1_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks");//, animationClips, enAnimationClip_num
-	m_P1_skinModelRender->SetPosition(m_WinnerPos);
-	//m_P1_skinModelRender->SetRotation(Quaternion::Identity);
+	m_P1_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks",m_animationClips,enAnimationClip_Num);
 	m_P2_skinModelRender = NewGO<prefab::CSkinModelRender>(3);
-	m_P2_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks");//, animationClips, enAnimationClip_num
-	m_P2_skinModelRender->SetPosition(m_LoserPos);
+	m_P2_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks", m_animationClips, enAnimationClip_Num);
+	//勝ったプレイヤーで分岐
 	if (m_loserNum == 0)
 	{
 		m_P1_skinModelRender->SetPosition(m_LoserPos);
@@ -73,6 +76,11 @@ bool ResultScene::Start()
 		m_P1_skinModelRender->SetPosition(m_WinnerPos);
 		m_P2_skinModelRender->SetPosition(m_LoserPos);
 	}
+
+	m_winnerDirectionLight = NewGO<prefab::CDirectionLight>(0);
+	m_winnerDirectionLight->SetDirection({ 0.0f,-1.0f,-1.0f });
+	m_winnerDirectionLight->SetColor({ 1.0f,1.0f,1.0f });
+
 	m_Down_SpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_Down_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Down_SpriteRender->Init("Assets/Image/Result_Down.dds", 1280, 720);
@@ -92,6 +100,17 @@ bool ResultScene::Start()
 }
 void ResultScene::Update()
 {
+	if (m_loserNum == 0)
+	{
+		m_P1_skinModelRender->PlayAnimation(enAnimationClip_Lose);
+		m_P2_skinModelRender->PlayAnimation(enAnimationClip_Win);
+	}
+	else
+	{
+		m_P1_skinModelRender->PlayAnimation(enAnimationClip_Win);
+		m_P2_skinModelRender->PlayAnimation(enAnimationClip_Lose);
+	}
+
 	//上か下ボタンを押すとリトライと、タイトルが切り替える
 	if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[1]->IsTrigger(enButtonDown) || g_pad[0]->IsTrigger(enButtonDown) || g_pad[1]->IsTrigger(enButtonUp)) {
 		if (m_RetryOn == true)
