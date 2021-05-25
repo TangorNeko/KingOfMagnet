@@ -1215,9 +1215,23 @@ void Player::Camera()
 		}
 	}
 
+	//本来のカメラ位置
 	cameraPos = targetPos + m_toCameraDir * 125.0f;
 
-	g_camera3D[m_playerNum]->SetPosition(cameraPos);
+	//バネカメラ的なもの　カメラのターゲット位置から本来のカメラ位置へのベクトルがステージに衝突しているか判定
+	Vector3 crossPoint;
+	bool isHit = m_stageModel->isLineHitModel(targetPos, cameraPos, crossPoint);
+
+	if (isHit == false)
+	{
+		//当たっていないなら本来のカメラ位置
+		g_camera3D[m_playerNum]->SetPosition(cameraPos);
+	}
+	else
+	{
+		//当たっているなら当たった位置にカメラを移動
+		g_camera3D[m_playerNum]->SetPosition(crossPoint);
+	}
 	g_camera3D[m_playerNum]->SetTarget(targetPos);
 
 	//ライト
