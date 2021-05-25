@@ -5,7 +5,8 @@ class TitleScene:public IGameObject
 	void Update() override;
 	~TitleScene();
 public:
-	prefab::CSpriteRender* m_BG_SpriteRender = nullptr;
+	prefab::CSkinModelRender* m_BG_ModelRender = nullptr;
+	prefab::CPointLight* m_BGLight = nullptr;
 	prefab::CSpriteRender* m_Monitor_SpriteRender = nullptr;
 	prefab::CSpriteRender* m_MonitorLine_SpriteRender = nullptr;
 	prefab::CSpriteRender* m_Rogo_SpriteRender = nullptr;

@@ -4,7 +4,8 @@
 #include "SampleScene.h"
 TitleScene::~TitleScene() 
 {
-	DeleteGO(m_BG_SpriteRender);
+	DeleteGO(m_BG_ModelRender);
+	DeleteGO(m_BGLight);
 	DeleteGO(m_Monitor_SpriteRender);
 	DeleteGO(m_MonitorLine_SpriteRender);
 	DeleteGO(m_Rogo_SpriteRender);
@@ -15,11 +16,16 @@ TitleScene::~TitleScene()
 }
 bool TitleScene::Start()
 {	
-	//背景
-	m_BG_SpriteRender = NewGO<prefab::CSpriteRender>(0);
-	m_BG_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-	m_BG_SpriteRender->SetPosition({ Vector3::Zero });
-	m_BG_SpriteRender->Init("Assets/Image/TitleBG.dds", 1280, 720);
+	//背景のモデル
+	m_BG_ModelRender = NewGO<prefab::CSkinModelRender>(0);
+	m_BG_ModelRender->Init("Assets/modelData/TitleCylinder.tkm");
+	m_BG_ModelRender->SetPosition({ 0.0f,-300.0f,-75.0f });
+
+	//背景のモデルを照らすポイントライト
+	m_BGLight = NewGO<prefab::CPointLight>(0);
+	m_BGLight->SetRange(1500.0f);
+	m_BGLight->SetPosition(Vector3::Zero);
+	m_BGLight->SetColor(Vector3::One);
 
 	//モニター
 	m_Monitor_SpriteRender =NewGO<prefab::CSpriteRender>(0);
