@@ -22,5 +22,22 @@ public:
 	Vector3 m_centerPos = { 320.0f,0.0f,0.0f };//中
 	Vector3 m_bottomPos = { 440.0f,-200.0f,0.0f };//下
 	
+private:
+	void CommandMove();
+	void CommandSelectMove();
+
+	//コマンドの種類
+	enum TitleCommand {
+		TC_Start,
+		TC_Option,
+		TC_Exit
+	};
+	TitleCommand m_titleCommand = TC_Start;		//現在選択中のコマンド
+	bool m_selectFlag = false;					//コマンド決定済？
+	bool m_selectMoveFlag = false;				//コマンド移動中？
+	bool m_comandUpDown = false;				//false:上 true:下
+
+	int m_commandTimer = 0;
+
 };
 
