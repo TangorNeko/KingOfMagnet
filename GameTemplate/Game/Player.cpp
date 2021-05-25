@@ -21,6 +21,10 @@ Player::~Player()
 	{
 		DeleteGO(m_bulletNumFont);
 	}
+	if (m_bulletNumFont2 != nullptr)
+	{
+		DeleteGO(m_bulletNumFont2);
+	}
 
 	if (m_crosshairRender != nullptr)
 	{
@@ -1832,6 +1836,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		//HPバー、画面分割線、メビウスゲージを消す
 		DeleteGO(m_bulletNumFont);
 		m_bulletNumFont = nullptr;
+		DeleteGO(m_bulletNumFont2);
+		m_bulletNumFont2 = nullptr;
 		DeleteGO(m_crosshairRender);
 		m_crosshairRender = nullptr;
 		DeleteGO(m_HPBarSpriteRender);
