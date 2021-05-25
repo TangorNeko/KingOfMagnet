@@ -7,6 +7,8 @@
 Repulsion::~Repulsion()
 {
 	DeleteGO(m_skinModelRender);
+	DeleteGO(m_ss2[0]);
+	DeleteGO(m_ss2[1]);
 }
 bool Repulsion::Start()
 {
@@ -16,6 +18,12 @@ bool Repulsion::Start()
 	m_skinModelRender->SetRotation(m_rot);
 	m_skinModelRender->SetScale(m_scale);
 	m_gameScene = FindGO<SampleScene>("gamescene");
+
+	m_ss2[0] = NewGO<prefab::CSoundSource>(0);
+	m_ss2[0]->Init(L"Assets/sound/UFO.wav");
+	m_ss2[1] = NewGO<prefab::CSoundSource>(0);
+	m_ss2[1]->Init(L"Assets/sound/UFO.wav");
+
 	return true;
 }
 void Repulsion::Update()
@@ -59,8 +67,7 @@ void Repulsion::Update()
 
 					//ss2を鳴らす。
 					if (m_isPlayss2[player->m_playerNum] == false) {												
-						m_ss2[player->m_playerNum] = NewGO<prefab::CSoundSource>(0);
-						m_ss2[player->m_playerNum]->Init(L"Assets/sound/UFO.wav");
+						
 						m_ss2[player->m_playerNum]->SetVolume(1.5f);
 						m_ss2[player->m_playerNum]->Play(true);	
 						m_isPlayss2[player->m_playerNum] = true;
@@ -88,11 +95,11 @@ void Repulsion::Update()
 					{
 						m_ss2Volume[player->m_playerNum] -= 0.01f;
 						m_ss2[player->m_playerNum]->SetVolume(m_ss2Volume[player->m_playerNum]);
-						//音が完全に消えたら、Delete。
+						//音が完全に消えたら、Stop
 						if (m_ss2Volume[player->m_playerNum] <= 0.0f)
 						{
 							m_ss2Volume[player->m_playerNum] = 0.0f;
-							DeleteGO(m_ss2[player->m_playerNum]);
+							m_ss2[player->m_playerNum]->Stop();
 							m_isPlayss2[player->m_playerNum] = false;
 						}
 					}

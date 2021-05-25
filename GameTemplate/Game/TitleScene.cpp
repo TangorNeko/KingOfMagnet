@@ -349,7 +349,7 @@ void TitleScene::CommandSelectMove() {
 		//SE
 		prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
 		ss1->Init(L"Assets/sound/ƒKƒL[ƒ“!.wav");
-		ss1->SetVolume(1.0f);
+		ss1->SetVolume(1.2f);
 		ss1->Play(false);
 	}
 }
