@@ -42,7 +42,7 @@ void DebrisBlock::Update()
 			Vector3 toPlayer = player->m_position - m_position;
 
 			//引力バーストしているプレイヤーが距離500以内に近づき、タイマーが上がっていて、ゲームに存在できる最大数未満であれば新しくガレキを生成
-			if (player->m_magPower == -1 && player->m_isBurst == true && m_factoryTimer <= 0 && toPlayer.Length() < 5000.0f)
+			if (player->m_magPower == -1 && player->m_isBurst == true && m_factoryTimer <= 0 && toPlayer.Length() < 500.0f)
 			{
 				for (int i = 0; i < 5; i++)//弾を拾う数
 				{

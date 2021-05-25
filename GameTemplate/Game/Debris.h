@@ -64,5 +64,8 @@ public:
 
 	//スペシャルチャージャー用
 	float m_specialChargeCount = 0.0f;	//スペシャルゲージを増やすまでのカウント
+
+	//地面についているかどうか
+	bool m_isOnGround = false;
 };
 

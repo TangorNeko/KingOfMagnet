@@ -109,110 +109,122 @@ void Debris::AsDropBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool {
 
 		Vector3 toPlayer = player->m_position - m_position;
-
-		//引力の時のみ
-		if (player->m_magPower == -1)
+		if (player->m_isBurst == true)
 		{
-			//バーストしてたら引っ張ってくる
-			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			//引力の時のみ
+			if (player->m_magPower == -1)
 			{
-				toPlayer.y += 10.0f;
-				Vector3 moveDir = toPlayer;
-				moveDir.Normalize();
-
-				//x、zそれぞれ別々で測る
-				m_position.x += moveDir.x *= 30.0f;
-				//壁にぶつかったとき
-				Vector3 crossPoint;
-				bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-				if (isHit == true) {
-					m_position = m_oldPosition;
-				}
-				else
-					m_oldPosition = m_position;
-
-				m_position.z += moveDir.z *= 30.0f;
-				//壁にぶつかったとき
-				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-				if (isHit == true) {
-					m_position = m_oldPosition;
-				}
-				else
-					m_oldPosition = m_position;
-			}
-
-			//近くに弾があれば10発以内なら拾える
-			if (toPlayer.Length() < 100.0f && player->m_holdDebrisVector.size() < 10)
-			{
-				m_parent = player;
-				m_debrisState = enHold;
-
-				//プレイヤーの保持するガレキコンテナに格納
-				player->m_holdDebrisVector.push_back(this);
-				//テキスト更新
-				player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
-				if (player->m_playerNum == 0)
+				//バーストしてたら引っ張ってくる
+				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
 				{
-					if (player->m_holdDebrisVector.size() >= 10)
-						player->m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+					toPlayer.y += 10.0f;
+					Vector3 moveDir = toPlayer;
+					moveDir.Normalize();
 
+					//x、zそれぞれ別々で測る
+					m_position.x += moveDir.x *= 30.0f;
+					//壁にぶつかったとき
+					Vector3 crossPoint;
+					bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+					if (isHit == true) {
+						m_position = m_oldPosition;
+					}
 					else
-						player->m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+						m_oldPosition = m_position;
+
+					m_position.z += moveDir.z *= 30.0f;
+					//壁にぶつかったとき
+					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+					if (isHit == true) {
+						m_position = m_oldPosition;
+					}
+					else
+						m_oldPosition = m_position;
 				}
-				else
+
+				//近くに弾があれば10発以内なら拾える
+				if (toPlayer.Length() < 100.0f && player->m_holdDebrisVector.size() < 10)
 				{
-					if (player->m_holdDebrisVector.size() >= 10)
-						player->m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+					m_parent = player;
+					m_debrisState = enHold;
+
+					//プレイヤーの保持するガレキコンテナに格納
+					player->m_holdDebrisVector.push_back(this);
+					//テキスト更新
+					player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
+					if (player->m_playerNum == 0)
+					{
+						if (player->m_holdDebrisVector.size() >= 10)
+							player->m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+
+						else
+							player->m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+					}
 					else
-						player->m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+					{
+						if (player->m_holdDebrisVector.size() >= 10)
+							player->m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+						else
+							player->m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+					}
 				}
 			}
-		}
 
-		//斥力の時
-		if (player->m_magPower == 1)
-		{
-			//バーストしてたら引っ張ってくる
-			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			//斥力の時
+			else if (player->m_magPower == 1)
 			{
-				Vector3 moveDir = toPlayer;
-				moveDir.y = 0.0f;
-				moveDir.Normalize();
+				//バーストしてたら引っ張ってくる
+				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
+				{
+					Vector3 moveDir = toPlayer;
+					moveDir.y = 0.0f;
+					moveDir.Normalize();
 
-				//x、zそれぞれ別々で測る
-				m_position.x += moveDir.x *= -30.0f;
-				//壁にぶつかったとき
-				Vector3 crossPoint;
-				bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-				if (isHit == true) {
-					m_position = m_oldPosition;
+					//x、zそれぞれ別々で測る
+					m_position.x += moveDir.x *= -30.0f;
+					//壁にぶつかったとき
+					Vector3 crossPoint;
+					bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+					if (isHit == true) {
+						m_position = m_oldPosition;
+					}
+					else
+						m_oldPosition = m_position;
+
+					m_position.z += moveDir.z *= -30.0f;
+					//壁にぶつかったとき
+					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+					if (isHit == true) {
+						m_position = m_oldPosition;
+					}
+					else
+						m_oldPosition = m_position;
+
+					m_position.y += 10.0f;
 				}
-				else
-					m_oldPosition = m_position;
 
-				m_position.z += moveDir.z *= -30.0f;
-				//壁にぶつかったとき
-				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-				if (isHit == true) {
-					m_position = m_oldPosition;
-				}
-				else
-					m_oldPosition = m_position;
-
-				m_position.y += 10.0f;
 			}
-			
 		}
 		return true;
 		});
+
 	//重力処理
-	m_position.y -= 5.0f;
-	Vector3 crossPoint;
-	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-	if (isHit == true)
+	if (m_position.y != m_oldPosition.y)
 	{
-		m_position = m_oldPosition;
+		m_isOnGround = false;
 	}
+	if (m_isOnGround == false)
+	{
+		m_position.y -= 5.0f;
+		Vector3 crossPoint;
+		bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+		if (isHit == true)
+		{
+			m_position = m_oldPosition;
+			m_isOnGround = true;
+		}
+	}
+	
 }
 
 //弾として発射されている時の挙動

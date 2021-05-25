@@ -42,8 +42,10 @@ SampleScene::~SampleScene()
 		});
 
 	DeleteGO(ssBGM);
+
 	DeleteGO(m_onesPlaceSpriteRender);
-	DeleteGO(m_tensPlaceSpriteRender);
+	if (int(m_timeLimit) >= 10)
+		DeleteGO(m_tensPlaceSpriteRender);
 }
 
 bool SampleScene::Start()
@@ -173,13 +175,14 @@ bool SampleScene::Start()
 	m_CountDown_1_1->SetPosition({ 0.0f,600.0f,0.0f });
 	m_CountDown_1_1->Init("Assets/Image/Count/CountLine.dds", 36, 200);
 
-	//
+	//タイムリミットの一桁目
 	m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_onesPlaceSpriteRender->SetPosition({ 27.0f, 315.0f, 0.0f });
 	m_onesPlaceSpriteRender->SetScale({0.25f,0.25f,1.0f});
 	m_onesPlaceSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
 
+	//タイムリミットの二桁目
 	m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_tensPlaceSpriteRender->SetPosition({ -27.0f, 315.0f, 0.0f });
 	m_tensPlaceSpriteRender->SetScale({ 0.25f,0.25f,1.0f });
@@ -332,8 +335,8 @@ void SampleScene::WinnerJudge()
 		m_drawFontRender = NewGO<prefab::CFontRender>(4);
 		m_drawFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 		m_drawFontRender->SetPosition({ -185.0f, 130.0f });
-		m_drawFontRender->SetScale({ 3.0f, 3.0f });
-		m_drawFontRender->SetText(L"Draw!");
+		m_drawFontRender->SetScale({ 2.0f, 2.0f });
+		m_drawFontRender->SetText(L"DRAW!");
 	}
 }
 
@@ -606,7 +609,7 @@ void SampleScene::TimeLimitChangesSprits(int num, int numPlace)
 			}
 			else if (numPlace == 0)
 			{
-				//一桁になったら、十の位表示位置を真ん中に。
+				//一桁になったら、一の位表示位置を真ん中に。
 				DeleteGO(m_tensPlaceSpriteRender);
 				m_onesPlaceSpriteRender->SetPosition({ 0.0f, 315.0f, 0.0f });
 				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", 500, 500);
