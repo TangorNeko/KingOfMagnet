@@ -175,7 +175,7 @@ namespace prefab
 	}
 
 	//事前にモデルをロードしておく。
-	void PreLoadModel(const char* tkmFilePath)
+	void CSkinModelRender::PreLoadModel(const char* tkmFilePath)
 	{
 		TkmFile* tkmFile = ResourceBankManager::GetInstance()->GetTkmFileFromBank(tkmFilePath);
 
