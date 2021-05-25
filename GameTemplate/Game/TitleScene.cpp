@@ -72,13 +72,14 @@ bool TitleScene::Start()
 	m_Arrow_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Arrow_SpriteRender->SetPosition({ 600,0,0 });
 	m_Arrow_SpriteRender->Init("Assets/Image/Title_Arrow.dds", 48, 88);
-
+//カメラ位置の初期化
+	g_camera3D[0]->SetPosition({ 0.0f,50.0f,200.0f });
+	g_camera3D[0]->SetTarget({ 0.0f,50.0f,0.0f });
 	//BGMを再生
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/タイトル曲.wav");
 	ssBGM->SetVolume(0.2f);
-	ssBGM->Play(true);
-	return true;
+	ssBGM->Play(true);	return true;
 }
 void TitleScene::Update()
 {

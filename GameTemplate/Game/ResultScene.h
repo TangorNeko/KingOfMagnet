@@ -19,9 +19,21 @@ public:
 
 	prefab::CSkinModelRender* m_P1_skinModelRender = nullptr;
 	prefab::CSkinModelRender* m_P2_skinModelRender = nullptr;
-	//仮のポジション
-	Vector3 m_WinnerPos = { 100,50,0 };
-	Vector3 m_LoserPos = { -100,50,0 };
+
+	//勝者を照らすライト
+	prefab::CDirectionLight* m_winnerDirectionLight = nullptr;
+
+	enum {
+		enAnimationClip_Win,
+		enAnimationClip_Lose,
+		enAnimationClip_Num,
+	};
+	AnimationClip m_animationClips[enAnimationClip_Num];
+
+	//勝者、敗者のポジション
+	Vector3 m_WinnerPos = { 60,25,100 };
+	Vector3 m_LoserPos = { -50,40,100 };
+	//カメラのポジション
 	Vector3 m_cameraPos = { 0,90,250 };
 
 	Vector3 m_DownPos = { Vector3::Zero };

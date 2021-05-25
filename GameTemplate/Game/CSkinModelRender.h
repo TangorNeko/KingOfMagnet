@@ -176,6 +176,9 @@ namespace prefab
 		/// <param name="boneName">ボーンの名前</param>
 		/// <returns></returns>
 		Matrix GetWorldMatrixFromBoneName(const wchar_t* boneName);
+
+		//事前にモデルをロードしておく。
+		void PreLoadModel(const char* tkmFilePath);
 	};
 }
 

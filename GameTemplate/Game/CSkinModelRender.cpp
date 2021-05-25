@@ -173,4 +173,18 @@ namespace prefab
 		int boneNo = m_skeleton.FindBoneID(boneName);
 		return m_skeleton.GetBone(boneNo)->GetWorldMatrix();
 	}
+
+	//事前にモデルをロードしておく。
+	void PreLoadModel(const char* tkmFilePath)
+	{
+		TkmFile* tkmFile = ResourceBankManager::GetInstance()->GetTkmFileFromBank(tkmFilePath);
+
+		if (tkmFile == nullptr)
+		{
+			//未登録
+			tkmFile = new TkmFile;
+			tkmFile->Load(tkmFilePath);
+			ResourceBankManager::GetInstance()->RegistTkmFileToBank(tkmFilePath, tkmFile);
+		}
+	}
 }
