@@ -56,7 +56,7 @@ bool SampleScene::Start()
 	m_stageLight->SetColor({ 0.8f,0.8f,0.8f });
 
 	m_player1 = NewGO<Player>(0, "Player");
-	m_player1->m_position = { 860.0f,0.0f,400.0f };
+	m_player1->m_position = { 760.0f,0.0f,400.0f };
 	//m_player1->m_position = { 250.0f,0.0f,250.0f };//ミニステージ
 	m_player1->m_playerNum = 0;
 	m_player1->m_magPower = 1;
@@ -64,9 +64,8 @@ bool SampleScene::Start()
 	m_player1->m_characterDirection = { -1.0f,0.0f,0.0f };
 
 	m_player2 = NewGO<Player>(0, "Player");
-	m_player2->m_position = { -860.0f,0.0f,-400.0f };
+	m_player2->m_position = { -760.0f,0.0f,-400.0f };
 	//m_player2->m_position = { -250.0f,0.0f,-250.0f };//ミニステージ
-
 	m_player2->m_playerNum = 1;
 	m_player2->m_magPower = -1;
 	m_player2->m_toCameraDir = { -1.0f,0.0f,0.0f };
