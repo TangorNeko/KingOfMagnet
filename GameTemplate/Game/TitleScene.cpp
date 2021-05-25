@@ -72,6 +72,12 @@ bool TitleScene::Start()
 	m_Arrow_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Arrow_SpriteRender->SetPosition({ 600,0,0 });
 	m_Arrow_SpriteRender->Init("Assets/Image/Title_Arrow.dds", 48, 88);
+
+	//BGMを再生
+	ssBGM = NewGO<prefab::CSoundSource>(0);
+	ssBGM->Init(L"Assets/sound/タイトル曲.wav");
+	ssBGM->SetVolume(0.2f);
+	ssBGM->Play(true);
 	return true;
 }
 void TitleScene::Update()
@@ -96,12 +102,24 @@ void TitleScene::Update()
 			m_selectMoveFlag = true;
 			m_comandUpDown = false;
 			m_commandTimer = 0;
+
+			//SE
+			prefab::CSoundSource* ss2 = NewGO<prefab::CSoundSource>(0);
+			ss2->Init(L"Assets/sound/タイトル画面SE1.wav");
+			ss2->SetVolume(0.8f);
+			ss2->Play(false);
 		}
 		//コマンド移動 下
 		if ((g_pad[0]->IsTrigger(enButtonDown)) && m_selectMoveFlag == false) {
 			m_selectMoveFlag = true;
 			m_comandUpDown = true;
 			m_commandTimer = 0;
+
+			//SE
+			prefab::CSoundSource* ss3 = NewGO<prefab::CSoundSource>(0);
+			ss3->Init(L"Assets/sound/タイトル画面SE1.wav");
+			ss3->SetVolume(0.8f);
+			ss3->Play(false);
 		}
 
 		if (m_selectMoveFlag == true) {
@@ -323,5 +341,14 @@ void TitleScene::CommandSelectMove() {
 			break;
 		}
 	}
-
+	if (m_commandTimer == 20)
+	{
+		//BGMを消す
+		DeleteGO(ssBGM);
+		//SE
+		prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
+		ss1->Init(L"Assets/sound/ガキーン!.wav");
+		ss1->SetVolume(1.0f);
+		ss1->Play(false);
+	}
 }
