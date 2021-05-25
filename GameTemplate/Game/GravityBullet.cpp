@@ -197,7 +197,8 @@ void GravityBullet::AsGravityBehave()
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				Vector3 diff = m_position - player->m_position;
-				if (diff.Length() < 400.0f && player != m_parent)
+				if (diff.Length() > 60.0f &&	//ãﬂÇ∑Ç¨ÇƒÇ‡É_ÉÅ
+					diff.Length() < 400.0f && player != m_parent)
 				{
 					//Yé≤Ç‡ãzÇ¢äÒÇπÇÈÇ∆è∞î≤ÇØÇ∑ÇÈÇ±Ç∆Ç™Ç†ÇÈÇÃÇ≈yé≤ÇèúÇ≠ÅB
 					Vector3 toGravity = diff;
