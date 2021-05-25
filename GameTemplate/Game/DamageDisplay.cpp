@@ -32,7 +32,7 @@ void DamageDisplay::Update()
 		m_damagePos.y += 1.0f;
 		m_Alpha -= 0.02;
 	}
-	if (m_loopcount > m_deletetime+5000)//50フレーム立ってから消す
+	if (m_loopcount > m_deletetime)//50フレーム立ってから消す
 	{
 		DeleteGO(this);
 	}	

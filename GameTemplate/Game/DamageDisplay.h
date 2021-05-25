@@ -10,7 +10,7 @@ public:
 	int m_damage = 0;
 	int m_enemyNum;
 	int m_loopcount=0;
-	int m_deletetime = 10;
+	int m_deletetime = 50;
 	float m_Alpha = 1.0f;
 	prefab::CFontRender* m_fontRenderDamage = nullptr;
 

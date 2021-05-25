@@ -12,6 +12,7 @@ GravityBullet::~GravityBullet()
 
 	DeleteGO(m_effect2);
 	DeleteGO(m_wearingEffect);
+	DeleteGO(m_inflateEffect);
 }
 
 bool GravityBullet::Start()
