@@ -352,6 +352,29 @@ void Debris::AsHoldBehave()
 			}
 		return true;
 	});
+
+	//プレイヤーの向きにガレキのモデルも向ける。
+	//ガレキの回転クォータニオン
+	Quaternion DebrisRot;
+	//キャラの向きを取得
+	Vector3 CharacterDirection = m_parent->m_toCameraDir * -1.0f;
+	//上下方向の向きは無視する。
+	CharacterDirection.y = 0.0f;
+	CharacterDirection.Normalize();
+
+	//キャラの向きと基準方向AxisZとの角度を求める
+	float dot = CharacterDirection.Dot(Vector3::AxisZ);
+	float angle = acosf(dot);//アークコサイン
+	//角度しか求まらないのでキャラの向きでどちら回りかを決める
+	//反時計回りなら正の数　時計回りなら負の数
+	if (CharacterDirection.x < 0)
+	{
+		angle *= -1;
+	}
+	//Y軸まわりに回転をセット
+	DebrisRot.SetRotation(Vector3::AxisY, angle);
+	//モデルに回転を適用。
+	m_skinModelRender->SetRotation(DebrisRot);
 }
 
 //何かに当たった直後の挙動

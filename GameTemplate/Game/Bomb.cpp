@@ -36,14 +36,14 @@ bool Bomb::Start()
 		break;
 	case enFlashGrenade:
 		m_skinModelRender->Init("Assets/modelData/FlashGrenade.tkm");
-		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
+		m_skinModelRender->SetScale({ 0.35f, 0.35f, 0.35f });
 		//投げる角度を少し上にする。
 		m_moveDirection.y += 0.4f;
 		m_moveDirection.Normalize();
 		break;
 	case enIncendiaryGrenade:
 		m_skinModelRender->Init("Assets/modelData/SmokeGrenade.tkm");
-		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
+		m_skinModelRender->SetScale({ 0.25f, 0.25f, 0.25f });
 		//投げる角度を少し上にする。
 		m_moveDirection.y += 0.4f;
 		m_moveDirection.Normalize();
@@ -283,6 +283,28 @@ void Bomb::AsBulletBehave()
 //プレイヤーに保持されている時の挙動
 void Bomb::AsHoldBehave()
 {
+	//プレイヤーの向きに爆弾のモデルも向ける。
+	//爆弾の回転クォータニオン
+	Quaternion DebrisRot;
+	//キャラの向きを取得
+	Vector3 CharacterDirection = m_parent->m_toCameraDir * -1.0f;
+	//上下方向の向きは無視する。
+	CharacterDirection.y = 0.0f;
+	CharacterDirection.Normalize();
+
+	//キャラの向きと基準方向AxisZとの角度を求める
+	float dot = CharacterDirection.Dot(Vector3::AxisZ);
+	float angle = acosf(dot);//アークコサイン
+	//角度しか求まらないのでキャラの向きでどちら回りかを決める
+	//反時計回りなら正の数　時計回りなら負の数
+	if (CharacterDirection.x < 0)
+	{
+		angle *= -1;
+	}
+	//Y軸まわりに回転をセット
+	DebrisRot.SetRotation(Vector3::AxisY, angle);
+	//モデルに回転を適用。
+	m_skinModelRender->SetRotation(DebrisRot);
 }
 
 //何かに当たった直後の挙動
