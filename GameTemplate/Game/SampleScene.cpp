@@ -302,7 +302,7 @@ void SampleScene::Update()
 		effect->SetScale({ 30.0f, 30.0f, 30.0f });
 		effect->Play();
 		//•KŽE‹ZŽŽ‚·—p
-		pl->ChargeSpecialAttackGauge(100);
+		pl->ChargeSpecialAttackGauge(10);
 
 	}
 }

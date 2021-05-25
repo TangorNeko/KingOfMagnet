@@ -17,9 +17,9 @@ Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
 
-	if (m_bulletNumber != nullptr)
+	if (m_bulletNumFont != nullptr)
 	{
-		DeleteGO(m_bulletNumber);
+		DeleteGO(m_bulletNumFont);
 	}
 
 	if (m_crosshairRender != nullptr)
@@ -100,32 +100,46 @@ bool Player::Start()
 	m_charaCon.Init(10.0f, 50.0f, m_position);
 
 	//残弾数表示の初期化
-	m_bulletNumber = NewGO<prefab::CFontRender>(6);
-	m_bulletNumber->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	m_bulletNumFont = NewGO<prefab::CFontRender>(6);
+	m_bulletNumFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	if (m_playerNum == 0)
 	{
-		m_bulletNumber->SetPosition({ -200.0f, -270.0f });
+		m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
 	}
 	else
 	{
-		m_bulletNumber->SetPosition({ 20.0f, -270.0f });
+		m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
 	}
-	m_bulletNumber->SetScale({ 1.0f,1.0f });
-	m_bulletNumber->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
-	m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()) + +L"/10");
+	m_bulletNumFont->SetScale({ 1.0f,1.0f });
+	m_bulletNumFont->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
+	m_bulletNumFont->SetText(std::to_wstring(m_holdDebrisVector.size()));
+
+	m_bulletNumFont2 = NewGO<prefab::CFontRender>(6);
+	m_bulletNumFont2->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	if (m_playerNum == 0)
+	{
+		m_bulletNumFont2->SetPosition({ -130.0f, -283.0f });
+	}
+	else
+	{
+		m_bulletNumFont2->SetPosition({ 100.0f, -283.0f });
+	}
+	m_bulletNumFont2->SetScale({ 0.7f,0.7f });
+	m_bulletNumFont2->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
+	m_bulletNumFont2->SetText(L"/10");
 
 	//必殺ゲージの溜まり具合を表示するフォント
 	m_ChargeSPFontRender = NewGO<prefab::CFontRender>(6);
 	m_ChargeSPFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	if (m_playerNum == 0)
 	{
-		m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
+		m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
 	}
 	else
 	{
-		m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
+		m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
 	}
-	m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+	m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
 	m_ChargeSPFontRender->SetColor({ 1.0f,1.0f, 0.0f,1.0f });
 	m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 
@@ -579,7 +593,22 @@ void Player::Attack()
 			m_holdDebrisVector.erase(m_holdDebrisVector.begin());
 
 			//テキスト更新
-			m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()) + L"/10");
+			m_bulletNumFont->SetText(std::to_wstring(m_holdDebrisVector.size()));
+			if (m_playerNum == 0)
+			{
+				if (m_holdDebrisVector.size() >= 10)
+					m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+
+				else 
+					m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+			}
+			else
+			{
+				if (m_holdDebrisVector.size() >= 10)
+					m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+				else
+					m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+			}
 		}
 
 	}
@@ -689,14 +718,14 @@ void Player::SpecialAttack()
 			m_specialShotCount = 0;
 			if (m_playerNum == 0)
 			{
-				m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
-				m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+				m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
 				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
-				m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
-				m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+				m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
 				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 		}
@@ -751,7 +780,14 @@ void Player::SpecialAttack()
 				m_holdDebrisVector.clear();
 
 				//テキスト更新
-				m_bulletNumber->SetText(std::to_wstring(m_holdDebrisVector.size()) + L"/10");
+				m_bulletNumFont->SetText(std::to_wstring(m_holdDebrisVector.size()));
+				if (m_playerNum == 0)					
+					m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+				
+				else
+					m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+				
+
 
 				//撃ったので必殺技ゲージを0に
 				m_specialAttackGauge = 0;
@@ -759,14 +795,14 @@ void Player::SpecialAttack()
 				m_specialShotCount = 0;
 				if (m_playerNum == 0)
 				{
-					m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
-					m_ChargeSPFontRender->SetScale({1.0f,1.0f});
+					m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+					m_ChargeSPFontRender->SetScale({0.7f,0.7f});
 					m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 				else
 				{
-					m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
-					m_ChargeSPFontRender->SetScale({ 1.0f,1.0f });
+					m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+					m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
 					m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 			}
@@ -1355,13 +1391,13 @@ void Player::ChargeSpecialAttackGauge(int charge)
 			m_ChargeSPFontRender->SetText(L"MAX");
 			if (m_playerNum == 0)
 			{
-				m_ChargeSPFontRender->SetPosition({ -580.0f, -180.0f });
+				m_ChargeSPFontRender->SetPosition({ -585.0f, -215.0f });
 			}
 			else
 			{
-				m_ChargeSPFontRender->SetPosition({ 470.0f, -180.0f });
+				m_ChargeSPFontRender->SetPosition({ 465.0f, -215.0f });
 			}
-			m_ChargeSPFontRender->SetScale({1.5f,1.5f});
+			m_ChargeSPFontRender->SetScale({1.0f,1.0f});
 		}
 	}
 	else
@@ -1373,16 +1409,16 @@ void Player::ChargeSpecialAttackGauge(int charge)
 		if (m_playerNum == 0)
 		{
 			if (m_specialAttackGauge < 10)
-				m_ChargeSPFontRender->SetPosition({ -550.0f, -210.0f });
+				m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
 			else
-				m_ChargeSPFontRender->SetPosition({ -560.0f, -210.0f });
+				m_ChargeSPFontRender->SetPosition({ -565.0f, -225.0f });
 		}
 		else
 		{
 			if (m_specialAttackGauge < 10)
-				m_ChargeSPFontRender->SetPosition({ 500.0f, -210.0f });
-			else
-				m_ChargeSPFontRender->SetPosition({ 490.0f, -210.0f });
+				m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+			else											 
+				m_ChargeSPFontRender->SetPosition({ 485.0f, -225.0f });
 		}
 	}
 
@@ -1780,8 +1816,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
 		//画面に出ているやつを消す
 		//HPバー、画面分割線、メビウスゲージを消す
-		DeleteGO(m_bulletNumber);
-		m_bulletNumber = nullptr;
+		DeleteGO(m_bulletNumFont);
+		m_bulletNumFont = nullptr;
 		DeleteGO(m_crosshairRender);
 		m_crosshairRender = nullptr;
 		DeleteGO(m_HPBarSpriteRender);
