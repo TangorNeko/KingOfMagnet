@@ -85,8 +85,6 @@ void GravityBullet::Update()
 		break;
 	}
 
-	m_skinModelRender->SetPosition(m_position);
-
 	OutputDebugStringA("afterUpdate\n");
 }
 
@@ -137,6 +135,7 @@ void GravityBullet::AsBulletBehave()
 	Quaternion qRot;
 	qRot.SetRotation(Vector3::AxisY, angle);
 	m_skinModelRender->SetRotation(qRot);
+	m_skinModelRender->SetPosition(m_position);
 
 	OutputDebugStringA("afterBulletBehave\n");
 }

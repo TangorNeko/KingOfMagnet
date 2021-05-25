@@ -42,6 +42,8 @@ SampleScene::~SampleScene()
 		});
 
 	DeleteGO(ssBGM);
+	DeleteGO(m_onesPlaceSpriteRender);
+	DeleteGO(m_tensPlaceSpriteRender);
 }
 
 bool SampleScene::Start()
@@ -279,24 +281,26 @@ void SampleScene::Update()
 			if (int(m_timeLimit) >= 10)
 				DeleteGO(m_tensPlaceSpriteRender);
 			DeleteGO(m_drawFontRender);
+			DeleteGO(m_onesPlaceSpriteRender);
+			DeleteGO(m_tensPlaceSpriteRender);
 			NewGO<SampleScene>(0, "gamescene");
 			DeleteGO(this);
 		}
 	}
 
 	//エフェクト試す用
-	if (g_pad[0]->IsTrigger(enButtonB)) {
-		Player* pl = FindGO<Player>("Player");
+	//if (g_pad[0]->IsTrigger(enButtonB)) {
+	//	Player* pl = FindGO<Player>("Player");
 
-		/*prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-		effect->Init(u"Assets/effect/Blackhole3.efk");
-		effect->SetPosition(pl->m_position);
-		effect->SetScale({ 30.0f, 30.0f, 30.0f });
-		effect->Play();*/
-		//必殺技試す用
-		pl->ChargeSpecialAttackGauge(10);
+	//	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
+	//	effect->Init(u"Assets/effect/Blackhole3.efk");
+	//	effect->SetPosition(pl->m_position);
+	//	effect->SetScale({ 30.0f, 30.0f, 30.0f });
+	//	effect->Play();
+	//	//必殺技試す用
+	//	pl->ChargeSpecialAttackGauge(10);
 
-	}
+	//}
 }
 
 void SampleScene::WinnerJudge()
