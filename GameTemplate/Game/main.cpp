@@ -73,17 +73,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//ここから絵を描くコードを記述する。
 		//////////////////////////////////////
 
-#if 0
-		if (g_pad[0]->IsTrigger(enButtonB)) {
-			Player* pl = FindGO<Player>("Player");
-			
-			prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-			effect->Init(u"Assets/effect/引力弾.efk");
-			effect->SetPosition(pl->m_position);
-			effect->SetScale({ 10.0f, 10.0f, 10.0f });
-			effect->Play();
-		}
-#endif
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 
 		//Renderはモデル等、エフェクトを受けるものを描画する

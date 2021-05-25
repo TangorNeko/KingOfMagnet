@@ -60,6 +60,8 @@ Player::~Player()
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
 	DeleteGO(m_SPGaugeMaxEffect);
+	DeleteGO(m_SPFirstEffectRed);
+	DeleteGO(m_SPFirstEffectBlue);
 
 	DeleteGO(m_spotLight);
 

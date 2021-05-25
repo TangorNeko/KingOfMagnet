@@ -12,10 +12,13 @@ GravityBullet::~GravityBullet()
 
 	DeleteGO(m_effect2);
 	DeleteGO(m_wearingEffect);
+	DeleteGO(m_inflateEffect);
 }
 
 bool GravityBullet::Start()
 {
+	OutputDebugStringA("beforeStart\n");
+
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Gravity2.tkm");
@@ -44,11 +47,15 @@ bool GravityBullet::Start()
 	m_wearingEffect->SetPosition(m_position);
 	m_wearingEffect->Play();
 
+	OutputDebugStringA("afterStart\n");
+
 	return true;
 }
 
 void GravityBullet::Update()
 {
+	OutputDebugStringA("beforeUpdate\n");
+
 	//ポーズ中ならスキップ。
 	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
 	{
@@ -79,10 +86,13 @@ void GravityBullet::Update()
 	}
 
 	m_skinModelRender->SetPosition(m_position);
+
+	OutputDebugStringA("afterUpdate\n");
 }
 
 void GravityBullet::AsBulletBehave()
 {
+	OutputDebugStringA("beforeBulletBehave\n");
 	//移動処理。
 	m_position += m_moveDirection * m_velocity;
 
@@ -127,10 +137,14 @@ void GravityBullet::AsBulletBehave()
 	Quaternion qRot;
 	qRot.SetRotation(Vector3::AxisY, angle);
 	m_skinModelRender->SetRotation(qRot);
+
+	OutputDebugStringA("afterBulletBehave\n");
 }
 
 void GravityBullet::AsExplodeBehave()
 {
+	OutputDebugStringA("beforeExplodeBehave\n");
+
 	//周囲のガレキを浮かせるモードに。
 	QueryGOs<Debris>("debris", [this](Debris* debris)->bool
 		{
@@ -168,10 +182,14 @@ void GravityBullet::AsExplodeBehave()
 
 	//爆発したので引力を発生させる状態へ
 	m_gravityBulletState = enGravity;
+
+	OutputDebugStringA("afterExplodeBehave\n");
 }
 
 void GravityBullet::AsGravityBehave()
 {
+	OutputDebugStringA("beforeGravityBehave\n");
+
 	//HACK:Pop状態では常にm_position.yがマイナス10され続けているので
 	//毎フレーム+11することで1ずつ浮く形になっている。
 	//またenPop状態でm_position.yがマイナス10された時地形に当たっていたら
@@ -225,10 +243,13 @@ void GravityBullet::AsGravityBehave()
 		m_effect->SetPosition(m_position);
 		m_effect->Play();
 	}
+
+	OutputDebugStringA("afterGravityBehave\n");
 }
 
 void GravityBullet::AsFinishBehave()
 {
+	OutputDebugStringA("beforeFinishBehave\n");
 	//浮かせたガレキに攻撃を指示。
 	for (auto debris : m_controlDebrisVector)
 	{
@@ -248,4 +269,6 @@ void GravityBullet::AsFinishBehave()
 
 	//フィニッシュ攻撃を指示したので引力弾としての役目は終わり。
 	DeleteGO(this);
+
+	OutputDebugStringA("afterFinishBehave\n");
 }

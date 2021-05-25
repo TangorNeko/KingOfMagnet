@@ -196,11 +196,6 @@ bool SampleScene::Start()
 void SampleScene::Update()
 {
 
-	//デバッグ用。ゲームシーンに存在する弾+グレネードの数を出力
-	char buff[256];
-	sprintf_s(buff, "現在のゲームシーンに存在する弾数 = %d\n", m_bulletNum);
-	OutputDebugStringA(buff);
-
 	//スタートダウンカウントダウン
 	if (m_gameState == enStartCountDown) {
 		StartCountDown();
