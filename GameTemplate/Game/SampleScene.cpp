@@ -193,7 +193,7 @@ bool SampleScene::Start()
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
 	ssBGM->SetVolume(0.3f);
-	//ssBGM->Play(true);
+	ssBGM->Play(true);
 	return true;
 }
 
@@ -291,18 +291,18 @@ void SampleScene::Update()
 	}
 
 	//エフェクト試す用
-	//if (g_pad[0]->IsTrigger(enButtonB)) {
-	//	Player* pl = FindGO<Player>("Player");
+	if (g_pad[0]->IsTrigger(enButtonB)) {
+		Player* pl = FindGO<Player>("Player");
 
-	//	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-	//	effect->Init(u"Assets/effect/Blackhole3.efk");
-	//	effect->SetPosition(pl->m_position);
-	//	effect->SetScale({ 30.0f, 30.0f, 30.0f });
-	//	effect->Play();
-	//	//必殺技試す用
-	//	pl->ChargeSpecialAttackGauge(10);
-
-	//}
+		/*prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
+		effect->Init(u"Assets/effect/Blackhole3.efk");
+		effect->SetPosition(pl->m_position);
+		effect->SetScale({ 30.0f, 30.0f, 30.0f });
+		effect->Play();*/
+		//必殺技試す用
+		pl->ChargeSpecialAttackGauge(10);
+		pl->Damage(1000);
+	}
 }
 
 void SampleScene::WinnerJudge()

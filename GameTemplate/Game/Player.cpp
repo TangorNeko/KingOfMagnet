@@ -1838,6 +1838,7 @@ void Player::OpeningCamera()
 
 void Player::FinalHit()//決着がついたときのカメラ
 {	
+	m_gameScene->ssBGM->Stop();
 	if (m_FirstTime == true) {//一回だけ流れるループ
 		//画面分割を終了
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
@@ -1968,6 +1969,14 @@ void Player::FinalHit()//決着がついたときのカメラ
 			//音を再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
 			ss->Init(L"Assets/sound/K.O..wav");
+			ss->SetVolume(1.5f);
+			ss->Play(false);
+		}
+		if (m_LoseCameraLoop == 250)
+		{
+			//ジングルを再生
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/yattaze!1.wav");
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
