@@ -353,10 +353,15 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		}
 
 		affect = 1.0f - 1.0f / spotLigData[i].ligAngle * angle;
-		if (affect < 0.0f)
+		if (affect <= 0.0f)
+		{
 			affect = 0.0f;
-
-		affect = pow(affect, 0.5f);
+		}
+		else
+		{
+			//0より大きい時だけ乗算
+			affect = pow(affect, 0.5f);
+		}
 
 		finalLig *= affect;
 
