@@ -109,13 +109,11 @@ void Debris::AsDropBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool {
 
 		Vector3 toPlayer = player->m_position - m_position;
-		if (player->m_isBurst == true)
-		{
 			//引力の時のみ
 			if (player->m_magPower == -1)
 			{
 				//バーストしてたら引っ張ってくる
-				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
+				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
 				{
 					toPlayer.y += 10.0f;
 					Vector3 moveDir = toPlayer;
@@ -174,7 +172,7 @@ void Debris::AsDropBehave()
 			else if (player->m_magPower == 1)
 			{
 				//バーストしてたら引っ張ってくる
-				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
+				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
 				{
 					Vector3 moveDir = toPlayer;
 					moveDir.y = 0.0f;
@@ -204,7 +202,6 @@ void Debris::AsDropBehave()
 				}
 
 			}
-		}
 		return true;
 		});
 

@@ -61,6 +61,13 @@ public:
 	{
 		return elapsed;
 	}
+
+	void PrintElapsed() const
+	{
+		char buffer[256];
+		sprintf_s(buffer, "%f\n", elapsed);
+		OutputDebugStringA(buffer);
+	}
 	/*!
 	 *@brief	Œo‰ßŽžŠÔ‚ðŽæ“¾(’PˆÊ:ƒ~ƒŠ•b)
 	 */
