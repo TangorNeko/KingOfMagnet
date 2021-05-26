@@ -342,21 +342,30 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 		float angle = dot(toGround, spotLigData[i].ligDir);
 		
-		//floatの誤差かacos(1)が0になるはずなのにNanになっていたので臨時変更(錦織)
-		if (angle < 1)
+		//floatの誤差かacos(1)が0に、acos(-1)がπになるはずなのにNanになっていたので臨時変更(錦織)
+		if (-1 < angle && angle < 1)
 		{
 			angle = acos(angle);
 		}
-		else
+		else if(angle > 0.9 )
 		{
 			angle = 0;
 		}
+		else
+		{
+			angle = acos(-1.0f);
+		}
 
 		affect = 1.0f - 1.0f / spotLigData[i].ligAngle * angle;
-		if (affect < 0.0f)
+		if (affect <= 0.0f)
+		{
 			affect = 0.0f;
-
-		affect = pow(affect, 0.5f);
+		}
+		else
+		{
+			//0より大きい時だけ乗算
+			affect = pow(affect, 0.5f);
+		}
 
 		finalLig *= affect;
 
