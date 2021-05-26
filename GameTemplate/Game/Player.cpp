@@ -67,6 +67,7 @@ Player::~Player()
 
 	if (m_ChargeSPFontRender != nullptr)
 		DeleteGO(m_ChargeSPFontRender);	
+	DeleteGO(m_winnerFont);
 }
 
 bool Player::Start()
@@ -1979,6 +1980,15 @@ void Player::FinalHit()//Œˆ’…‚ª‚Â‚¢‚½‚Æ‚«‚ÌƒJƒƒ‰
 			ss->Init(L"Assets/sound/yattaze!1.wav");
 			ss->SetVolume(1.5f);
 			ss->Play(false);
+		}
+		if (m_LoseCameraLoop == 300)
+		{
+			m_winnerFont = NewGO<prefab::CFontRender>(0);
+			m_winnerFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+			m_winnerFont->SetPosition({ -250.0f, -100.0f });
+			m_winnerFont->SetScale({ 2.0f, 2.0f });
+			m_winnerFont->SetColor({ 0.0f,0.8f,1.0f,1.0f});
+			m_winnerFont->SetText(L"W I N !");
 		}
 
 		g_camera3D[0]->SetPosition(m_cameraPos);
