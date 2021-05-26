@@ -17,6 +17,8 @@ ResultScene::~ResultScene()
 }			 
 bool ResultScene::Start()
 {	
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 30, true);
+
 	//背景
 	m_BG_SpriteRender = NewGO<prefab::CSpriteRender>(0);
 	m_BG_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)0);
@@ -166,10 +168,14 @@ void ResultScene::Update()
 		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
 
 			if (m_RetryOn == true) {
+				//トランジション
+				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 3, false);
 				SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {
+				//トランジション
+				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 15, false);
 				TitleScene* titlescene = NewGO<TitleScene>(0, "titlescene");
 				DeleteGO(this);
 			}
