@@ -1351,9 +1351,6 @@ void Player::Damage(int damage)
 	if (m_hp <= 0)
 	{
 		m_hp = 0;
-		
-		//体力の更新。
-		DisplayStatus();
 
 		Lose();
 
@@ -1985,10 +1982,10 @@ void Player::FinalHit()//決着がついたときのカメラ
 		{
 			m_winnerFont = NewGO<prefab::CFontRender>(0);
 			m_winnerFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-			m_winnerFont->SetPosition({ -250.0f, -100.0f });
+			m_winnerFont->SetPosition({ -300.0f, -120.0f });
 			m_winnerFont->SetScale({ 2.0f, 2.0f });
-			m_winnerFont->SetColor({ 0.0f,0.8f,1.0f,1.0f});
-			m_winnerFont->SetText(L"W I N !");
+			m_winnerFont->SetColor({ 0.0f,0.9f,1.0f,1.0f});
+			m_winnerFont->SetText(L"YOU WIN!");
 		}
 
 		g_camera3D[0]->SetPosition(m_cameraPos);

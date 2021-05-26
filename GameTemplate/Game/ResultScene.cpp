@@ -138,6 +138,27 @@ void ResultScene::Update()
 			m_Command_SpriteRender->m_spriteSupporter.SpriteColor(Vector4::White, 12, 0);
 			m_Lose_SpriteRender->m_spriteSupporter.SpriteShake({20.0f,0.0f}, 24, 0);		//シェイク
 			m_win_lose_MoveFlag = true;
+
+			//BGM
+			ssBGM = NewGO<prefab::CSoundSource>(0);;
+			ssBGM->Init(L"Assets/sound/リザルト曲.wav");
+			ssBGM->SetVolume(0.2f);
+			ssBGM->Play(true);
+		}
+
+		//SE
+		if (m_moveTimer == 22) {
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/リザルトSE1.wav");
+			ss->SetVolume(1.2f);
+			ss->Play(false);
+		}
+		else if (m_moveTimer == 52)
+		{
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/リザルトSE1.wav");
+			ss->SetVolume(1.2f);
+			ss->Play(false);
 		}
 
 		m_moveTimer++;
@@ -154,6 +175,12 @@ void ResultScene::Update()
 				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,5.0f }, 6, 0, true);
 				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-5.0f }, 6, 6, true);
 				m_RetryOn = false;
+
+				//SE
+				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+				ss->Init(L"Assets/sound/カーソル移動音.wav");
+				ss->SetVolume(1.0f);
+				ss->Play(false);
 			}
 			else
 			{
@@ -161,6 +188,12 @@ void ResultScene::Update()
 				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,5.0f }, 6, 0, true);
 				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-5.0f }, 6, 6, true);
 				m_RetryOn = true;
+
+				//SE
+				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+				ss->Init(L"Assets/sound/カーソル移動音.wav");
+				ss->SetVolume(1.0f);
+				ss->Play(false);
 			}
 		}
 
@@ -168,12 +201,26 @@ void ResultScene::Update()
 		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
 
 			if (m_RetryOn == true) {
+				DeleteGO(ssBGM);
+				//SE
+				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+				ss->Init(L"Assets/sound/リザルト画面決定音.wav");
+				ss->SetVolume(1.0f);
+				ss->Play(false);
+
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 3, false);
 				SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {
+				DeleteGO(ssBGM);
+				//SE
+				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+				ss->Init(L"Assets/sound/リザルト画面決定音.wav");
+				ss->SetVolume(1.0f);
+				ss->Play(false);
+
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 15, false);
 				TitleScene* titlescene = NewGO<TitleScene>(0, "titlescene");
