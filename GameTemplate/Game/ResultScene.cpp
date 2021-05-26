@@ -138,27 +138,29 @@ void ResultScene::Update()
 			m_Command_SpriteRender->m_spriteSupporter.SpriteColor(Vector4::White, 12, 0);
 			m_Lose_SpriteRender->m_spriteSupporter.SpriteShake({20.0f,0.0f}, 24, 0);		//シェイク
 			m_win_lose_MoveFlag = true;
-
-			//BGM
-			ssBGM = NewGO<prefab::CSoundSource>(0);;
-			ssBGM->Init(L"Assets/sound/リザルト曲.wav");
-			ssBGM->SetVolume(0.2f);
-			ssBGM->Play(true);
 		}
 
 		//SE
-		if (m_moveTimer == 22) {
+		if (m_moveTimer == 25) {
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
 			ss->Init(L"Assets/sound/リザルトSE1.wav");
 			ss->SetVolume(1.2f);
 			ss->Play(false);
 		}
-		else if (m_moveTimer == 52)
+		else if (m_moveTimer == 55)
 		{
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
 			ss->Init(L"Assets/sound/リザルトSE1.wav");
 			ss->SetVolume(1.2f);
 			ss->Play(false);
+		}
+		//BGM
+		else if (m_moveTimer == 80)
+		{	
+			ssBGM = NewGO<prefab::CSoundSource>(0);;
+			ssBGM->Init(L"Assets/sound/リザルト曲.wav");
+			ssBGM->SetVolume(0.2f);
+			ssBGM->Play(true);
 		}
 
 		m_moveTimer++;
