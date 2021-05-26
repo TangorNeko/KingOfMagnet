@@ -79,7 +79,8 @@ bool TitleScene::Start()
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/タイトル曲.wav");
 	ssBGM->SetVolume(0.2f);
-	ssBGM->Play(true);	return true;
+	//ssBGM->Play(true);	
+	return true;
 }
 void TitleScene::Update()
 {
@@ -99,7 +100,7 @@ void TitleScene::Update()
 		}
 
 		//コマンド移動 上
-		if ((g_pad[0]->IsTrigger(enButtonUp)) && m_selectMoveFlag == false) {
+		if ((g_pad[0]->IsPress(enButtonUp)) && m_selectMoveFlag == false) {
 			m_selectMoveFlag = true;
 			m_comandUpDown = false;
 			m_commandTimer = 0;
@@ -111,7 +112,7 @@ void TitleScene::Update()
 			ss2->Play(false);
 		}
 		//コマンド移動 下
-		if ((g_pad[0]->IsTrigger(enButtonDown)) && m_selectMoveFlag == false) {
+		if ((g_pad[0]->IsPress(enButtonDown)) && m_selectMoveFlag == false) {
 			m_selectMoveFlag = true;
 			m_comandUpDown = true;
 			m_commandTimer = 0;

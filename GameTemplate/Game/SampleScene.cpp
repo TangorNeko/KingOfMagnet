@@ -41,9 +41,9 @@ SampleScene::~SampleScene()
 			return true;
 		});
 
-	DeleteGO(ssBGM);
+	//DeleteGO(ssBGM);
 
-	DeleteGO(m_onesPlaceSpriteRender);
+	//DeleteGO(m_onesPlaceSpriteRender);
 	if (int(m_timeLimit) >= 10)
 		DeleteGO(m_tensPlaceSpriteRender);
 }
@@ -193,8 +193,7 @@ bool SampleScene::Start()
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
 	ssBGM->SetVolume(0.3f);
-	ssBGM->Play(true);
-
+	//ssBGM->Play(true);
 	return true;
 }
 
