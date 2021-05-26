@@ -43,8 +43,10 @@ SampleScene::~SampleScene()
 
 	//DeleteGO(ssBGM);
 
-	//DeleteGO(m_onesPlaceSpriteRender);/*if (int(m_timeLimit) >= 10)
-		DeleteGO(m_tensPlaceSpriteRender);*/}
+	//DeleteGO(m_onesPlaceSpriteRender);
+	/*if (int(m_timeLimit) >= 10)
+		DeleteGO(m_tensPlaceSpriteRender);*/
+}
 
 bool SampleScene::Start()
 {
