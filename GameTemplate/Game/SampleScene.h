@@ -66,9 +66,6 @@ class SampleScene : public IGameObject
 	//
 	prefab::CSpriteRender* m_CountDown_1_1 = nullptr;
 
-
-	//BGM
-	prefab::CSoundSource* ssBGM = nullptr;
 public:
 	enum GameState
 	{
@@ -116,5 +113,8 @@ public:
 
 	//ƒQ[ƒ€ƒV[ƒ“‚É‘¶İ‚Å‚«‚é’e”‚ÌÅ‘å”
 	const int MAXBULLETNUM = 30;
+
+	//BGM
+	prefab::CSoundSource* ssBGM = nullptr;
 };
 

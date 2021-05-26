@@ -286,6 +286,9 @@ public:
 
 	//必殺技ゲージがどれだけ溜まっているかを表示
 	prefab::CFontRender* m_ChargeSPFontRender = nullptr;
+
+	//勝利表示
+	prefab::CFontRender* m_winnerFont = nullptr;
 };
 
 

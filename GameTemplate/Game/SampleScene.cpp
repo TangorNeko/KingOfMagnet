@@ -193,7 +193,7 @@ bool SampleScene::Start()
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
 	ssBGM->SetVolume(0.3f);
-	//ssBGM->Play(true);
+	ssBGM->Play(true);
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, true);
 	return true;
 }
@@ -314,7 +314,7 @@ void SampleScene::Update()
 	//	effect->Play();
 	//	//必殺技試す用
 	//	pl->ChargeSpecialAttackGauge(10);
-
+	//	pl->Damage(1000);
 	//}
 }
 

@@ -81,7 +81,7 @@ bool TitleScene::Start()
 	ssBGM = NewGO<prefab::CSoundSource>(0);
 	ssBGM->Init(L"Assets/sound/ƒ^ƒCƒgƒ‹‹È.wav");
 	ssBGM->SetVolume(0.2f);
-	//ssBGM->Play(true);	
+	ssBGM->Play(true);	
 	return true;
 }
 void TitleScene::Update()

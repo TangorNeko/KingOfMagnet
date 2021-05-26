@@ -67,6 +67,7 @@ Player::~Player()
 
 	if (m_ChargeSPFontRender != nullptr)
 		DeleteGO(m_ChargeSPFontRender);	
+	DeleteGO(m_winnerFont);
 }
 
 bool Player::Start()
@@ -1350,9 +1351,6 @@ void Player::Damage(int damage)
 	if (m_hp <= 0)
 	{
 		m_hp = 0;
-		
-		//体力の更新。
-		DisplayStatus();
 
 		Lose();
 
@@ -1838,6 +1836,7 @@ void Player::OpeningCamera()
 
 void Player::FinalHit()//決着がついたときのカメラ
 {	
+	m_gameScene->ssBGM->Stop();
 	if (m_FirstTime == true) {//一回だけ流れるループ
 		//画面分割を終了
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
@@ -1970,6 +1969,23 @@ void Player::FinalHit()//決着がついたときのカメラ
 			ss->Init(L"Assets/sound/K.O..wav");
 			ss->SetVolume(1.5f);
 			ss->Play(false);
+		}
+		if (m_LoseCameraLoop == 250)
+		{
+			//ジングルを再生
+			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
+			ss->Init(L"Assets/sound/yattaze!1.wav");
+			ss->SetVolume(1.5f);
+			ss->Play(false);
+		}
+		if (m_LoseCameraLoop == 300)
+		{
+			m_winnerFont = NewGO<prefab::CFontRender>(0);
+			m_winnerFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+			m_winnerFont->SetPosition({ -300.0f, -120.0f });
+			m_winnerFont->SetScale({ 2.0f, 2.0f });
+			m_winnerFont->SetColor({ 0.0f,0.9f,1.0f,1.0f});
+			m_winnerFont->SetText(L"YOU WIN!");
 		}
 
 		g_camera3D[0]->SetPosition(m_cameraPos);

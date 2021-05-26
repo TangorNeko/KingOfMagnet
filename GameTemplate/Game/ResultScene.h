@@ -51,5 +51,7 @@ public:
 	const int MoveLimit = 120;
 	bool m_win_lose_MoveFlag = false;
 
+	//BGM
+	prefab::CSoundSource* ssBGM = nullptr;
 };
 
