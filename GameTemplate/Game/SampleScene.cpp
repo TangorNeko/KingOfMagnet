@@ -194,6 +194,7 @@ bool SampleScene::Start()
 	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
 	ssBGM->SetVolume(0.3f);
 	//ssBGM->Play(true);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, true);
 	return true;
 }
 
@@ -260,7 +261,13 @@ void SampleScene::Update()
 			m_gameEndCount++;
 		}
 		m_gameEndLoop++;
-		if (m_gameEndCount == 2||m_gameEndLoop>1500)
+
+		if (m_gameEndLoop == 500)
+		{
+			TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, false);
+		}
+
+		if (m_gameEndLoop>550)
 		{
 			NewGO<ResultScene>(0, "resultscene");
 			ResultScene* resultscene = FindGO<ResultScene>("resultscene");
@@ -273,6 +280,12 @@ void SampleScene::Update()
 	if (m_gameState == enDraw)
 	{
 		m_drawFontCount--;
+
+		if (m_drawFontCount == 45)
+		{
+			//トランジション
+			TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, false);
+		}
 
 		if (m_drawFontCount == 0)
 		{

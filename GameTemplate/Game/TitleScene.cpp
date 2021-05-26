@@ -16,6 +16,8 @@ TitleScene::~TitleScene()
 }
 bool TitleScene::Start()
 {	
+	//トランジション
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 60,true);
 	//背景のモデル
 	m_BG_ModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_BG_ModelRender->Init("Assets/modelData/TitleCylinder.tkm");
@@ -325,6 +327,12 @@ void TitleScene::CommandSelectMove() {
 
 	m_commandTimer++;
 
+
+	if (m_commandTimer == 40 && m_titleCommand == TitleScene::TC_Start)
+	{
+		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, false);
+	}
+
 	if (m_commandTimer == 60) {
 		switch (m_titleCommand)
 		{
@@ -339,7 +347,7 @@ void TitleScene::CommandSelectMove() {
 			break;
 		case TitleScene::TC_Exit:
 			//終了
-			DeleteGO(this);
+			exit(EXIT_SUCCESS);
 			break;
 		}
 	}
