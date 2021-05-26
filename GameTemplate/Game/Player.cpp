@@ -1367,11 +1367,14 @@ void Player::Damage(int damage)
 	damagedisplay->m_damage = damage;
 
 	//HPバー更新
-	if (m_playerNum == 0) {
-		m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
-	}
-	else if (m_playerNum == 1) {
-		m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
+	{
+		if (m_playerNum == 0) {
+			m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
+		}
+		else if (m_playerNum == 1) {
+			m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
+		}
 	}
 
 	//ダメージエフェクト
