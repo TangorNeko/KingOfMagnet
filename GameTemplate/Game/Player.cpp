@@ -276,12 +276,7 @@ void Player::Update()
 		AnimationSelect();
 	}
 	else if(m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
-	{
-		//デバッグ用///////////////////////////////////
-		if (g_pad[m_playerNum]->IsTrigger(enButtonLB2))
-			Damage(200);
-		///////////////////////////////////////////////
-		
+	{		
 		//体力等ステータスのテキストを表示(後に画像にする。)
 		DisplayStatus();
 
