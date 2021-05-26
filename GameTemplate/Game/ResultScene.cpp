@@ -31,8 +31,7 @@ bool ResultScene::Start()
 	m_Up_SpriteRender->Init("Assets/Image/Result_Up.dds", 1280, 720);
 	//モデルの描画前にスプライトを描画できるようにする。
 	m_Up_SpriteRender->SetPostRenderMode(false);
-	m_Up_SpriteRender->SetPosition({ m_UpPos });
-
+	m_Up_SpriteRender->SetPosition({ m_UpPos.x,m_UpPos.y + CoverMove,m_UpPos.z });
 
 	m_Under_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Under_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)0);
@@ -40,22 +39,26 @@ bool ResultScene::Start()
 	//モデルの描画前にスプライトを描画できるようにする。
 	m_Under_SpriteRender->SetPostRenderMode(false);
 	m_Under_SpriteRender->SetPosition({ m_UnderPos });
+	m_Under_SpriteRender->SetMulColor({ 1.0f,1.0f,1.0f,0.0f });
 
 	m_Lose_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Lose_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Lose_SpriteRender->Init("Assets/Image/Result_Lose.dds", 372, 132);
 	m_Lose_SpriteRender->SetPosition({ m_LosePos });
+	m_Lose_SpriteRender->SetMulColor({ 1.0f,1.0f,1.0f,0.0f });
 
 	m_Win_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Win_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Win_SpriteRender->Init("Assets/Image/Result_Win.dds", 300, 112);
 	m_Win_SpriteRender->SetPosition({ m_WinPos });
+	m_Win_SpriteRender->SetMulColor({ 1.0f,1.0f,1.0f,0.0f });
 
 	m_Command_SpriteRender = NewGO<prefab::CSpriteRender>(1);
 	m_Command_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
-	m_Command_SpriteRender->SetPosition({ m_CommandPos });
-	
+	m_Command_SpriteRender->SetPosition({ m_CommandPos.x,m_CommandPos.y - CoverMove,m_CommandPos.z });
+	m_Command_SpriteRender->SetMulColor({ 0.0f,0.0f,0.0f,1.0f });
+
 	//勝者、敗者のモデル
 	m_animationClips[enAnimationClip_Win].Load("Assets/animData/Mage_SpecialAttack2.tka");
 	m_animationClips[enAnimationClip_Win].SetLoopFlag(true);
@@ -84,7 +87,7 @@ bool ResultScene::Start()
 	m_Down_SpriteRender = NewGO<prefab::CSpriteRender>(2);
 	m_Down_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Down_SpriteRender->Init("Assets/Image/Result_Down.dds", 1280, 720);
-	m_Down_SpriteRender->SetPosition({ m_DownPos });
+	m_Down_SpriteRender->SetPosition({ m_UpPos.x,m_UpPos.y - CoverMove,m_UpPos.z });
 
 	g_camera3D[0]->SetPosition(m_cameraPos);
 	g_camera3D[0]->SetTarget({ 0,90,0 });
@@ -111,32 +114,88 @@ void ResultScene::Update()
 		m_P2_skinModelRender->PlayAnimation(enAnimationClip_Lose);
 	}
 
-	//上か下ボタンを押すとリトライと、タイトルが切り替える
-	if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[1]->IsTrigger(enButtonDown) || g_pad[0]->IsTrigger(enButtonDown) || g_pad[1]->IsTrigger(enButtonUp)) {
-		if (m_RetryOn == true)
-		{
-			m_Command_SpriteRender->Init("Assets/Image/Result_Command_Title.dds", 400, 76);
-			m_RetryOn = false;
+	if (m_moveEndFlag == false) {
+		if (m_moveTimer == 0) {
+			//移動予約
+			m_Up_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-CoverMove - 20.0f }, 30, 0, true);
+			m_Up_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,40.0f }, 12, 30, true);
+			m_Up_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-20.0f }, 12, 42, true);
+
+			m_Down_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,CoverMove + 20.0f }, 30, 0, true);
+			m_Down_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-40.0f }, 12, 30, true);
+			m_Down_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,20.0f }, 12, 42, true);
+			m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,CoverMove + 20.0f }, 30, 0, true);
+			m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-40.0f }, 12, 30, true);
+			m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,20.0f }, 12, 42, true);
+
 		}
-		else
-		{
-			m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
-			m_RetryOn = true;
+		else if (m_moveTimer == 60) {
+			m_Under_SpriteRender->m_spriteSupporter.SpriteColor(Vector4::White, 12, 0);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteColor(Vector4::White, 12, 0);
+			m_Lose_SpriteRender->m_spriteSupporter.SpriteColor(Vector4::White, 12, 0);
+			m_Command_SpriteRender->m_spriteSupporter.SpriteColor(Vector4::White, 12, 0);
+			m_Lose_SpriteRender->m_spriteSupporter.SpriteShake({20.0f,0.0f}, 24, 0);		//シェイク
+			m_win_lose_MoveFlag = true;
+		}
+
+		m_moveTimer++;
+		if (m_moveTimer >= MoveLimit) {
+			m_moveEndFlag = true;
+		}
+	}
+	else if(m_moveEndFlag == true){
+		//上か下ボタンを押すとリトライと、タイトルが切り替える
+		if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[1]->IsTrigger(enButtonDown) || g_pad[0]->IsTrigger(enButtonDown) || g_pad[1]->IsTrigger(enButtonUp)) {
+			if (m_RetryOn == true)
+			{
+				m_Command_SpriteRender->Init("Assets/Image/Result_Command_Title.dds", 400, 76);
+				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,5.0f }, 6, 0, true);
+				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-5.0f }, 6, 6, true);
+				m_RetryOn = false;
+			}
+			else
+			{
+				m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
+				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,5.0f }, 6, 0, true);
+				m_Command_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-5.0f }, 6, 6, true);
+				m_RetryOn = true;
+			}
+		}
+
+		//スタートでAボタンを押すとキャラ選択画面に遷移する
+		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
+
+			if (m_RetryOn == true) {
+				SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
+				DeleteGO(this);
+			}
+			if (m_RetryOn == false) {
+				TitleScene* titlescene = NewGO<TitleScene>(0, "titlescene");
+				DeleteGO(this);
+			}
 		}
 	}
 
-	//スタートでAボタンを押すとキャラ選択画面に遷移する
-	if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
+	if (m_win_lose_MoveFlag == true) {
 
-		if (m_RetryOn == true) {
-			SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
-			DeleteGO(this);
+		if (m_Win_SpriteRender->m_spriteSupporter.GetSpriteMoveListLen() == 0) {
+			m_Win_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-10.0f }, 12, 0, true);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale({ 1.2f,0.8f,1.0f }, 12, 0);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,60.0f }, 12, 12, true);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale({ 0.8f,1.2f,1.0f }, 12, 12);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,-60.0f }, 6, 12, true);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale({ 1.5f,0.5f,1.0f }, 6, 12);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,20.0f }, 12, 18, true);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale({ 0.6f,1.4f,1.0f }, 12, 18);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteMove({ m_WinPos.x,m_WinPos.y }, 6, 30);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale({ 1.2f,0.8f,1.0f }, 6, 30);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteMove({ 0.0f,0.0f }, 90, 30, true);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale({ 0.9f,1.1f,1.0f }, 6, 36);
+			m_Win_SpriteRender->m_spriteSupporter.SpriteScale(1.0f, 6, 42);
 		}
-		if (m_RetryOn == false) {
-			TitleScene* titlescene = NewGO<TitleScene>(0, "titlescene");
-			DeleteGO(this);
-		}
+
 	}
+
 }
 
 //void ResultScene::ResultDisplay()

@@ -41,8 +41,15 @@ public:
 	Vector3 m_UnderPos = { Vector3::Zero };
 	Vector3 m_LosePos = { 350.0f,220.0f,0.0f };
 	Vector3 m_WinPos = { -200.0f,280.0f,0.0f };
-	Vector3 m_CommandPos = { 0.0f,-275.0f,0.0f };
+	Vector3 m_CommandPos = { 0.0f,-278.0f,0.0f };
 	bool m_RetryOn = true;
 	int m_loserNum = 0;
+
+	const float CoverMove = 400.0f;
+	bool m_moveEndFlag = false;		//ˆÚ“®Š®—¹
+	int m_moveTimer = 0;
+	const int MoveLimit = 120;
+	bool m_win_lose_MoveFlag = false;
+
 };
 
