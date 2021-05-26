@@ -60,6 +60,8 @@ Player::~Player()
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
 	DeleteGO(m_SPGaugeMaxEffect);
+	DeleteGO(m_SPFirstEffectRed);
+	DeleteGO(m_SPFirstEffectBlue);
 
 	DeleteGO(m_spotLight);
 
@@ -670,6 +672,18 @@ void Player::SpecialAttack()
 			m_specialAttackGauge = 0;
 			m_specialShotFlag = false;
 			m_specialShotCount = 0;
+			if (m_playerNum == 0)
+			{
+				m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+			}
+			else
+			{
+				m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+			}
 		}
 	}
 

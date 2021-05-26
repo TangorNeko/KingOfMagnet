@@ -15,7 +15,7 @@ class SampleScene : public IGameObject
 	void WinnerJudge();
 
 	//タイムリミット関連
-	float m_timeLimit = 100;
+	float m_timeLimit = 100.0f;
 	float m_deltaTimeCount = 0.0f;
 	void TimeLimitCount();
 	void TimeLimitChangesSprits(int num, int numPlace);	//numはスプライトにしたい数字、numPlaceは一桁ならば0を送り、二桁ならば送る数字が一の位なら1を、十のくらいなら10を送る。
