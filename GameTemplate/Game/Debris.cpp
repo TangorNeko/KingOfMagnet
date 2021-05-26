@@ -22,19 +22,25 @@ bool Debris::Start()
 {
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->SetShadowCasterFlag(true);
-	int randam;
+	int random;
 	//ガレキの形状で読み込むモデルを分岐
 	switch (m_debrisShape)
 	{
 	case enStone:
 		//石のモデル
-		randam = rand() % 3;
-		if(randam == 0)
-		m_skinModelRender->Init("Assets/modelData/pipe.tkm");
-		if (randam == 1)
-		m_skinModelRender->Init("Assets/modelData/gear.tkm");
-		if (randam == 2)
-		m_skinModelRender->Init("Assets/modelData/neji.tkm");
+		random = rand() % 3;
+		if (random == 0)
+		{
+			m_skinModelRender->Init("Assets/modelData/pipe.tkm");
+		}
+		if (random == 1)
+		{
+			m_skinModelRender->Init("Assets/modelData/gear.tkm");
+		}
+		if (random == 2)
+		{
+			m_skinModelRender->Init("Assets/modelData/neji.tkm");
+		}
 		m_skinModelRender->SetScale({ 1.0f,1.0f,1.0f });
 		break;
 	case enSword:
