@@ -298,6 +298,7 @@ void SampleScene::Update()
 			DeleteGO(m_drawFontRender);
 			DeleteGO(m_onesPlaceSpriteRender);
 			DeleteGO(m_tensPlaceSpriteRender);
+			DeleteGO(ssBGM);
 			NewGO<SampleScene>(0, "gamescene");
 			DeleteGO(this);
 		}

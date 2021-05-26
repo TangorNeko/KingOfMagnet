@@ -48,14 +48,12 @@ Player::~Player()
 
 	m_magEffect[0]->Stop();
 	m_magEffect[1]->Stop();
-	m_magEffect[2]->Stop();
 	m_burstEffect->Stop();
 	m_hitEffect->Stop();
 	m_SPEffect->Stop();
 	m_SPGaugeMaxEffect->Stop();
 	DeleteGO(m_magEffect[0]);
 	DeleteGO(m_magEffect[1]);
-	DeleteGO(m_magEffect[2]);
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
@@ -202,10 +200,16 @@ bool Player::Start()
 	//エフェクト関連
 	m_magEffect[0] = NewGO<prefab::CEffect>(0);
 	m_magEffect[1] = NewGO<prefab::CEffect>(0);
-	m_magEffect[2] = NewGO<prefab::CEffect>(0);
 	m_magEffect[0]->SetScale({ 25.0f, 25.0f, 25.0f });
 	m_magEffect[1]->SetScale({ 25.0f, 25.0f, 25.0f });
-	m_magEffect[2]->SetScale({ 25.0f, 25.0f, 25.0f });
+	if (m_magPower == 1) {
+		m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
+		m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
+	}
+	else if (m_magPower == -1) {
+		m_magEffect[0]->Init(u"Assets/effect/引力.efk");
+		m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+	}
 
 	m_burstEffect = NewGO<prefab::CEffect>(0);
 	m_burstEffect->SetScale({ 50.0f, 50.0f, 50.0f });
@@ -343,35 +347,22 @@ void Player::Update()
 		Camera();
 
 		//斥力・引力エフェクト			
-		if (m_magPower == 1) {
-			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
-			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
-			m_magEffect[2]->Init(u"Assets/effect/斥力.efk");
-		}
-		else if (m_magPower == -1) {
-			m_magEffect[0]->Init(u"Assets/effect/引力.efk");
-			m_magEffect[1]->Init(u"Assets/effect/引力.efk");
-			m_magEffect[2]->Init(u"Assets/effect/引力.efk");
-		}
+
 		//磁力エフェクトを再生
 		if (m_magEffectCallCount == 40) {
-			m_magEffect[2]->Play();
-		}
-		else if (m_magEffectCallCount == 20) {
 			m_magEffect[1]->Play();
 		}
 		else if (m_magEffectCallCount <= 0) {
 			m_magEffect[0]->Play();
-			m_magEffectCallCount = 60;
+			m_magEffectCallCount = 80;
 		}
-		m_magEffectCallCount -= 1;
+		m_magEffectCallCount--;
 
 		m_magEffect[0]->SetPosition(m_position);
 		m_magEffect[1]->SetPosition(m_position);
-		m_magEffect[2]->SetPosition(m_position);
 			
 		if(m_SPGaugeMaxEffect->IsPlay())
-			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y += 50.0f, m_position.z });
+			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
 	
 	}
 	else if(m_gameScene->GetGameState() == SampleScene::GameState::enResult)
@@ -1207,6 +1198,16 @@ void Player::ChangeMagnetPower()
 
 		//チャージを回復。
 		m_charge = 1000.0f;
+	
+		//磁力エフェクト変更
+		if (m_magPower == 1) {
+			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
+			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
+		}
+		else if (m_magPower == -1) {
+			m_magEffect[0]->Init(u"Assets/effect/引力.efk");
+			m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+		}
 	}
 }
 

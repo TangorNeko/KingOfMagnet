@@ -262,8 +262,8 @@ public:
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 
 	//斥力・引力エフェクト関連
-	prefab::CEffect* m_magEffect[3] = { nullptr,nullptr,nullptr };		//三つのエフェクトを連続で再生し続ける。
-	int m_magEffectCallCount = 60;		//磁力エフェクトを呼ぶまでの時間
+	prefab::CEffect* m_magEffect[2] = { nullptr,nullptr };		//2つのエフェクトを連続で再生し続ける。
+	int m_magEffectCallCount = 41;		//磁力エフェクトを呼ぶまでの時間
 
 	//斥力・引力バースト エフェクト関連
 	prefab::CEffect* m_burstEffect = nullptr;
