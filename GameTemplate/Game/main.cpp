@@ -49,13 +49,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 
-	TransitionGenerator* tg = NewGO<TransitionGenerator>(10, "TransitionGenerator");
+	TransitionGenerator* tg = NewGO<TransitionGenerator>(5, "TransitionGenerator");
 
 	//トランジション
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 60, false);
 
 	//タイトルシーンを作成。
-	TitleScene* title = NewGO<TitleScene>(0, "titlescene");
+	TitleScene* title = NewGO<TitleScene>(6, "titlescene");
 
 	//SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 	
