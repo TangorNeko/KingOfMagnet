@@ -1119,6 +1119,24 @@ void Player::MagneticBurst()
 						m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
 					}
 
+					//テキスト更新
+					m_enemy->m_bulletNumFont->SetText(std::to_wstring(m_enemy->m_holdDebrisVector.size()));
+					if (m_enemy->m_playerNum == 0)
+					{
+						if (m_enemy->m_holdDebrisVector.size() >= 10)
+							m_enemy->m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+
+						else
+							m_enemy->m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+					}
+					else
+					{
+						if (m_enemy->m_holdDebrisVector.size() >= 10)
+							m_enemy->m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+						else
+							m_enemy->m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+					}
+
 					//もう敵の弾を奪ったのでフラグ変更
 					m_isSteal = true;
 				}
