@@ -65,7 +65,8 @@ Player::~Player()
 
 	if (m_ChargeSPFontRender != nullptr)
 		DeleteGO(m_ChargeSPFontRender);	
-	DeleteGO(m_winnerFont);
+	DeleteGO(m_winnerSprite1);
+	DeleteGO(m_winnerSprite2);
 }
 
 bool Player::Start()
@@ -424,7 +425,7 @@ void Player::Update()
 void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
-
+	
 	//メビウスゲージの色を磁力から決定
 	if (m_magPower == 1)
 	{
@@ -2009,7 +2010,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
-		if (m_LoseCameraLoop == 50)
+		else if (m_LoseCameraLoop == 50)
 		{
 			//音を再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
@@ -2017,7 +2018,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
-		if (m_LoseCameraLoop == 100)
+		else if (m_LoseCameraLoop == 100)
 		{
 			//音を再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
@@ -2025,7 +2026,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
-		if (m_LoseCameraLoop == 250)
+		else if (m_LoseCameraLoop == 250)
 		{
 			//ジングルを再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
@@ -2033,17 +2034,32 @@ void Player::FinalHit()//決着がついたときのカメラ
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
-		if (m_LoseCameraLoop == 300)
+		else if (m_LoseCameraLoop == 300)
 		{
-			m_winnerFont = NewGO<prefab::CFontRender>(0);
-			m_winnerFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-			m_winnerFont->SetPosition({ -300.0f, -120.0f });
-			m_winnerFont->SetScale({ 2.0f, 2.0f });
-			m_winnerFont->SetColor({ 0.0f,0.9f,1.0f,1.0f});
-			m_winnerFont->SetText(L"YOU WIN!");
-			m_winnerFont->SetShadowFlag(true);
-			m_winnerFont->SetShadowColor({ 0,0,0,1 });
-			m_winnerFont->SetShadowOffset(3);
+			if (m_loserNum == 1)	//1Pが勝利した場合
+			{
+				m_winnerSprite1 = NewGO<prefab::CSpriteRender>(5);
+				m_winnerSprite1->Init("Assets/Image/1P.DDS", 148, 120);
+				m_winnerSprite1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+				m_winnerSprite1->SetPosition({ -120.0f, -120.0f, 0.0f });
+				m_winnerSprite1->SetScale({ 1.0f, 1.0f, 1.0f });				
+			}
+			else if (m_loserNum == 0)	//2Pが勝利した場合
+			{
+				m_winnerSprite1 = NewGO<prefab::CSpriteRender>(5);
+				m_winnerSprite1->Init("Assets/Image/2P.DDS", 180, 128);
+				m_winnerSprite1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+				m_winnerSprite1->SetPosition({ -120.0f, -120.0f, 0.0f });
+				m_winnerSprite1->SetScale({ 1.0f, 1.0f, 1.0f });			
+			}
+		}
+		else if (m_LoseCameraLoop == 350)
+		{
+			m_winnerSprite2 = NewGO<prefab::CSpriteRender>(5);
+			m_winnerSprite2->Init("Assets/Image/Win.DDS", 300, 128);
+			m_winnerSprite2->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			m_winnerSprite2->SetPosition({ 150.0f, -120.0f, 0.0f });
+			m_winnerSprite2->SetScale({ 1.0f, 1.0f, 1.0f });		
 		}
 
 		g_camera3D[0]->SetPosition(m_cameraPos);

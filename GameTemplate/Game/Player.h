@@ -293,7 +293,8 @@ public:
 	prefab::CFontRender* m_ChargeSPFontRender = nullptr;
 
 	//Ÿ—˜•\¦
-	prefab::CFontRender* m_winnerFont = nullptr;
+	prefab::CSpriteRender* m_winnerSprite1 = nullptr;
+	prefab::CSpriteRender* m_winnerSprite2 = nullptr;
 };
 
 
