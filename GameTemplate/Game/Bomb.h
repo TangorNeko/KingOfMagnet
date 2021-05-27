@@ -59,7 +59,7 @@ public:
 	SampleScene* m_gameScene = nullptr;
 
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//ˆÚ“®‚·‚é•ûŒü
-	const float m_velocity = 50.0f;//’e‘¬
+	const float m_velocity = 20.0f;//’e‘¬
 
 	//”š”­‚Ü‚Å‚ÌƒJƒEƒ“ƒg
 	int m_explosionCount = 0;

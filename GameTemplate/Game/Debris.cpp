@@ -121,11 +121,13 @@ void Debris::AsDropBehave()
 				//バーストしてたら引っ張ってくる
 				if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
 				{
+					m_isOnGround = false;
+
 					Vector3 moveDir = toPlayer;
 					moveDir.Normalize();
 
 					//x、z、yそれぞれ別々で測る
-					m_position.x += moveDir.x *= 30.0f;
+					m_position.x += moveDir.x * 30.0f;
 					//壁にぶつかったとき
 					Vector3 crossPoint;
 					bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -135,7 +137,7 @@ void Debris::AsDropBehave()
 					else
 						m_oldPosition = m_position;
 
-					m_position.z += moveDir.z *= 30.0f;
+					m_position.z += moveDir.z * 30.0f;
 					//壁にぶつかったとき
 					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 					if (isHit == true) {
@@ -144,7 +146,7 @@ void Debris::AsDropBehave()
 					else
 						m_oldPosition = m_position;
 
-					m_position.y += moveDir.y *= 10.0f;
+					m_position.y += moveDir.y * 10.0f;
 					//地面にぶつかったとき
 					crossPoint;
 					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -194,7 +196,7 @@ void Debris::AsDropBehave()
 					moveDir.Normalize();
 
 					//x、zそれぞれ別々で測る
-					m_position.x += moveDir.x *= -30.0f;
+					m_position.x += moveDir.x * -30.0f;
 					//壁にぶつかったとき
 					Vector3 crossPoint;
 					bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -204,7 +206,7 @@ void Debris::AsDropBehave()
 					else
 						m_oldPosition = m_position;
 
-					m_position.z += moveDir.z *= -30.0f;
+					m_position.z += moveDir.z * -30.0f;
 					//壁にぶつかったとき
 					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 					if (isHit == true) {
@@ -221,10 +223,6 @@ void Debris::AsDropBehave()
 		});
 
 	//重力処理
-	if (m_position.y != m_oldPosition.y)
-	{
-		m_isOnGround = false;
-	}
 	if (m_isOnGround == false)
 	{
 		m_position.y -= 5.0f;
@@ -236,7 +234,10 @@ void Debris::AsDropBehave()
 			m_isOnGround = true;
 		}
 	}
-	
+	if (m_position.y != m_oldPosition.y)
+	{
+		m_isOnGround = false;
+	}
 }
 
 //弾として発射されている時の挙動
