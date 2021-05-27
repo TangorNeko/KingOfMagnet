@@ -83,6 +83,8 @@ bool Player::Start()
 	animationClips[enAnimationClip_Fall].SetLoopFlag(true);	//ループモーションにする。
 	animationClips[enAnimationClip_SpecialAttack].Load("Assets/animData/Mage_RangeAttack.tka");
 	animationClips[enAnimationClip_SpecialAttack].SetLoopFlag(false);
+	animationClips[enAnimationClip_Burst].Load("Assets/animData/Mage_SpecialAttack2.tka");
+	animationClips[enAnimationClip_Burst].SetLoopFlag(false);
 	animationClips[enAnimationClip_Hit].Load("Assets/animData/Mage_Hit.tka");
 	animationClips[enAnimationClip_Hit].SetLoopFlag(false);
 	animationClips[enAnimationClip_Death].Load("Assets/animData/Mage_Death.tka");
@@ -107,6 +109,9 @@ bool Player::Start()
 	//残弾数表示の初期化
 	m_bulletNumFont = NewGO<prefab::CFontRender>(6);
 	m_bulletNumFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	m_bulletNumFont->SetShadowFlag(true);
+	m_bulletNumFont->SetShadowColor({ 0,0,0,1 });
+	m_bulletNumFont->SetShadowOffset(3);
 	if (m_playerNum == 0)
 	{
 		m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
@@ -121,6 +126,9 @@ bool Player::Start()
 
 	m_bulletNumFont2 = NewGO<prefab::CFontRender>(6);
 	m_bulletNumFont2->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	m_bulletNumFont2->SetShadowFlag(true);
+	m_bulletNumFont2->SetShadowColor({ 0,0,0,1 });
+	m_bulletNumFont2->SetShadowOffset(3);
 	if (m_playerNum == 0)
 	{
 		m_bulletNumFont2->SetPosition({ -130.0f, -283.0f });
@@ -136,6 +144,9 @@ bool Player::Start()
 	//必殺ゲージの溜まり具合を表示するフォント
 	m_ChargeSPFontRender = NewGO<prefab::CFontRender>(6);
 	m_ChargeSPFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	m_ChargeSPFontRender->SetShadowFlag(true);
+	m_ChargeSPFontRender->SetShadowColor({ 0,0,0,1 });
+	m_ChargeSPFontRender->SetShadowOffset(3);
 	if (m_playerNum == 0)
 	{
 		m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
@@ -1560,6 +1571,15 @@ void Player::TryChangeStatusSpecialAttack()
 	}
 }
 
+//バースト状態に切り替える
+void Player::TryChangeStatusBurst()
+{
+	if (m_isBurst == true)
+	{
+		m_animStatus = enStatus_Burst;
+	}
+}
+
 //走り状態に切り替えできたら切り替える。
 void Player::TryChangeStatusRun()
 {
@@ -1630,7 +1650,7 @@ void Player::UpdateState()
 		{
 			m_animStatus = enStatus_Idle;
 		}
-		TryChangeStatusHit();
+		TryChangeStatusHit();		
 		TryChangeStatusDeath();
 		TryChangeStatusWin();
 		break;
@@ -1644,6 +1664,10 @@ void Player::UpdateState()
 		TryChangeStatusHit();
 		TryChangeStatusDeath();
 		TryChangeStatusWin();
+		break;
+	case enStatus_Burst:
+		TryChangeStatusIdle();
+		TryChangeStatusBurst();
 		break;
 	case enStatus_Run:
 		TryChangeStatusAttack();
@@ -1672,6 +1696,7 @@ void Player::UpdateState()
 		TryChangeStatusWalk();
 		TryChangeStatusFall();
 		TryChangeStatusHit();
+		TryChangeStatusBurst();
 		TryChangeStatusDeath();
 		TryChangeStatusWin();
 		break;
@@ -1723,6 +1748,10 @@ void Player::AnimationSelect()
 	case enStatus_SpecialAttack:		
 		m_skinModelRender->m_animation_speed = 2.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
+		break;
+	case enStatus_Burst:
+		m_skinModelRender->m_animation_speed = 4.0;
+		m_skinModelRender->PlayAnimation(enAnimationClip_Burst);
 		break;
 	case enStatus_Run:		
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
@@ -2008,6 +2037,9 @@ void Player::FinalHit()//決着がついたときのカメラ
 			m_winnerFont->SetScale({ 2.0f, 2.0f });
 			m_winnerFont->SetColor({ 0.0f,0.9f,1.0f,1.0f});
 			m_winnerFont->SetText(L"YOU WIN!");
+			m_winnerFont->SetShadowFlag(true);
+			m_winnerFont->SetShadowColor({ 0,0,0,1 });
+			m_winnerFont->SetShadowOffset(3);
 		}
 
 		g_camera3D[0]->SetPosition(m_cameraPos);

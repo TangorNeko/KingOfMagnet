@@ -65,6 +65,9 @@ private:
 	//特殊攻撃状態に切り替える
 	void TryChangeStatusSpecialAttack();
 
+	//バースト状態に切り替える
+	void TryChangeStatusBurst();
+
 	//走り状態に切り替えできたら切り替える。
 	void TryChangeStatusRun();
 
@@ -191,6 +194,7 @@ public:
 		enAnimationClip_Move,
 		enAnimationClip_Fall,
 		enAnimationClip_SpecialAttack,
+		enAnimationClip_Burst,
 		enAnimationClip_Hit,
 		enAnimationClip_Death,
 		enAnimationClip_Winner,
@@ -206,9 +210,10 @@ public:
 		enStatus_Move,		//移動アクション状態		
 		enStatus_Fall,		//落下状態
 		enStatus_SpecialAttack,//必殺技状態
+		enStatus_Burst,		//バースト状態
 		enStatus_Hit,		//被弾状態
 		enStatus_Death,		//死亡状態
-		enStatus_Winner,		//勝利状態
+		enStatus_Winner,	//勝利状態
 		enStatus_Num,		//状態の数。
 	};
 
