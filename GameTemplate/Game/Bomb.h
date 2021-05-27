@@ -63,5 +63,8 @@ public:
 
 	//爆発までのカウント
 	int m_explosionCount = 0;
+
+	//地面についているかどうか
+	bool m_isOnGround = false;
 };
 

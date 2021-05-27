@@ -117,13 +117,12 @@ void Bomb::AsDropBehave()
 		if (player->m_magPower == -1)
 		{
 			//バーストしてたら引っ張ってくる
-			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
 			{
-				toPlayer.y += 10.0f;
 				Vector3 moveDir = toPlayer;
 				moveDir.Normalize();
 
-				//x、zそれぞれ別々で測る
+				//x、z、yそれぞれ別々で測る
 				m_position.x += moveDir.x *= 30.0f;
 				//壁にぶつかったとき
 				Vector3 crossPoint;
@@ -136,6 +135,16 @@ void Bomb::AsDropBehave()
 
 				m_position.z += moveDir.z *= 30.0f;
 				//壁にぶつかったとき
+				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+				if (isHit == true) {
+					m_position = m_oldPosition;
+				}
+				else
+					m_oldPosition = m_position;
+
+				m_position.y += moveDir.y *= 10.0f;
+				//地面にぶつかったとき
+				crossPoint;
 				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 				if (isHit == true) {
 					m_position = m_oldPosition;
@@ -158,10 +167,10 @@ void Bomb::AsDropBehave()
 		}
 
 		//斥力の時
-		if (player->m_magPower == 1)
+		else if (player->m_magPower == 1)
 		{
 			//バーストしてたら引っ張ってくる
-			if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+			if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
 			{
 				Vector3 moveDir = toPlayer;
 				moveDir.y = 0.0f;
@@ -194,12 +203,20 @@ void Bomb::AsDropBehave()
 		return true;
 		});
 	//重力処理
-	m_position.y -= 5.0f;
-	Vector3 crossPoint;
-	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-	if (isHit == true)
+	if (m_position.y != m_oldPosition.y)
 	{
-		m_position = m_oldPosition;
+		m_isOnGround = false;
+	}
+	if (m_isOnGround == false)
+	{
+		m_position.y -= 5.0f;
+		Vector3 crossPoint;
+		bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+		if (isHit == true)
+		{
+			m_position = m_oldPosition;
+			m_isOnGround = true;
+		}
 	}
 }
 
@@ -257,6 +274,7 @@ void Bomb::AsBulletBehave()
 				{
 					//当たった所からポップさせる
 					m_bombState = enPop;
+					m_isOnGround == false;
 				}
 			}
 			return true;
@@ -325,7 +343,7 @@ void Bomb::AsPopBehave()
 		{
 			case enGrenade:
 			m_explosionCount++;
-			if (m_explosionCount >= 80) {
+			if (m_explosionCount >= 20) {
 				Explosion* explosion = NewGO<Explosion>(0);
 				explosion->m_position = crossPoint;
 				DeleteGO(this);
@@ -333,7 +351,7 @@ void Bomb::AsPopBehave()
 			break;
 			case enFlashGrenade:
 			m_explosionCount++;
-			if (m_explosionCount >= 80) {
+			if (m_explosionCount >= 20) {
 				Flash* flash = NewGO<Flash>(0);
 				flash->m_position = crossPoint;
 				flash->m_parentNum = m_parent->m_playerNum;
@@ -342,7 +360,7 @@ void Bomb::AsPopBehave()
 			break;
 			case enIncendiaryGrenade:
 			m_explosionCount++;
-			if (m_explosionCount >= 80) {
+			if (m_explosionCount >= 20) {
 				Incendia* incendia = NewGO<Incendia>(0);
 				incendia->m_position = crossPoint;
 				DeleteGO(this);
