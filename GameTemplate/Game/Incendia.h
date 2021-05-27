@@ -7,9 +7,8 @@ class Incendia :public IGameObject
 	~Incendia();
 	bool Start();
 	void Update();
-public:
 
-	Vector3 m_position;
+private:
 
 	//ダメージを受けるまでのカウント(2キャラ分)
 	int m_damageCountdown[2] = {0,0};
@@ -24,4 +23,6 @@ public:
 	SampleScene* m_gameScene = nullptr;
 
 	bool m_deleteFlag = false;
+public:
+	Vector3 m_position;
 };

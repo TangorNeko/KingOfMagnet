@@ -16,7 +16,6 @@ bool Repulsion::Start()
 	m_skinModelRender->Init("Assets/modelData/repulsion.tkm");
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_rot);
-	m_skinModelRender->SetScale(m_scale);
 	m_gameScene = FindGO<SampleScene>("gamescene");
 
 	m_ss2[0] = NewGO<prefab::CSoundSource>(0);

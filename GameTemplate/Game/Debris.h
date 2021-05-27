@@ -23,6 +23,18 @@ class Debris : public IGameObject
 	//何かに当たった後の挙動
 	void AsPopBehave();
 
+	prefab::CSkinModelRender* m_skinModelRender = nullptr;//ガレキのモデル
+
+	MyCapsuleCollider m_bulletCollider;//プレイヤーとの当たり判定用のカプセル状の当たり判定
+
+	BackGround* m_stageModel = nullptr;//当たり判定用のステージのクラス
+
+	SampleScene* m_gameScene = nullptr;
+
+	const float m_velocity = 50.0f;//弾速
+
+	//スペシャルチャージャー用
+	float m_specialChargeCount = 0.0f;	//スペシャルゲージを増やすまでのカウント
 public:
 	//ガレキの状態
 	enum enDebrisState
@@ -49,21 +61,9 @@ public:
 	Vector3 m_position;//座標
 	Vector3 m_oldPosition;//前フレームの座標
 
-	prefab::CSkinModelRender* m_skinModelRender = nullptr;//ガレキのモデル
-
 	Player* m_parent = nullptr;//親のプレイヤー(ホールド時、発射時に使用)
 
-	MyCapsuleCollider m_bulletCollider;//プレイヤーとの当たり判定用のカプセル状の当たり判定
-
-	BackGround* m_stageModel = nullptr;//当たり判定用のステージのクラス
-
-	SampleScene* m_gameScene = nullptr;
-
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
-	const float m_velocity = 50.0f;//弾速
-
-	//スペシャルチャージャー用
-	float m_specialChargeCount = 0.0f;	//スペシャルゲージを増やすまでのカウント
 
 	//地面についているかどうか
 	bool m_isOnGround = false;

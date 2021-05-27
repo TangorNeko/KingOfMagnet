@@ -45,12 +45,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	EffectEngine::CreateInstance();
 
-	PreLoad();
-
 	PostEffectManager::CreateInstance();
 	//ブルームフラグ、シャドウフラグの順番
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
+	
+	//モデルデータ、エフェクトデータの事前ロード。
+	PreLoad();
 
 	TransitionGenerator* tg = NewGO<TransitionGenerator>(5, "TransitionGenerator");
 
@@ -59,10 +60,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//タイトルシーンを作成。
 	TitleScene* title = NewGO<TitleScene>(6, "titlescene");
-
-	//SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
-	
-	//ResultScene* resultscene = NewGO<ResultScene>(0, "resultscene");
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！

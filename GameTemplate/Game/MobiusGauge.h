@@ -18,6 +18,8 @@ public:
 		AllScreen//画面全体
 	};
 
+private:
+
 	struct GaugeDatas //ゲージのデータ。
 	{
 		Vector3 spriteStartDir = { 1.0f,0.0f,0.0f };//回転の開始方向　垂直な方向を後から外積で調べるために三次元ベクトルにしている
@@ -39,9 +41,9 @@ public:
 
 	DrawScreen m_drawScreen = AllScreen;//描画先
 
+public:
 	float m_charge;//磁力ゲージの溜まり具合
 	bool m_isRed = false;//磁力ゲージは赤色(斥力)か?
-
 	float m_spCharge;//必殺技ゲージの溜まり具合
 };
 

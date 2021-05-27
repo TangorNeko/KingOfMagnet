@@ -1,10 +1,11 @@
 #pragma once
 class TitleScene:public IGameObject
 {
+private:
 	bool Start() override;
 	void Update() override;
 	~TitleScene();
-public:
+
 	prefab::CSkinModelRender* m_BG_ModelRender = nullptr;
 	prefab::CPointLight* m_BGLight = nullptr;
 	prefab::CSpriteRender* m_Monitor_SpriteRender = nullptr;
@@ -25,7 +26,6 @@ public:
 	//BGM
 	prefab::CSoundSource* ssBGM = nullptr;
 	
-private:
 	void CommandMove();
 	void CommandSelectMove();
 

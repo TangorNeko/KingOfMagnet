@@ -24,7 +24,7 @@ class GravityBullet : public IGameObject
 	//フィニッシュ攻撃中の挙動
 	void AsFinishBehave();
 
-public:
+private:
 	//引力弾の状態
 	enum enGravityBulletState
 	{
@@ -34,14 +34,11 @@ public:
 		enFinish,//フィニッシュ攻撃中
 	};
 
-	enGravityBulletState m_gravityBulletState = enBullet;
-
-	Vector3 m_position = {0.0f,0.0f,0.0f};//座標
+	enGravityBulletState m_gravityBulletState = enBullet;//引力弾の状態
+	
 	Vector3 m_oldPosition;//前フレームの座標
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//引力弾のモデル
-
-	Player* m_parent = nullptr;//親のプレイヤー(爆発時に使用)
 
 	MyCapsuleCollider m_bulletCollider;//プレイヤーとの当たり判定用のカプセル状の当たり判定
 
@@ -49,7 +46,6 @@ public:
 
 	SampleScene* m_gameScene = nullptr;
 
-	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
 	const float m_velocity = 30.0f;//弾速
 
 	std::vector<Debris*> m_controlDebrisVector;//コントロールするガレキを格納するコンテナ
@@ -61,9 +57,15 @@ public:
 	prefab::CEffect* m_effect = nullptr;	//エフェクト
 	prefab::CEffect* m_effect2 = nullptr;	//エフェクト
 	prefab::CEffect* m_inflateEffect = nullptr;	//膨張エフェクト
-
 	prefab::CEffect* m_wearingEffect = nullptr;	//発射時に弾が纏うエフェクト
 
-	float angle = 0.0f;
+	float angle = 0.0f;//モデルの角度
+
+public:
+	Vector3 m_position = { 0.0f,0.0f,0.0f };//座標
+
+	Player* m_parent = nullptr;//親のプレイヤー(爆発時に使用)
+
+	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
 };
 
