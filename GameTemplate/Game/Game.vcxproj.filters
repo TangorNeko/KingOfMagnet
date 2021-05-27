@@ -326,6 +326,7 @@
     </ClCompile>
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="CEffect2D.cpp" />
+    <ClCompile Include="GameOption.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -982,6 +983,7 @@
     </ClInclude>
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="CEffect2D.h" />
+    <ClInclude Include="GameOption.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
@@ -1029,5 +1031,8 @@
     <Filter Include="ヘッダー ファイル\prefab">
       <UniqueIdentifier>{fbcc8401-c261-42d8-be0c-fdd20d76c163}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\tkEngine2\GameTemplate\Game\Assets\modelData\preset\skyCubeMap.dds" />
   </ItemGroup>
 </Project>

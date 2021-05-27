@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 #include "CharacterSelect.h"
 #include "SampleScene.h"
+#include "GameOption.h"
 TitleScene::~TitleScene() 
 {
 	DeleteGO(m_BG_ModelRender);
@@ -13,6 +14,8 @@ TitleScene::~TitleScene()
 	DeleteGO(m_Start_SpriteRender);
 	DeleteGO(m_Exit_SpriteRender);
 	DeleteGO(m_Arrow_SpriteRender);
+
+	DeleteGO(m_option);
 }
 bool TitleScene::Start()
 {	
@@ -74,7 +77,7 @@ bool TitleScene::Start()
 	m_Arrow_SpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_Arrow_SpriteRender->SetPosition({ 600,0,0 });
 	m_Arrow_SpriteRender->Init("Assets/Image/Title_Arrow.dds", 48, 88);
-//カメラ位置の初期化
+	//カメラ位置の初期化
 	g_camera3D[0]->SetPosition({ 0.0f,50.0f,200.0f });
 	g_camera3D[0]->SetTarget({ 0.0f,50.0f,0.0f });
 	//BGMを再生
@@ -82,6 +85,10 @@ bool TitleScene::Start()
 	ssBGM->Init(L"Assets/sound/タイトル曲.wav");
 	ssBGM->SetVolume(0.2f);
 	ssBGM->Play(true);	
+
+	//オプションは最初から作っておく
+	//オプションの優先度は少なくともTitleSceneより後にしなければ、項目から抜けた際に同時にオプションからも抜けてしまう
+	m_option = NewGO<GameOption>(10, "gameoption");
 	return true;
 }
 void TitleScene::Update()
@@ -135,6 +142,18 @@ void TitleScene::Update()
 	else {
 		//決定したのでコマンド演出
 		CommandSelectMove();
+
+		//オプションの時は戻れるように。
+		if (g_pad[0]->IsTrigger(enButtonB) && m_titleCommand == TitleScene::TC_Option && m_option->GetSelectingState() == GameOption::enItem) {
+			m_commandTimer = 0;
+			m_selectFlag = false;
+
+			m_option->Close();
+
+			m_Option_SpriteRender->m_spriteSupporter.SpriteMove({ -50.0f,0.0f }, 12, 0, true);
+			m_Option_SpriteRender->m_spriteSupporter.SpriteMove({ 125.0f,0.0f }, 12, 6, true);
+			m_Option_SpriteRender->m_spriteSupporter.SpriteMove({ -20.0f,0.0f }, 6, 18, true);
+		}
 	}
 }
 
@@ -338,12 +357,14 @@ void TitleScene::CommandSelectMove() {
 		{
 		case TitleScene::TC_Start:
 			//開始
+			//BGMを消す
+			DeleteGO(ssBGM);
 			NewGO<SampleScene>(0, "gamescene");
 			DeleteGO(this);
 			break;
 		case TitleScene::TC_Option:
 			//設定
-			DeleteGO(this);
+			m_option->Open();
 			break;
 		case TitleScene::TC_Exit:
 			//終了
@@ -353,8 +374,6 @@ void TitleScene::CommandSelectMove() {
 	}
 	if (m_commandTimer == 20)
 	{
-		//BGMを消す
-		DeleteGO(ssBGM);
 		//SE
 		prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
 		ss1->Init(L"Assets/sound/ガキーン!.wav");
