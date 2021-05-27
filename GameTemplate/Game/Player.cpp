@@ -850,6 +850,9 @@ void Player::ThrowBomb()
 			//保持した爆弾を発射モードにする
 			(*debris)->m_bombState = Bomb::enBullet;
 
+			//投げ始めの位置を調整
+			(*debris)->m_position.y -= 30.0f;
+
 			//キャラクターのスピードを遅くする。
 			m_characterSpeed = 0.5f;
 
@@ -860,7 +863,7 @@ void Player::ThrowBomb()
 			m_attackCount = 60;
 
 			Vector3 front = g_camera3D[m_playerNum]->GetForward();
-			front.y = 0;
+			front.y += 0.5f;
 			front.Normalize();
 			(*debris)->m_moveDirection = front;
 
@@ -1108,6 +1111,7 @@ void Player::MagneticBurst()
 					{
 						m_StealNum++;//敵の弾を奪った回数
 						//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
+						(*iterator)->m_isOnGround = false;
 						(*iterator)->m_debrisState = Debris::enDrop;
 
 						//カウントをすすめる

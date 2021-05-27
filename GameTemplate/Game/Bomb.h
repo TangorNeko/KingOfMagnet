@@ -59,9 +59,12 @@ public:
 	SampleScene* m_gameScene = nullptr;
 
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
-	const float m_velocity = 50.0f;//弾速
+	const float m_velocity = 20.0f;//弾速
 
 	//爆発までのカウント
 	int m_explosionCount = 0;
+
+	//地面についているかどうか
+	bool m_isOnGround = false;
 };
 

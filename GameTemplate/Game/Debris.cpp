@@ -119,14 +119,15 @@ void Debris::AsDropBehave()
 			if (player->m_magPower == -1)
 			{
 				//バーストしてたら引っ張ってくる
-				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+				if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
 				{
-					toPlayer.y += 10.0f;
+					m_isOnGround = false;
+
 					Vector3 moveDir = toPlayer;
 					moveDir.Normalize();
 
-					//x、zそれぞれ別々で測る
-					m_position.x += moveDir.x *= 30.0f;
+					//x、z、yそれぞれ別々で測る
+					m_position.x += moveDir.x * 30.0f;
 					//壁にぶつかったとき
 					Vector3 crossPoint;
 					bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -136,8 +137,18 @@ void Debris::AsDropBehave()
 					else
 						m_oldPosition = m_position;
 
-					m_position.z += moveDir.z *= 30.0f;
+					m_position.z += moveDir.z * 30.0f;
 					//壁にぶつかったとき
+					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
+					if (isHit == true) {
+						m_position = m_oldPosition;
+					}
+					else
+						m_oldPosition = m_position;
+
+					m_position.y += moveDir.y * 10.0f;
+					//地面にぶつかったとき
+					crossPoint;
 					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 					if (isHit == true) {
 						m_position = m_oldPosition;
@@ -178,14 +189,14 @@ void Debris::AsDropBehave()
 			else if (player->m_magPower == 1)
 			{
 				//バーストしてたら引っ張ってくる
-				if (toPlayer.Length() > 50 && toPlayer.Length() < 500.0f && player->m_isBurst == true)
+				if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
 				{
 					Vector3 moveDir = toPlayer;
 					moveDir.y = 0.0f;
 					moveDir.Normalize();
 
 					//x、zそれぞれ別々で測る
-					m_position.x += moveDir.x *= -30.0f;
+					m_position.x += moveDir.x * -30.0f;
 					//壁にぶつかったとき
 					Vector3 crossPoint;
 					bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -195,7 +206,7 @@ void Debris::AsDropBehave()
 					else
 						m_oldPosition = m_position;
 
-					m_position.z += moveDir.z *= -30.0f;
+					m_position.z += moveDir.z * -30.0f;
 					//壁にぶつかったとき
 					isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 					if (isHit == true) {
@@ -212,10 +223,6 @@ void Debris::AsDropBehave()
 		});
 
 	//重力処理
-	if (m_position.y != m_oldPosition.y)
-	{
-		m_isOnGround = false;
-	}
 	if (m_isOnGround == false)
 	{
 		m_position.y -= 5.0f;
@@ -227,7 +234,10 @@ void Debris::AsDropBehave()
 			m_isOnGround = true;
 		}
 	}
-	
+	if (m_position.y != m_oldPosition.y)
+	{
+		m_isOnGround = false;
+	}
 }
 
 //弾として発射されている時の挙動
@@ -320,6 +330,7 @@ void Debris::AsBulletBehave()
 					player->m_damegeEffectFront = m_moveDirection * -1.0f;
 					//当たった所からポップさせる
 					m_debrisState = enPop;
+					m_isOnGround = false;
 
 					//プレイヤーをノックバックさせる。
 					player->m_isKnockBack = true;
