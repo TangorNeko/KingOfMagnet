@@ -148,6 +148,7 @@ public:
 	float m_addY = 0.0f;
 	int m_cameraLoopCount = 0;
 	bool m_opning = true;
+	bool m_hpBarRedFlag = false;
 
 	int m_fallLoop = 0;//落下制御用のループカウント
 	float m_characterSpeed = 6.0;//キャラクターの移動速度
@@ -233,6 +234,7 @@ public:
 	//HPバー
 	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
 	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
+	prefab::CSpriteRender* m_HPBarRedSpriteRender = nullptr;
 
 	//メビウスゲージ
 	MobiusGauge* m_mobiusGauge = nullptr;
