@@ -850,6 +850,9 @@ void Player::ThrowBomb()
 			//保持した爆弾を発射モードにする
 			(*debris)->m_bombState = Bomb::enBullet;
 
+			//投げ始めの位置を調整
+			(*debris)->m_position.y -= 30.0f;
+
 			//キャラクターのスピードを遅くする。
 			m_characterSpeed = 0.5f;
 
@@ -860,7 +863,7 @@ void Player::ThrowBomb()
 			m_attackCount = 60;
 
 			Vector3 front = g_camera3D[m_playerNum]->GetForward();
-			front.y = 0;
+			front.y += 0.5f;
 			front.Normalize();
 			(*debris)->m_moveDirection = front;
 
@@ -1108,6 +1111,7 @@ void Player::MagneticBurst()
 					{
 						m_StealNum++;//敵の弾を奪った回数
 						//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
+						(*iterator)->m_isOnGround = false;
 						(*iterator)->m_debrisState = Debris::enDrop;
 
 						//カウントをすすめる
@@ -1128,6 +1132,24 @@ void Player::MagneticBurst()
 					else//3以上なら3個分削除
 					{
 						m_enemy->m_holdDebrisVector.erase(m_enemy->m_holdDebrisVector.begin(), m_enemy->m_holdDebrisVector.begin() + 3);
+					}
+
+					//テキスト更新
+					m_enemy->m_bulletNumFont->SetText(std::to_wstring(m_enemy->m_holdDebrisVector.size()));
+					if (m_enemy->m_playerNum == 0)
+					{
+						if (m_enemy->m_holdDebrisVector.size() >= 10)
+							m_enemy->m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+
+						else
+							m_enemy->m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+					}
+					else
+					{
+						if (m_enemy->m_holdDebrisVector.size() >= 10)
+							m_enemy->m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+						else
+							m_enemy->m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
 					}
 
 					//もう敵の弾を奪ったのでフラグ変更

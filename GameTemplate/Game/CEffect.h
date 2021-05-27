@@ -91,6 +91,13 @@ namespace prefab
 		 *@brief	更新。
 		 */
 		void Update();
+
+		//事前にエフェクトをロードしておく。
+		static void PreLoadEffect(const char16_t* filePath)
+		{
+			EffectEngine::GetInstance()->LoadEffect(filePath);
+		}
+
 	private:
 		Effekseer::EffectRef m_effect;	//エフェクト
 		int	m_handle = -1;				//再生中のエフェクトのハンドル。

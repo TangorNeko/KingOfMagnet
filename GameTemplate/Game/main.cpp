@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "TransitionGenerator.h"
 
+void PreLoad();
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -44,18 +45,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	EffectEngine::CreateInstance();
 
+	PreLoad();
+
 	PostEffectManager::CreateInstance();
 	//ブルームフラグ、シャドウフラグの順番
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 
-	TransitionGenerator* tg = NewGO<TransitionGenerator>(10, "TransitionGenerator");
+	TransitionGenerator* tg = NewGO<TransitionGenerator>(5, "TransitionGenerator");
 
 	//トランジション
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 60, false);
 
 	//タイトルシーンを作成。
-	TitleScene* title = NewGO<TitleScene>(0, "titlescene");
+	TitleScene* title = NewGO<TitleScene>(6, "titlescene");
 
 	//SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
 	
@@ -106,3 +109,43 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	return 0;
 }
 
+//使用するモデル、エフェクトの事前ロード、
+//TODO:後からcsvファイル等にまとめて連想配列などで使用できるようにしたいが...
+void PreLoad()
+{
+	//モデルの事前ロード
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/Player1.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/Player2.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/TitleCylinder.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/pipe.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/gear.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/neji.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/KnightBullet.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/Gravity.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/repulsion.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/stage00.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/SkyBoard.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/Grenade.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/FlashGrenade.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/SmokeGrenade.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/scrap.tkm");
+	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/Gravity2.tkm");
+
+	//エフェクトの事前ロード
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/閃光.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/爆発.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力弾.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力弾2.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Blackhole3.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/焼夷.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/ダメージ.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/キュピーン.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力チャージ.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力チャージ.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力弾発射.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力弾発射.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力バースト.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力バースト.efk");
+}

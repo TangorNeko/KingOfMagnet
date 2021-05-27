@@ -178,7 +178,7 @@ namespace prefab
 		Matrix GetWorldMatrixFromBoneName(const wchar_t* boneName);
 
 		//事前にモデルをロードしておく。
-		void PreLoadModel(const char* tkmFilePath);
+		static void PreLoadModel(const char* tkmFilePath);
 	};
 }
 

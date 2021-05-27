@@ -109,13 +109,13 @@ Effekseer::EffectRef EffectEngine::LoadEffect(const char16_t* filePath)
 	if (it != m_effectMap.end()) {
 		//ロード済み。
 		effect = it->second;
-		m_effectMap.insert({ u16FilePath, effect });
 	}
 	else {
 		//新規
 
 		//NOTE:同じエフェクトを読み込んでいるのでm_manager[0]の1回分だけでいい?
 		effect = Effekseer::Effect::Create(m_manager[0], filePath);
+		m_effectMap.insert({ u16FilePath, effect });
 	}
 
 	return effect;
