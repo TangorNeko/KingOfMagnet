@@ -115,7 +115,7 @@ void DebrisBlock::Update()
 					}
 				}
 				//生成タイマーをセット
-				m_factoryTimer = 180;
+				m_factoryTimer = 60;
 				
 			}
 			return true;

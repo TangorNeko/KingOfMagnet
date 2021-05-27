@@ -141,13 +141,14 @@ public:
 	Quaternion qRotY;
 	float n;//内積
 	float angle;//アークコサイン
-
+	float m_sensitivity = 2.0f;//視点感度
 	Vector3 m_cameraPos;
 	Vector3 m_targetPos = { 0.0f,0.0f,0.0f };
 	float gain = 10;//カメラとターゲットとの距離	
 	float m_addY = 0.0f;
 	int m_cameraLoopCount = 0;
 	bool m_opning = true;
+	bool m_hpBarRedFlag = false;
 
 	int m_fallLoop = 0;//落下制御用のループカウント
 	float m_characterSpeed = 6.0;//キャラクターの移動速度
@@ -233,6 +234,7 @@ public:
 	//HPバー
 	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
 	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
+	prefab::CSpriteRender* m_HPBarRedSpriteRender = nullptr;
 
 	//メビウスゲージ
 	MobiusGauge* m_mobiusGauge = nullptr;
@@ -293,7 +295,8 @@ public:
 	prefab::CFontRender* m_ChargeSPFontRender = nullptr;
 
 	//勝利表示
-	prefab::CFontRender* m_winnerFont = nullptr;
+	prefab::CSpriteRender* m_winnerSprite1 = nullptr;
+	prefab::CSpriteRender* m_winnerSprite2 = nullptr;
 };
 
 
