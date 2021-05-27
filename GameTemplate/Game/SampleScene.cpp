@@ -59,7 +59,16 @@ bool SampleScene::Start()
 	m_player1->m_position = { 760.0f,0.0f,400.0f };
 	//m_player1->m_position = { 250.0f,0.0f,250.0f };//ミニステージ
 	m_player1->m_playerNum = 0;
-	m_player1->m_magPower = 1;
+
+	int mag = rand() % 2;
+	if (mag)
+	{
+		m_player1->m_magPower = 1;
+	}
+	else
+	{
+		m_player1->m_magPower = -1;
+	}
 	m_player1->m_toCameraDir = { 1.0f,0.0f,0.0f };
 	m_player1->m_characterDirection = { -1.0f,0.0f,0.0f };
 
@@ -67,7 +76,15 @@ bool SampleScene::Start()
 	m_player2->m_position = { -760.0f,0.0f,-400.0f };
 	//m_player2->m_position = { -250.0f,0.0f,-250.0f };//ミニステージ
 	m_player2->m_playerNum = 1;
-	m_player2->m_magPower = -1;
+	mag = rand() % 2;
+	if (mag)
+	{
+		m_player2->m_magPower = 1;
+	}
+	else
+	{
+		m_player2->m_magPower = -1;
+	}
 	m_player2->m_toCameraDir = { -1.0f,0.0f,0.0f };
 	m_player2->m_characterDirection = { 1.0f,0.0f,0.0f };
 
@@ -305,18 +322,18 @@ void SampleScene::Update()
 	}
 
 	//エフェクト試す用
-	if (g_pad[0]->IsTrigger(enButtonB)) {
-		Player* pl = FindGO<Player>("Player");
+	//if (g_pad[0]->IsTrigger(enButtonB)) {
+	//	Player* pl = FindGO<Player>("Player");
 
-		/*prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
-		effect->Init(u"Assets/effect/Blackhole3.efk");
-		effect->SetPosition(pl->m_position);
-		effect->SetScale({ 30.0f, 30.0f, 30.0f });
-		effect->Play();*/
-		//必殺技試す用
-		pl->ChargeSpecialAttackGauge(10);
-		pl->Damage(1000);
-	}
+	//	prefab::CEffect* effect = NewGO<prefab::CEffect>(0);
+	//	effect->Init(u"Assets/effect/Blackhole3.efk");
+	//	effect->SetPosition(pl->m_position);
+	//	effect->SetScale({ 30.0f, 30.0f, 30.0f });
+	//	effect->Play();
+	//	//必殺技試す用
+	//	pl->ChargeSpecialAttackGauge(10);
+	//	pl->Damage(1000);
+	//}
 }
 
 void SampleScene::WinnerJudge()
