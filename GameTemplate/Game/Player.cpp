@@ -40,6 +40,10 @@ Player::~Player()
 	{
 		DeleteGO(m_HPBarDarkSpriteRender);
 	}
+	if (m_HPBarRedSpriteRender != nullptr)
+	{
+		DeleteGO(m_HPBarRedSpriteRender);
+	}
 
 	if (m_mobiusGauge != nullptr)
 	{
@@ -180,7 +184,20 @@ bool Player::Start()
 		m_HPBarSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
 		m_HPBarSpriteRender->SetPosition({ 10.0f,325.0f,0.0f });
 	}
+	//レッド
+	m_HPBarRedSpriteRender = NewGO<prefab::CSpriteRender>(5);
+	m_HPBarRedSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 
+	m_HPBarRedSpriteRender->Init("Assets/Image/HP_Bar_Damage.dds", 316, 36);
+	if (m_playerNum == 0) {
+		m_HPBarRedSpriteRender->SetPosition({ 290.0f,325.0f,0.0f });
+		//({ 290.0f,325.0f,0.0f });
+	}
+	else if (m_playerNum == 1) {
+		m_HPBarRedSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
+		m_HPBarRedSpriteRender->SetPosition({ -290.0f,325.0f,0.0f });
+	}
+	//
 	m_HPBarDarkSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_HPBarDarkSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
 
@@ -426,6 +443,35 @@ void Player::DisplayStatus()
 {
 	//体力、チャージ、現在の自分の磁力の状態の表示
 	
+	//HPバー更新
+	if (m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
+	{
+		if (m_playerNum == 0) {
+			m_HPBarRedSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
+			if (m_HPBarDarkSpriteRender->GetPosition().x > m_HPBarRedSpriteRender->GetPosition().x) {
+				Vector3 DarkPos = m_HPBarDarkSpriteRender->GetPosition();
+				DarkPos.x -= 2.0f;
+				m_HPBarDarkSpriteRender->SetPosition(DarkPos);
+				if (m_HPBarDarkSpriteRender->GetPosition().x < m_HPBarRedSpriteRender->GetPosition().x) {	//オーバー修正
+					DarkPos.x = m_HPBarRedSpriteRender->GetPosition().x;
+					m_HPBarDarkSpriteRender->SetPosition(DarkPos);
+				}
+			}
+		}
+		else if (m_playerNum == 1) {
+			m_HPBarRedSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
+			if (m_HPBarDarkSpriteRender->GetPosition().x < m_HPBarRedSpriteRender->GetPosition().x) {
+				Vector3 DarkPos = m_HPBarDarkSpriteRender->GetPosition();
+				DarkPos.x += 2.0f;
+				m_HPBarDarkSpriteRender->SetPosition(DarkPos);
+				if (m_HPBarDarkSpriteRender->GetPosition().x > m_HPBarRedSpriteRender->GetPosition().x) {	//オーバー修正
+					DarkPos.x = m_HPBarRedSpriteRender->GetPosition().x;
+					m_HPBarDarkSpriteRender->SetPosition(DarkPos);
+				}
+			}
+		}
+	}
+
 	//メビウスゲージの色を磁力から決定
 	if (m_magPower == 1)
 	{
@@ -1400,15 +1446,10 @@ void Player::Damage(int damage)
 	damagedisplay->m_enemyNum = m_enemy->m_playerNum;
 	damagedisplay->m_damage = damage;
 
-	//HPバー更新
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
-	{
-		if (m_playerNum == 0) {
-			m_HPBarDarkSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
-		}
-		else if (m_playerNum == 1) {
-			m_HPBarDarkSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
-		}
+	//HP200以下で赤くなる
+	if (m_hp <= 200 && m_hpBarRedFlag == false) {
+		m_HPBarSpriteRender->Init("Assets/Image/HP_Bar_Red.dds", 308, 32);
+		m_hpBarRedFlag = true;
 	}
 
 	//ダメージエフェクト
@@ -1908,6 +1949,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		m_HPBarSpriteRender = nullptr;
 		DeleteGO(m_HPBarDarkSpriteRender);
 		m_HPBarDarkSpriteRender = nullptr;
+		DeleteGO(m_HPBarRedSpriteRender);
+		m_HPBarRedSpriteRender = nullptr;
 		DeleteGO(m_mobiusGauge);
 		DeleteGO(m_ChargeSPFontRender);
 		m_ChargeSPFontRender = nullptr;
