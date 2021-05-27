@@ -9,6 +9,7 @@
 #include "Repulsion.h"
 #include "TitleScene.h"
 #include "ResultScene.h"
+#include <random>
 
 SampleScene::~SampleScene()
 {	
@@ -60,7 +61,9 @@ bool SampleScene::Start()
 	//m_player1->m_position = { 250.0f,0.0f,250.0f };//ミニステージ
 	m_player1->m_playerNum = 0;
 
-	int mag = rand() % 2;
+	std::random_device device;
+	std::mt19937_64 rnd(device());
+	int mag = rnd() % 2;
 	if (mag)
 	{
 		m_player1->m_magPower = 1;
@@ -76,7 +79,7 @@ bool SampleScene::Start()
 	m_player2->m_position = { -760.0f,0.0f,-400.0f };
 	//m_player2->m_position = { -250.0f,0.0f,-250.0f };//ミニステージ
 	m_player2->m_playerNum = 1;
-	mag = rand() % 2;
+	mag = rnd() % 2;
 	if (mag)
 	{
 		m_player2->m_magPower = 1;
