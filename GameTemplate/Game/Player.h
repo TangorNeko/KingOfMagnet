@@ -141,7 +141,7 @@ public:
 	Quaternion qRotY;
 	float n;//内積
 	float angle;//アークコサイン
-
+	float m_sensitivity = 2.0f;//視点感度
 	Vector3 m_cameraPos;
 	Vector3 m_targetPos = { 0.0f,0.0f,0.0f };
 	float gain = 10;//カメラとターゲットとの距離	

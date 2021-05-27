@@ -1255,12 +1255,12 @@ void Player::Camera()
 	else
 	{
 		//ロックされていない時はカメラへのベクトルを回転させる。
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 1.5);
+		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * m_sensitivity);
 		qRotY.Apply(m_toCameraDir);
 
 		Quaternion qRotX;
 		Vector3 right = g_camera3D[m_playerNum]->GetRight();
-		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -1.5);
+		qRotX.SetRotationDeg(right, g_pad[m_playerNum]->GetRStickYF() * -m_sensitivity);
 
 		//回転先の角度を確認して上すぎる時または下すぎる時は回転させない。
 		Vector3 checkToCamera = m_toCameraDir;
