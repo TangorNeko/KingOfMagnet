@@ -330,7 +330,7 @@ void TitleScene::CommandSelectMove() {
 
 	if (m_commandTimer == 40 && m_titleCommand == TitleScene::TC_Start)
 	{
-		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, false);
+		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 50, false);
 	}
 
 	if (m_commandTimer == 60) {
