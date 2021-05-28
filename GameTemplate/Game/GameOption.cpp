@@ -140,6 +140,14 @@ void GameOption::Update()
 				(*m_selectingItemValue) += 0.1f;
 			}
 
+			if (m_selectingItemValue == &m_BGMVolume)
+			{
+				CSoundEngine::GetInstance()->SetBGMVolume(*m_selectingItemValue);
+			}
+			else if (m_selectingItemValue == &m_SEVolume)
+			{
+				CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
+			}
 			//‘I‘ð‚³‚ê‚Ä‚¢‚é€–Ú‚ðÂ•F‚É
 			m_selectingItemFont->SetColor({ 0.0f,0.0f,0.5f,1.0f });
 
