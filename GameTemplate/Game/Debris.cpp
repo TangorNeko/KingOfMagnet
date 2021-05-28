@@ -7,6 +7,7 @@
 
 #include "Explosion.h"
 
+#include <random>
 Debris::~Debris()
 {
 	DeleteGO(m_skinModelRender);
@@ -24,11 +25,13 @@ bool Debris::Start()
 	m_skinModelRender->SetShadowCasterFlag(true);
 	int random;
 	//ガレキの形状で読み込むモデルを分岐
+	std::random_device device;
+	std::mt19937_64 rnd(device());
 	switch (m_debrisShape)
 	{
 	case enStone:
 		//石のモデル
-		random = rand() % 3;
+		random = rnd() % 3;
 		if (random == 0)
 		{
 			m_skinModelRender->Init("Assets/modelData/pipe.tkm");

@@ -2,6 +2,8 @@
 #include "DamageDisplay.h"
 #include "Character_base.h"
 
+#include <random>
+
 DamageDisplay::~DamageDisplay()
 {
 	DeleteGO(m_fontRenderDamage);
@@ -16,12 +18,15 @@ bool DamageDisplay::Start()
 
 	m_fontRenderDamage->SetText(std::to_wstring(m_damage));
 	m_damagePos.y += 100.0f;
-	m_damagePos.y += rand() % 50;
-	m_damagePos.x += rand() % 50;
+
+	std::random_device device;
+	std::mt19937_64 rnd(device());
+	m_damagePos.y += rnd() % 50;
+	m_damagePos.x += rnd() % 50;
 	m_damagePos.x -= 40.0f;
 
 	//フォントが右に移動するか左に移動するかランダムに決定。
-	m_isxSpeedPositive = rand() & 2;
+	m_isxSpeedPositive = rnd() % 2;
 	return true;
 }
 void DamageDisplay::Update()

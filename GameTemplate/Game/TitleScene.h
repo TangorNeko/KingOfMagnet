@@ -1,4 +1,6 @@
 #pragma once
+
+class GameOption;
 class TitleScene:public IGameObject
 {
 private:
@@ -22,6 +24,9 @@ private:
 	Vector3 m_topPos = { 440.0f,200.0f,0.0f };//è„
 	Vector3 m_centerPos = { 320.0f,0.0f,0.0f };//íÜ
 	Vector3 m_bottomPos = { 440.0f,-200.0f,0.0f };//â∫
+
+	//ÉIÉvÉVÉáÉìâÊñ 
+	GameOption* m_option = nullptr;
 
 	//BGM
 	prefab::CSoundSource* ssBGM = nullptr;

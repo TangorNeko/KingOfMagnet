@@ -316,6 +316,7 @@
     <ClCompile Include="EffectEngine.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Flash.cpp" />
+    <ClCompile Include="GameOption.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GravityBullet.cpp" />
     <ClCompile Include="GravityGrenade_item.cpp" />
@@ -453,6 +454,7 @@
     <ClInclude Include="EffectEngine.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Flash.h" />
+    <ClInclude Include="GameOption.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GravityBullet.h" />
     <ClInclude Include="GravityGrenade_item.h" />
