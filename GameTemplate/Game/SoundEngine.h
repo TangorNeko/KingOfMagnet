@@ -163,6 +163,8 @@
 
 		//SEの音量を設定
 		void SetSEVolume(float volume);
+
+		void UpdateVolume();
 	private:
 		IXAudio2* m_xAudio2 = nullptr;
 		IXAudio2MasteringVoice* m_masteringVoice = nullptr;
@@ -183,6 +185,8 @@
 		CWaveFileBank m_waveFileBank;					//!<波形データのバンク。
 
 		std::list<prefab::CSoundSource*> m_SoundSourceList;//現在存在するすべてのサウンドソースのリスト
+		float m_BGMBaseVolume = 1.0f;//BGMの基礎ボリューム
+		float m_SEBaseVolume = 1.0f;//SEの基礎ボリューム
 
 		static CSoundEngine* m_instance;
 	};

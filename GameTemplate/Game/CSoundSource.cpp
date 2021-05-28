@@ -109,6 +109,8 @@
 			CSoundEngine::GetInstance()->AddSoundSource(this);
 			m_soundType = soundType;
 
+			CSoundEngine::GetInstance()->UpdateVolume();
+
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
 		}
