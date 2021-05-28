@@ -144,7 +144,7 @@ void TitleScene::Update()
 		CommandSelectMove();
 
 		//オプションの時は戻れるように。
-		if (g_pad[0]->IsTrigger(enButtonB) && m_titleCommand == TitleScene::TC_Option && m_option->GetSelectingState() == GameOption::enItem) {
+		if (g_pad[0]->IsTrigger(enButtonB) && m_titleCommand == TitleScene::TC_Option && m_option->GetSelectingState() == GameOption::enItem && m_option->isQueuing() == false) {
 			m_commandTimer = 0;
 			m_selectFlag = false;
 

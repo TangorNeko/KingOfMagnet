@@ -14,7 +14,6 @@ class GameOption : public IGameObject
 	static float m_SEVolume;//効果音のボリューム
 	static float m_1PSensitivity;//プレイヤー1のカメラ感度
 	static float m_2PSensitivity;//プレイヤー2のカメラ感度
-	float m_selectItemTemporaryValue;//選択した項目の値を保存しておく(キャンセルした時に戻せるよう)
 
 	prefab::CFontRender* m_optionFont = nullptr;//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;//BGMのボリュームのフォント
@@ -40,6 +39,9 @@ private:
 	//選択している項目の数値を格納するポインタ
 	float* m_selectingItemValue = nullptr;
 
+	//選択した項目の値を保存しておく(キャンセルした時に戻せるよう)
+	float m_selectingItemTemporaryValue;
+
 	//選択している項目のフォントを格納するポインタ
 	prefab::CFontRender* m_selectingItemFont = nullptr;
 
@@ -64,6 +66,13 @@ public:
 	//2Pのカメラ感度の数値を取得
 	float Get2PSensitivity() { return m_2PSensitivity; }
 
+	//現在の選択深度を取得
 	SelectingState GetSelectingState() { return m_selectingState; }
+
+	//背景スプライトがまだ動いてる?
+	bool isQueuing()
+	{
+		return m_optionBackGroundSprite->m_spriteSupporter.GetSpriteScaleListLen() != 0;
+	}
 };
 

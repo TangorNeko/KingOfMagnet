@@ -57,9 +57,9 @@ bool GameOption::Start()
 void GameOption::Update()
 {
 	//オプションが開いていて、拡大が終わっている。
-	if (m_optionBackGroundSprite->m_spriteSupporter.GetSpriteScaleListLen() == 0 && isOpen == true)
+	if (isQueuing() == false && isOpen == true)
 	{
-		//背景を灰色に
+		//背景を水色に
 		m_optionBackGroundSprite->SetMulColor({ 0.0f,0.75f,0.75f,0.8f });
 
 		//フォントの拡大率を1倍にすることで擬似的に表示
@@ -69,7 +69,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetScale({ 1.0f,1.0f });
 		m_2PSensitivityFont->SetScale({ 1.0f,1.0f });
 
-		//選択したフォント以外を白にするため一旦全部白にしている(switch文の中で選択しているやつ以外を白にする形でもいいかも)
+		//選択したフォント以外を白にするため一旦全部白にしている
 		m_BGMVolumeFont->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		m_SEVolumeFont->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		m_1PSensitivityFont->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -125,7 +125,7 @@ void GameOption::Update()
 				m_selectingState = enNumeric;
 
 				//数値設定前の値を記録
-				m_selectItemTemporaryValue = *m_selectingItemValue;
+				m_selectingItemTemporaryValue = *m_selectingItemValue;
 			}
 		}
 		else if(m_selectingState == enNumeric)//項目の数値を設定するモードなら
@@ -140,26 +140,62 @@ void GameOption::Update()
 				(*m_selectingItemValue) += 0.1f;
 			}
 
+			//選んでいる値がBGMの音量なら
 			if (m_selectingItemValue == &m_BGMVolume)
 			{
+				//BGMの音量の範囲制限(0.0~1.0)
+				if (*m_selectingItemValue <= 0.0f)
+				{
+					*m_selectingItemValue = 0.0f;
+				}
+				else if (*m_selectingItemValue >= 1.0f)
+				{
+					*m_selectingItemValue = 1.0f;
+				}
+
+				//設定値をBGMの音量としてセット
 				CSoundEngine::GetInstance()->SetBGMVolume(*m_selectingItemValue);
 			}
-			else if (m_selectingItemValue == &m_SEVolume)
+			else if (m_selectingItemValue == &m_SEVolume)//選んでいる値がSEの音量なら
 			{
+				//SEの音量の範囲制限(0.0~1.0)
+				if (*m_selectingItemValue <= 0.0f)
+				{
+					*m_selectingItemValue = 0.0f;
+				}
+				else if (*m_selectingItemValue >= 1.0f)
+				{
+					*m_selectingItemValue = 1.0f;
+				}
+
+				//設定値をSEの音量としてセット
 				CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
+			}
+			else if (m_selectingItemValue == &m_1PSensitivity || m_selectingItemValue == &m_2PSensitivity)//選んでいる値がカメラの感度なら
+			{
+				//プレイヤーのカメラ感度の範囲制限(0.1~5.0)
+				if (*m_selectingItemValue <= 0.1f)
+				{
+					*m_selectingItemValue = 0.1f;
+				}
+				else if (*m_selectingItemValue >= 5.0f)
+				{
+					*m_selectingItemValue = 5.0f;
+				}
 			}
 			//選択されている項目を青黒色に
 			m_selectingItemFont->SetColor({ 0.0f,0.0f,0.5f,1.0f });
 
+			//Aボタンを押すと値そのまま項目選択へ(値の決定)
 			if (g_pad[0]->IsTrigger(enButtonA))
 			{
 				m_selectingState = enItem;
 			}
-			else if (g_pad[0]->IsTrigger(enButtonB))
+			else if (g_pad[0]->IsTrigger(enButtonB))//Bボタンを押すと値を変更前に戻して項目選択へ(値のキャンセル)
 			{
 				m_selectingState = enItem;
 
-				*m_selectingItemValue = m_selectItemTemporaryValue;
+				*m_selectingItemValue = m_selectingItemTemporaryValue;
 			}
 		}
 
@@ -190,21 +226,27 @@ void GameOption::Update()
 
 void GameOption::Open()
 {
-	//背景の拡大率を1倍にするキューをセット
-	m_optionBackGroundSprite->m_spriteSupporter.SpriteScale(Vector3::One, 12, 1);
+	if (isQueuing() == false)
+	{
+		//背景の拡大率を1倍にするキューをセット
+		m_optionBackGroundSprite->m_spriteSupporter.SpriteScale(Vector3::One, 12, 1);
 
-	//開いたフラグをオン
-	isOpen = true;
+		//開いたフラグをオン
+		isOpen = true;
+	}
 }
 
 void GameOption::Close()
 {
-	//背景の拡大率を0倍にするキューをセット
-	m_optionBackGroundSprite->m_spriteSupporter.SpriteScale(Vector3::Zero, 12, 1);
+	if (isQueuing() == false)
+	{
+		//背景の拡大率を0倍にするキューをセット
+		m_optionBackGroundSprite->m_spriteSupporter.SpriteScale(Vector3::Zero, 12, 1);
 
-	//開いたフラグをオフ
-	isOpen = false;
+		//開いたフラグをオフ
+		isOpen = false;
 
-	//選択項目をリセット
-	m_selectingItem = 0;
+		//選択項目をリセット
+		m_selectingItem = 0;
+	}
 }
