@@ -76,6 +76,22 @@
 				m_3dSoundSource.erase(it);
 			}
 		}
+
+		//サウンドソースをリストに追加
+		void AddSoundSource(prefab::CSoundSource* s)
+		{
+			m_SoundSourceList.push_back(s);
+		}
+		
+		//サウンドソースをリストから削除
+		void RemoveSoundSource(prefab::CSoundSource* s)
+		{
+			auto it = std::find(m_SoundSourceList.begin(), m_SoundSourceList.end(), s);
+			if (it != m_SoundSourceList.end()) {
+				m_SoundSourceList.erase(it);
+			}
+		}
+
 		/*!
 		* @brief	サウンドリスナーの座標を設定。
 		* @details
@@ -141,6 +157,12 @@
 		{
 			return m_isInited;
 		}
+
+		//BGMの音量を設定
+		void SetBGMVolume(float volume);
+
+		//SEの音量を設定
+		void SetSEVolume(float volume);
 	private:
 		IXAudio2* m_xAudio2 = nullptr;
 		IXAudio2MasteringVoice* m_masteringVoice = nullptr;
@@ -159,6 +181,8 @@
 		std::list<prefab::CSoundSource*>	m_3dSoundSource;	//!<3Dサウンドのサウンドソース。
 		X3DAUDIO_CONE	m_emitterCone;
 		CWaveFileBank m_waveFileBank;					//!<波形データのバンク。
+
+		std::list<prefab::CSoundSource*> m_SoundSourceList;//現在存在するすべてのサウンドソースのリスト
 
 		static CSoundEngine* m_instance;
 	};

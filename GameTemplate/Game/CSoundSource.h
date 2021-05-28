@@ -7,6 +7,12 @@
 #include "WaveFile.h"
 //#include "tkEngine/Sound/tkWaveFile.h"
 
+enum SoundType
+{
+	enBGM,//BGM
+	enSE//効果音
+};
+
 	namespace prefab {
 		/*!
 		 * @brief	音源クラス。
@@ -52,17 +58,19 @@
 			 *@details
 			 * オンメモリ再生向けの初期化。
 			 *@param[in]	filePath	ファイルパス。対応しているファイルフォーマット(*.wave)
+			 *@param[in]	soundType	音のタイプ(BGM?SE?)
 			 *@param[in]	is3DSound	3Dサウンド？
 			 */
-			void Init(wchar_t* filePath, bool is3DSound = false);
+			void Init(wchar_t* filePath, SoundType soundType = SoundType::enSE, bool is3DSound = false);
 			/*!
 			 * @brief	初期化。
 			 *@details
 			 * オンメモリ再生向けの初期化。こちらを使う方がちょっとだけ速い。
 			 *@param[in]	nameKey		名前キー。
+			 *@param[in]	soundType	音のタイプ(BGM?SE?)
 			 *@param[in]	is3DSound	3Dサウンド？
 			 */
-			void Init(const WNameKey& nameKey, bool is3DSound = false);
+			void Init(const WNameKey& nameKey, SoundType soundType = SoundType::enSE,bool is3DSound = false);
 			/*!
 			* @brief	初期化。
 			*@details
@@ -72,11 +80,12 @@
 			* 一度に読み込まれるデータの最大サイズはbufferingSizeです。</br>
 			* 読み込まれたデータはリングバッファにコピーされていきます。</br>
 			*@param[in]	filePath		ファイルパス。対応しているファイルフォーマット(*.wave)
+			*@param[in]	soundType	音のタイプ(BGM?SE?)
 			*@param[in] is3DSound		3Dサウンド？
 			*@param[in] ringBufferSize	リングバッファのサイズ。(bufferSizeの倍数になっていると無駄なく活用できます。)
 			*@param[in]	bufferSize		ストリーミングの最大バッファリングサイズ。
 			*/
-			void InitStreaming(wchar_t* filePath, bool is3DSound = false, unsigned int ringBufferSize = 3 * 1024 * 1024, unsigned int bufferingSize = 1024 * 512);
+			void InitStreaming(wchar_t* filePath, SoundType soundType = SoundType::enSE,bool is3DSound = false, unsigned int ringBufferSize = 3 * 1024 * 1024, unsigned int bufferingSize = 1024 * 512);
 			/*!
 			* @brief	開放。
 			*@details
@@ -117,23 +126,47 @@
 				return m_isPlaying;
 			}
 
+			//ボリューム設定を更新
+			void UpdateVolume()
+			{
+				m_sourceVoice->SetVolume(m_volume * m_baseVolume);
+			}
+
 			/*!
 			* @brief	ボリュームを設定。
 			*@param[in]	vol		ボリューム。
 			*/
 			void SetVolume(float vol)
 			{
-				m_sourceVoice->SetVolume(vol);
+				m_volume = vol;
+				UpdateVolume();
 			}
 			/*!
 			* @brief	ボリュームを取得。
 			*/
 			float GetVolume() const
 			{
+				/*
 				float vol;
 				m_sourceVoice->GetVolume(&vol);
 				return vol;
+				*/
+				return m_volume;
 			}
+
+			//ボリュームの基礎値を設定
+			void SetBaseVolume(float baseVolume)
+			{
+				m_baseVolume = baseVolume;
+				UpdateVolume();
+			}
+
+			//ボリュームの基礎値を取得
+			float GetBaseVolume() const
+			{
+				return m_baseVolume;
+			}
+
 			/*!
 			* @brief	音源の座標を設定。
 			* @details
@@ -203,6 +236,12 @@
 			{
 				return &m_dspSettings;
 			}
+
+			//音のタイプを取得
+			SoundType GetSoundType()
+			{
+				return m_soundType;
+			}
 		private:
 			void InitCommon();
 			//ストリーミング再生中の更新処理。
@@ -243,5 +282,10 @@
 			X3DAUDIO_DSP_SETTINGS m_dspSettings;
 			bool m_isSetPositionFirst = true;	//!<一番最初のsetPosition?
 			bool m_isAvailable = false;			//!<インスタンスが利用可能？
+
+			float m_volume = 1.0f;//音のボリューム
+
+			SoundType m_soundType;//音のタイプ(BGM,SE等)
+			float m_baseVolume = 1.0f;//音のタイプに共通してボリュームに掛け合わせる基礎値
 		};
 	}

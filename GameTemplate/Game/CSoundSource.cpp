@@ -35,7 +35,7 @@
 			m_dspSettings.EmitterVelocityComponent = 0.0f;
 			m_dspSettings.ListenerVelocityComponent = 0.0f;
 		}
-		void CSoundSource::Init(wchar_t* filePath, bool is3DSound)
+		void CSoundSource::Init(wchar_t* filePath, SoundType soundType,bool is3DSound)
 		{
 			if (CSoundEngine::GetInstance()->IsAvailable() == false) {
 				//サウンドエンジンが利用不可。
@@ -71,10 +71,13 @@
 			}
 			InitCommon();
 
+			CSoundEngine::GetInstance()->AddSoundSource(this);
+			m_soundType = soundType;
+
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
 		}
-		void CSoundSource::Init(const WNameKey& nameKey, bool is3DSound)
+		void CSoundSource::Init(const WNameKey& nameKey, SoundType soundType,bool is3DSound)
 		{
 			if (CSoundEngine::GetInstance()->IsAvailable() == false) {
 				//サウンドエンジンが利用不可。
@@ -103,11 +106,14 @@
 			}
 			InitCommon();
 
+			CSoundEngine::GetInstance()->AddSoundSource(this);
+			m_soundType = soundType;
+
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
 		}
 
-		void CSoundSource::InitStreaming(wchar_t* filePath, bool is3DSound, unsigned int ringBufferSize, unsigned int bufferSize)
+		void CSoundSource::InitStreaming(wchar_t* filePath, SoundType soundType,bool is3DSound, unsigned int ringBufferSize, unsigned int bufferSize)
 		{
 			if (CSoundEngine::GetInstance()->IsAvailable() == false) {
 				//サウンドエンジンが利用不可。
@@ -131,6 +137,9 @@
 			}
 			InitCommon();
 
+			CSoundEngine::GetInstance()->AddSoundSource(this);
+			m_soundType = soundType;
+
 			m_is3DSound = is3DSound;
 			m_isAvailable = true;
 		}
@@ -146,6 +155,9 @@
 				m_sourceVoice = nullptr;
 			}
 			Remove3DSound();
+
+			CSoundEngine::GetInstance()->RemoveSoundSource(this);
+
 			DeleteGO(this);
 		}
 		void CSoundSource::Play(char* buff, unsigned int bufferSize)

@@ -338,3 +338,27 @@ CSoundEngine* CSoundEngine::m_instance = nullptr;
 			}
 		}
 	}
+
+	//BGM‚Ì‰¹—Ê‚ðÝ’è
+	void CSoundEngine::SetBGMVolume(float volume)
+	{
+		for (auto soundSource : m_SoundSourceList)
+		{
+			if (soundSource->GetSoundType() == SoundType::enBGM)
+			{
+				soundSource->SetBaseVolume(volume);
+			}
+		}
+	}
+
+	//SE‚Ì‰¹—Ê‚ðÝ’è
+	void CSoundEngine::SetSEVolume(float volume)
+	{
+		for (auto soundSource : m_SoundSourceList)
+		{
+			if (soundSource->GetSoundType() == SoundType::enSE)
+			{
+				soundSource->SetBaseVolume(volume);
+			}
+		}
+	}
