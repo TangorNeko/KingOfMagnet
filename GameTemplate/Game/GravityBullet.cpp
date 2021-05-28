@@ -175,7 +175,7 @@ void GravityBullet::AsExplodeBehave()
 
 	//‰¹‚ð–Â‚ç‚·
 	prefab::CSoundSource* ssGravity = NewGO<prefab::CSoundSource>(0);
-	ssGravity->Init(L"Assets/sound/ˆÃ•–‚–@.wav");
+	ssGravity->Init(L"Assets/sound/ˆÃ•–‚–@.wav", SoundType::enSE);
 	ssGravity->SetVolume(1.5f);
 	ssGravity->Play(false);
 

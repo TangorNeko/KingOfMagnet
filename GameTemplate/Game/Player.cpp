@@ -561,7 +561,7 @@ void Player::Move()
 			if (m_footstepsTimer >= 25)
 			{
 				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->Init(L"Assets/sound/足音.wav", SoundType::enSE);
 				ssShoot->SetVolume(0.2f);
 				ssShoot->Play(false);
 
@@ -572,7 +572,7 @@ void Player::Move()
 			if (m_footstepsTimer >= 17)
 			{
 				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-				ssShoot->Init(L"Assets/sound/足音.wav");
+				ssShoot->Init(L"Assets/sound/足音.wav", SoundType::enSE);
 				ssShoot->SetVolume(0.2f);
 				ssShoot->Play(false);
 				
@@ -586,7 +586,7 @@ void Player::Move()
 	if (oldPos.y >= -50.0f && m_position.y < -50.0f)
 	{
 		prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-		ssShoot->Init(L"Assets/sound/落下音.wav");
+		ssShoot->Init(L"Assets/sound/落下音.wav", SoundType::enSE);
 		ssShoot->SetVolume(0.5f);
 		ssShoot->Play(false);
 	}	
@@ -603,7 +603,7 @@ void Player::Attack()
 			m_AttackNum++;//攻撃回数
 			//音を鳴らす
 			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-			ssShoot->Init(L"Assets/sound/シュート音.wav");
+			ssShoot->Init(L"Assets/sound/シュート音.wav", SoundType::enSE);
 			ssShoot->SetVolume(0.5f);
 			ssShoot->Play(false);
 
@@ -704,7 +704,7 @@ void Player::SpecialAttack()
 		if (m_specialShotCount == 0)
 		{
 			prefab::CSoundSource* ssSPCharge = NewGO<prefab::CSoundSource>(0);
-			ssSPCharge->Init(L"Assets/sound/パワーチャージ.wav");
+			ssSPCharge->Init(L"Assets/sound/パワーチャージ.wav", SoundType::enSE);
 			ssSPCharge->Play(false);
 		}
 
@@ -740,7 +740,7 @@ void Player::SpecialAttack()
 			//m_SPFirstEffectBlue->Stop();
 			//音を鳴らす
 			prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);
-			ssSPShot->Init(L"Assets/sound/引力弾発射.wav");
+			ssSPShot->Init(L"Assets/sound/引力弾発射.wav", SoundType::enSE);
 			ssSPShot->SetVolume(0.8f);
 			ssSPShot->Play(false);
 
@@ -800,7 +800,7 @@ void Player::SpecialAttack()
 			{
 				//音を鳴らす
 				prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);;
-				ssSPShot->Init(L"Assets/sound/気弾1.wav");
+				ssSPShot->Init(L"Assets/sound/気弾1.wav", SoundType::enSE);
 				ssSPShot->Play(false);
 
 				//発射エフェクト
@@ -889,7 +889,7 @@ void Player::ThrowBomb()
 			m_AttackNum++;//攻撃回数
 			//音を鳴らす
 			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
-			ssThrow->Init(L"Assets/sound/投げる音.wav");
+			ssThrow->Init(L"Assets/sound/投げる音.wav", SoundType::enSE);
 			ssThrow->Play(false);
 
 			//選択している爆弾を発射
@@ -1091,7 +1091,7 @@ void Player::MagneticBehavior()
 		{
 		case -1://引力
 			//バースト音を再生
-			ssBurst->Init(L"Assets/sound/引力バースト音.wav");
+			ssBurst->Init(L"Assets/sound/引力バースト音.wav", SoundType::enSE);
 			ssBurst->SetVolume(1.5);
 			ssBurst->Play(false);		
 			//エフェクトを表示
@@ -1101,7 +1101,7 @@ void Player::MagneticBehavior()
 
 		case 1://斥力
 			//バースト音を再生
-			ssBurst->Init(L"Assets/sound/斥力バースト音.wav");
+			ssBurst->Init(L"Assets/sound/斥力バースト音.wav", SoundType::enSE);
 			ssBurst->SetVolume(1.5);
 			ssBurst->Play(false);
 			//エフェクトを表示
@@ -1488,7 +1488,7 @@ void Player::ChargeSpecialAttackGauge(int charge)
 			m_SPGaugeMaxEffect->Play();
 			//SE
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/きらーん.wav");
+			ss->Init(L"Assets/sound/きらーん.wav", SoundType::enSE);
 			ss->SetVolume(0.5f);
 			ss->Play(false);
 
@@ -2049,7 +2049,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 		{
 			//音を再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/K.O..wav");
+			ss->Init(L"Assets/sound/K.O..wav", SoundType::enSE);
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
@@ -2057,7 +2057,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 		{
 			//音を再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/K.O..wav");
+			ss->Init(L"Assets/sound/K.O..wav", SoundType::enSE);
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
@@ -2065,7 +2065,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 		{
 			//音を再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/K.O..wav");
+			ss->Init(L"Assets/sound/K.O..wav", SoundType::enSE);
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}
@@ -2073,7 +2073,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 		{
 			//ジングルを再生
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/yattaze!1.wav");
+			ss->Init(L"Assets/sound/yattaze!1.wav", SoundType::enSE);
 			ss->SetVolume(1.5f);
 			ss->Play(false);
 		}

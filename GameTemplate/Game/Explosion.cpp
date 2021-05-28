@@ -12,7 +12,7 @@ bool Explosion::Start()
 {
 	//‰¹‚ğÄ¶
 	prefab::CSoundSource* ssExplosion = NewGO<prefab::CSoundSource>(0);;
-	ssExplosion->Init(L"Assets/sound/”š”­‰¹.wav");
+	ssExplosion->Init(L"Assets/sound/”š”­‰¹.wav", SoundType::enSE);
 	ssExplosion->SetVolume(1.1f);
 	ssExplosion->Play(false);
 

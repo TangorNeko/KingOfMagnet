@@ -143,14 +143,14 @@ void ResultScene::Update()
 		//SE
 		if (m_moveTimer == 25) {
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/リザルトSE1.wav");
+			ss->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
 			ss->SetVolume(1.2f);
 			ss->Play(false);
 		}
 		else if (m_moveTimer == 55)
 		{
 			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/リザルトSE1.wav");
+			ss->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
 			ss->SetVolume(1.2f);
 			ss->Play(false);
 		}
@@ -158,7 +158,7 @@ void ResultScene::Update()
 		else if (m_moveTimer == 80)
 		{	
 			ssBGM = NewGO<prefab::CSoundSource>(0);;
-			ssBGM->Init(L"Assets/sound/リザルト曲.wav");
+			ssBGM->Init(L"Assets/sound/リザルト曲.wav", SoundType::enBGM);
 			ssBGM->SetVolume(0.2f);
 			ssBGM->Play(true);
 		}
@@ -180,7 +180,7 @@ void ResultScene::Update()
 
 				//SE
 				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/カーソル移動音.wav");
+				ss->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
 				ss->SetVolume(1.0f);
 				ss->Play(false);
 			}
@@ -193,7 +193,7 @@ void ResultScene::Update()
 
 				//SE
 				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/カーソル移動音.wav");
+				ss->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
 				ss->SetVolume(1.0f);
 				ss->Play(false);
 			}
@@ -206,7 +206,7 @@ void ResultScene::Update()
 				DeleteGO(ssBGM);
 				//SE
 				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/リザルト画面決定音.wav");
+				ss->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
 				ss->SetVolume(1.0f);
 				ss->Play(false);
 
@@ -219,7 +219,7 @@ void ResultScene::Update()
 				DeleteGO(ssBGM);
 				//SE
 				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/リザルト画面決定音.wav");
+				ss->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
 				ss->SetVolume(1.0f);
 				ss->Play(false);
 

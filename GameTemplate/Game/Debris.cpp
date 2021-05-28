@@ -302,7 +302,7 @@ void Debris::AsBulletBehave()
 					case enStone:
 						//音を再生
 						if (player->m_hp > 0) {
-							ssHit->Init(L"Assets/sound/ダメージ音.wav");
+							ssHit->Init(L"Assets/sound/ダメージ音.wav",SoundType::enSE);
 							ssHit->SetVolume(1.2f);
 							ssHit->Play(false);
 						}
@@ -312,7 +312,7 @@ void Debris::AsBulletBehave()
 					case enSword:
 						//音を再生
 						if (player->m_hp > 0) {
-							ssHit->Init(L"Assets/sound/剣が当たる.wav");
+							ssHit->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
 							ssHit->SetVolume(1.5f);
 							ssHit->Play(false);
 						}
@@ -322,7 +322,7 @@ void Debris::AsBulletBehave()
 					case enSpecialCharger:
 						//音を再生(仮)
 						if (player->m_hp > 0) {
-							ssHit->Init(L"Assets/sound/剣が当たる.wav");
+							ssHit->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
 							ssHit->SetVolume(1.5f);
 							ssHit->Play(false);
 						}

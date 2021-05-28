@@ -19,9 +19,9 @@ bool Repulsion::Start()
 	m_gameScene = FindGO<SampleScene>("gamescene");
 
 	m_ss2[0] = NewGO<prefab::CSoundSource>(0);
-	m_ss2[0]->Init(L"Assets/sound/UFO.wav");
+	m_ss2[0]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
 	m_ss2[1] = NewGO<prefab::CSoundSource>(0);
-	m_ss2[1]->Init(L"Assets/sound/UFO.wav");
+	m_ss2[1]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
 
 	return true;
 }
@@ -58,7 +58,7 @@ void Repulsion::Update()
 					if (m_isPlayss1[player->m_playerNum] == false)
 					{
 						prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
-						ss1->Init(L"Assets/sound/マジックウェーブ.wav");
+						ss1->Init(L"Assets/sound/マジックウェーブ.wav", SoundType::enSE);
 						ss1->SetVolume(1.5f);
 						ss1->Play(false);
 						m_isPlayss1[player->m_playerNum] = true;

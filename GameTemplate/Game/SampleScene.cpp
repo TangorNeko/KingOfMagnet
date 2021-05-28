@@ -213,7 +213,7 @@ bool SampleScene::Start()
 
 	//音を再生
 	ssBGM = NewGO<prefab::CSoundSource>(0);
-	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav");
+	ssBGM->Init(L"Assets/sound/サイバー風BGM.wav", SoundType::enBGM);
 	ssBGM->SetVolume(0.3f);
 	ssBGM->Play(true);
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 60, true);
@@ -462,12 +462,12 @@ void SampleScene::StartCountDown() {
 		prefab::CSoundSource* ssCount = NewGO<prefab::CSoundSource>(0);;
 		if (m_startCount >= 1 && m_startCount < 4) 
 		{
-			ssCount->Init(L"Assets/sound/カウント音2.wav");
+			ssCount->Init(L"Assets/sound/カウント音2.wav", SoundType::enSE);
 			ssCount->SetVolume(0.8f);
 		}
 		else if (m_startCount == 0)
 		{
-			ssCount->Init(L"Assets/sound/エアーホーン.wav");
+			ssCount->Init(L"Assets/sound/エアーホーン.wav", SoundType::enSE);
 			ssCount->SetVolume(0.8f);
 		}
 		ssCount->Play(false);

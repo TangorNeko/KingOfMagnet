@@ -13,7 +13,7 @@ bool Incendia::Start()
 {
 	//音を再生
 	prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);
-	ss->Init(L"Assets/sound/炎.wav");
+	ss->Init(L"Assets/sound/炎.wav", SoundType::enSE);
 	ss->Play(false);
 
 	//エフェクトを再生

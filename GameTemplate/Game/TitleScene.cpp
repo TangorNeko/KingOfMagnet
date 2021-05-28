@@ -82,7 +82,7 @@ bool TitleScene::Start()
 	g_camera3D[0]->SetTarget({ 0.0f,50.0f,0.0f });
 	//BGMを再生
 	ssBGM = NewGO<prefab::CSoundSource>(0);
-	ssBGM->Init(L"Assets/sound/タイトル曲.wav");
+	ssBGM->Init(L"Assets/sound/タイトル曲.wav", SoundType::enBGM);
 	ssBGM->SetVolume(0.2f);
 	ssBGM->Play(true);	
 
@@ -116,7 +116,7 @@ void TitleScene::Update()
 
 			//SE
 			prefab::CSoundSource* ss2 = NewGO<prefab::CSoundSource>(0);
-			ss2->Init(L"Assets/sound/タイトル画面SE1.wav");
+			ss2->Init(L"Assets/sound/タイトル画面SE1.wav", SoundType::enSE);
 			ss2->SetVolume(0.8f);
 			ss2->Play(false);
 		}
@@ -128,7 +128,7 @@ void TitleScene::Update()
 
 			//SE
 			prefab::CSoundSource* ss3 = NewGO<prefab::CSoundSource>(0);
-			ss3->Init(L"Assets/sound/タイトル画面SE1.wav");
+			ss3->Init(L"Assets/sound/タイトル画面SE1.wav", SoundType::enSE);
 			ss3->SetVolume(0.8f);
 			ss3->Play(false);
 		}
@@ -381,7 +381,7 @@ void TitleScene::CommandSelectMove() {
 	{
 		//SE
 		prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
-		ss1->Init(L"Assets/sound/ガキーン!.wav");
+		ss1->Init(L"Assets/sound/ガキーン!.wav", SoundType::enSE);
 		ss1->SetVolume(1.2f);
 		ss1->Play(false);
 	}
