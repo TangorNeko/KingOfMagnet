@@ -24,7 +24,10 @@ class SampleScene : public IGameObject
 	prefab::CSpriteRender* m_tensPlaceSpriteRender = nullptr;	//タイムリミットの二桁目を表示するスプライト
 
 	Player* m_player1 = nullptr;
+	float m_1PSensitivity = 1.0f;
+
 	Player* m_player2 = nullptr;
+	float m_2PSensitivity = 1.0f;
 
 	prefab::CDirectionLight* m_stageLight = nullptr;
 	BackGround* m_backGround = nullptr;
@@ -109,6 +112,18 @@ public:
 	int GetBulletNum()
 	{
 		return m_bulletNum;
+	}
+	
+	//1Pのカメラ感度設定
+	void Set1PSensitivity(float sensitivity)
+	{
+		m_1PSensitivity = sensitivity;
+	}
+
+	//2Pのカメラ感度設定
+	void Set2PSensitivity(float sensitivity)
+	{
+		m_2PSensitivity = sensitivity;
 	}
 
 	//ゲームシーンに存在できる弾数の最大数

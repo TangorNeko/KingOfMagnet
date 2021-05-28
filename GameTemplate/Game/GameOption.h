@@ -10,10 +10,10 @@ class GameOption : public IGameObject
 
 	bool isOpen = false;//オプションが開いているか
 
-	float m_BGMVolume = 1.0f;//BGMのボリューム
-	float m_SEVolume = 1.0f;//効果音のボリューム
-	float m_1PSensitivity = 1.0f;//プレイヤー1のカメラ感度
-	float m_2PSensitivity = 1.0f;//プレイヤー2のカメラ感度
+	static float m_BGMVolume;//BGMのボリューム
+	static float m_SEVolume;//効果音のボリューム
+	static float m_1PSensitivity;//プレイヤー1のカメラ感度
+	static float m_2PSensitivity;//プレイヤー2のカメラ感度
 	float m_selectItemTemporaryValue;//選択した項目の値を保存しておく(キャンセルした時に戻せるよう)
 
 	prefab::CFontRender* m_optionFont = nullptr;//オプションのフォント

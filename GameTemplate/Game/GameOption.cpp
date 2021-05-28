@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "GameOption.h"
 
+float GameOption::m_BGMVolume = 1.0f;//BGMのボリューム
+float GameOption::m_SEVolume = 1.0f;//効果音のボリューム
+float GameOption::m_1PSensitivity = 1.0f;//プレイヤー1のカメラ感度
+float GameOption::m_2PSensitivity = 1.0f;//プレイヤー2のカメラ感度
+
 GameOption::~GameOption()
 {
 	//スプライト、フォントの削除

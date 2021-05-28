@@ -359,7 +359,12 @@ void TitleScene::CommandSelectMove() {
 			//開始
 			//BGMを消す
 			DeleteGO(ssBGM);
-			NewGO<SampleScene>(0, "gamescene");
+			//switch文の中で宣言するためのスコープ
+			{
+				SampleScene* gameScene = NewGO<SampleScene>(0, "gamescene");
+				gameScene->Set1PSensitivity(m_option->Get1PSensitivity());
+				gameScene->Set2PSensitivity(m_option->Get2PSensitivity());
+			}
 			DeleteGO(this);
 			break;
 		case TitleScene::TC_Option:

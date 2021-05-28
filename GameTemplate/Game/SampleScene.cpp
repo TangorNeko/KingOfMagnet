@@ -74,6 +74,7 @@ bool SampleScene::Start()
 	}
 	m_player1->m_toCameraDir = { 1.0f,0.0f,0.0f };
 	m_player1->m_characterDirection = { -1.0f,0.0f,0.0f };
+	m_player1->m_sensitivity = m_1PSensitivity;
 
 	m_player2 = NewGO<Player>(0, "Player");
 	m_player2->m_position = { -760.0f,0.0f,-400.0f };
@@ -90,6 +91,7 @@ bool SampleScene::Start()
 	}
 	m_player2->m_toCameraDir = { -1.0f,0.0f,0.0f };
 	m_player2->m_characterDirection = { 1.0f,0.0f,0.0f };
+	m_player2->m_sensitivity = m_2PSensitivity;
 
 	//ŠeƒvƒŒƒCƒ„[‚É“G‚ð“n‚·
 	m_player2->m_enemy = m_player1;
