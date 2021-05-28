@@ -140,12 +140,6 @@ bool SampleScene::Start()
 	m_TimerBaseSpriteRender->SetPosition({ 0.0f,300.0f,0.0f });
 	m_TimerBaseSpriteRender->Init("Assets/Image/Timer_Base.dds", 272, 120);
 
-	//ゲームスタートカウント
-	//m_startCountFontRender = NewGO<prefab::CFontRender>(4);
-	//m_startCountFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	//m_startCountFontRender->SetPosition({ -185.0f, 130.0f });
-	//m_startCountFontRender->SetScale({ 3.0f, 3.0f });
-
 	//カウント3
 	m_CountDown_3_1 = NewGO<prefab::CSpriteRender>(3);
 	m_CountDown_3_1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
@@ -229,7 +223,7 @@ bool SampleScene::Start()
 void SampleScene::Update()
 {
 
-	//スタートダウンカウントダウン
+	//スタートカウントダウン
 	if (m_gameState == enStartCountDown) {
 		StartCountDown();
 		return;
@@ -452,9 +446,6 @@ void SampleScene::StartCountDown() {
 
 		m_count1_Flag = true;
 	}
-	else if ( m_startCount == 0) {
-		//m_startCountFontRender->SetText(L"Start!");
-	}
 
 	else if (m_startCount < 0) {
 		DeleteGO(m_CountDown_3_1);
@@ -468,6 +459,8 @@ void SampleScene::StartCountDown() {
 		DeleteGO(m_CountDown_2_5);
 		DeleteGO(m_CountDown_1_1);
 		m_gameState = enPlaying;
+
+		DeleteGO(m_startSprite);
 	}
 
 	if (m_playCountSEFlag == true) {
@@ -481,6 +474,13 @@ void SampleScene::StartCountDown() {
 		{
 			ssCount->Init(L"Assets/sound/エアーホーン.wav", SoundType::enSE);
 			ssCount->SetVolume(0.8f);
+
+			//ゲームスタートカウント
+			m_startSprite = NewGO<prefab::CSpriteRender>(5);
+			m_startSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			m_startSprite->Init("Assets/Image/Start.DDS" ,324, 64);
+			m_startSprite->SetPosition({ 0.0f, 0.0f, 0.0f });
+			m_startSprite->SetScale({ 1.5f, 1.5f, 1.5f });
 		}
 		ssCount->Play(false);
 		m_playCountSEFlag = false;

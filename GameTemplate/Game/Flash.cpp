@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Flash.h"
 #include "Player.h"
+#include "SampleScene.h"
 
 Flash::~Flash()
 {
@@ -47,6 +48,8 @@ bool Flash::Start()
 			}
 			return true;
 		});
+
+	m_gameScene = FindGO<SampleScene>("gamescene");
 	return true;	
 }
 void Flash::Update()
@@ -68,6 +71,11 @@ void Flash::Update()
 	}
 
 	else if (m_deleteFlag == true && m_effect->IsPlay() == false)
+	{
+		DeleteGO(this);
+	}
+
+	if (m_gameScene->GetGameState() == SampleScene::enResult)
 	{
 		DeleteGO(this);
 	}

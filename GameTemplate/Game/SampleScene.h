@@ -39,7 +39,7 @@ class SampleScene : public IGameObject
 	void StartCountDown();
 	float m_measureSecond = 0.0f;	//秒を測る
 	int m_startCount = 4;		//ゲームスタートまでのカウント
-	//prefab::CFontRender* m_startCountFontRender = nullptr;
+	prefab::CSpriteRender* m_startSprite = nullptr;
 	bool m_playCountSEFlag = false;
 	bool m_GEfirstLoop = true;
 

@@ -1,4 +1,7 @@
 #pragma once
+
+class SampleScene;
+
 class Flash:public IGameObject
 {
 	~Flash();
@@ -21,5 +24,7 @@ public:
 	Vector3 m_position = {0.0f,0.0f,0.0f};
 
 	int m_parentNum;
+
+	SampleScene* m_gameScene = nullptr;
 };
 
