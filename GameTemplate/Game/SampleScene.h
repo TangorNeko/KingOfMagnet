@@ -56,6 +56,9 @@ class SampleScene : public IGameObject
 	bool m_count3_Flag = false;
 	bool m_count2_Flag = false;
 	bool m_count1_Flag = false;
+	bool m_finalCount3_Flag = false;
+	bool m_finalCount2_Flag = false;
+	bool m_finalCount1_Flag = false;
 	prefab::CSpriteRender* m_CountDown_3_1 = nullptr;
 	prefab::CSpriteRender* m_CountDown_3_2 = nullptr;
 	prefab::CSpriteRender* m_CountDown_3_3 = nullptr;
@@ -68,6 +71,8 @@ class SampleScene : public IGameObject
 	prefab::CSpriteRender* m_CountDown_2_5 = nullptr;
 	//
 	prefab::CSpriteRender* m_CountDown_1_1 = nullptr;
+	//
+	prefab::CSpriteRender* m_finalCount = nullptr;
 
 public:
 	enum GameState
@@ -82,6 +87,7 @@ public:
 
 private:
 
+	void FinalCount();
 	GameState m_gameState = enBirdseye;
 
 public:

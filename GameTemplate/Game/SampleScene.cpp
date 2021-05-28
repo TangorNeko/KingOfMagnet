@@ -196,6 +196,12 @@ bool SampleScene::Start()
 	m_CountDown_1_1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 	m_CountDown_1_1->SetPosition({ 0.0f,600.0f,0.0f });
 	m_CountDown_1_1->Init("Assets/Image/Count/CountLine.dds", 36, 200);
+	//最後のカウント
+	m_finalCount = NewGO<prefab::CSpriteRender>(10);
+	m_finalCount->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+	m_finalCount->SetPosition({ 0.0f,0.0f,0.0f });
+	m_finalCount->Init("Assets/Image/count3.dds", 300, 300);
+	m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.0f });
 
 	//タイムリミットの一桁目
 	m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
@@ -229,6 +235,12 @@ void SampleScene::Update()
 		return;
 	}
 	TimeLimitCount();
+
+	//時間切れでも勝敗がついていない場合
+	if (m_timeLimit <= 4 && m_timeLimit >= 0 && m_gameState != enResult && m_gameState != enDraw)
+	{
+		FinalCount();
+	}
 
 	//時間切れでも勝敗がついていない場合
 	if(m_timeLimit <= 0 && m_gameState != enResult && m_gameState != enDraw)
@@ -654,4 +666,38 @@ void SampleScene::TimeLimitChangesSprits(int num, int numPlace)
 			break;
 		}
 	}
+}
+
+void SampleScene::FinalCount() {
+
+	if (m_timeLimit > 3.0f && m_timeLimit <= 4.0f && m_finalCount3_Flag == false) {
+		m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.5f });
+		m_finalCount->SetScale({ 3.0f,3.0f,3.0f });
+		m_finalCount->m_spriteSupporter.SpriteScale(1.0f, 6, 0);
+		m_finalCount->m_spriteSupporter.SpriteScale(0.8f, 24, 6);
+		m_finalCount->m_spriteSupporter.SpriteScale(0.0f, 6, 30);
+		m_finalCount->m_spriteSupporter.SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
+		m_finalCount3_Flag = true;
+	}
+	if (m_timeLimit > 2.0f && m_timeLimit <= 3.0f && m_finalCount2_Flag == false) {
+		m_finalCount->Init("Assets/Image/count2.dds", 300, 300);
+		m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.5f });
+		m_finalCount->SetScale({ 3.0f,3.0f,3.0f });
+		m_finalCount->m_spriteSupporter.SpriteScale(1.0f, 6, 0);
+		m_finalCount->m_spriteSupporter.SpriteScale(0.8f, 24, 6);
+		m_finalCount->m_spriteSupporter.SpriteScale(0.0f, 6, 30);
+		m_finalCount->m_spriteSupporter.SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
+		m_finalCount2_Flag = true;
+	}
+	if (m_timeLimit > 1.0f && m_timeLimit <= 2.0f && m_finalCount1_Flag == false) {
+		m_finalCount->Init("Assets/Image/count1.dds", 300, 300);
+		m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.5f });
+		m_finalCount->SetScale({ 3.0f,3.0f,3.0f });
+		m_finalCount->m_spriteSupporter.SpriteScale(1.0f, 6, 0);
+		m_finalCount->m_spriteSupporter.SpriteScale(0.8f, 24, 6);
+		m_finalCount->m_spriteSupporter.SpriteScale(0.0f, 6, 30);
+		m_finalCount->m_spriteSupporter.SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
+		m_finalCount1_Flag = true;
+	}
+
 }
