@@ -79,14 +79,14 @@ void GameOption::Update()
 		if (m_selectingState == enItem)
 		{
 			//下を押すと下の項目へ
-			if (g_pad[0]->IsTrigger(enButtonDown))
+			if (g_pad[0]->IsTrigger(enButtonDown) || g_pad[1]->IsTrigger(enButtonDown))
 			{
 				if (++m_selectingItem == 4)
 				{
 					m_selectingItem = 0;
 				}
 			}
-			else if(g_pad[0]->IsTrigger(enButtonUp))//上を押すと上の項目へ
+			else if(g_pad[0]->IsTrigger(enButtonUp) || g_pad[1]->IsTrigger(enButtonUp))//上を押すと上の項目へ
 			{
 				if (--m_selectingItem == -1)
 				{
@@ -120,7 +120,7 @@ void GameOption::Update()
 			m_selectingItemFont->SetColor({ 0.5f,0.0f,0.0f,1.0f });
 
 			//Aボタンを押すと選択している項目の数値を設定するモードに移行
-			if (g_pad[0]->IsTrigger(enButtonA))
+			if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA))
 			{
 				m_selectingState = enNumeric;
 
@@ -131,11 +131,11 @@ void GameOption::Update()
 		else if(m_selectingState == enNumeric)//項目の数値を設定するモードなら
 		{
 			//下を押すと数値を減らす
-			if (g_pad[0]->IsPress(enButtonDown))
+			if (g_pad[0]->IsPress(enButtonDown) || g_pad[1]->IsPress(enButtonDown))
 			{
 				(*m_selectingItemValue) -= 0.1f;
 			}
-			else if(g_pad[0]->IsPress(enButtonUp))//上を押すと数値を増やす
+			else if(g_pad[0]->IsPress(enButtonUp) || g_pad[1]->IsPress(enButtonUp))//上を押すと数値を増やす
 			{
 				(*m_selectingItemValue) += 0.1f;
 			}
@@ -187,11 +187,11 @@ void GameOption::Update()
 			m_selectingItemFont->SetColor({ 0.0f,0.0f,0.5f,1.0f });
 
 			//Aボタンを押すと値そのまま項目選択へ(値の決定)
-			if (g_pad[0]->IsTrigger(enButtonA))
+			if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA))
 			{
 				m_selectingState = enItem;
 			}
-			else if (g_pad[0]->IsTrigger(enButtonB))//Bボタンを押すと値を変更前に戻して項目選択へ(値のキャンセル)
+			else if (g_pad[0]->IsTrigger(enButtonB) || g_pad[1]->IsTrigger(enButtonB))//Bボタンを押すと値を変更前に戻して項目選択へ(値のキャンセル)
 			{
 				m_selectingState = enItem;
 
