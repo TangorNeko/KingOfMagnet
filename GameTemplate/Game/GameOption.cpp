@@ -3,8 +3,8 @@
 
 float GameOption::m_BGMVolume = 1.0f;//BGMのボリューム
 float GameOption::m_SEVolume = 1.0f;//効果音のボリューム
-float GameOption::m_1PSensitivity = 1.0f;//プレイヤー1のカメラ感度
-float GameOption::m_2PSensitivity = 1.0f;//プレイヤー2のカメラ感度
+float GameOption::m_1PSensitivity = 2.0f;//プレイヤー1のカメラ感度
+float GameOption::m_2PSensitivity = 2.0f;//プレイヤー2のカメラ感度
 
 GameOption::~GameOption()
 {
@@ -196,6 +196,17 @@ void GameOption::Update()
 				m_selectingState = enItem;
 
 				*m_selectingItemValue = m_selectingItemTemporaryValue;
+
+				if (m_selectingItemValue == &m_BGMVolume)
+				{
+					//設定値をBGMの音量としてセット
+					CSoundEngine::GetInstance()->SetBGMVolume(*m_selectingItemValue);
+				}
+				else if (m_selectingItemValue == &m_SEVolume)//選んでいる値がSEの音量なら
+				{
+					//設定値をSEの音量としてセット
+					CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
+				}
 			}
 		}
 
