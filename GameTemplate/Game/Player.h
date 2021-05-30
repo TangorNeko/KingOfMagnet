@@ -85,11 +85,6 @@ private:
 	bool m_HitOn = false;//被弾したかどうか
 	int m_Hitcount = 30;//被弾したときに流れるアニメーションのフレーム数
 
-	//死亡状態に切り替える
-	void TryChangeStatusDeath();
-	
-	//勝利状態に切り替える
-	void TryChangeStatusWin();
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -212,9 +207,7 @@ public:
 		enStatus_Fall,		//落下状態
 		enStatus_SpecialAttack,//必殺技状態
 		enStatus_Burst,		//バースト状態
-		enStatus_Hit,		//被弾状態
-		enStatus_Death,		//死亡状態
-		enStatus_Winner,	//勝利状態
+		enStatus_Hit,		//被弾状態		
 		enStatus_Num,		//状態の数。
 	};
 
