@@ -1740,6 +1740,7 @@ void Player::UpdateState()
 
 void Player::AnimationSelect()
 {	
+	m_skinModelRender->m_animation_speed = 1.0;
 	switch (m_animStatus)
 	{
 	case enStatus_Attack:
