@@ -13,6 +13,9 @@ bool DamageDisplay::Start()
 	m_oldhitcount = m_hitcount;
 	m_fontRenderDamage = NewGO<prefab::CFontRender>(1);
 	m_fontRenderDamage->SetDrawScreen((prefab::CFontRender::DrawScreen)m_enemyNum);
+	m_fontRenderDamage->SetShadowFlag(true);
+	m_fontRenderDamage->SetShadowColor({ 0,0,0,1 });
+	m_fontRenderDamage->SetShadowOffset(2);
 
 	m_fontRenderDamage->SetColor({ 0.0f,0.0f,1.0f,1.0f });
 
@@ -68,6 +71,6 @@ void DamageDisplay::Update()
 
 	//計算結果のスクリーン上の座標にxとyの移動量をプラス。
 	m_fontRenderDamage->SetPosition({ m_screenDamagePos.x + m_xplusValue,m_screenDamagePos.y + m_yplusValue });
-	m_fontRenderDamage->SetColor({ 0.0f,1.0f,1.0f,m_Alpha });
+	m_fontRenderDamage->SetColor({ 1.0f,0.1f,0.1f,m_Alpha });
 
 }
