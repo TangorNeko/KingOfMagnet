@@ -482,6 +482,7 @@ void GraphicsEngine::EndRender()
 	ID3D12CommandList* ppCommandLists[] = { m_commandList };
 	m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
+	/*
 	if (m_frameRate >= 100)
 	{
 		m_swapChain->Present(2, 0);
@@ -491,6 +492,10 @@ void GraphicsEngine::EndRender()
 		// Present the frame.
 		m_swapChain->Present(1, 0);
 	}
+	*/
+
+	//‚’¼“¯Šú‚ğ‘Ò‚½‚È‚¢B
+	m_swapChain->Present(0, 0);
 
 	m_directXTKGfxMemroy->GarbageCollect();
 	//•`‰æŠ®—¹‘Ò‚¿B

@@ -50,6 +50,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	PostEffectManager::GetInstance()->Init(true,true);
 	//////////////////////////////////////////////////
 	
+	//FPS固定用ストップウォッチ
+	Stopwatch stopwatch;
+
 	//モデルデータ、エフェクトデータの事前ロード。
 	PreLoad();
 
@@ -69,6 +72,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		//FPS計測用ストップウォッチの計測開始
+		stopwatch.Start();
+
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
@@ -88,6 +94,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
 		g_engine->EndFrame();
+
+		//スピンロックを行う。
+		int restTime = 0;
+		do {
+			stopwatch.Stop();
+			restTime = 16 - (int)stopwatch.GetElapsedMillisecond();
+		} while (restTime > 0);
+
+
+		//ストップウォッチの計測終了
+		stopwatch.Stop();
+		//デルタタイムをストップウォッチの計測時間から、計算する
+		GameTime::GetInstance().PushFrameDeltaTime((float)stopwatch.GetElapsed());
 	}
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
