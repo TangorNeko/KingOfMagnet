@@ -399,9 +399,9 @@ void Player::Update()
 		//ファイナルヒットカメラ。
 		FinalHit();
 		//状態更新。
-		UpdateState();
+		//UpdateState();
 		//アニメーション選択。
-		AnimationSelect();
+		//AnimationSelect();
 	}
 	else if (m_gameScene->GetGameState() == SampleScene::GameState::enDraw)
 	{
@@ -1563,12 +1563,7 @@ void Player::Win()
 //敗北した時
 void Player::Lose()
 {	
-	m_Lose = true;
-	/*m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
-	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
-	m_resultSpriteRender->Init("Assets/Image/Haiboku.dds", 256, 256);*/
-	//m_loserNum = m_playerNum;
-
+	m_Lose = true;	
 
 	//空中で倒れた時用に、現在位置から下方向に向かってレイを飛ばす。
 	Vector3 crossPoint;
@@ -1669,22 +1664,6 @@ void Player::TryChangeStatusHit()
 	}	
 }
 
-//死亡状態に切り替える
-void Player::TryChangeStatusDeath()
-{
-	if (m_Lose==true)
-	{
-		m_animStatus = enStatus_Death;				
-	}
-}
-
-//勝利状態に切り替える
-void Player::TryChangeStatusWin()
-{
-	if(m_WinAnimOn==true)
-	m_animStatus = enStatus_Winner;
-}
-
 //アニメーションの状態更新
 void Player::UpdateState()
 {
@@ -1696,9 +1675,7 @@ void Player::UpdateState()
 		{
 			m_animStatus = enStatus_Idle;
 		}
-		TryChangeStatusHit();		
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
+		TryChangeStatusHit();
 		break;
 	case enStatus_SpecialAttack:
 		TryChangeStatusFall();
@@ -1707,9 +1684,7 @@ void Player::UpdateState()
 		{
 			m_animStatus = enStatus_Idle;			
 		}
-		TryChangeStatusHit();
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
+		TryChangeStatusHit();		
 		break;
 	case enStatus_Burst:
 		TryChangeStatusIdle();
@@ -1722,8 +1697,6 @@ void Player::UpdateState()
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
 		TryChangeStatusHit();
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
 		break;
 	case enStatus_Walk:
 		TryChangeStatusAttack();
@@ -1732,8 +1705,6 @@ void Player::UpdateState()
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
 		TryChangeStatusHit();
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
 		break;
 	case enStatus_Idle:
 		TryChangeStatusAttack();
@@ -1743,8 +1714,6 @@ void Player::UpdateState()
 		TryChangeStatusFall();
 		TryChangeStatusHit();
 		TryChangeStatusBurst();
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
 		break;
 	case enStatus_Fall:
 		TryChangeStatusAttack();
@@ -1753,8 +1722,6 @@ void Player::UpdateState()
 		TryChangeStatusWalk();
 		TryChangeStatusIdle();
 		TryChangeStatusFall();
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
 		break;
 
 	case enStatus_Hit:
@@ -1767,31 +1734,20 @@ void Player::UpdateState()
 			m_HitOn = false;
 		}
 		TryChangeStatusHit();
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
-		break;
-	case enStatus_Death:
-		TryChangeStatusDeath();
-		TryChangeStatusWin();
-		break;
-	case enStatus_Winner:
-		TryChangeStatusWin();
+		break;	
 	}
 }
 
 void Player::AnimationSelect()
 {	
-	if (m_LoseCameraFlag == false)
-		m_skinModelRender->m_animation_speed = 0.1f;
-	else
-		m_skinModelRender->m_animation_speed = 1.0;
+	m_skinModelRender->m_animation_speed = 1.0;
 	switch (m_animStatus)
 	{
 	case enStatus_Attack:
 		m_skinModelRender->m_animation_speed = 4.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
-	case enStatus_SpecialAttack:		
+	case enStatus_SpecialAttack:
 		m_skinModelRender->m_animation_speed = 2.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 		break;
@@ -1799,7 +1755,7 @@ void Player::AnimationSelect()
 		m_skinModelRender->m_animation_speed = 4.0;
 		m_skinModelRender->PlayAnimation(enAnimationClip_Burst);
 		break;
-	case enStatus_Run:		
+	case enStatus_Run:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Run);
 		break;
 	case enStatus_Walk:
@@ -1814,14 +1770,7 @@ void Player::AnimationSelect()
 	case enStatus_Hit:
 		m_skinModelRender->PlayAnimation(enAnimationClip_Hit);
 		break;
-	case enStatus_Death:		
-		m_skinModelRender->PlayAnimation(enAnimationClip_Death);
-		break;
-	case enStatus_Winner:
-		m_skinModelRender->PlayAnimation(enAnimationClip_Winner);
-		break;
 	}
-
 }
 
 //カメラが向いている方向に敵のモデルもしくはステージのモデルがあるかを計算する。
@@ -1934,6 +1883,7 @@ void Player::OpeningCamera()
 void Player::FinalHit()//決着がついたときのカメラ
 {	
 	m_gameScene->ssBGM->Stop();
+	
 	if (m_FirstTime == true) {//一回だけ流れるループ
 		//画面分割を終了
 		GameObjectManager::GetInstance()->Set2ScreenMode(false);
@@ -1968,11 +1918,13 @@ void Player::FinalHit()//決着がついたときのカメラ
 			});
 		m_FirstTime = false;
 	}
+	
 	Vector3 LastRight;
 	Vector3 winnerFrontPos;
 	Vector3 winnerHeadPos;
 	if (m_playerNum == m_loserNum)//敗者を写す
-	{	
+	{			
+		m_skinModelRender->PlayAnimation(enAnimationClip_Death);//アニメーション再生
 		LastRight = Cross(g_vec3AxisY, m_LastFront);//最後に向いていた向きの右ベクトル
 		Vector3 targetPos = m_position;//ターゲットポジション
 		m_cameraPos = targetPos;//カメラのポジション
@@ -1996,7 +1948,6 @@ void Player::FinalHit()//決着がついたときのカメラ
 		if (m_LoseCameraLoop > 150)
 		{
 			m_LastCameraStatus = 3;
-			m_LoseCameraFlag = true;//アニメーションの再生速度を戻す
 		}
 		if (m_LoseCameraLoop > 200)
 		{
@@ -2006,6 +1957,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		switch (m_LastCameraStatus)
 		{
 		case 0://右からのカメラ
+			m_skinModelRender->m_animation_speed = 0.1f;
+			m_enemy->m_skinModelRender->m_animation_speed = 0.1f;
 			m_cameraPos += LastRight * 200;//右
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
@@ -2018,6 +1971,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 3://自分を写しながら敵を向いたカメラ
+			m_skinModelRender->m_animation_speed = 1.0f;
+			m_enemy->m_skinModelRender->m_animation_speed = 1.0f;
 			winnerHeadPos = m_enemy->m_position;
 			winnerHeadPos.y += 50;//勝者の頭の位置
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
@@ -2034,7 +1989,9 @@ void Player::FinalHit()//決着がついたときのカメラ
 			if (m_coef < 1.0f)//ベクトルに掛ける値
 				m_coef += 0.01f;
 			if (m_coef > 0.5f)//カメラが半分の距離まで行くとアニメーションを再生する
+			{
 				m_enemy->m_WinAnimOn = true;
+			}
 			m_cameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//+ (winnerVec * 200)
 			m_cameraPos += m_winnerVec * -200;//後ろ
 			
@@ -2107,6 +2064,17 @@ void Player::FinalHit()//決着がついたときのカメラ
 
 		g_camera3D[0]->SetPosition(m_cameraPos);
 		m_LoseCameraLoop++;
+	}
+	else//勝者のとき
+	{
+		if (m_WinAnimOn==true)//カメラが半分の距離まで行くとアニメーションを再生する
+		{			
+			m_skinModelRender->PlayAnimation(enAnimationClip_Winner);
+		}
+		else
+		{
+			m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
+		}
 	}
 }
 void Player::ResultDisplay()

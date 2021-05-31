@@ -3,8 +3,8 @@
 
 float GameOption::m_BGMVolume = 1.0f;//BGMのボリューム
 float GameOption::m_SEVolume = 1.0f;//効果音のボリューム
-float GameOption::m_1PSensitivity = 1.0f;//プレイヤー1のカメラ感度
-float GameOption::m_2PSensitivity = 1.0f;//プレイヤー2のカメラ感度
+float GameOption::m_1PSensitivity = 2.0f;//プレイヤー1のカメラ感度
+float GameOption::m_2PSensitivity = 2.0f;//プレイヤー2のカメラ感度
 
 GameOption::~GameOption()
 {
@@ -22,35 +22,51 @@ bool GameOption::Start()
 	m_optionBackGroundSprite = NewGO<prefab::CSpriteRender>(0);
 	m_optionBackGroundSprite->Init("Assets/Image/White.dds", 960, 540);
 	m_optionBackGroundSprite->SetScale({ 0.0f,0.0f,0.0f });
+	m_optionBackGroundSprite->SetMulColor({ 0.0f,0.75f,0.75f,0.8f });
 
 	//オプションフォント
 	m_optionFont = NewGO<prefab::CFontRender>(0);
 	m_optionFont->SetScale({ 0.0f,0.0f });
 	m_optionFont->SetPosition({ -125.0f,220.0f });
 	m_optionFont->SetText(L"OPTION");
+	m_optionFont->SetShadowFlag(true);
+	m_optionFont->SetShadowColor({ 0,0,0,1 });
+	m_optionFont->SetShadowOffset(2);
 
 	//BGMボリュームフォント
 	m_BGMVolumeFont = NewGO<prefab::CFontRender>(0);
 	m_BGMVolumeFont->SetScale({ 0.0f,0.0f });
 	m_BGMVolumeFont->SetPosition({ -450.0f,120.0f });
+	m_BGMVolumeFont->SetShadowFlag(true);
+	m_BGMVolumeFont->SetShadowColor({ 0,0,0,1 });
+	m_BGMVolumeFont->SetShadowOffset(2);
 
 
 	//SEボリュームフォント
 	m_SEVolumeFont = NewGO<prefab::CFontRender>(0);
 	m_SEVolumeFont->SetScale({ 0.0f,0.0f });
 	m_SEVolumeFont->SetPosition({ -450.0f,20.0f });
+	m_SEVolumeFont->SetShadowFlag(true);
+	m_SEVolumeFont->SetShadowColor({ 0,0,0,1 });
+	m_SEVolumeFont->SetShadowOffset(2);
 
 
 	//1P操作感度フォント
 	m_1PSensitivityFont = NewGO<prefab::CFontRender>(0);
 	m_1PSensitivityFont->SetScale({ 0.0f,0.0f });
 	m_1PSensitivityFont->SetPosition({ -450.0f,-80.0f });
+	m_1PSensitivityFont->SetShadowFlag(true);
+	m_1PSensitivityFont->SetShadowColor({ 0,0,0,1 });
+	m_1PSensitivityFont->SetShadowOffset(2);
 
 
 	//2P操作感度フォント
 	m_2PSensitivityFont = NewGO<prefab::CFontRender>(0);
 	m_2PSensitivityFont->SetScale({ 0.0f,0.0f });
 	m_2PSensitivityFont->SetPosition({ -450.0f,-180.0f });
+	m_2PSensitivityFont->SetShadowFlag(true);
+	m_2PSensitivityFont->SetShadowColor({ 0,0,0,1 });
+	m_2PSensitivityFont->SetShadowOffset(2);
 	return true;
 }
 
@@ -59,9 +75,6 @@ void GameOption::Update()
 	//オプションが開いていて、拡大が終わっている。
 	if (isQueuing() == false && isOpen == true)
 	{
-		//背景を水色に
-		m_optionBackGroundSprite->SetMulColor({ 0.0f,0.75f,0.75f,0.8f });
-
 		//フォントの拡大率を1倍にすることで擬似的に表示
 		m_optionFont->SetScale({ 1.0f,1.0f });
 		m_BGMVolumeFont->SetScale({ 1.0f,1.0f });
@@ -116,8 +129,8 @@ void GameOption::Update()
 				break;
 			}
 
-			//選択されている項目を赤黒色に
-			m_selectingItemFont->SetColor({ 0.5f,0.0f,0.0f,1.0f });
+			//選択されている項目を青色に
+			m_selectingItemFont->SetColor({ 0.1f,0.1f,1.0f,1.0f });
 
 			//Aボタンを押すと選択している項目の数値を設定するモードに移行
 			if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA))
@@ -133,11 +146,11 @@ void GameOption::Update()
 			//下を押すと数値を減らす
 			if (g_pad[0]->IsPress(enButtonDown) || g_pad[1]->IsPress(enButtonDown))
 			{
-				(*m_selectingItemValue) -= 0.1f;
+				(*m_selectingItemValue) -= 0.05f;
 			}
 			else if(g_pad[0]->IsPress(enButtonUp) || g_pad[1]->IsPress(enButtonUp))//上を押すと数値を増やす
 			{
-				(*m_selectingItemValue) += 0.1f;
+				(*m_selectingItemValue) += 0.05f;
 			}
 
 			//選んでいる値がBGMの音量なら
@@ -183,8 +196,8 @@ void GameOption::Update()
 					*m_selectingItemValue = 5.0f;
 				}
 			}
-			//選択されている項目を青黒色に
-			m_selectingItemFont->SetColor({ 0.0f,0.0f,0.5f,1.0f });
+			//選択されている項目を赤色に
+			m_selectingItemFont->SetColor({ 1.0f,0.25f,0.25f,1.0f });
 
 			//Aボタンを押すと値そのまま項目選択へ(値の決定)
 			if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA))
@@ -196,25 +209,33 @@ void GameOption::Update()
 				m_selectingState = enItem;
 
 				*m_selectingItemValue = m_selectingItemTemporaryValue;
+
+				if (m_selectingItemValue == &m_BGMVolume)
+				{
+					//設定値をBGMの音量としてセット
+					CSoundEngine::GetInstance()->SetBGMVolume(*m_selectingItemValue);
+				}
+				else if (m_selectingItemValue == &m_SEVolume)//選んでいる値がSEの音量なら
+				{
+					//設定値をSEの音量としてセット
+					CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
+				}
 			}
 		}
 
 		//変更された数値を元にフォントの描画文字列を変更
-		swprintf_s(m_buffer, L"BGMVOLUME = %.2f", m_BGMVolume);
+		swprintf_s(m_buffer, L"BGM VOLUME     = %.2f", m_BGMVolume);
 		m_BGMVolumeFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"SEVOLUME = %.2f", m_SEVolume);
+		swprintf_s(m_buffer, L"SE  VOLUME     = %.2f", m_SEVolume);
 		m_SEVolumeFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"1PSENSITIVITY = %.2f", m_1PSensitivity);
+		swprintf_s(m_buffer, L"1P SENSITIVITY = %.2f", m_1PSensitivity);
 		m_1PSensitivityFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"2PSENSITIVITY = %.2f", m_2PSensitivity);
+		swprintf_s(m_buffer, L"2P SENSITIVITY = %.2f", m_2PSensitivity);
 		m_2PSensitivityFont->SetText(m_buffer);
 
 	}
 	else//それ以外
 	{
-		//背景を白色に
-		m_optionBackGroundSprite->SetMulColor({ 1.0f,1.0f,1.0f,1.0f });
-
 		//フォントの拡大率を0倍にすることで擬似的に消去
 		m_optionFont->SetScale({ 0.0f,0.0f });
 		m_BGMVolumeFont->SetScale({ 0.0f,0.0f });
