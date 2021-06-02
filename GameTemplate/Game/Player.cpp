@@ -1827,45 +1827,44 @@ void Player::KnockBack() {
 }
 void Player::OpeningCamera()
 {
-	m_cameraLoopCount++;	
+	m_cameraLoopCount++;
 
-	if (g_pad[m_playerNum]->IsTrigger(enButtonA))
+	if (g_pad[m_playerNum]->IsTrigger(enButtonA))//オープニングカメラスキップ
 	{
 		m_gameScene->SetGameState(SampleScene::GameState::enStartCountDown);
 	}
 	
-	if (m_cameraLoopCount < 250)
+	if (m_cameraLoopCount < 250)//250フレーム経てば
 	{
 		Vector3 toPos = m_position;
 		toPos.y = 400;
 		//toPosを回す。
 		Quaternion qRotY;
-		//Y軸回りにちょっとだけ回転するクォータニオンをつくる。
+		//Y軸回りに回転するクォータニオンをつくる
 		m_addY += 0.01;
 		qRotY.SetRotation(Vector3::AxisY, m_addY);
-		//クォータニオンを使ってtoPosを回す。
+		//クォータニオンを使ってtoPosを回す
 		qRotY.Apply(toPos);
 		m_cameraPos = toPos;
 		g_camera3D[m_playerNum]->SetTarget(m_targetPos);
 	}
-	else
+	else//キャラに向かってカメラを移動させる
 	{
 		Vector3 PlayerPos = m_position;
 		PlayerPos.y = m_position.y + 90.0f;//プレイヤーの頭の位置
 		
 		
 		Vector3 targetVec = PlayerPos - m_cameraPos;
-		if (targetVec.Length() < 250)
+		if (targetVec.Length() < 250)//カメラが近づけばオープニングカメラ終了
 		{
 			m_gameScene->SetGameState(SampleScene::GameState::enStartCountDown);
 		}
 		targetVec.Normalize();
-		m_cameraPos += targetVec*gain;
-		gain += 0.1;
+		m_cameraPos += targetVec*m_gain;
+		m_gain += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
-	}		
+	}
 	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
-
 
 	//キャラを初期方向に向かせる
 
