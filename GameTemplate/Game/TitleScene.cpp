@@ -362,8 +362,8 @@ void TitleScene::CommandSelectMove() {
 			//switch文の中で宣言するためのスコープ
 			{
 				SampleScene* gameScene = NewGO<SampleScene>(0, "gamescene");
-				gameScene->Set1PSensitivity(m_option->Get1PSensitivity());
-				gameScene->Set2PSensitivity(m_option->Get2PSensitivity());
+				gameScene->Set1PSensitivity(m_option->GetP1Sensitivity());
+				gameScene->Set2PSensitivity(m_option->GetP2Sensitivity());
 			}
 			DeleteGO(this);
 			break;
