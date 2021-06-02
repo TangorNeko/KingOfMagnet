@@ -1557,7 +1557,7 @@ void Player::Win()
 
 	m_skinModelRender->SetPosition(m_position);
 
-	m_LastFront = m_front;
+	m_LastFrontDir = m_front;
 }
 
 //敗北した時
@@ -1589,7 +1589,7 @@ void Player::Lose()
 
 	m_skinModelRender->SetPosition(m_position);
 
-	m_LastFront = m_front;
+	m_LastFrontDir = m_front;
 }
 
 
@@ -1919,37 +1919,37 @@ void Player::FinalHit()//決着がついたときのカメラ
 		m_FirstTime = false;
 	}
 	
-	Vector3 LastRight;
-	Vector3 winnerFrontPos;
-	Vector3 winnerHeadPos;
 	if (m_playerNum == m_loserNum)//敗者を写す
-	{			
+	{		
 		m_skinModelRender->PlayAnimation(enAnimationClip_Death);//アニメーション再生
-		LastRight = Cross(g_vec3AxisY, m_LastFront);//最後に向いていた向きの右ベクトル
+		
+		Vector3 winnerFrontPos;//勝者の位置から少し前に伸びるベクトル		
+		Vector3 winnerHeadPos = m_enemy->m_position;
+		winnerHeadPos.y += 50;//勝者の頭の位置
+		Vector3 LastRight = Cross(g_vec3AxisY, m_LastFrontDir);//最後に向いていた向きの右ベクトル
 		Vector3 targetPos = m_position;//ターゲットポジション
 		m_cameraPos = targetPos;//カメラのポジション
 		targetPos.y += 20;//少し上に設定する
-		targetPos += m_LastFront * -30;//キャラの少し後ろに伸ばす	
+		targetPos += m_LastFrontDir * -30;//キャラの少し後ろに伸ばす	
 		m_cameraPos.y += 100;//キャラより少し上くらい
 		//ループの値に合わせてステータスを変える
-		if (m_LoseCameraLoop > 0)
+		if (m_LoseCameraLoop == 0)
 		{
-			m_LoseCameraFlag = false;//アニメーションの再生速度を変える
 			m_LastCameraStatus = 0;
 		}
-		if(m_LoseCameraLoop > 50)
-		{ 
+		if(m_LoseCameraLoop == 50)
+		{
 			m_LastCameraStatus = 1;
 		}
-		if (m_LoseCameraLoop > 100)
+		if (m_LoseCameraLoop == 100)
 		{
 			m_LastCameraStatus = 2;
 		}
-		if (m_LoseCameraLoop > 150)
+		if (m_LoseCameraLoop == 150)
 		{
 			m_LastCameraStatus = 3;
 		}
-		if (m_LoseCameraLoop > 200)
+		if (m_LoseCameraLoop == 200)
 		{
 			m_LastCameraStatus = 4;
 		}		
@@ -1957,7 +1957,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 		switch (m_LastCameraStatus)
 		{
 		case 0://右からのカメラ
-			m_skinModelRender->m_animation_speed = 0.1f;
+			m_skinModelRender->m_animation_speed = 0.1f;//アニメーションを遅くする
 			m_enemy->m_skinModelRender->m_animation_speed = 0.1f;
 			m_cameraPos += LastRight * 200;//右
 			g_camera3D[0]->SetTarget(targetPos);
@@ -1967,35 +1967,34 @@ void Player::FinalHit()//決着がついたときのカメラ
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 2://前からのカメラ
-			m_cameraPos += m_LastFront * 200;//正面
+			m_cameraPos += m_LastFrontDir * 200;//正面
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 3://自分を写しながら敵を向いたカメラ
-			m_skinModelRender->m_animation_speed = 1.0f;
-			m_enemy->m_skinModelRender->m_animation_speed = 1.0f;
-			winnerHeadPos = m_enemy->m_position;
-			winnerHeadPos.y += 50;//勝者の頭の位置
+			m_skinModelRender->m_animation_speed = 1.0f;//アニメーションスピードをもとに戻す
+			m_enemy->m_skinModelRender->m_animation_speed = 1.0f;			
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
-			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFront * 200) - m_position;
+			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFrontDir * 200) - m_position;
 			m_winnerVec.Normalize();
 			m_cameraPos += m_winnerVec*-200;//後ろ
-			m_enemyWaistPos = m_enemy->m_position;//敵の腰の位置
-			m_enemyWaistPos.y += 20;
-			g_camera3D[0]->SetTarget(m_enemyWaistPos);
+			m_winnerWaistPos = m_enemy->m_position;//敵の腰の位置
+			m_winnerWaistPos.y += 20;
+			g_camera3D[0]->SetTarget(m_winnerWaistPos);
 			break;
 		case 4://敵の前まで移動する
 			//カメラを敵の前まで移動させる				
-			winnerFrontPos = (m_enemy->m_position + m_enemy->m_LastFront * 150 ) - (m_position + m_winnerVec * -200);			
+			winnerFrontPos = (m_enemy->m_position + m_enemy->m_LastFrontDir * 150 ) - (m_position + m_winnerVec * -200);//	
 			if (m_coef < 1.0f)//ベクトルに掛ける値
 				m_coef += 0.01f;
 			if (m_coef > 0.5f)//カメラが半分の距離まで行くとアニメーションを再生する
 			{
 				m_enemy->m_WinAnimOn = true;
 			}
-			m_cameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//+ (winnerVec * 200)
-			m_cameraPos += m_winnerVec * -200;//後ろ
+			m_cameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//指数関数的にカメラが近づく
+
+			m_cameraPos += m_winnerVec * -200;//case3のときのカメラの位置と合わせるため
 			
-			g_camera3D[0]->SetTarget(m_enemyWaistPos);
+			g_camera3D[0]->SetTarget(m_winnerWaistPos);
 			break;
 		default:
 			break;

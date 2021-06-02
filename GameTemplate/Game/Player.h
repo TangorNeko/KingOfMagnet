@@ -246,19 +246,19 @@ public:
 	int m_SaveSP = 0;//溜まった必殺技ポイント
 
 	//ファイナルヒット関連
-	bool m_Lose = false;
-	bool m_LoseCameraFlag = true;
-	bool m_doryInOn = true;
-	bool m_WinAnimOn = false;
-	int m_LoseCameraLoop = 0;
-	bool m_FirstTime = true;
-	int m_winnerNum = 0;
-	int m_loserNum = 0;
-	int m_LastCameraStatus = 0;
-	float m_coef = 0.0f;
-	Vector3 m_LastFront;
-	Vector3 m_winnerVec;
-	Vector3 m_enemyWaistPos;//ダメージエフェクト関連
+	bool m_Lose = false;//負けたかどうか
+	bool m_WinAnimOn = false;//勝者アニメーションを開始する
+	int m_LoseCameraLoop = 0;//ファイナルヒットカメラのループカウント
+	bool m_FirstTime = true;//最初の一度だけ
+	int m_winnerNum = 0;//勝者のプレイヤー番号
+	int m_loserNum = 0;//敗者のプレイヤー番号
+	int m_LastCameraStatus = 0;//状態遷移番号
+	float m_coef = 0.0f;//ベクターに掛ける値(coefficient)
+	Vector3 m_LastFrontDir;//キャラが最後に向いた向き
+	Vector3 m_winnerVec;//敗者から勝者に向かうベクトル
+	Vector3 m_winnerWaistPos;//勝者の腰の位置
+
+	//ダメージエフェクト関連
 	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
 
 	//斥力・引力エフェクト関連
