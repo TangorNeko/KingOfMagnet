@@ -104,6 +104,22 @@ namespace prefab
 	}
 
 	/// <summary>
+	/// 画像移動をセットする
+	/// </summary>
+	/// <param name="move">移動先の座標</param>
+	/// <param name="moveTime">移動時間</param>
+	/// <param name="moveDelay">移動ディレイ</param>
+	/// <param name="relative">相対移動フラグ trueにするとmoveに設定した値を相対座標として扱う</param>
+	void SpriteSupporter::SpriteMove(const Vector3& move, const int& moveTime,
+		const int& moveDelay, const bool& relative) {
+
+		//リストに追加や
+		SpriteMoveSet set = { {move.x,move.y},{0.0f,0.0f},moveTime,moveDelay,0,relative,false };
+		m_spriteMoveList.push_back(set);
+
+	}
+
+	/// <summary>
 	/// 回転移動をセットする
 	/// </summary>
 	/// <remarks>

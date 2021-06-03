@@ -30,6 +30,8 @@ namespace prefab
 		//実行するコマンド
 		void SpriteMove(const Vector2& move, const int& moveTime,
 			const int& moveDelay, const bool& relative = false);
+		void SpriteMove(const Vector3& move, const int& moveTime,
+			const int& moveDelay, const bool& relative = false);
 		void SpriteRotation(const float& rot, const int& moveTime,
 			const int& moveDelay, const bool& loopflag = false);
 		void SpriteScale(const Vector3& scale, const int& moveTime, const int& moveDelay);
