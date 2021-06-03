@@ -287,7 +287,7 @@ void GameOption::Open()
 	if (isQueuing() == false)
 	{
 		//背景の拡大率を1倍にするキューをセット
-		m_optionBackGroundSprite->m_spriteSupporter.SpriteScale(SPRITE_SCALE_OPEN, SPRITE_SCALING_TIME, SPRITE_SCALING_DELAY);
+		m_optionBackGroundSprite->GetSpriteSupporter().SpriteScale(SPRITE_SCALE_OPEN, SPRITE_SCALING_TIME, SPRITE_SCALING_DELAY);
 
 		//開いたフラグをオン
 		m_isOpen = true;
@@ -299,7 +299,7 @@ void GameOption::Close()
 	if (isQueuing() == false)
 	{
 		//背景の拡大率を0倍にするキューをセット
-		m_optionBackGroundSprite->m_spriteSupporter.SpriteScale(SPRITE_SCALE_CLOSE, SPRITE_SCALING_TIME, SPRITE_SCALING_DELAY);
+		m_optionBackGroundSprite->GetSpriteSupporter().SpriteScale(SPRITE_SCALE_CLOSE, SPRITE_SCALING_TIME, SPRITE_SCALING_DELAY);
 
 		//開いたフラグをオフ
 		m_isOpen = false;

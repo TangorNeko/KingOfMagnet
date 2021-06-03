@@ -396,53 +396,53 @@ void SampleScene::StartCountDown() {
 
 	//カウントダウン
 	if (m_startCount == 3 && m_count3_Flag == false) {
-		m_CountDown_3_1->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 0, true);
-		m_CountDown_3_1->m_spriteSupporter.SpriteMove({ 10.0f,0.0f }, 48, 12, true);
-		m_CountDown_3_1->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 60, true);
+		m_CountDown_3_1->GetSpriteSupporter().SpriteMove({ 890.0f,0.0f }, 12, 0, true);
+		m_CountDown_3_1->GetSpriteSupporter().SpriteMove({ 10.0f,0.0f }, 48, 12, true);
+		m_CountDown_3_1->GetSpriteSupporter().SpriteMove({ 890.0f,0.0f }, 12, 60, true);
 
-		m_CountDown_3_2->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 0, true);
-		m_CountDown_3_2->m_spriteSupporter.SpriteMove({ -10.0f,0.0f }, 48, 12, true);
-		m_CountDown_3_2->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 60, true);
+		m_CountDown_3_2->GetSpriteSupporter().SpriteMove({ -890.0f,0.0f }, 12, 0, true);
+		m_CountDown_3_2->GetSpriteSupporter().SpriteMove({ -10.0f,0.0f }, 48, 12, true);
+		m_CountDown_3_2->GetSpriteSupporter().SpriteMove({ -890.0f,0.0f }, 12, 60, true);
 
-		m_CountDown_3_3->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 0, true);
-		m_CountDown_3_3->m_spriteSupporter.SpriteMove({ 10.0f,0.0f }, 48, 12, true);
-		m_CountDown_3_3->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 60, true);
+		m_CountDown_3_3->GetSpriteSupporter().SpriteMove({ 890.0f,0.0f }, 12, 0, true);
+		m_CountDown_3_3->GetSpriteSupporter().SpriteMove({ 10.0f,0.0f }, 48, 12, true);
+		m_CountDown_3_3->GetSpriteSupporter().SpriteMove({ 890.0f,0.0f }, 12, 60, true);
 
-		m_CountDown_3_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 0, true);
-		m_CountDown_3_4->m_spriteSupporter.SpriteMove({ 0.0f,10.0f }, 48, 12, true);
-		m_CountDown_3_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 60, true);
+		m_CountDown_3_4->GetSpriteSupporter().SpriteMove({ 0.0f,590.0f }, 12, 0, true);
+		m_CountDown_3_4->GetSpriteSupporter().SpriteMove({ 0.0f,10.0f }, 48, 12, true);
+		m_CountDown_3_4->GetSpriteSupporter().SpriteMove({ 0.0f,590.0f }, 12, 60, true);
 
 		m_count3_Flag = true;
 	}
 	if (m_startCount == 2 && m_count2_Flag == false) {
 
-		m_CountDown_2_1->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 0, true);
-		m_CountDown_2_1->m_spriteSupporter.SpriteMove({ -10.0f,0.0f }, 48, 12, true);
-		m_CountDown_2_1->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 60, true);
+		m_CountDown_2_1->GetSpriteSupporter().SpriteMove({ -890.0f,0.0f }, 12, 0, true);
+		m_CountDown_2_1->GetSpriteSupporter().SpriteMove({ -10.0f,0.0f }, 48, 12, true);
+		m_CountDown_2_1->GetSpriteSupporter().SpriteMove({ -890.0f,0.0f }, 12, 60, true);
 
-		m_CountDown_2_2->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 0, true);
-		m_CountDown_2_2->m_spriteSupporter.SpriteMove({ 10.0f,0.0f }, 48, 12, true);
-		m_CountDown_2_2->m_spriteSupporter.SpriteMove({ 890.0f,0.0f }, 12, 60, true);
+		m_CountDown_2_2->GetSpriteSupporter().SpriteMove({ 890.0f,0.0f }, 12, 0, true);
+		m_CountDown_2_2->GetSpriteSupporter().SpriteMove({ 10.0f,0.0f }, 48, 12, true);
+		m_CountDown_2_2->GetSpriteSupporter().SpriteMove({ 890.0f,0.0f }, 12, 60, true);
 
-		m_CountDown_2_3->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 0, true);
-		m_CountDown_2_3->m_spriteSupporter.SpriteMove({ -10.0f,0.0f }, 48, 12, true);
-		m_CountDown_2_3->m_spriteSupporter.SpriteMove({ -890.0f,0.0f }, 12, 60, true);
+		m_CountDown_2_3->GetSpriteSupporter().SpriteMove({ -890.0f,0.0f }, 12, 0, true);
+		m_CountDown_2_3->GetSpriteSupporter().SpriteMove({ -10.0f,0.0f }, 48, 12, true);
+		m_CountDown_2_3->GetSpriteSupporter().SpriteMove({ -890.0f,0.0f }, 12, 60, true);
 
-		m_CountDown_2_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 0, true);
-		m_CountDown_2_4->m_spriteSupporter.SpriteMove({ 0.0f,10.0f }, 48, 12, true);
-		m_CountDown_2_4->m_spriteSupporter.SpriteMove({ 0.0f,590.0f }, 12, 60, true);
+		m_CountDown_2_4->GetSpriteSupporter().SpriteMove({ 0.0f,590.0f }, 12, 0, true);
+		m_CountDown_2_4->GetSpriteSupporter().SpriteMove({ 0.0f,10.0f }, 48, 12, true);
+		m_CountDown_2_4->GetSpriteSupporter().SpriteMove({ 0.0f,590.0f }, 12, 60, true);
 
-		m_CountDown_2_5->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 0, true);
-		m_CountDown_2_5->m_spriteSupporter.SpriteMove({ 0.0f,-10.0f }, 48, 12, true);
-		m_CountDown_2_5->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 60, true);
+		m_CountDown_2_5->GetSpriteSupporter().SpriteMove({ 0.0f,-590.0f }, 12, 0, true);
+		m_CountDown_2_5->GetSpriteSupporter().SpriteMove({ 0.0f,-10.0f }, 48, 12, true);
+		m_CountDown_2_5->GetSpriteSupporter().SpriteMove({ 0.0f,-590.0f }, 12, 60, true);
 
 		m_count2_Flag = true;
 	}
 	if (m_startCount == 1 && m_count1_Flag == false) {
 
-		m_CountDown_1_1->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 0, true);
-		m_CountDown_1_1->m_spriteSupporter.SpriteMove({ 0.0f,-10.0f }, 48, 12, true);
-		m_CountDown_1_1->m_spriteSupporter.SpriteMove({ 0.0f,-590.0f }, 12, 60, true);
+		m_CountDown_1_1->GetSpriteSupporter().SpriteMove({ 0.0f,-590.0f }, 12, 0, true);
+		m_CountDown_1_1->GetSpriteSupporter().SpriteMove({ 0.0f,-10.0f }, 48, 12, true);
+		m_CountDown_1_1->GetSpriteSupporter().SpriteMove({ 0.0f,-590.0f }, 12, 60, true);
 
 		m_count1_Flag = true;
 	}
@@ -673,30 +673,30 @@ void SampleScene::FinalCount() {
 	if (m_timeLimit > 3.0f && m_timeLimit <= 4.0f && m_finalCount3_Flag == false) {
 		m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.5f });
 		m_finalCount->SetScale({ 3.0f,3.0f,3.0f });
-		m_finalCount->m_spriteSupporter.SpriteScale(1.0f, 6, 0);
-		m_finalCount->m_spriteSupporter.SpriteScale(0.8f, 24, 6);
-		m_finalCount->m_spriteSupporter.SpriteScale(0.0f, 6, 30);
-		m_finalCount->m_spriteSupporter.SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
+		m_finalCount->GetSpriteSupporter().SpriteScale(1.0f, 6, 0);
+		m_finalCount->GetSpriteSupporter().SpriteScale(0.8f, 24, 6);
+		m_finalCount->GetSpriteSupporter().SpriteScale(0.0f, 6, 30);
+		m_finalCount->GetSpriteSupporter().SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
 		m_finalCount3_Flag = true;
 	}
 	if (m_timeLimit > 2.0f && m_timeLimit <= 3.0f && m_finalCount2_Flag == false) {
 		m_finalCount->Init("Assets/Image/count2.dds", 300, 300);
 		m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.5f });
 		m_finalCount->SetScale({ 3.0f,3.0f,3.0f });
-		m_finalCount->m_spriteSupporter.SpriteScale(1.0f, 6, 0);
-		m_finalCount->m_spriteSupporter.SpriteScale(0.8f, 24, 6);
-		m_finalCount->m_spriteSupporter.SpriteScale(0.0f, 6, 30);
-		m_finalCount->m_spriteSupporter.SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
+		m_finalCount->GetSpriteSupporter().SpriteScale(1.0f, 6, 0);
+		m_finalCount->GetSpriteSupporter().SpriteScale(0.8f, 24, 6);
+		m_finalCount->GetSpriteSupporter().SpriteScale(0.0f, 6, 30);
+		m_finalCount->GetSpriteSupporter().SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
 		m_finalCount2_Flag = true;
 	}
 	if (m_timeLimit > 1.0f && m_timeLimit <= 2.0f && m_finalCount1_Flag == false) {
 		m_finalCount->Init("Assets/Image/count1.dds", 300, 300);
 		m_finalCount->SetMulColor({ 1.0f,1.0f,1.0f,0.5f });
 		m_finalCount->SetScale({ 3.0f,3.0f,3.0f });
-		m_finalCount->m_spriteSupporter.SpriteScale(1.0f, 6, 0);
-		m_finalCount->m_spriteSupporter.SpriteScale(0.8f, 24, 6);
-		m_finalCount->m_spriteSupporter.SpriteScale(0.0f, 6, 30);
-		m_finalCount->m_spriteSupporter.SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
+		m_finalCount->GetSpriteSupporter().SpriteScale(1.0f, 6, 0);
+		m_finalCount->GetSpriteSupporter().SpriteScale(0.8f, 24, 6);
+		m_finalCount->GetSpriteSupporter().SpriteScale(0.0f, 6, 30);
+		m_finalCount->GetSpriteSupporter().SpriteColor({ 1.0f,1.0f,1.0f,0.0f }, 6, 30);
 		m_finalCount1_Flag = true;
 	}
 

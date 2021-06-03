@@ -60,7 +60,7 @@ public:
 	*/
 	bool isQueuing()
 	{
-		return m_optionBackGroundSprite->m_spriteSupporter.GetSpriteScaleListLen() != 0;
+		return m_optionBackGroundSprite->GetSpriteSupporter().GetSpriteScaleListLen() != 0;
 	}
 
 private:

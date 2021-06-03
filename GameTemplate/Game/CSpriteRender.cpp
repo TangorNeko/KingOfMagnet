@@ -3,20 +3,18 @@
 
 namespace prefab
 {
-	/// <summary>
-	/// スプライトの初期化関数
-	/// </summary>
-	/// <param name="spritePath">スプライトファイルのパス(.dds)</param>
-	/// <param name="width">スプライトの幅</param>
-	/// <param name="height">スプライトの高さ</param>
 	void CSpriteRender::Init(const char* spritePath,UINT width,UINT height)
 	{
+		//スプライトの初期化データ
 		SpriteInitData initData;
 
+		//スプライトのテクスチャパス
 		initData.m_ddsFilePath[0] = spritePath;
 
+		//スプライトの頂点シェーダーのエントリー関数名の指定
 		initData.m_vsEntryPointFunc = "VSMain";
 
+		//スプライトのモードに応じて使用するピクセルシェーダーのエントリー関数を変更
 		switch (m_spriteMode)
 		{
 		case prefab::CSpriteRender::Normal:
@@ -28,77 +26,70 @@ namespace prefab
 			break;
 		}
 
+		//シェーダーファイルパスの指定
 		initData.m_fxFilePath = "Assets/shader/sprite.fx";
 
+		//スプライトの幅を指定
 		initData.m_width = width;
 
+		//スプライトの高さを指定
 		initData.m_height = height;
 
+		//スプライトのアルファブレンドモードを透過に指定
 		initData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
+		//スプライトのカラーバッファのフォーマットを指定
 		initData.m_colorBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
+		//スプライトの初期化
 		m_sprite.Init(initData);
 
 		//スプライトサポーターに自分の存在を伝える
 		m_spriteSupporter.SpriteRenderSetting(this);
 	}
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
 	void CSpriteRender::Update()
 	{
 		//スプライトサポーターの更新
 		m_spriteSupporter.SpriteSupporter_Update();
 	}
 
-	//スプライトのドローコール
 	void CSpriteRender::Render(RenderContext& rc, Camera* camera)
 	{
+		//描画画面が一致し、モデルと同タイミングで描画する設定なら描画
 		if (rc.GetRenderStep() == m_drawScreen && m_isPostRender == false)
 		{
 			m_sprite.Draw(rc);
 		}
 	}
 
-	//スプライトのドローコール
 	void CSpriteRender::PostRender(RenderContext& rc, Camera* camera)
 	{
+		//描画画面が一致し、モデルが描画された後で描画する設定なら描画
 		if (rc.GetRenderStep() == m_drawScreen && m_isPostRender == true)
 		{
 			m_sprite.Draw(rc);
 		}
 	}
 
-	/// <summary>
-	/// スプライトの座標を設定する。
-	/// </summary>
-	/// <param name="pos"></param>
 	void CSpriteRender::SetPosition(Vector3 pos)
 	{
 		m_position = pos;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);
 	}
 
-	/// <summary>
-	/// スプライトの回転を設定する。
-	/// </summary>
-	/// <param name="qRot"></param>
 	void CSpriteRender::SetRotation(Quaternion qRot)
 	{
 		m_qRot = qRot;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);
 	}
 
-	//スプライトの拡大率を設定する。
 	void CSpriteRender::SetScale(Vector3 scale)
 	{
 		m_scale = scale;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);
 	}
 
-	//スプライトのピボットを設定する。
 	void CSpriteRender::SetPivot(Vector2 pivot)
 	{
 		m_pivot = pivot;
