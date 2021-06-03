@@ -6,16 +6,20 @@
 #include "CPointLight.h"
 #include "CSpotLight.h"
 
-//各ライトの最大数　この数はmodel.fxのライト配列の数と一緒にしなければならない
-const int MaxDirectionLightNum = 5;
-const int MaxPointLightNum = 20;
-const int MaxSpotLightNum = 20;
+namespace
+{
+	//各ライトの最大数　この数はmodel.fxのライト配列の数と一緒にしなければならない
+	const int DIRECTIONLIGHT_NUMBER_MAX = 5;
+	const int POINTLIGHT_NUMBER_MAX = 20;
+	const int SPOTLIGHT_NUMBER_MAX = 20;
+}
 
 //TODO:ライトを作る際最大数以上の時throwするのではなく一番古いライトを消すような処理にする方がよい?
 //勝手に消す(例:一番古いライトタグに対応した数字を-1にし、UpdateLightで-1ならLight.cppでDelete(this)させる)
 //と無効なアドレスに値を入れることになりそうだが
 //データを使わないだけで消さないようにする(例:古いライトタグに対応した数字を-1にするだけ)
 //とそれはそれでメモリの無駄遣いになりそう
+
 class CLightManager
 {
 private:
@@ -27,9 +31,9 @@ private:
 	//ライトの情報とカメラの位置とライトの数を集めたデータ(定数バッファとしてHLSLに送られる構造体)
 	struct LigDatas
 	{
-		prefab::DirLigData directionLightArray[MaxDirectionLightNum];	//ディレクションライトのデータの配列
-		prefab::PointLigData pointLightArray[MaxPointLightNum];			//ポイントライトのデータの配列
-		prefab::SpotLigData spotLightArray[MaxSpotLightNum];			//スポットライトのデータの配列
+		prefab::DirLigData directionLightArray[DIRECTIONLIGHT_NUMBER_MAX];	//ディレクションライトのデータの配列
+		prefab::PointLigData pointLightArray[POINTLIGHT_NUMBER_MAX];			//ポイントライトのデータの配列
+		prefab::SpotLigData spotLightArray[SPOTLIGHT_NUMBER_MAX];			//スポットライトのデータの配列
 		Vector3 eyePos;													//カメラの位置
 		int directionLightNum = 0;										//ディレクションライトの数
 		int pointLightNum = 0;											//ポイントライトの数
@@ -58,6 +62,10 @@ private:
 
 	Camera m_lightCamera;//シャドウマップ用のライトの位置のカメラ。とりあえずテスト。
 public:
+
+	/**
+	 * @brief ライトマネージャーのインスタンスを作成する
+	*/
 	static void CreateInstance()
 	{
 		if (!m_instance)
@@ -66,35 +74,63 @@ public:
 		}
 	}
 
+	/**
+	 * @brief ライトマネージャーのインスタンスを削除する
+	*/
 	static void DeleteInstance()
 	{
 		delete m_instance;
 		m_instance = nullptr;
 	}
 
+	/**
+	 * @brief ライトマネージャーのインスタンスを取得する
+	*/
 	static CLightManager* GetInstance() { return m_instance; }
 
-	//ライトのデータの塊を取得する(定数バッファに渡す用)
+	/**
+	 * @brief ライトのデータの塊を取得する(定数バッファに渡す用)
+	 * @return 全ライトのデータ
+	*/
 	LigDatas* GetLigDatas() { return &m_ligData; }
 
-	//ライトのデータの塊のサイズを取得する(定数バッファに渡す用)
+	/**
+	 * @brief ライトのデータの塊のサイズを取得する(定数バッファに渡す用)
+	 * @return 全ライトのデータのサイズ
+	*/
 	int GetLigDataSize() { return m_size; }
 
-	//ライトカメラのデータの塊を取得する(定数バッファに渡す用)
-	LigCameraDatas* GetLigCameraDatas() { return &m_ligCameraData; }
-
-	//ライトカメラのデータの塊のサイズを取得する(定数バッファに渡す用)
-	int GetLigCameraDataSize() { return m_ligCameraDataSize; }
-
-	//カメラのポジションを更新する
+	/**
+	 * @brief カメラのポジションを更新する
+	 * @param カメラの番号
+	*/
 	void UpdateEyePos(int camNo) { m_ligData.eyePos = g_camera3D[camNo]->GetPosition(); }
 
+	/**
+	 * @brief 影の描画に使用するライトカメラのデータの塊を取得する(定数バッファに渡す用)
+	 * @return ライトカメラのデータ
+	*/
+	LigCameraDatas* GetLigCameraDatas() { return &m_ligCameraData; }
+
+	/**
+	 * @brief 影の描画に使用するライトカメラのデータの塊のサイズを取得する(定数バッファに渡す用)
+	 * @return ライトカメラのデータのサイズ
+	*/
+	int GetLigCameraDataSize() { return m_ligCameraDataSize; }
+
+	/**
+	 * @brief 影の描画に使用するライトカメラを取得
+	 * @return ライトカメラ
+	*/
 	Camera* GetLightCamera()
 	{
 		return &m_lightCamera;
 	}
 
-	//シャドウ用
+	/**
+	 * @brief 影の描画に使用するライトカメラの座標を指定する
+	 * @param pos ライトカメラの座標
+	*/
 	void SetLightCameraPosition(const Vector3& pos)
 	{
 		m_lightCamera.SetPosition(pos);
@@ -106,6 +142,10 @@ public:
 		m_ligCameraData.lightCameraDirection.Normalize();
 	}
 
+	/**
+	 * @brief 影の描画に使用するライトカメラのターゲットの座標を指定する
+	 * @param targetPos ライトカメラのターゲットの座標
+	*/
 	void SetLightCameraTarget(const Vector3& targetPos)
 	{
 		m_lightCamera.SetTarget(targetPos);
@@ -116,6 +156,10 @@ public:
 		m_ligCameraData.lightCameraDirection.Normalize();
 	}
 
+	/**
+	 * @brief 影の描画に使用するライトカメラの上方向を指定する
+	 * @param up カメラの上方向のベクトル
+	*/
 	void SetLightCameraUp(const Vector3& up)
 	{
 		m_lightCamera.SetUp(up);
@@ -123,6 +167,10 @@ public:
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
+	/**
+	 * @brief 影の描画に使用するライトカメラの射影行列の更新方法を設定する
+	 * @param func 射影行列の更新方法 
+	*/
 	void SetLightCameraUpdateProjMatrixFunc(Camera::EnUpdateProjMatrixFunc func)
 	{
 		m_lightCamera.SetUpdateProjMatrixFunc(func);
@@ -130,6 +178,10 @@ public:
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
+	/**
+	 * @brief 影の描画に使用するライトカメラの横幅を指定する(平行投影限定)
+	 * @param width ライトカメラの横幅
+	*/
 	void SetLightCameraWidth(const float& width)
 	{
 		m_lightCamera.SetWidth(width);
@@ -137,6 +189,10 @@ public:
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
+	/**
+	 * @brief 影の描画に使用するライトカメラの高さを指定する(平行投影限定)
+	 * @param height ライトカメラの高さ
+	*/
 	void SetLightCameraHeight(const float& height)
 	{
 		m_lightCamera.SetHeight(height);
@@ -145,30 +201,36 @@ public:
 	}
 
 	//ディレクションライト用////////////////////////////////////////////////////////////////////////////////////////////////
-	//Mapを使って安全にライトを削除できる仕組みを作ってみた。オブジェクトの削除がうまくいっていないためまだ検証できていない
-	//TODO:ライトの削除の検証
 
-	//ディレクションライトの数のカウントをプラスする
-	int DirectionLightPlus() { return m_ligData.directionLightNum++; }
+	/**
+	 * @brief ディレクションライトの数のカウントをプラスする
+	*/
+	void DirectionLightPlus() { m_ligData.directionLightNum++; }
 
-	//ディレクションライトの数のカウントをマイナスする
+	/**
+	 * @brief ディレクションライトの数のカウントをマイナスする
+	*/
 	void DirectionLightMinus() {
 		m_ligData.directionLightNum--;
 
 		//ライトの数が0以下になる時はおかしくなっているのでthrowする(起こり得ないと信じたい)
 		if (m_ligData.directionLightNum < 0)
 		{
-			throw;
+			MessageBoxA(nullptr, "ディレクションライトの数がマイナスになっています。\n", "エラー", MB_OK);
 		}
 	}
 
-	//ディレクションライトを追加する
+	/**
+	 * @brief ライトマネージャーにディレクションライトを登録する
+	 * @param dirLigData ディレクションライトのデータ
+	 * @return 登録したディレクションライトのタグ番号(ライトの照合に使う)
+	*/
 	int AddDirectionLight(prefab::DirLigData* dirLigData)
 	{
 		//ライトの数が最初に決めた数以上ならthrowする(いっぱい作るとふつうに起こる)
-		if (m_ligData.directionLightNum >= MaxDirectionLightNum)
+		if (m_ligData.directionLightNum >= DIRECTIONLIGHT_NUMBER_MAX)
 		{
-			throw;
+			MessageBoxA(nullptr, "ディレクションライトの数が最大数を超えています。\n", "エラー", MB_OK);
 		}
 
 		//空きの中で一番先頭位置にデータを格納する
@@ -184,7 +246,10 @@ public:
 		return m_dirLigNum++;
 	}
 
-	//ディレクションライトを削除する
+	/**
+	 * @brief ディレクションライトを削除する
+	 * @param directionLightTag 削除したいディレクションライトのタグ番号
+	*/
 	void RemoveDirectionLight(int directionLightTag)
 	{
 		//タグから削除する位置を取得し、削除するライトをソートで一番終端に持っていく
@@ -203,7 +268,11 @@ public:
 		}
 	}
 
-	//ディレクションライトの情報を更新する
+	/**
+	 * @brief ディレクションライトの情報を更新する
+	 * @param directionLightTag 更新したいライトのタグ番号
+	 * @param dirLigData 更新したいライトの新しいライトデータ
+	*/
 	void UpdateDirectionLight(int directionLightTag, prefab::DirLigData* dirLigData)
 	{
 		//タグから取得したライトの位置のデータを更新する。
@@ -212,11 +281,14 @@ public:
 
 	//ポイントライト用///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//ポイントライトの数のカウントをプラスする
-	int PointLightPlus() { return m_ligData.pointLightNum++; }
+	/**
+	 * @brief ポイントライトの数のカウントをプラスする
+	*/
+	void PointLightPlus() { m_ligData.pointLightNum++; }
 
-	//ポイントライトの数のカウントをマイナスする
-	//WARNING:明らかに危険 何番目のライトを消すか把握する必要がある
+	/**
+	 * @brief ポイントライトの数のカウントをマイナスする
+	*/
 	void PointLightMinus()
 	{
 		m_ligData.pointLightNum--;
@@ -224,17 +296,21 @@ public:
 		//ライトの数が0以下になる時はおかしくなっているのでthrowする(起こり得ないと信じたい)
 		if (m_ligData.pointLightNum < 0)
 		{
-			throw;
+			MessageBoxA(nullptr, "ポイントライトの数がマイナスになっています。\n", "エラー", MB_OK);
 		}
 	}
 
-	//ポイントライトを追加する
+	/**
+	 * @brief ライトマネージャーにポイントライトを登録する
+	 * @param pointLigData ポイントライトのデータ
+	 * @return 登録したポイントライトのタグ番号(ライトの照合に使う)
+	*/
 	int AddPointLight(prefab::PointLigData* pointLigData)
 	{
 		//ライトの数が最初に決めた数以上ならthrowする(いっぱい作るとふつうに起こる)
-		if (m_ligData.pointLightNum >= MaxPointLightNum)
+		if (m_ligData.pointLightNum >= POINTLIGHT_NUMBER_MAX)
 		{
-			throw;
+			MessageBoxA(nullptr, "ポイントライトの数が最大数を超えています。\n", "エラー", MB_OK);
 		}
 
 		//空きの中で一番先頭位置にデータを格納する
@@ -250,7 +326,10 @@ public:
 		return m_pointLigNum++;
 	}
 
-	//ポイントライトを削除する
+	/**
+	 * @brief ポイントライトを削除する
+	 * @param pointLightTag 削除したいポイントライトのタグ番号
+	*/
 	void RemovePointLight(int pointLightTag)
 	{
 		//タグから削除する位置を取得し、削除するライトをソートで一番終端に持っていく
@@ -269,7 +348,11 @@ public:
 		}
 	}
 
-	//ポイントライトの情報を更新する
+	/**
+	 * @brief ポイントライトの情報を更新する
+	 * @param pointLightTag 更新したいライトのタグ番号
+	 * @param pointLigData 更新したいライトの新しいライトデータ
+	*/
 	void UpdatePointLight(int pointLightTag, prefab::PointLigData* pointLigData)
 	{
 		m_ligData.pointLightArray[m_pointLigMap.at(pointLightTag)] = *pointLigData;
@@ -277,10 +360,14 @@ public:
 
 	//スポットライト用/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//スポットライトの数のカウントをプラスする
-	int SpotLightPlus() { return m_ligData.spotLightNum++; }
+	/**
+	 * @brief スポットライトの数のカウントをプラスする
+	*/
+	void SpotLightPlus() { m_ligData.spotLightNum++; }
 
-	//スポットライトの数のカウントをマイナスする
+	/**
+	 * @brief スポットライトの数のカウントをマイナスする
+	*/
 	void SpotLightMinus()
 	{
 		m_ligData.spotLightNum--;
@@ -288,17 +375,21 @@ public:
 		//ライトの数が0以下になる時はおかしくなっているのでthrowする(起こり得ないと信じたい)
 		if (m_ligData.spotLightNum < 0)
 		{
-			throw;
+			MessageBoxA(nullptr, "スポットライトの数がマイナスになっています。\n", "エラー", MB_OK);
 		}
 	}
 
-	//スポットライトを追加する
+	/**
+	 * @brief ライトマネージャーにスポットライトを登録する
+	 * @param spotLigData スポットライトのデータ
+	 * @return 登録したスポットライトのタグ番号(ライトの照合に使う)
+	*/
 	int AddSpotLight(prefab::SpotLigData* spotLigData)
 	{
 		//ライトの数が最初に決めた数以上ならthrowする(いっぱい作るとふつうに起こる)
-		if (m_ligData.spotLightNum >= MaxSpotLightNum)
+		if (m_ligData.spotLightNum >= SPOTLIGHT_NUMBER_MAX)
 		{
-			throw;
+			MessageBoxA(nullptr, "スポットライトの数が最大数を超えています。\n", "エラー", MB_OK);
 		}
 
 		//空きの中で一番先頭位置にデータを格納する
@@ -314,7 +405,10 @@ public:
 		return m_spotLigNum++;
 	}
 
-	//スポットライトを削除する
+	/**
+	 * @brief スポットライトを削除する
+	 * @param spotLightTag 削除したいスポットライトのタグ番号
+	*/
 	void RemoveSpotLight(int spotLightTag)
 	{
 		//タグから削除する位置を取得し、削除するライトをソートで一番終端に持っていく
@@ -333,7 +427,11 @@ public:
 		}
 	}
 
-	//スポットライトの情報を更新する
+	/**
+	 * @brief スポットライトの情報を更新する
+	 * @param spotLightTag 更新したいライトのタグ番号
+	 * @param spotLigData 更新したいライトの新しいライトデータ
+	*/
 	void UpdateSpotLight(int spotLightTag, prefab::SpotLigData* spotLigData)
 	{
 		m_ligData.spotLightArray[m_spotLigMap.at(spotLightTag)] = *spotLigData;

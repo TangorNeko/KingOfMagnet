@@ -12,31 +12,53 @@ namespace prefab
 
 	class CDirectionLight : public IGameObject
 	{
-	private:
-		DirLigData dirLigData;	//ディレクションライトのデータ
-
-		int m_dirLigTag;		//ディレクションライトの番号(何番目に作られたライト?)
-	public:
 		~CDirectionLight();
 		bool Start();
 		void Update();
 
-		//ディレクションライトのデータを取得
-		DirLigData* GetLigData() { return &dirLigData; }
+	public:
+		/**
+		 * @brief ディレクションライトのデータを取得
+		 * @return ディレクションライトのデータ
+		*/
+		DirLigData* GetLigData() { return &m_dirLigData; }
 		
-		//ディレクションライトのサイズを取得
-		int GetLigDataSize() { return sizeof(dirLigData); }
+		/**
+		 * @brief ディレクションライトのデータのサイズを取得
+		 * @return ディレクションライトのデータのサイズ
+		*/
+		int GetLigDataSize() { return sizeof(m_dirLigData); }
 
-		//向きの設定と取得
+		/**
+		 * @brief ディレクションライトの向きを設定
+		 * @param dir ディレクションライトの向き
+		*/
 		void SetDirection(Vector3 dir) { 
-			dirLigData.ligDir = dir;
-			dirLigData.ligDir.Normalize();
+			m_dirLigData.ligDir = dir;
+			m_dirLigData.ligDir.Normalize();
 		}
-		Vector3 GetDirecion() { return dirLigData.ligDir; }
 
-		//色の設定と取得
-		void SetColor(Vector3 color) { dirLigData.ligColor = color; }
-		Vector3 GetColor() { return dirLigData.ligColor; }
+		/**
+		 * @brief ディレクションライトの向きを取得
+		 * @return ディレクションライトの向き
+		*/
+		Vector3 GetDirecion() { return m_dirLigData.ligDir; }
+
+		/**
+		 * @brief ディレクションライトの色を設定
+		 * @param color ディレクションライトの色
+		*/
+		void SetColor(Vector3 color) { m_dirLigData.ligColor = color; }
+
+		/**
+		 * @brief ディレクションのライトの色を取得
+		 * @return ディレクションライトの色
+		*/
+		Vector3 GetColor() { return m_dirLigData.ligColor; }
+
+	private:
+		DirLigData m_dirLigData;	//ディレクションライトのデータ
+		int m_dirLigTag;		//ディレクションライトの番号(何番目に作られたライト?)
 	};
 }
 
