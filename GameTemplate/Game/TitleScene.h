@@ -3,11 +3,21 @@
 class GameOption;
 class TitleScene:public IGameObject
 {
-private:
 	bool Start() override;
 	void Update() override;
 	~TitleScene();
 
+	/**
+	 * @brief 選択しているコマンドに応じてメニューバーを移動させる
+	*/
+	void CommandMove();
+
+	/**
+	 * @brief コマンドを決定した時の動作
+	*/
+	void CommandSelectMove();
+
+private:
 	prefab::CSkinModelRender* m_BG_ModelRender = nullptr;
 	prefab::CPointLight* m_BGLight = nullptr;
 	prefab::CSpriteRender* m_Monitor_SpriteRender = nullptr;
@@ -18,8 +28,6 @@ private:
 	prefab::CSpriteRender* m_Exit_SpriteRender = nullptr;
 	prefab::CSpriteRender* m_Arrow_SpriteRender = nullptr;
 
-	Vector4 m_semitrans = { 1, 1, 1, 0.7f };//半透明
-	Vector3 m_smallScale = { 0.7f,0.7f,1.0f };//上下のメニューバーの拡大率
 	//メニューバーの位置
 	Vector3 m_topPos = { 440.0f,200.0f,0.0f };//上
 	Vector3 m_centerPos = { 320.0f,0.0f,0.0f };//中
@@ -30,9 +38,6 @@ private:
 
 	//BGM
 	prefab::CSoundSource* ssBGM = nullptr;
-	
-	void CommandMove();
-	void CommandSelectMove();
 
 	//コマンドの種類
 	enum TitleCommand {
@@ -40,6 +45,7 @@ private:
 		TC_Option,
 		TC_Exit
 	};
+
 	TitleCommand m_titleCommand = TC_Start;		//現在選択中のコマンド
 	bool m_selectFlag = false;					//コマンド決定済？
 	bool m_selectMoveFlag = false;				//コマンド移動中？
