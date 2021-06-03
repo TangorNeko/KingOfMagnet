@@ -19,3 +19,8 @@
 #include "time/GameTime.h"
 #include "NameKey.h"
 #include "TransitionGenerator.h"
+
+
+//TODO:’è”@‰¼‚Åstdafx.h‚É’u‚­AêŠ‚ÍŒŸ“¢
+const int PAD_PLAYER1 = 0;
+const int PAD_PLAYER2 = 1;

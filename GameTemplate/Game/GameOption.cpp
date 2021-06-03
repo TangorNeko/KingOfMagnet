@@ -36,10 +36,6 @@ namespace
 
 	const float CONTROL_SENSITIVITY_MIN = 0.1f;
 	const float CONTROL_SENSITIVITY_MAX = 5.0f;
-
-	//TODO:パッドは共通なのでどこかに分離?
-	const int PAD_PLAYER1 = 0;
-	const int PAD_PLAYER2 = 1;
 }
 
 float GameOption::m_BGMVolume = 1.0f;//BGMのボリューム
