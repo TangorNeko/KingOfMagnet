@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Repulsion.h"
 #include "Player.h"
-#include "GameScene.h"
 #include "SampleScene.h"
 
 Repulsion::~Repulsion()

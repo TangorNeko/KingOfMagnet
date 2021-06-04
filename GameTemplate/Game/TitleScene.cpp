@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TitleScene.h"
-#include "CharacterSelect.h"
 #include "SampleScene.h"
 #include "GameOption.h"
 

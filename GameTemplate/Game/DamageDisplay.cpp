@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "DamageDisplay.h"
-#include "Character_base.h"
 
 #include <random>
 

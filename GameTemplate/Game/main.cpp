@@ -4,7 +4,6 @@
 #include "TitleScene.h"
 #include "SampleScene.h"
 #include "ResultScene.h"
-#include "GameScene.h"
 #include "Player.h"
 #include "TransitionGenerator.h"
 

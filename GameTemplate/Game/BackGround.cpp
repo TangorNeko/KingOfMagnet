@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "BackGround.h"
-#include "PopRandItem.h"
 #include "Repulsion.h"
 
 BackGround::~BackGround()
