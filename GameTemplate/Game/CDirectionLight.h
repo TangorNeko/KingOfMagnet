@@ -58,7 +58,7 @@ namespace prefab
 
 	private:
 		DirLigData m_dirLigData;	//ディレクションライトのデータ
-		int m_dirLigTag;		//ディレクションライトの番号(何番目に作られたライト?)
+		int m_dirLigTag;			//ディレクションライトの番号(何番目に作られたライト?)
 	};
 }
 
