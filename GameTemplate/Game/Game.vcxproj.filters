@@ -232,25 +232,9 @@
     <ClCompile Include="CSpriteRender.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SampleScene.cpp" />
-    <ClCompile Include="Debris.cpp" />
-    <ClCompile Include="DebrisBlock.cpp" />
-    <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GravityBullet.cpp" />
-    <ClCompile Include="Explosion.cpp" />
-    <ClCompile Include="Bomb.cpp" />
-    <ClCompile Include="MobiusGauge.cpp" />
-    <ClCompile Include="EffectEngine.cpp" />
     <ClCompile Include="CEffect.cpp">
       <Filter>ソース ファイル\prefab</Filter>
     </ClCompile>
-    <ClCompile Include="Incendia.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="SpriteSupporter.cpp">
       <Filter>ソース ファイル\prefab</Filter>
@@ -258,9 +242,51 @@
     <ClCompile Include="TransitionGenerator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ResultScene.cpp" />
-    <ClCompile Include="CEffect2D.cpp" />
-    <ClCompile Include="GameOption.cpp" />
+    <ClCompile Include="Bomb.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Debris.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DebrisBlock.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectEngine.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MiniEngine\font\FontEngine.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOption.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Incendia.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MobiusGauge.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SampleScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CEffect2D.cpp">
+      <Filter>ソース ファイル\prefab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -724,9 +750,6 @@
     <ClInclude Include="CaslFile.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CLightManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="CUtil.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -829,29 +852,60 @@
     <ClInclude Include="prefab.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SampleScene.h" />
-    <ClInclude Include="Debris.h" />
-    <ClInclude Include="DebrisBlock.h" />
-    <ClInclude Include="GravityBullet.h" />
-    <ClInclude Include="Explosion.h" />
-    <ClInclude Include="Bomb.h" />
-    <ClInclude Include="MobiusGauge.h" />
-    <ClInclude Include="EffectEngine.h" />
     <ClInclude Include="CEffect.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
     </ClInclude>
-    <ClInclude Include="Flash.h" />
-    <ClInclude Include="Incendia.h" />
     <ClInclude Include="SpriteSupporter.h">
       <Filter>ヘッダー ファイル\prefab</Filter>
     </ClInclude>
     <ClInclude Include="TransitionGenerator.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ResultScene.h" />
-    <ClInclude Include="CEffect2D.h" />
-    <ClInclude Include="GameOption.h" />
+    <ClInclude Include="Bomb.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Debris.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DebrisBlock.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectEngine.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Flash.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOption.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Incendia.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MobiusGauge.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CEffect2D.h">
+      <Filter>ヘッダー ファイル\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="CLightManager.h">
+      <Filter>ヘッダー ファイル\prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
@@ -899,8 +953,5 @@
     <Filter Include="ヘッダー ファイル\prefab">
       <UniqueIdentifier>{fbcc8401-c261-42d8-be0c-fdd20d76c163}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\tkEngine2\GameTemplate\Game\Assets\modelData\preset\skyCubeMap.dds" />
   </ItemGroup>
 </Project>
