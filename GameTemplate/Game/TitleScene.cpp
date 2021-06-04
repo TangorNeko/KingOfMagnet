@@ -160,10 +160,10 @@ bool TitleScene::Start()
 	g_camera3D[0]->SetTarget(CAMERA_TITLE_TARGETPOSITION);
 
 	//BGMを再生
-	ssBGM = NewGO<prefab::CSoundSource>(0);
-	ssBGM->Init(L"Assets/sound/タイトル曲.wav", SoundType::enBGM);
-	ssBGM->SetVolume(SOUND_BGM_TITLE_VOLUME);
-	ssBGM->Play(true);	
+	m_titleBGM = NewGO<prefab::CSoundSource>(0);
+	m_titleBGM->Init(L"Assets/sound/タイトル曲.wav", SoundType::enBGM);
+	m_titleBGM->SetVolume(SOUND_BGM_TITLE_VOLUME);
+	m_titleBGM->Play(true);	
 
 	//オプションは最初から作っておく
 	//オプションの優先度は少なくともTitleSceneより後にしなければ、項目から抜けた際に同時にオプションからも抜けてしまう
@@ -440,7 +440,7 @@ void TitleScene::CommandSelectMove() {
 		case TitleScene::TC_Start:
 			//開始
 			//BGMを消す
-			DeleteGO(ssBGM);
+			DeleteGO(m_titleBGM);
 			//switch文の中で宣言するためのスコープ
 			{
 				SampleScene* gameScene = NewGO<SampleScene>(0, "gamescene");
