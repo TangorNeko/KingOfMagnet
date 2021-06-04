@@ -7,13 +7,11 @@ namespace prefab
 	public:
 		//モデルの状態
 		enum EModel {
-			eModel_View1,//画面1に描画されるモデル
-			eModel_View2,//画面2に描画されるモデル
-			eModel_Shadow,//影を描画する用モデル
-			eModel_Num,//モデルの状態の数
+			eModel_View1,	//画面1に描画されるモデル
+			eModel_View2,	//画面2に描画されるモデル
+			eModel_Shadow,	//影を描画する用モデル
+			eModel_Num,		//モデルの状態の数
 		};
-		//アニメーション速度
-		float m_animation_speed = 1.0;
 	private:
 
 		/**
@@ -60,8 +58,17 @@ namespace prefab
 		void PlayAnimation(int animationNo, float interpolateTime = 0.0f)
 		{
 			m_animation.Play(animationNo, interpolateTime);
-			m_animation.Progress(m_animation_speed /60.0f);
+			m_animation.Progress(m_animationSpeed /60.0f);
 			UpdateModel();
+		}
+
+		/**
+		 * @brief アニメーションの再生速度を設定する
+		 * @param animationSpeed 再生速度
+		*/
+		void SetAnimationSpeed(float animationSpeed)
+		{
+			m_animationSpeed = animationSpeed;
 		}
 		
 		/**
@@ -110,15 +117,6 @@ namespace prefab
 		void SetShadowCasterFlag(bool isShadowCaster)
 		{
 			m_isShadowCaster = isShadowCaster;
-		}
-		
-		/**
-		 * @brief アニメーションの再生フラグを取得
-		 * @return 再生している:true 再生していない:false
-		*/
-		bool GetAnimFlag()
-		{ 
-			return m_animation.IsPlaying(); 
 		}
 		
 		/**
@@ -181,18 +179,17 @@ namespace prefab
 		static void PreLoadModel(const char* tkmFilePath);
 
 	private:
-		Skeleton m_skeleton; //スケルトン
-		Model m_model[eModel_Num]; //モデル
-
-		Vector3 m_position; //座標
-		Quaternion m_qRot; //回転
-		Vector3 m_scale; //拡大率
-
-		AnimationClip* m_animationClips = nullptr;//アニメーションクリップ
-		int m_animationClipNum = 0;//アニメーションクリップの数
-		Animation m_animation;//アニメーション。
-
-		bool m_isShadowCaster = false;//このモデルは影を作るか?
+		Skeleton m_skeleton;						//スケルトン
+		Model m_model[eModel_Num];					//モデル
+		Vector3 m_position;							//座標
+		Quaternion m_qRot;							//回転
+		Vector3 m_scale;							//拡大率
+		AnimationClip* m_animationClips = nullptr;	//アニメーションクリップ
+		int m_animationClipNum = 0;					//アニメーションクリップの数
+		Animation m_animation;						//アニメーション。
+		bool m_isShadowCaster = false;				//このモデルは影を作るか?
+		float m_animation_speed = 1.0;				//アニメーション速度
+		float m_animationSpeed = 1.0f;				//アニメーション速度
 	};
 }
 

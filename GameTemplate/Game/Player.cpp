@@ -1740,19 +1740,19 @@ void Player::UpdateState()
 
 void Player::AnimationSelect()
 {	
-	m_skinModelRender->m_animation_speed = 1.0;
+	m_skinModelRender->SetAnimationSpeed(1.0f);
 	switch (m_animStatus)
 	{
 	case enStatus_Attack:
-		m_skinModelRender->m_animation_speed = 4.0;
+		m_skinModelRender->SetAnimationSpeed(4.0f);
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
 	case enStatus_SpecialAttack:
-		m_skinModelRender->m_animation_speed = 2.0;
+		m_skinModelRender->SetAnimationSpeed(2.0f);
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 		break;
 	case enStatus_Burst:
-		m_skinModelRender->m_animation_speed = 4.0;
+		m_skinModelRender->SetAnimationSpeed(4.0f);
 		m_skinModelRender->PlayAnimation(enAnimationClip_Burst);
 		break;
 	case enStatus_Run:
@@ -1956,8 +1956,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		switch (m_LastCameraStatus)
 		{
 		case 0://右からのカメラ
-			m_skinModelRender->m_animation_speed = 0.1f;//アニメーションを遅くする
-			m_enemy->m_skinModelRender->m_animation_speed = 0.1f;
+			m_skinModelRender->SetAnimationSpeed(0.1f);//アニメーションを遅くする
+			m_enemy->m_skinModelRender->SetAnimationSpeed(0.1f);
 			m_cameraPos += LastRight * 200;//右
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
@@ -1970,8 +1970,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 3://自分を写しながら敵を向いたカメラ
-			m_skinModelRender->m_animation_speed = 1.0f;//アニメーションスピードをもとに戻す
-			m_enemy->m_skinModelRender->m_animation_speed = 1.0f;			
+			m_skinModelRender->SetAnimationSpeed(1.0f);//アニメーションスピードをもとに戻す
+			m_enemy->m_skinModelRender->SetAnimationSpeed(1.0f);
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
 			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFrontDir * 200) - m_position;
 			m_winnerVec.Normalize();
