@@ -4,8 +4,6 @@
 
 #include "stdafx.h"
 #include "WaveFile.h"
-//#include "tkEngine/tkEnginePreCompile.h"
-//#include "tkEngine/Sound/tkWaveFile.h"
 
 
 
