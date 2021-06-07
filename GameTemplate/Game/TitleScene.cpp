@@ -73,9 +73,6 @@ namespace
 	const int COMMANDTIME_SPRITEMOVE_FINISH = 30;
 	const int COMMANDTIMER_START_TRANSITION = 40;
 	const int COMMANDTIMER_EXECUTE_COMMAND = 60;
-
-	//他でも使っているので分離?
-	const int TRANSITION_MOVETIME = 50;
 }
 
 TitleScene::~TitleScene() 
@@ -95,7 +92,7 @@ TitleScene::~TitleScene()
 bool TitleScene::Start()
 {	
 	//トランジション
-	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_MOVETIME,true);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME,true);
 	//背景のモデル
 	m_BG_ModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_BG_ModelRender->Init("Assets/modelData/TitleCylinder.tkm");
@@ -430,7 +427,7 @@ void TitleScene::CommandSelectMove() {
 	
 	if (m_commandTimer == COMMANDTIMER_START_TRANSITION && m_titleCommand == TitleScene::TC_Start)
 	{
-		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_MOVETIME, false);
+		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, false);
 	}
 
 	if (m_commandTimer == COMMANDTIMER_EXECUTE_COMMAND) {

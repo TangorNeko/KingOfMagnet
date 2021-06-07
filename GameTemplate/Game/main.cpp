@@ -7,6 +7,15 @@
 #include "Player.h"
 #include "TransitionGenerator.h"
 
+namespace
+{
+	const Vector3 LIGHTCAMERA_POSITION = { 500.0f,500.0f,-500.0f };
+	const Vector3 LIGHTCAMERA_TARGET = { 0.0f,0.0f,0.0f };
+	const Vector3 LIGHTCAMERA_UP = { 1.0f,0.0f,0.0f };
+	const float LIGHTCAMERA_WIDTH = 2000.0f;
+	const float LIGHTCAMERA_HEIGHT = 2000.0f;
+}
+
 void PreLoad();
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -29,12 +38,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();
-	CLightManager::GetInstance()->SetLightCameraPosition({ 500.0f,500.0f,-500.0f });
-	CLightManager::GetInstance()->SetLightCameraTarget({ 0.0f,0.0f,0.0f });
-	CLightManager::GetInstance()->SetLightCameraUp({ 1.0f,0.0f,0.0f });
+	CLightManager::GetInstance()->SetLightCameraPosition(LIGHTCAMERA_POSITION);
+	CLightManager::GetInstance()->SetLightCameraTarget(LIGHTCAMERA_TARGET);
+	CLightManager::GetInstance()->SetLightCameraUp(LIGHTCAMERA_UP);
 	CLightManager::GetInstance()->SetLightCameraUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-	CLightManager::GetInstance()->SetLightCameraWidth(2000.0f);
-	CLightManager::GetInstance()->SetLightCameraHeight(2000.0f);
+	CLightManager::GetInstance()->SetLightCameraWidth(LIGHTCAMERA_WIDTH);
+	CLightManager::GetInstance()->SetLightCameraHeight(LIGHTCAMERA_HEIGHT);
 
 	//リソースマネージャのインスタンスを作成
 	ResourceBankManager::CreateInstance();
@@ -58,7 +67,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	TransitionGenerator* tg = NewGO<TransitionGenerator>(5, "TransitionGenerator");
 
 	//トランジション
-	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 60, false);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME, false);
 
 	//タイトルシーンを作成。
 	TitleScene* title = NewGO<TitleScene>(6, "titlescene");
