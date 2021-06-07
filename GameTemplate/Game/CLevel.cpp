@@ -31,7 +31,7 @@ namespace prefab
 				bone->CalcWorldTRS(objData.position, objData.rotation, objData.scale);
 
 				//名前。
-				objData.name = m_tklFile.m_objects[i].boneName.get();
+				objData.name = m_tklFile.GetObjectAt(i).boneName.get();
 
 				//3dsMaxとは軸が違うので、補正を入れる。
 				float t = objData.position.y;

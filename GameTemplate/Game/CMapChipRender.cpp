@@ -13,13 +13,6 @@ namespace prefab
 	{
 		//ì¬‚µ‚½•ª‚¾‚¯Á‚·B
 		DeleteGO(m_modelRender);
-
-		/*
-		for (auto mphysicsStaticObject : m_physicsStaticObjects)
-		{
-			delete mphysicsStaticObject;
-		}
-		*/
 	}
 
 	void CMapChipRender::Init()

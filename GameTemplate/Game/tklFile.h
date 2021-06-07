@@ -2,6 +2,8 @@
 class tklFile
 {
 public:
+
+	//tklファイルに含まれるボーン情報
 	struct SObject
 	{
 		std::unique_ptr<char[]> boneName;	//ボーンの名前。
@@ -17,10 +19,10 @@ public:
 		std::vector<Vector3> vector3Data;	//Vector3の追加データ
 	};
 
-	//SObjectのユニークポインタ
-	typedef std::unique_ptr<SObject> CObject;
-
-	//SObjectに対して共通の処理を行う
+	/**
+	 * @brief SObjectに対して共通の処理を行う
+	 * @param query 共通処理の関数
+	*/
 	void QueryObject(std::function<void(SObject& obj)>query)
 	{
 		for (auto& obj : m_objects)
@@ -29,17 +31,32 @@ public:
 		}
 	}
 
-	//.tklファイルを読み込んで内容をSObjectの可変長配列m_objectsに書き込む
+	/**
+	 * @brief .tklファイルを読み込んで内容をSObjectの可変長配列m_objectsに書き込む
+	 * @param levelFilePath tklファイルのパス
+	 * @return 成功した?
+	*/
 	bool Load(const char* levelFilePath);
-//private:
-	//tklファイルのバージョン
-	int m_tklVersion = 0;
-	//ボーンの数
-	int m_numBone = 0;
-	//SObjectの可変長配列
-	std::vector<SObject> m_objects;
-public:
-	//ボーンの数を取得
+
+	/**
+	 * @brief ボーンの数を取得
+	 * @return ボーンの数
+	*/
 	int GetNumBone() { return m_numBone; }
+
+	/**
+	 * @brief SObjectの可変長配列のデータを取得
+	 * @param index 何番目のデータか
+	 * @return SObjectデータ
+	*/
+	SObject& GetObjectAt(int index)
+	{
+		return m_objects[index];
+	}
+private:
+	int m_tklVersion = 0;						//tklファイルのバージョン
+	int m_numBone = 0;							//ボーンの数
+	std::vector<SObject> m_objects;				//SObjectの可変長配列
+	typedef std::unique_ptr<SObject> CObject;	//SObjectのユニークポインタ
 };
 
