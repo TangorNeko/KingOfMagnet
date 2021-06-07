@@ -5,7 +5,6 @@
 #pragma once
 
 #include "WaveFile.h"
-//#include "tkEngine/Sound/tkWaveFile.h"
 
 enum SoundType
 {
