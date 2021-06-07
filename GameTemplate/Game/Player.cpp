@@ -6,7 +6,7 @@
 #include "Bomb.h"
 #include "DamageDisplay.h"
 #include "GravityBullet.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "MobiusGauge.h"
 #include "ResultScene.h"
 
@@ -263,25 +263,25 @@ bool Player::Start()
 	m_SPFirstEffectBlue->Init(u"Assets/effect/引力チャージ.efk");
 	//ここまでエフェクト
 
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 	return true;
 }
 
 void Player::Update()
 {
 	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
 		return;
 	}
 
 	//オープニングカメラ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enBirdseye)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enBirdseye)
 	{
 		OpeningCamera();
 	}
 	//スタートダウンカウントダウン中
-	else if (m_gameScene->GetGameState() == SampleScene::GameState::enStartCountDown)
+	else if (m_gameScene->GetGameState() == GameScene::GameState::enStartCountDown)
 	{
 		//カメラの移動。
 		Camera();
@@ -309,7 +309,7 @@ void Player::Update()
 		//アニメーション選択。
 		AnimationSelect();
 	}
-	else if(m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
+	else if(m_gameScene->GetGameState() == GameScene::GameState::enPlaying)
 	{		
 		//体力等ステータスのテキストを表示(後に画像にする。)
 		DisplayStatus();
@@ -394,7 +394,7 @@ void Player::Update()
 			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
 	
 	}
-	else if(m_gameScene->GetGameState() == SampleScene::GameState::enResult)
+	else if(m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		//ファイナルヒットカメラ。
 		FinalHit();
@@ -403,7 +403,7 @@ void Player::Update()
 		//アニメーション選択。
 		//AnimationSelect();
 	}
-	else if (m_gameScene->GetGameState() == SampleScene::GameState::enDraw)
+	else if (m_gameScene->GetGameState() == GameScene::GameState::enDraw)
 	{
 		//保持しているガレキを浮遊させる。
 		HoldDebris();
@@ -444,7 +444,7 @@ void Player::DisplayStatus()
 	//体力、チャージ、現在の自分の磁力の状態の表示
 	
 	//HPバー更新
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPlaying)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPlaying)
 	{
 		if (m_playerNum == 0) {
 			m_HPBarRedSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
@@ -1437,7 +1437,7 @@ void Player::Damage(int damage)
 
 		m_enemy->Win();
 
-		m_gameScene->SetGameState(SampleScene::GameState::enResult);
+		m_gameScene->SetGameState(GameScene::GameState::enResult);
 	}
 
 	//与えたダメージ量を相手に表示する
@@ -1831,7 +1831,7 @@ void Player::OpeningCamera()
 
 	if (g_pad[m_playerNum]->IsTrigger(enButtonA))//オープニングカメラスキップ
 	{
-		m_gameScene->SetGameState(SampleScene::GameState::enStartCountDown);
+		m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
 	}
 	
 	if (m_cameraLoopCount < 250)//250フレーム経てば
@@ -1857,7 +1857,7 @@ void Player::OpeningCamera()
 		Vector3 targetVec = PlayerPos - m_cameraPos;
 		if (targetVec.Length() < 250)//カメラが近づけばオープニングカメラ終了
 		{
-			m_gameScene->SetGameState(SampleScene::GameState::enStartCountDown);
+			m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
 		}
 		targetVec.Normalize();
 		m_cameraPos += targetVec*m_gain;
@@ -1881,7 +1881,7 @@ void Player::OpeningCamera()
 
 void Player::FinalHit()//決着がついたときのカメラ
 {	
-	m_gameScene->ssBGM->Stop();
+	m_gameScene->StopGameBGM();
 	
 	if (m_FirstTime == true) {//一回だけ流れるループ
 		//画面分割を終了

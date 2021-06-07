@@ -2,7 +2,7 @@
 #include "system/system.h"
 
 #include "TitleScene.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "ResultScene.h"
 #include "Player.h"
 #include "TransitionGenerator.h"

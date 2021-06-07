@@ -324,7 +324,7 @@
     <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="Repulsion.cpp" />
     <ClCompile Include="ResultScene.cpp" />
-    <ClCompile Include="SampleScene.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="SpriteSupporter.cpp" />
@@ -440,7 +440,7 @@
     <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="Repulsion.h" />
     <ClInclude Include="ResultScene.h" />
-    <ClInclude Include="SampleScene.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="SkyBoard.h" />
     <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="SpriteSupporter.h" />

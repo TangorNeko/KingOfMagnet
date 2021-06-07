@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TitleScene.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "GameOption.h"
 
 namespace
@@ -439,9 +439,9 @@ void TitleScene::CommandSelectMove() {
 			DeleteGO(m_titleBGM);
 			//switch文の中で宣言するためのスコープ
 			{
-				SampleScene* gameScene = NewGO<SampleScene>(0, "gamescene");
-				gameScene->Set1PSensitivity(m_option->GetP1Sensitivity());
-				gameScene->Set2PSensitivity(m_option->GetP2Sensitivity());
+				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
+				gameScene->SetP1Sensitivity(m_option->GetP1Sensitivity());
+				gameScene->SetP2Sensitivity(m_option->GetP2Sensitivity());
 			}
 			DeleteGO(this);
 			break;

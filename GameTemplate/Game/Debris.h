@@ -3,7 +3,7 @@
 
 class Player;
 class BackGround;
-class SampleScene;
+class GameScene;
 
 class Debris : public IGameObject
 {
@@ -29,7 +29,7 @@ class Debris : public IGameObject
 
 	BackGround* m_stageModel = nullptr;//当たり判定用のステージのクラス
 
-	SampleScene* m_gameScene = nullptr;
+	GameScene* m_gameScene = nullptr;
 
 	const float m_velocity = 50.0f;//弾速
 

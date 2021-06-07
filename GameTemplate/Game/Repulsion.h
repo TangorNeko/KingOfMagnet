@@ -1,5 +1,5 @@
 #pragma once
-class SampleScene;
+class GameScene;
 
 class Repulsion : public IGameObject
 {
@@ -11,7 +11,7 @@ class Repulsion : public IGameObject
 
 	Vector3 diff;
 
-	SampleScene* m_gameScene = nullptr;
+	GameScene* m_gameScene = nullptr;
 
 	//SE‚ğ–Â‚ç‚µ‚½‚©‚Ç‚¤‚©(2ƒvƒŒƒCƒ„[•ª)
 	bool m_isPlayss1[2] = { false,false };	//ss1

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ResultScene.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "TitleScene.h"
 ResultScene::~ResultScene()
 {	
@@ -212,7 +212,7 @@ void ResultScene::Update()
 
 				//ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 3, false);
-				SampleScene* samplescene = NewGO<SampleScene>(0, "gamescene");
+				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {

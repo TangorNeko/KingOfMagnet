@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Repulsion.h"
 #include "Player.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 
 Repulsion::~Repulsion()
 {
@@ -15,7 +15,7 @@ bool Repulsion::Start()
 	m_skinModelRender->Init("Assets/modelData/repulsion.tkm");
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_rot);
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 
 	m_ss2[0] = NewGO<prefab::CSoundSource>(0);
 	m_ss2[0]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
@@ -27,7 +27,7 @@ bool Repulsion::Start()
 void Repulsion::Update()
 {	
 	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
 		return;
 	}

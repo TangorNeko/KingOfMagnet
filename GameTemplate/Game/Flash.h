@@ -1,6 +1,6 @@
 #pragma once
 
-class SampleScene;
+class GameScene;
 
 class Flash:public IGameObject
 {
@@ -25,6 +25,6 @@ public:
 
 	int m_parentNum;
 
-	SampleScene* m_gameScene = nullptr;
+	GameScene* m_gameScene = nullptr;
 };
 
