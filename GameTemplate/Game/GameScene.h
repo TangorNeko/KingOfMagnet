@@ -14,12 +14,20 @@ class GameScene : public IGameObject
 public:
 	enum GameState
 	{
-		enBirdseye,//俯瞰カメラ状態
-		enStartCountDown,//スタートカウントダウン
-		enPlaying,//プレイ中
-		enPause,//ポーズ中
-		enResult,//リザルト中
+		enBirdseye,			//俯瞰カメラ状態
+		enStartCountDown,	//スタートカウントダウン
+		enPlaying,			//プレイ中
+		enPause,			//ポーズ中
+		enResult,			//リザルト中
 		enDraw
+	};
+
+	//タイムリミットで表示するスプライトの桁数
+	enum TimeLimitSpriteDigit
+	{
+		enOnesPlaceOfSingleDigit,	//一桁表示中の一桁(例:残り6秒の時の6)
+		enOnesPlaceOfDoubleDigit,	//二桁表示中の一桁(例:残り15秒の時の5)
+		enTenthPlaceOfDoubleDigit,	//二桁表示中の二桁(例:残り21秒の時の2)
 	};
 
 private:
@@ -46,9 +54,9 @@ private:
 	/**
 	 * @brief 残り時間の表示に伴うスプライトの変化
 	 * @param num スプライトにしたい数字
-	 * @param numPlace スプライトにしたい数字の桁数(一桁ならば0、二桁ならば、送る数字が一の位なら1を、十の位なら10を入れる)
+	 * @param numPlace スプライトにしたい数字の桁数(一桁ならば0、二桁ならば、送る数字が一の位なら1を、十の位なら2を入れる)
 	*/
-	void TimeLimitChangesSprits(int num, int numPlace);
+	void TimeLimitChangesSprits(int num, TimeLimitSpriteDigit numPlace);
 
 public:
 
