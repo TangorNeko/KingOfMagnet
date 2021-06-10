@@ -2,6 +2,19 @@
 #include "BackGround.h"
 #include "Repulsion.h"
 
+namespace
+{
+	const Vector3 SPOTLIGHT_NORTH_POSITION = { 0.0f,0.0f,270.0f };
+	const Vector3 SPOTLIGHT_SOUTH_POSITION = { 0.0f,0.0f,-270.0f };
+	const Vector3 SPOTLIGHT_DIRECTION = { 0.0f,-1.0f,0.0f };
+	const Vector3 SPOTLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };
+	const float SPOTLIGHT_RANGE = 1000.0f;
+	const float SPOTLIGHT_ANGLE = 90.0f;
+	const float RESPAWNPOINT_INIT_DISTANCE = 0.0f;
+	const int STRCMP_NO_DIFFERENCE = 0;
+
+}
+
 BackGround::~BackGround()
 {
 	DeleteGO(m_skinModelRender);
@@ -22,23 +35,23 @@ bool BackGround::Start()
 
 	//ステージの北の穴を照らすスポットライト
 	m_northSpotLight = NewGO<prefab::CSpotLight>(0);
-	m_northSpotLight->SetPosition({ 0.0f,0.0f,270.0f });
-	m_northSpotLight->SetColor({ 1.0f,1.0f,1.0f });
-	m_northSpotLight->SetRange(1000);
-	m_northSpotLight->SetDirection({ 0.0f,-1.0f,0.0f });
-	m_northSpotLight->SetAngleDeg(90.0f);
+	m_northSpotLight->SetPosition(SPOTLIGHT_NORTH_POSITION);
+	m_northSpotLight->SetColor(SPOTLIGHT_COLOR_WHITE);
+	m_northSpotLight->SetRange(SPOTLIGHT_RANGE);
+	m_northSpotLight->SetDirection(SPOTLIGHT_DIRECTION);
+	m_northSpotLight->SetAngleDeg(SPOTLIGHT_ANGLE);
 
 	//ステージの南の穴を照らすスポットライト
 	m_southSpotLight = NewGO<prefab::CSpotLight>(0);
-	m_southSpotLight->SetPosition({ 0.0f,0.0f,-270.0f });
-	m_southSpotLight->SetColor({ 1.0f,1.0f,1.0f });
-	m_southSpotLight->SetRange(1000);
-	m_southSpotLight->SetDirection({ 0.0f,-1.0f,0.0f });
-	m_southSpotLight->SetAngleDeg(90.0f);
+	m_southSpotLight->SetPosition(SPOTLIGHT_SOUTH_POSITION);
+	m_southSpotLight->SetColor(SPOTLIGHT_COLOR_WHITE);
+	m_southSpotLight->SetRange(SPOTLIGHT_RANGE);
+	m_southSpotLight->SetDirection(SPOTLIGHT_DIRECTION);
+	m_southSpotLight->SetAngleDeg(SPOTLIGHT_ANGLE);
 	
 	//リスポーン地点の読み込み
 	m_level.Init("Assets/modelData/Level_00.tkl", [&](prefab::LevelObjectData& objData) {
-		if (strcmp(objData.name, "ResPos") == 0) {//リスポーン地点
+		if (strcmp(objData.name, "ResPos") == STRCMP_NO_DIFFERENCE) {//リスポーン地点
 
 			//リスポーン地点の候補に追加していく。
 			m_respawnPoints.push_back({ objData.position.x,0.0f,objData.position.z });
@@ -67,7 +80,7 @@ Vector3 BackGround::GetRespawnPoint(const Vector3& enemyPos)
 	Vector3 respawnpoint;
 
 	//リスポーン地点から受け取った敵の座標への距離(0で初期化)
-	float distance = 0;
+	float distance = RESPAWNPOINT_INIT_DISTANCE;
 
 	//リスポーン地点の候補を走査
 	for (auto ResPos : m_respawnPoints)
