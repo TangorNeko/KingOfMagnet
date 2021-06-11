@@ -7,20 +7,28 @@ class Repulsion : public IGameObject
 	bool Start();
 	void Update();
 
-	prefab::CSkinModelRender* m_skinModelRender = nullptr;
-
-	Vector3 diff;
-
-	GameScene* m_gameScene = nullptr;
-
-	//SEを鳴らしたかどうか(2プレイヤー分)
-	bool m_isPlayss1[2] = { false,false };	//ss1
-
-	bool m_isPlayss2[2] = { false,false };	//ss2
-	prefab::CSoundSource* m_ss2[2] = { nullptr,nullptr };
-	float m_ss2Volume[2] = { 1.0f,1.0f };
 public:
-	Vector3 m_position;	
-	Quaternion m_rot;
+
+	/**
+	 * @brief 斥力床の座標を設定
+	 * @param pos 座標
+	*/
+	void SetPosition(const Vector3& pos) { m_position = pos; }
+
+	/**
+	 * @brief 斥力床のY軸回りの回転を設定
+	 * @param deg 回転角度
+	*/
+	void SetRotationDeg(const float& deg) { m_rot.SetRotationDeg(Vector3::AxisY, deg); }
+
+private:
+	prefab::CSkinModelRender* m_skinModelRender = nullptr;//斥力床のモデル
+	Vector3 m_position;//斥力床の座標
+	Quaternion m_rot;//斥力床の回転
+	prefab::CSoundSource* m_repulsionStaySE[2] = { nullptr,nullptr };//斥力床に乗り続けている時の効果音、2プレイヤー分
+	bool m_isPlayEnterSE[2] = { false,false };	//乗った瞬間のSEを鳴らしたかどうか(2プレイヤー分)
+	bool m_isPlayStaySE[2] = { false,false };	//乗り続けている時のSEを鳴らしたかどうか(2プレイヤー分)
+	float m_staySEVolume[2] = { 1.0f,1.0f };//乗り続けている時のSEのボリューム
+	GameScene* m_gameScene = nullptr;//ゲームシーン
 };
 

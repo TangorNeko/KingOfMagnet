@@ -25,6 +25,9 @@
 const int PAD_PLAYER1 = 0;
 const int PAD_PLAYER2 = 1;
 
+const int NUMBER_PLAYER1 = 0;
+const int NUMBER_PLAYER2 = 1;
+
 const int TRANSITION_TIME = 50;
 
 const int MAGNETSTATE_GRAVITY = -1;

@@ -117,8 +117,6 @@ namespace
 
 
 	//他でも使いそうなのでどこかに分離?
-	const int NUMBER_PLAYER1 = 0;
-	const int NUMBER_PLAYER2 = 1;
 	const int NUMBER_MAGNET_STATUS = 2;
 }
 GameScene::~GameScene()
@@ -217,11 +215,11 @@ bool GameScene::Start()
 	debrisblock->SetPosition(DEBRISBLOCK_CENTER_POSITION);
 
 	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
-	rep->m_position = REPULTIONFLOOR_EAST_POSITION;
-	rep->m_rot.SetRotationDeg(Vector3::AxisY, REPULTIONFLOOR_DEGREES_TO_WEST);
+	rep->SetPosition(REPULTIONFLOOR_EAST_POSITION);
+	rep->SetRotationDeg(REPULTIONFLOOR_DEGREES_TO_WEST);
 	rep = NewGO<Repulsion>(0, "repulsion");
-	rep->m_position = REPULTIONFLOOR_WEST_POSITION;
-	rep->m_rot.SetRotationDeg(Vector3::AxisY, REPULTIONFLOOR_DEGREES_TO_EAST);
+	rep->SetPosition(REPULTIONFLOOR_WEST_POSITION);
+	rep->SetRotationDeg(REPULTIONFLOOR_DEGREES_TO_EAST);
 
 	//空を作成。キューブマップじゃなくてただの板ポリ。
 	m_sky = NewGO<SkyBoard>(0);
