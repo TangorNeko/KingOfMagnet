@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BackGround.h"
 #include "Repulsion.h"
+#include "DebrisBlock.h"
 
 namespace
 {
@@ -51,11 +52,28 @@ bool BackGround::Start()
 	
 	//リスポーン地点の読み込み
 	m_level.Init("Assets/modelData/Level_00.tkl", [&](prefab::LevelObjectData& objData) {
-		if (strcmp(objData.name, "ResPos") == STRCMP_NO_DIFFERENCE) {//リスポーン地点
+		if (strcmp(objData.name, "RespawnPoint") == STRCMP_NO_DIFFERENCE) {//リスポーン地点
 
 			//リスポーン地点の候補に追加していく。
 			m_respawnPoints.push_back({ objData.position.x,0.0f,objData.position.z });
 			
+			return true;
+		}
+		if (strcmp(objData.name, "DebrisBlock") == STRCMP_NO_DIFFERENCE) {//ガレキブロック
+
+			//ガレキブロックを作成
+			DebrisBlock* debrisBlock = NewGO<DebrisBlock>(0, "debrisblock");
+			debrisBlock->SetPosition(objData.position);
+
+			return true;
+		}
+		if (strcmp(objData.name, "Repulsion") == STRCMP_NO_DIFFERENCE) {//斥力床
+
+			//斥力床を作成
+			Repulsion* repulsion = NewGO<Repulsion>(0, "repulsion");
+			repulsion->SetPosition(objData.position);
+			repulsion->SetRotation(objData.rotation);
+
 			return true;
 		}
 		return false;

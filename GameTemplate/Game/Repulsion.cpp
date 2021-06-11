@@ -25,13 +25,14 @@ bool Repulsion::Start()
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/repulsion.tkm");
 	m_skinModelRender->SetPosition(m_position);
-	m_skinModelRender->SetRotation(m_rot);
-	m_gameScene = FindGO<GameScene>("gamescene");
+	m_skinModelRender->SetRotation(m_qRot);
 
 	m_repulsionStaySE[NUMBER_PLAYER1] = NewGO<prefab::CSoundSource>(0);
 	m_repulsionStaySE[NUMBER_PLAYER1]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
 	m_repulsionStaySE[NUMBER_PLAYER2] = NewGO<prefab::CSoundSource>(0);
 	m_repulsionStaySE[NUMBER_PLAYER2]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
+
+	m_gameScene = FindGO<GameScene>("gamescene");
 
 	return true;
 }

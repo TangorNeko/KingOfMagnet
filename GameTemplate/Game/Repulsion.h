@@ -16,15 +16,18 @@ public:
 	void SetPosition(const Vector3& pos) { m_position = pos; }
 
 	/**
-	 * @brief 斥力床のY軸回りの回転を設定
-	 * @param deg 回転角度
+	 * @brief 斥力床の回転を設定
+	 * @param qRot 回転
 	*/
-	void SetRotationDeg(const float& deg) { m_rot.SetRotationDeg(Vector3::AxisY, deg); }
+	void SetRotation(const Quaternion& qRot)
+	{
+		m_qRot = qRot;
+	}
 
 private:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;//斥力床のモデル
 	Vector3 m_position;//斥力床の座標
-	Quaternion m_rot;//斥力床の回転
+	Quaternion m_qRot;//斥力床の回転
 	prefab::CSoundSource* m_repulsionStaySE[2] = { nullptr,nullptr };//斥力床に乗り続けている時の効果音、2プレイヤー分
 	bool m_isPlayEnterSE[2] = { false,false };	//乗った瞬間のSEを鳴らしたかどうか(2プレイヤー分)
 	bool m_isPlayStaySE[2] = { false,false };	//乗り続けている時のSEを鳴らしたかどうか(2プレイヤー分)
