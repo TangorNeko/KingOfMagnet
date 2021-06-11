@@ -79,25 +79,25 @@ void DebrisBlock::Update()
 						{
 							//ガレキ
 							Debris* debris = NewGO<Debris>(0, "debris");
-							debris->m_debrisState = Debris::enDrop;
-							debris->m_position = m_position;
+							debris->SetDebrisState(Debris::enDrop);
+							debris->SetPosition(m_position);
 
 							//第二抽選、ガレキの形状は?
 							int shapeLottery = rnd() % DEBRIS_SHAPE_LOTTRY_MOD_VALUE;//0~99
 							if (shapeLottery <= DEBRIS_SHAPE_LOTTRY_SCRAP)
 							{
 								//スクラップ
-								debris->m_debrisShape = Debris::enScrap;
+								debris->SetDebrisShape(Debris::enScrap);
 							}
 							else if (shapeLottery <= DEBRIS_SHAPE_LOTTRY_SWORD)
 							{
 								//剣
-								debris->m_debrisShape = Debris::enSword;
+								debris->SetDebrisShape(Debris::enSword);
 							}
 							else
 							{
 								//必殺技チャージ
-								debris->m_debrisShape = Debris::enSpecialCharger;
+								debris->SetDebrisShape(Debris::enSpecialCharger);
 							}
 						}
 						else
