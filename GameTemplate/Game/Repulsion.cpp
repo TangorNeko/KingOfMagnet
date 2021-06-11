@@ -22,16 +22,19 @@ Repulsion::~Repulsion()
 }
 bool Repulsion::Start()
 {
+	//斥力床のモデルを作成
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/repulsion.tkm");
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetRotation(m_qRot);
 
+	//斥力床に乗り続けている時のSEを作成
 	m_repulsionStaySE[NUMBER_PLAYER1] = NewGO<prefab::CSoundSource>(0);
 	m_repulsionStaySE[NUMBER_PLAYER1]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
 	m_repulsionStaySE[NUMBER_PLAYER2] = NewGO<prefab::CSoundSource>(0);
 	m_repulsionStaySE[NUMBER_PLAYER2]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
 
+	//ゲームシーンを取得
 	m_gameScene = FindGO<GameScene>("gamescene");
 
 	return true;
