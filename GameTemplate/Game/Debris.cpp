@@ -18,8 +18,6 @@ namespace
 	const Vector3 MODEL_SWORD_SCALE = { 0.5f,0.5f,0.5f };
 	const Vector3 MODEL_SPECIALCHARGER_SCALE = { 0.1f, 0.1f, 0.1f };
 	const float DEBRIS_DESTROY_HEIGHT = -1000.0f;
-	const float BIRST_AFFECT_RANGE_MIN = 50.0f;
-	const float BIRST_AFFECT_RANGE_MAX = 500.0f;
 	const float DEBRIS_BIRST_MOVE_SPEED_X = 30.0f;
 	const float DEBRIS_BIRST_MOVE_SPEED_Y = 10.0f;
 	const float DEBRIS_BIRST_MOVE_SPEED_Z = 30.0f;

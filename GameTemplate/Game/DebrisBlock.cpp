@@ -104,25 +104,25 @@ void DebrisBlock::Update()
 						{
 							//爆弾
 							Bomb* bomb = NewGO<Bomb>(0, "bomb");
-							bomb->m_bombState = Bomb::enDrop;
-							bomb->m_position = m_position;
+							bomb->SetBombState(Bomb::enDrop);
+							bomb->SetPosition(m_position);
 
 							//第二抽選、爆弾の形状は?
 							int shapeLottery = rnd() % BOMG_SHAPE_LOTTERY_MOD_VALUE;//0~99
 							if (shapeLottery <= BOMG_SHAPE_LOTTERY_GRENADE)
 							{
 								//手榴弾
-								bomb->m_bombShape = Bomb::enGrenade;
+								bomb->SetBombShape(Bomb::enGrenade);
 							}
 							else if (shapeLottery <= BOMG_SHAPE_LOTTERY_FLASHGRENADE)
 							{
 								//フラッシュグレネード
-								bomb->m_bombShape = Bomb::enFlashGrenade;
+								bomb->SetBombShape(Bomb::enFlashGrenade);
 							}
 							else
 							{
 								//焼夷弾
-								bomb->m_bombShape = Bomb::enIncendiaryGrenade;
+								bomb->SetBombShape(Bomb::enIncendiaryGrenade);
 							}
 						}
 					}

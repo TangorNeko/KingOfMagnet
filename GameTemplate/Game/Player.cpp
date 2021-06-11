@@ -893,10 +893,12 @@ void Player::ThrowBomb()
 			//選択している爆弾を発射
 			auto debris = m_holdBombVector.begin() + m_selectBombNo;
 			//保持した爆弾を発射モードにする
-			(*debris)->m_bombState = Bomb::enBullet;
+			(*debris)->SetBombState(Bomb::enBullet);
 
 			//投げ始めの位置を調整
-			(*debris)->m_position.y -= 30.0f;
+			Vector3 throwPosition = (*debris)->GetPosition();
+			throwPosition.y -= 30.0f;
+			(*debris)->SetPosition(throwPosition);
 
 			//キャラクターのスピードを遅くする。
 			m_characterSpeed = 0.5f;
@@ -910,7 +912,7 @@ void Player::ThrowBomb()
 			Vector3 front = g_camera3D[m_playerNum]->GetForward();
 			front.y += 0.5f;
 			front.Normalize();
-			(*debris)->m_moveDirection = front;
+			(*debris)->SetMoveDirection(front);
 
 			//発射した爆弾を保持リストから削除
 			m_holdBombVector.erase(m_holdBombVector.begin() + m_selectBombNo);
@@ -1040,7 +1042,7 @@ void Player::HoldBomb()
 			debrisRot.Apply(tmp);
 
 			//回転の中心点から伸ばす
-			debris->m_position = centerOfRotation + tmp;
+			debris->SetPosition(centerOfRotation + tmp);
 
 			i++;
 		}
@@ -1204,7 +1206,7 @@ void Player::MagneticBurst()
 				if (m_enemy->m_holdBombVector.size() != 0)
 				{
 					//爆弾をドロップさせる。
-					(*m_enemy->m_holdBombVector.begin())->m_bombState = Bomb::enDrop;
+					(*m_enemy->m_holdBombVector.begin())->SetBombState(Bomb::enDrop);
 
 					//ドロップさせた爆弾を相手のコンテナから削除
 					m_enemy->m_holdBombVector.erase(m_enemy->m_holdBombVector.begin());

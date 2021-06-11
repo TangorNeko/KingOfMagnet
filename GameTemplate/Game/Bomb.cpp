@@ -8,6 +8,28 @@
 #include "Explosion.h"
 #include "Flash.h"
 #include "Incendia.h"
+
+namespace
+{
+	const float BOMB_SPEED = 20.0f;
+	const Vector3 BOMB_GRENADE_SCALE = { 0.5f,0.5f,0.5f };
+	const Vector3 BOMB_FLASHGRENADE_SCALE = { 0.35f, 0.35f, 0.35f };
+	const Vector3 BOMB_INCENDIARY_SCALE = { 0.25f, 0.25f, 0.25f };
+	const float BOMB_DESTROY_HEIGHT = -1000.0f;
+	const float BOMB_BIRST_MOVE_SPEED_X = 30.0f;
+	const float BOMB_BIRST_MOVE_SPEED_Y = 10.0f;
+	const float BOMB_BIRST_MOVE_SPEED_Z = 30.0f;
+	const float BOMB_OBTAINABLE_RANGE = 100.0f;
+	const float BOMB_GROUND_GRAVITY_SPEED = 10.0f;
+	const float BOMB_COLLISION_RADIUS = 60.0f;
+	const float BOMB_FALLING_DIRECTION_MINUS_VALUE = 0.035f;
+	const float BOMB_POP_POSITION_SPACE = 30.0f;
+	const int BOMB_EXPLOSION_COUNT_EXPLOSION = 20;
+
+
+	//他のクラスでも使いそうな定数
+	const int PLAYER_HOLD_BOMB_SIZE_MAX = 3;
+}
 Bomb::~Bomb()
 {
 	DeleteGO(m_skinModelRender);
@@ -29,23 +51,17 @@ bool Bomb::Start()
 	{
 	case enGrenade:
 		m_skinModelRender->Init("Assets/modelData/Grenade.tkm");
-		m_skinModelRender->SetScale({ 0.5f, 0.5f, 0.5f });
-		//投げる角度を少し上にする。
-		m_moveDirection.y += 0.4f;
+		m_skinModelRender->SetScale(BOMB_GRENADE_SCALE);
 		m_moveDirection.Normalize();
 		break;
 	case enFlashGrenade:
 		m_skinModelRender->Init("Assets/modelData/FlashGrenade.tkm");
-		m_skinModelRender->SetScale({ 0.35f, 0.35f, 0.35f });
-		//投げる角度を少し上にする。
-		m_moveDirection.y += 0.4f;
+		m_skinModelRender->SetScale(BOMB_FLASHGRENADE_SCALE);
 		m_moveDirection.Normalize();
 		break;
 	case enIncendiaryGrenade:
 		m_skinModelRender->Init("Assets/modelData/SmokeGrenade.tkm");
-		m_skinModelRender->SetScale({ 0.25f, 0.25f, 0.25f });
-		//投げる角度を少し上にする。
-		m_moveDirection.y += 0.4f;
+		m_skinModelRender->SetScale(BOMB_INCENDIARY_SCALE);
 		m_moveDirection.Normalize();
 		break;
 	default:
@@ -100,7 +116,7 @@ void Bomb::Update()
 	m_skinModelRender->SetPosition(m_position);
 
 	//Bombが穴に落ちた時、消す。
-	if (m_position.y <= -1000.0f) {
+	if (m_position.y <= BOMB_DESTROY_HEIGHT) {
 		DeleteGO(this);
 	}
 }
@@ -114,10 +130,10 @@ void Bomb::AsDropBehave()
 		Vector3 toPlayer = player->m_position - m_position;
 
 		//引力の時のみ
-		if (player->m_magPower == -1)
+		if (player->m_magPower == MAGNETSTATE_GRAVITY)
 		{
 			//バーストしてたら引っ張ってくる
-			if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
+			if (player->m_isBurst == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 			{
 				m_isOnGround = false;
 
@@ -125,7 +141,7 @@ void Bomb::AsDropBehave()
 				moveDir.Normalize();
 
 				//x、z、yそれぞれ別々で測る
-				m_position.x += moveDir.x * 30.0f;
+				m_position.x += moveDir.x * BOMB_BIRST_MOVE_SPEED_X;
 				//壁にぶつかったとき
 				Vector3 crossPoint;
 				bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -135,7 +151,7 @@ void Bomb::AsDropBehave()
 				else
 					m_oldPosition = m_position;
 
-				m_position.z += moveDir.z * 30.0f;
+				m_position.z += moveDir.z * BOMB_BIRST_MOVE_SPEED_Z;
 				//壁にぶつかったとき
 				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 				if (isHit == true) {
@@ -144,7 +160,7 @@ void Bomb::AsDropBehave()
 				else
 					m_oldPosition = m_position;
 
-				m_position.y += moveDir.y * 10.0f;
+				m_position.y += moveDir.y * BOMB_BIRST_MOVE_SPEED_Y;
 				//地面にぶつかったとき
 				crossPoint;
 				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -156,7 +172,7 @@ void Bomb::AsDropBehave()
 			}
 
 			//近くに弾があれば3発以内なら拾える
-			if (toPlayer.Length() < 100.0f && player->m_holdBombVector.size() < 3)
+			if (toPlayer.Length() < BOMB_OBTAINABLE_RANGE && player->m_holdBombVector.size() < PLAYER_HOLD_BOMB_SIZE_MAX)
 			{
 				m_parent = player;
 				m_bombState = enHold;
@@ -169,17 +185,20 @@ void Bomb::AsDropBehave()
 		}
 
 		//斥力の時
-		else if (player->m_magPower == 1)
+		else if (player->m_magPower == MAGNETSTATE_REPULSION)
 		{
-			//バーストしてたら引っ張ってくる
-			if (player->m_isBurst == true && toPlayer.Length() > 50 && toPlayer.Length() < 500.0f)
+			//バーストしてたら弾き飛ばす
+			if (player->m_isBurst == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 			{
-				Vector3 moveDir = toPlayer;
+				//弾き飛ばすのでプレイヤーへの向きとは反対側
+				Vector3 moveDir = toPlayer * -1;
+
+				//y方向にはプレイヤーの位置依存では移動させない(床を抜ける可能性があるので)
 				moveDir.y = 0.0f;
 				moveDir.Normalize();
 
 				//x、zそれぞれ別々で測る
-				m_position.x += moveDir.x * -30.0f;
+				m_position.x += moveDir.x * BOMB_BIRST_MOVE_SPEED_X;
 				//壁にぶつかったとき
 				Vector3 crossPoint;
 				bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
@@ -189,7 +208,7 @@ void Bomb::AsDropBehave()
 				else
 					m_oldPosition = m_position;
 
-				m_position.z += moveDir.z * -30.0f;
+				m_position.z += moveDir.z * BOMB_BIRST_MOVE_SPEED_Z;
 				//壁にぶつかったとき
 				isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 				if (isHit == true) {
@@ -198,7 +217,7 @@ void Bomb::AsDropBehave()
 				else
 					m_oldPosition = m_position;
 
-				m_position.y += 10.0f;
+				m_position.y += BOMB_BIRST_MOVE_SPEED_Y;
 			}
 
 		}
@@ -207,7 +226,7 @@ void Bomb::AsDropBehave()
 	//重力処理
 	if (m_isOnGround == false)
 	{
-		m_position.y -= 5.0f;
+		m_position.y -= BOMB_GROUND_GRAVITY_SPEED;
 		Vector3 crossPoint;
 		bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
 		if (isHit == true)
@@ -227,7 +246,7 @@ void Bomb::AsBulletBehave()
 {
 	//プレイヤーとの当たり判定用
 	m_bulletCollider.SetStartPoint(m_oldPosition);
-	m_bulletCollider.SetRadius(60.0f);
+	m_bulletCollider.SetRadius(BOMB_COLLISION_RADIUS);
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
@@ -240,11 +259,12 @@ void Bomb::AsBulletBehave()
 					Vector3 toPlayer = player->m_magPosition - m_position;
 
 					//敵との距離が500未満なら
-					if (toPlayer.Length() < 500.0f)
+					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 					{						
 						//引力なら
-						if (player->m_magPower == -1)
+						if (player->m_magPower == MAGNETSTATE_GRAVITY)
 						{
+							//プレイヤーに向かうベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();
 							Vector3 newDirection = m_moveDirection + toPlayer;
 							newDirection /= 2;
@@ -253,6 +273,7 @@ void Bomb::AsBulletBehave()
 						}
 						else //斥力なら
 						{
+							//プレイヤーから離れていくベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();
 							Vector3 newDirection = m_moveDirection - toPlayer;
 							newDirection /= 2;
@@ -264,8 +285,8 @@ void Bomb::AsBulletBehave()
 
 				//移動処理(TODO:撃った弾と違うプレイヤーは1人しかいないので1回しか呼ばれないので大丈夫だが、場所の移動は検討する、
 				//その場合、QueryGOsを移動処理と当たり判定処理の2回に分けてすることになるかも)
-				m_position += m_moveDirection * m_velocity;
-				m_moveDirection.y -= 6.0f * 6.0f * 0.001f;
+				m_position += m_moveDirection * BOMB_SPEED;
+				m_moveDirection.y -= BOMB_FALLING_DIRECTION_MINUS_VALUE;
 				m_moveDirection.Normalize();
 
 				//移動先の当たり判定を更新
@@ -276,7 +297,7 @@ void Bomb::AsBulletBehave()
 				{
 					//当たった所からポップさせる
 					m_bombState = enPop;
-					m_isOnGround == false;
+					m_isOnGround = false;
 				}
 			}
 			return true;
@@ -293,7 +314,7 @@ void Bomb::AsBulletBehave()
 		moveDir.Normalize();
 
 		//当たった所より少し手前からポップさせる
-		m_position -= moveDir * 30.0f;
+		m_position -= moveDir * BOMB_POP_POSITION_SPACE;
 
 		m_bombState = enPop;
 	}
@@ -330,7 +351,7 @@ void Bomb::AsHoldBehave()
 //何かに当たった直後の挙動
 void Bomb::AsPopBehave()
 {
-	m_position.y -= 10.0f;
+	m_position.y -= BOMB_GROUND_GRAVITY_SPEED;
 
 	//ステージとの当たり判定
 	Vector3 crossPoint;
@@ -345,7 +366,7 @@ void Bomb::AsPopBehave()
 		{
 			case enGrenade:
 			m_explosionCount++;
-			if (m_explosionCount >= 20) {
+			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Explosion* explosion = NewGO<Explosion>(0);
 				explosion->m_position = crossPoint;
 				DeleteGO(this);
@@ -353,7 +374,7 @@ void Bomb::AsPopBehave()
 			break;
 			case enFlashGrenade:
 			m_explosionCount++;
-			if (m_explosionCount >= 20) {
+			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Flash* flash = NewGO<Flash>(0);
 				flash->m_position = crossPoint;
 				flash->m_parentNum = m_parent->m_playerNum;
@@ -362,7 +383,7 @@ void Bomb::AsPopBehave()
 			break;
 			case enIncendiaryGrenade:
 			m_explosionCount++;
-			if (m_explosionCount >= 20) {
+			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Incendia* incendia = NewGO<Incendia>(0);
 				incendia->m_position = crossPoint;
 				DeleteGO(this);

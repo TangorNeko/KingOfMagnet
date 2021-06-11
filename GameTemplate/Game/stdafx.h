@@ -32,3 +32,6 @@ const int TRANSITION_TIME = 50;
 
 const int MAGNETSTATE_GRAVITY = -1;
 const int MAGNETSTATE_REPULSION = 1;
+
+const float BIRST_AFFECT_RANGE_MIN = 50.0f;
+const float BIRST_AFFECT_RANGE_MAX = 500.0f;
