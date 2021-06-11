@@ -29,7 +29,7 @@ bool Debris::Start()
 	std::mt19937_64 rnd(device());
 	switch (m_debrisShape)
 	{
-	case enStone:
+	case enScrap:
 		//石のモデル
 		random = rnd() % 3;
 		if (random == 0)
@@ -299,7 +299,7 @@ void Debris::AsBulletBehave()
 					//ガレキの形状でダメージが分岐
 					switch (m_debrisShape)
 					{
-					case enStone:
+					case enScrap:
 						//音を再生
 						if (player->m_hp > 0) {
 							ssHit->Init(L"Assets/sound/ダメージ音.wav",SoundType::enSE);

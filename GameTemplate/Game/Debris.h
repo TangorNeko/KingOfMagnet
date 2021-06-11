@@ -50,13 +50,13 @@ public:
 	//ガレキの形
 	enum enDebrisShape
 	{
-		enStone,//石
+		enScrap,//石
 		enSword,//剣
 		//ここから他のアイテム(魔法の杖)など追加していく?
 		enSpecialCharger,
 	};
 
-	enDebrisShape m_debrisShape = enStone;
+	enDebrisShape m_debrisShape = enScrap;
 
 	Vector3 m_position;//座標
 	Vector3 m_oldPosition;//前フレームの座標

@@ -117,8 +117,6 @@ namespace
 
 
 	//他でも使いそうなのでどこかに分離?
-	const int MAGNETSTATE_GRAVITY = -1;
-	const int MAGNETSTATE_REPULSION = 1;
 	const int NUMBER_PLAYER1 = 0;
 	const int NUMBER_PLAYER2 = 1;
 	const int NUMBER_MAGNET_STATUS = 2;
@@ -210,13 +208,13 @@ bool GameScene::Start()
 
 	//ガレキブロック。
 	DebrisBlock* debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = DEBRISBLOCK_NORTHWEST_POSITION;
+	debrisblock->SetPosition(DEBRISBLOCK_NORTHWEST_POSITION);
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = DEBRISBLOCK_SOUTHEAST_POSITION;
+	debrisblock->SetPosition(DEBRISBLOCK_SOUTHEAST_POSITION);
 
 	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = DEBRISBLOCK_CENTER_POSITION;
+	debrisblock->SetPosition(DEBRISBLOCK_CENTER_POSITION);
 
 	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
 	rep->m_position = REPULTIONFLOOR_EAST_POSITION;
