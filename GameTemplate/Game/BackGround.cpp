@@ -55,7 +55,7 @@ bool BackGround::Start()
 		if (strcmp(objData.name, "RespawnPoint") == STRCMP_NO_DIFFERENCE) {//リスポーン地点
 
 			//リスポーン地点の候補に追加していく。
-			m_respawnPoints.push_back({ objData.position.x,0.0f,objData.position.z });
+			m_respawnPoints.push_back(objData.position);
 			
 			return true;
 		}
