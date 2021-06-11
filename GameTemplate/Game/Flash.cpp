@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "Flash.h"
 #include "Player.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 
 Flash::~Flash()
 {
@@ -49,7 +49,7 @@ bool Flash::Start()
 			return true;
 		});
 
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 	return true;	
 }
 void Flash::Update()
@@ -75,7 +75,7 @@ void Flash::Update()
 		DeleteGO(this);
 	}
 
-	if (m_gameScene->GetGameState() == SampleScene::enResult)
+	if (m_gameScene->GetGameState() == GameScene::enResult)
 	{
 		DeleteGO(this);
 	}

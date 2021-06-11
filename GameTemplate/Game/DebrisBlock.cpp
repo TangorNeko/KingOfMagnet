@@ -3,7 +3,7 @@
 
 #include <random>
 #include "Player.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "Debris.h"
 #include "Bomb.h"
 
@@ -17,7 +17,7 @@ bool DebrisBlock::Start()
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_skinModelRender->Init("Assets/modelData/scrap.tkm");
 
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 
 	return true;
 }
@@ -25,7 +25,7 @@ bool DebrisBlock::Start()
 void DebrisBlock::Update()
 {
 	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
 		return;
 	}

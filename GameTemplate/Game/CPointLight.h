@@ -67,6 +67,6 @@ namespace prefab
 
 	private:
 		PointLigData m_pointLigData;	//ポイントライトのデータ
-		int m_pointLigTag;			//ポイントライトのタグ(何番目に作られたライト?)
+		int m_pointLigTag;				//ポイントライトのタグ(何番目に作られたライト?)
 	};
 }

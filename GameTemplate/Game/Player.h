@@ -6,7 +6,7 @@ class BackGround;
 class Debris;
 class Bomb;
 class MobiusGauge;
-class SampleScene;
+class GameScene;
 
 class Player : public IGameObject
 {
@@ -150,7 +150,7 @@ public:
 
 	bool m_isLock = false; //ロックしているか。
 
-	SampleScene* m_gameScene = nullptr;
+	GameScene* m_gameScene = nullptr;
 
 	BackGround* m_stageModel;//背景のモデル(当たり判定用)
 	CharacterController m_charaCon;//プレイヤーのキャラコン

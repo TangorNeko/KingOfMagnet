@@ -7,9 +7,6 @@
 #include "SoundEngine.h"
 #include "WaveFile.h"
 #include "CSoundSource.h"
-//#include "tkEngine/tkEnginePreCompile.h"
-//#include "tkEngine/Sound/tkWaveFile.h"
-//#include "tkEngine/Sound/tkSoundSource.h"
 
 CSoundEngine* CSoundEngine::m_instance = nullptr;
 

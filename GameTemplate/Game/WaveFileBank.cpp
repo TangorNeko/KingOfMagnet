@@ -5,9 +5,6 @@
 #include "stdafx.h"
 #include "WaveFileBank.h"
 #include "WaveFile.h"
-//#include "tkEngine/tkEnginePreCompile.h"
-//#include "tkEngine/Sound/tkWaveFile.h"
-//#include "tkEngine/Sound/tkWaveFileBank.h"
 
 	CWaveFileBank::CWaveFileBank()
 	{

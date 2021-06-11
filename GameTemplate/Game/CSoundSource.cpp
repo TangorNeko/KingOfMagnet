@@ -5,9 +5,6 @@
 #include "stdafx.h"
 #include "CSoundSource.h"
 #include "SoundEngine.h"
-//#include "tkEngine/tkEnginePreCompile.h"
-//#include "tkEngine/Sound/tkSoundEngine.h"
-//#include "tkEngine/Sound/tkSoundSource.h"
 
 
 	namespace prefab {

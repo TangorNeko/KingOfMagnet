@@ -3,7 +3,7 @@
 
 #include "Player.h"
 #include "BackGround.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "Debris.h"
 
 GravityBullet::~GravityBullet()
@@ -26,7 +26,7 @@ bool GravityBullet::Start()
 
 	m_stageModel = FindGO<BackGround>("background");
 
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 
 	//エフェクト
 	m_effect = NewGO<prefab::CEffect>(0);
@@ -57,7 +57,7 @@ void GravityBullet::Update()
 	OutputDebugStringA("beforeUpdate\n");
 
 	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
 		return;
 	}

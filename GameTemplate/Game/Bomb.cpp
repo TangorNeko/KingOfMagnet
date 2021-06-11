@@ -3,7 +3,7 @@
 
 #include "Player.h"
 #include "BackGround.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 
 #include "Explosion.h"
 #include "Flash.h"
@@ -57,7 +57,7 @@ bool Bomb::Start()
 	m_stageModel = FindGO<BackGround>("background");
 
 	//ゲームシーンを取得
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 
 	return true;
 }
@@ -65,7 +65,7 @@ bool Bomb::Start()
 void Bomb::Update()
 {
 	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
 		return;
 	}

@@ -4,7 +4,6 @@
 
 #pragma once
 #include "WaveFileBank.h"
-//#include "tkEngine/Sound/tkWaveFileBank.h"
 
 #define INPUTCHANNELS 2  // number of source channels
 #define OUTPUTCHANNELS 8	//最大出力チャンネル数。

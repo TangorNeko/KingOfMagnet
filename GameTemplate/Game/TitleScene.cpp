@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "TitleScene.h"
-#include "CharacterSelect.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 #include "GameOption.h"
 
 namespace
@@ -74,9 +73,6 @@ namespace
 	const int COMMANDTIME_SPRITEMOVE_FINISH = 30;
 	const int COMMANDTIMER_START_TRANSITION = 40;
 	const int COMMANDTIMER_EXECUTE_COMMAND = 60;
-
-	//他でも使っているので分離?
-	const int TRANSITION_MOVETIME = 50;
 }
 
 TitleScene::~TitleScene() 
@@ -96,7 +92,7 @@ TitleScene::~TitleScene()
 bool TitleScene::Start()
 {	
 	//トランジション
-	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_MOVETIME,true);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME,true);
 	//背景のモデル
 	m_BG_ModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_BG_ModelRender->Init("Assets/modelData/TitleCylinder.tkm");
@@ -160,10 +156,10 @@ bool TitleScene::Start()
 	g_camera3D[0]->SetTarget(CAMERA_TITLE_TARGETPOSITION);
 
 	//BGMを再生
-	ssBGM = NewGO<prefab::CSoundSource>(0);
-	ssBGM->Init(L"Assets/sound/タイトル曲.wav", SoundType::enBGM);
-	ssBGM->SetVolume(SOUND_BGM_TITLE_VOLUME);
-	ssBGM->Play(true);	
+	m_titleBGM = NewGO<prefab::CSoundSource>(0);
+	m_titleBGM->Init(L"Assets/sound/タイトル曲.wav", SoundType::enBGM);
+	m_titleBGM->SetVolume(SOUND_BGM_TITLE_VOLUME);
+	m_titleBGM->Play(true);	
 
 	//オプションは最初から作っておく
 	//オプションの優先度は少なくともTitleSceneより後にしなければ、項目から抜けた際に同時にオプションからも抜けてしまう
@@ -431,7 +427,7 @@ void TitleScene::CommandSelectMove() {
 	
 	if (m_commandTimer == COMMANDTIMER_START_TRANSITION && m_titleCommand == TitleScene::TC_Start)
 	{
-		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_MOVETIME, false);
+		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, false);
 	}
 
 	if (m_commandTimer == COMMANDTIMER_EXECUTE_COMMAND) {
@@ -440,12 +436,12 @@ void TitleScene::CommandSelectMove() {
 		case TitleScene::TC_Start:
 			//開始
 			//BGMを消す
-			DeleteGO(ssBGM);
+			DeleteGO(m_titleBGM);
 			//switch文の中で宣言するためのスコープ
 			{
-				SampleScene* gameScene = NewGO<SampleScene>(0, "gamescene");
-				gameScene->Set1PSensitivity(m_option->GetP1Sensitivity());
-				gameScene->Set2PSensitivity(m_option->GetP2Sensitivity());
+				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
+				gameScene->SetP1Sensitivity(m_option->GetP1Sensitivity());
+				gameScene->SetP2Sensitivity(m_option->GetP2Sensitivity());
 			}
 			DeleteGO(this);
 			break;

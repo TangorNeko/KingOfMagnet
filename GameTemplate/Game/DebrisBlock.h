@@ -1,6 +1,6 @@
 #pragma once
 
-class SampleScene;
+class GameScene;
 
 class DebrisBlock : public IGameObject
 {
@@ -12,7 +12,7 @@ class DebrisBlock : public IGameObject
 
 	int m_factoryTimer = 0;//引力バーストされた時の生成タイマー
 
-	SampleScene* m_gameScene = nullptr;//ゲームシーン
+	GameScene* m_gameScene = nullptr;//ゲームシーン
 public:
 	Vector3 m_position = { 0.0f,0.0f,0.0f };//座標
 };

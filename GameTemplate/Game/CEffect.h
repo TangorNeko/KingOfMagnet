@@ -4,9 +4,6 @@
 
 #pragma once
 
-/*!
-* @brief	エフェクト。
-*/
 namespace prefab
 {
 	class CEffect :public IGameObject
@@ -15,89 +12,98 @@ namespace prefab
 		CEffect();
 		~CEffect();
 
-		/// <summary>
-		/// 初期化。
-		/// </summary>
-		/// <remark>
-		/// エフェクト再生のための準備を行います。
-		/// </remark>
-		/// <param name="filePath">ファイルパス</param>
+		/**
+		 * @brief エフェクトの初期化
+		 * @param filePath エフェクトのファイルパス
+		*/
 		void Init(const char16_t* filePath);
-		/// <summary>
-		/// 再生開始
-		/// </summary>
-		/// <remark>
-		/// この関数を呼び出すとエフェクトの再生が開始されます。
-		/// </remark>
+
+		/**
+		 * @brief エフェクトの再生
+		*/
 		void Play();
 
-		//再生を停止
+		/**
+		 * @brief エフェクトの再生を終了
+		*/
 		void Stop();
 
-		/// <summary>
-		/// 座標の設定。g_camera2Dは{0,0,1}から{0,0,0}を見ているので映らなかったらZ座標をマイナスにしてみるとうまく表示されるかもしれません。
-		/// </summary>
-		/// <param name="pos">エフェクトの2D座標</param>
+		/**
+		 * @brief エフェクトの座標を設定
+		 * @param pos 座標
+		*/
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
 		}
-		/// <summary>
-		/// 座標を取得。
-		/// </summary>
-		/// <returns></returns>
+
+		/**
+		 * @brief エフェクトの座標を取得
+		 * @return 座標
+		*/
 		const Vector3& GetPosition() const
 		{
 			return m_position;
 		}
-		/*!
-		*@brief	回転クォータニオンを設定。
+
+		/**
+		 * @brief エフェクトの回転を設定
+		 * @param rot 回転
 		*/
 		void SetRotation(const Quaternion& rot)
 		{
 			m_rotation = rot;
 		}
-		/// <summary>
-		/// 回転クォータニオンを取得。
-		/// </summary>
-		/// <returns></returns>
+		
+		/**
+		 * @brief エフェクトの回転を取得
+		 * @return 回転
+		*/
 		const Quaternion& GetRotation() const
 		{
 			return m_rotation;
 		}
-		/*!
-			*@brief	拡大率を設定。
-			*/
+		
+		/**
+		 * @brief エフェクトの拡大率を設定
+		 * @param scale 拡大率
+		*/
 		void SetScale(const Vector3& scale)
 		{
 			m_scale = scale;
 		}
-		/// <summary>
-		/// 拡大率を取得。
-		/// </summary>
-		/// <returns></returns>
+		
+		/**
+		 * @brief エフェクトの拡大率を取得
+		 * @return 拡大率
+		*/
 		const Vector3& GetScale() const
 		{
 			return m_scale;
 		}
-		/// <summary>
-		/// エフェクトが再生中か判定。
-		/// </summary>
+		
+		/**
+		 * @brief エフェクトが再生中か
+		 * @return 再生中:true 再生していない:false
+		*/
 		bool IsPlay() const
 		{
 			return EffectEngine::GetInstance()->IsPlay(m_handle);
 		}
-		/*!
-		 *@brief	更新。
-		 */
+		
+		/**
+		 * @brief エフェクトの更新
+		*/
 		void Update();
 
-		//事前にエフェクトをロードしておく。
+		/**
+		 * @brief 事前にエフェクトをロードしておく
+		 * @param filePath ロードしたいエフェクトのファイルパス
+		*/
 		static void PreLoadEffect(const char16_t* filePath)
 		{
 			EffectEngine::GetInstance()->LoadEffect(filePath);
 		}
-
 	private:
 		Effekseer::EffectRef m_effect;	//エフェクト
 		int	m_handle = -1;				//再生中のエフェクトのハンドル。

@@ -1,53 +1,44 @@
 #include "stdafx.h"
 #include "BackGround.h"
-#include "PopRandItem.h"
 #include "Repulsion.h"
 
 BackGround::~BackGround()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_sLigR);
-	DeleteGO(m_sLigL);
-	//DeleteGO(popranditem);
+	DeleteGO(m_northSpotLight);
+	DeleteGO(m_southSpotLight);
 }
 
 bool BackGround::Start()
 {
+	//ステージを作成。
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-
+	//ステージは影を発生させる
 	m_skinModelRender->SetShadowCasterFlag(true);
-	m_sLigR = NewGO<prefab::CSpotLight>(0);
-	m_sLigR->SetPosition({ 0.0f,0.0f,270.0f });
-	m_sLigR->SetColor({ 1.0f,1.0f,1.0f });
-	m_sLigR->SetRange(1000);
-	m_sLigR->SetDirection({ 0.0f,-1.0f,0.0f });
-	m_sLigR->SetAngleDeg(90.0f);
-	m_sLigL = NewGO<prefab::CSpotLight>(0);
-	m_sLigL->SetPosition({ 0.0f,0.0f,-270.0f });
-	m_sLigL->SetColor({ 1.0f,1.0f,1.0f });
-	m_sLigL->SetRange(1000);
-	m_sLigL->SetDirection({ 0.0f,-1.0f,0.0f });
-	m_sLigL->SetAngleDeg(90.0f);	//アイテムをランダムに出現させる
-	//popranditem = NewGO<PopRandItem>(0, "popranditem");
-
-	/*
-	m_pLig = NewGO<prefab::CPointLight>(0);
-	m_pLig->SetPosition({ 100.0f,0.0f,0.0f });
-	m_pLig->SetColor({ 1.0f,1.0f,1.0f });
-	m_pLig->SetRange(500);
-	*/
 	m_skinModelRender->Init("Assets/modelData/stage00.tkm");
-	//m_skinModelRender->Init("Assets/modelData/ministage.tkm");
 
+	//ステージのモデルの静的物理モデルを作成
 	m_physicsStaticObject.CreateFromModel(m_skinModelRender->GetModel(), m_skinModelRender->GetModel().GetWorldMatrix());
 
+	//ステージの北の穴を照らすスポットライト
+	m_northSpotLight = NewGO<prefab::CSpotLight>(0);
+	m_northSpotLight->SetPosition({ 0.0f,0.0f,270.0f });
+	m_northSpotLight->SetColor({ 1.0f,1.0f,1.0f });
+	m_northSpotLight->SetRange(1000);
+	m_northSpotLight->SetDirection({ 0.0f,-1.0f,0.0f });
+	m_northSpotLight->SetAngleDeg(90.0f);
+
+	//ステージの南の穴を照らすスポットライト
+	m_southSpotLight = NewGO<prefab::CSpotLight>(0);
+	m_southSpotLight->SetPosition({ 0.0f,0.0f,-270.0f });
+	m_southSpotLight->SetColor({ 1.0f,1.0f,1.0f });
+	m_southSpotLight->SetRange(1000);
+	m_southSpotLight->SetDirection({ 0.0f,-1.0f,0.0f });
+	m_southSpotLight->SetAngleDeg(90.0f);
 	
+	//リスポーン地点の読み込み
 	m_level.Init("Assets/modelData/Level_00.tkl", [&](prefab::LevelObjectData& objData) {
 		if (strcmp(objData.name, "ResPos") == 0) {//リスポーン地点
-			
-			char buff[256];
-			sprintf(buff, "x = %f, y = %f, z = %f\n", objData.position.x, objData.position.y, objData.position.z);
-			OutputDebugStringA(buff);
 
 			//リスポーン地点の候補に追加していく。
 			m_respawnPoints.push_back({ objData.position.x,0.0f,objData.position.z });
@@ -59,10 +50,12 @@ bool BackGround::Start()
 	
 	return true;
 }
+
 void BackGround::Update()
 {
 	m_skinModelRender->SetPosition(m_position);
 }
+
 bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector3& crossPoint)
 {
 	return m_skinModelRender->isLineHitModel(start, end, crossPoint);
@@ -70,22 +63,28 @@ bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector
 
 Vector3 BackGround::GetRespawnPoint(const Vector3& enemyPos)
 {
+	//リスポーン地点
 	Vector3 respawnpoint;
+
+	//リスポーン地点から受け取った敵の座標への距離(0で初期化)
 	float distance = 0;
+
+	//リスポーン地点の候補を走査
 	for (auto ResPos : m_respawnPoints)
 	{
+		//リスポーン地点の候補から敵の座標へのベクトルを取得
 		Vector3 diff = ResPos - enemyPos;
 
+		//リスポーン地点の候補から敵の座標へのベクトルの長さが、現時点での長さより長いなら
 		if (diff.Length() > distance)
 		{
+			//リスポーン地点を更新
 			respawnpoint = ResPos;
+
+			//リスポーン地点への距離を更新
 			distance = diff.Length();
 		}
 	}
-
-	char buff[256];
-	sprintf(buff, "決定地点、x = %f, y = %f, z = %f\n", respawnpoint.x, respawnpoint.y, respawnpoint.z);
-	OutputDebugStringA(buff);
 
 	return respawnpoint;
 }

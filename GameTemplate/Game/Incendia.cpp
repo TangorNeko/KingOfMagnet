@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "Incendia.h"
 #include "Player.h"
-#include "SampleScene.h"
+#include "GameScene.h"
 
 Incendia::~Incendia()
 {
@@ -23,14 +23,14 @@ bool Incendia::Start()
 	m_effect->SetScale({ 25.0f, 15.0f, 25.0f });
 	m_effect->Play();
 
-	m_gameScene = FindGO<SampleScene>("gamescene");
+	m_gameScene = FindGO<GameScene>("gamescene");
 
 	return true;
 }
 void Incendia::Update()
 {
 	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == SampleScene::GameState::enPause)
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
 		return;
 	}

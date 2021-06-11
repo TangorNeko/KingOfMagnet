@@ -31,6 +31,7 @@ public:
 			m_instance = new EffectEngine;
 		}
 	}
+
 	/// <summary>
 	/// インスタンスの取得。
 	/// </summary>
@@ -39,6 +40,7 @@ public:
 	{
 		return m_instance;
 	}
+
 	/// <summary>
 	/// インスタンスの削除。
 	/// </summary>
@@ -48,6 +50,7 @@ public:
 		m_instance = nullptr;
 
 	}
+
 	/// <summary>
 	/// エフェクトが再生中か判定。
 	/// </summary>
@@ -58,6 +61,7 @@ public:
 		//NOTE:2つのエフェクトが別々に再生されることはないのでm_manager[0]の結果を返せば大丈夫?
 		return m_manager[0]->GetShown(handle);
 	}
+
 	/// <summary>
 	/// エフェクトのワールド行列を更新。
 	/// </summary>
@@ -94,17 +98,20 @@ public:
 		m_manager[0]->SetBaseMatrix(handle, baseMat);
 		m_manager[1]->SetBaseMatrix(handle, baseMat);
 	}
+
 	/// <summary>
 	/// エフェクトを再生。
 	/// </summary>
 	/// <param name="filePath">再生したいエフェクト</param>
 	/// <returns>再生したエフェクトのハンドル。</returns>
 	int Play(Effekseer::EffectRef effect);
+
 	/// <summary>
 	/// エフェクトを停止。
 	/// </summary>
 	/// <param name="effectHandle"></param>
 	void Stop(int effectHandle);
+
 	/// <summary>
 	/// エフェクトをロード。
 	/// </summary>
@@ -115,13 +122,14 @@ public:
 	/// </summary>
 	/// <param name="deltaTime">1フレームの経過時間。</param>
 	void Update(float deltaTime,int cameraNum);
+
 	/// <summary>
 	/// 描画。
 	/// </summary>
 	void Draw(int cameraNum);
 
 	/// <summary>
-	/// エフェクトが再生中か判定。
+	/// 2Dエフェクトが再生中か判定。
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <returns></returns>
@@ -129,8 +137,9 @@ public:
 	{
 		return m_2Dmanager->GetShown(handle);
 	}
+
 	/// <summary>
-	/// エフェクトのワールド行列を更新。
+	/// 2Dエフェクトのワールド行列を更新。
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <param name="pos"></param>
@@ -164,29 +173,33 @@ public:
 
 		m_2Dmanager->SetBaseMatrix(handle, baseMat);
 	}
+
 	/// <summary>
-	/// エフェクトを再生。
+	/// 2Dエフェクトを再生。
 	/// </summary>
 	/// <param name="filePath">再生したいエフェクト</param>
 	/// <returns>再生したエフェクトのハンドル。</returns>
 	int Play2D(Effekseer::EffectRef effect);
+
 	/// <summary>
-	/// エフェクトを停止。
+	/// 2Dエフェクトを停止。
 	/// </summary>
 	/// <param name="effectHandle"></param>
 	void Stop2D(int effectHandle);
+
 	/// <summary>
-	/// エフェクトをロード。
+	/// 2Dエフェクトをロード。
 	/// </summary>
 	Effekseer::EffectRef LoadEffect2D(const char16_t* filePath);
 
 	/// <summary>
-	/// 更新
+	/// 2Dエフェクトを更新
 	/// </summary>
 	/// <param name="deltaTime">1フレームの経過時間。</param>
 	void Update2D(float deltaTime);
+
 	/// <summary>
-	/// 描画。
+	/// 2Dエフェクトを描画。
 	/// </summary>
 	void Draw2D();
 private:

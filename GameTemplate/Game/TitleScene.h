@@ -18,40 +18,27 @@ class TitleScene:public IGameObject
 	void CommandSelectMove();
 
 private:
-	prefab::CSkinModelRender* m_BG_ModelRender = nullptr;
-	prefab::CPointLight* m_BGLight = nullptr;
-	prefab::CSpriteRender* m_Monitor_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_MonitorLine_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Rogo_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Option_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Start_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Exit_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Arrow_SpriteRender = nullptr;
-
-	//メニューバーの位置
-	Vector3 m_topPos = { 440.0f,200.0f,0.0f };//上
-	Vector3 m_centerPos = { 320.0f,0.0f,0.0f };//中
-	Vector3 m_bottomPos = { 440.0f,-200.0f,0.0f };//下
-
-	//オプション画面
-	GameOption* m_option = nullptr;
-
-	//BGM
-	prefab::CSoundSource* ssBGM = nullptr;
-
 	//コマンドの種類
 	enum TitleCommand {
-		TC_Start,
-		TC_Option,
-		TC_Exit
+		TC_Start,	//スタート
+		TC_Option,	//オプション
+		TC_Exit		//終了
 	};
-
-	TitleCommand m_titleCommand = TC_Start;		//現在選択中のコマンド
-	bool m_selectFlag = false;					//コマンド決定済？
-	bool m_selectMoveFlag = false;				//コマンド移動中？
-	bool m_comandUpDown = false;				//false:上 true:下
-
-	int m_commandTimer = 0;
-
+	TitleCommand m_titleCommand = TC_Start;							//現在選択中のコマンド
+	bool m_selectFlag = false;										//コマンド決定済？
+	bool m_selectMoveFlag = false;									//コマンド移動中？
+	bool m_comandUpDown = false;									//コマンドの方向はどっち? false:上 true:下
+	int m_commandTimer = 0;											//コマンド用タイマー
+	prefab::CSkinModelRender* m_BG_ModelRender = nullptr;			//背景のモデル
+	prefab::CPointLight* m_BGLight = nullptr;						//背景のモデルを照らすライト
+	prefab::CSpriteRender* m_Monitor_SpriteRender = nullptr;		//モニターの画像
+	prefab::CSpriteRender* m_MonitorLine_SpriteRender = nullptr;	//モニターのラインの画像
+	prefab::CSpriteRender* m_Rogo_SpriteRender = nullptr;			//タイトルロゴの画像
+	prefab::CSpriteRender* m_Option_SpriteRender = nullptr;			//オプションの画像
+	prefab::CSpriteRender* m_Start_SpriteRender = nullptr;			//スタートの画像
+	prefab::CSpriteRender* m_Exit_SpriteRender = nullptr;			//終了の画像
+	prefab::CSpriteRender* m_Arrow_SpriteRender = nullptr;			//選択用の矢印の画像
+	prefab::CSoundSource* m_titleBGM = nullptr;						//BGMのサウンドソース
+	GameOption* m_option = nullptr;									//オプション画面
 };
 

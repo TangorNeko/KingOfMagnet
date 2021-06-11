@@ -1,6 +1,6 @@
 #pragma once
 
-class SampleScene;
+class GameScene;
 
 class Incendia :public IGameObject
 {
@@ -20,7 +20,7 @@ private:
 	prefab::CEffect* m_effect = nullptr;
 
 	//ÉQÅ[ÉÄÉVÅ[Éì
-	SampleScene* m_gameScene = nullptr;
+	GameScene* m_gameScene = nullptr;
 
 	bool m_deleteFlag = false;
 public:
