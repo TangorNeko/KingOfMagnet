@@ -11,30 +11,25 @@ class Bomb : public IGameObject
 	bool Start() override;
 	void Update() override;
 
-	//地面に落ちている時の挙動
+	/**
+	 * @brief 地面に落ちている時の挙動
+	*/
 	void AsDropBehave();
 
-	//弾として発射されている時の挙動
+	/**
+	 * @brief 弾として発射されている時の挙動
+	*/
 	void AsBulletBehave();
 
-	//プレイヤーに保持されている時の挙動
+	/**
+	 * @brief プレイヤーに保持されている時の挙動
+	*/
 	void AsHoldBehave();
 
-	//何かに当たった後の挙動
+	/**
+	 * @brief 何かに当たった後の挙動
+	*/
 	void AsPopBehave();
-
-	prefab::CSkinModelRender* m_skinModelRender = nullptr;//爆弾のモデル
-
-	MyCapsuleCollider m_bulletCollider;//プレイヤーとの当たり判定用のカプセル状の当たり判定
-
-	BackGround* m_stageModel = nullptr;//当たり判定用のステージのクラス
-
-	GameScene* m_gameScene = nullptr;
-
-	const float m_velocity = 20.0f;//弾速
-
-	//爆発までのカウント
-	int m_explosionCount = 0;
 public:
 	//爆弾の状態
 	enum enBombState
@@ -45,8 +40,6 @@ public:
 		enPop,//何かに当たった　爆発寸前
 	};
 
-	enBombState m_bombState = enDrop;
-
 	//爆弾の種類
 	enum enBombShape
 	{
@@ -55,16 +48,52 @@ public:
 		enIncendiaryGrenade,//焼夷弾
 	};
 
-	enBombShape m_bombShape = enGrenade;
+	/**
+	 * @brief 爆弾の座標を設定
+	 * @param pos 座標
+	*/
+	void SetPosition(const Vector3& pos) { m_position = pos; }
 
-	Vector3 m_position;//座標
-	Vector3 m_oldPosition;//前フレームの座標
+	/**
+	 * @brief 爆弾の座標を取得
+	 * @return 
+	*/
+	Vector3 GetPosition() { return m_position; }
 
-	Player* m_parent = nullptr;//親のプレイヤー(ホールド時、発射時に使用)
+	/**
+	 * @brief 爆弾の状態を設定
+	 * @param state 爆弾の状態
+	*/
+	void SetBombState(enBombState state) { m_bombState = state; }
 
-	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
+	/**
+	 * @brief 爆弾の種類を設定
+	 * @param shape 種類
+	*/
+	void SetBombShape(enBombShape shape) { m_bombShape = shape; }
 
-	//地面についているかどうか
-	bool m_isOnGround = false;
+	/**
+	 * @brief 爆弾の移動方向を設定
+	 * @param direction 移動方向
+	*/
+	void SetMoveDirection(const Vector3& direction)
+	{
+		m_moveDirection = direction;
+		m_moveDirection.Normalize();
+	}
+	
+private:
+	prefab::CSkinModelRender* m_skinModelRender = nullptr;	//爆弾のモデル
+	Vector3 m_position;										//座標
+	Vector3 m_oldPosition;									//前フレームの座標
+	Vector3 m_moveDirection = { 1.0f,0.0f,0.0f };			//移動する方向
+	enBombState m_bombState = enDrop;						//爆弾の状態
+	enBombShape m_bombShape = enGrenade;					//爆弾の種類
+	bool m_isOnGround = false;								//地面についているかどうか
+	MyCapsuleCollider m_bulletCollider;						//プレイヤーとの当たり判定用のカプセル状の当たり判定
+	BackGround* m_stageModel = nullptr;						//当たり判定用のステージのクラス
+	GameScene* m_gameScene = nullptr;						//ゲームシーン
+	int m_explosionCount = 0;								//爆発までのカウント
+	Player* m_parent = nullptr;								//親のプレイヤー(ホールド時、発射時に使用)
 };
 

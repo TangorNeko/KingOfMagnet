@@ -147,13 +147,13 @@ void GravityBullet::AsExplodeBehave()
 	//周囲のガレキを浮かせるモードに。
 	QueryGOs<Debris>("debris", [this](Debris* debris)->bool
 		{
-			Vector3 diff = m_position - debris->m_position;
+			Vector3 diff = m_position - debris->GetPosition();
 
-			if (diff.Length() < 400.0f && debris->m_debrisState == Debris::enDrop)
+			if (diff.Length() < 400.0f && debris->GetDebrisState() == Debris::enDrop)
 			{
 				//HACK:浮いてる途中に拾われないかつダメージを直で受けないようにPopにしている。
 				//正直あんまり良いとは思わない DebrisのStateを増やす?
-				debris->m_debrisState = Debris::enPop;
+				debris->SetDebrisState(Debris::enPop);
 
 				//浮かせたガレキを後ほど攻撃状態に移行させるためにコンテナに格納。
 				m_controlDebrisVector.push_back(debris);
@@ -196,8 +196,10 @@ void GravityBullet::AsGravityBehave()
 	//TODO:後から直す。
 	for (auto debris : m_controlDebrisVector)
 	{
-		debris->m_debrisState = Debris::enPop;
-		debris->m_position.y += 11.0f;
+		debris->SetDebrisState(Debris::enPop);
+		Vector3 position = debris->GetPosition();
+		position.y += 11.0f;
+		debris->SetPosition(position);
 	}
 
 	//引力状態のカウンターを進める
@@ -253,17 +255,17 @@ void GravityBullet::AsFinishBehave()
 	for (auto debris : m_controlDebrisVector)
 	{
 		//ガレキの状態をBulletに
-		debris->m_debrisState = Debris::enBullet;
+		debris->SetDebrisState(Debris::enBullet);
 
 		//どちらのプレイヤーの攻撃かをガレキに渡す。
-		debris->m_parent = m_parent;
+		debris->SetParent(m_parent);
 
 		//攻撃先は引力弾の中心(敵プレイヤーの位置に飛ぶわけではない)
-		Vector3 toGravity = m_position - debris->m_position;
+		Vector3 toGravity = m_position - debris->GetPosition();
 		toGravity.Normalize();
 
 		//ガレキに移動方向を指定。
-		debris->m_moveDirection = toGravity;
+		debris->SetMoveDirection(toGravity);
 	}
 
 	//フィニッシュ攻撃を指示したので引力弾としての役目は終わり。

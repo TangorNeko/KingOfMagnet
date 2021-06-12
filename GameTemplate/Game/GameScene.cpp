@@ -21,13 +21,6 @@ namespace
 	const Vector3 STARTDIRECTION_PLAYER2_TOCAMERA = { -1.0f,0.0f,0.0f };
 	const Vector3 STARTDIRECTION_PLAYER1_MODEL = { -1.0f,0.0f,0.0f };
 	const Vector3 STARTDIRECTION_PLAYER2_MODEL = { 1.0f,0.0f,0.0f };
-	const Vector3 DEBRISBLOCK_NORTHWEST_POSITION = { -700.0f,0.0f,600.0f };
-	const Vector3 DEBRISBLOCK_SOUTHEAST_POSITION = { 700.0f,0.0f,-600.0f };
-	const Vector3 DEBRISBLOCK_CENTER_POSITION = { 0.0f,160.0f,0.0f };
-	const Vector3 REPULTIONFLOOR_EAST_POSITION = { 310.0f,1.0f,0.0f };
-	const Vector3 REPULTIONFLOOR_WEST_POSITION = { -310.0f,1.0f,0.0f };
-	const float REPULTIONFLOOR_DEGREES_TO_WEST = -90.0f;
-	const float REPULTIONFLOOR_DEGREES_TO_EAST = 90.0f;
 	const Vector3 SPRITE_DELIMITLINE_POSITION = { 0.0f,0.0f,0.0f };
 	const int SPRITE_DELIMITELINE_WIDTH = 40;
 	const int SPRITE_DELIMITELINE_HEIGHT = 720;
@@ -117,10 +110,6 @@ namespace
 
 
 	//他でも使いそうなのでどこかに分離?
-	const int MAGNETSTATE_GRAVITY = -1;
-	const int MAGNETSTATE_REPULSION = 1;
-	const int NUMBER_PLAYER1 = 0;
-	const int NUMBER_PLAYER2 = 1;
 	const int NUMBER_MAGNET_STATUS = 2;
 }
 GameScene::~GameScene()
@@ -205,25 +194,8 @@ bool GameScene::Start()
 	m_player2->m_enemy = m_player1;
 	m_player1->m_enemy = m_player2;
 	
-	//ステージの表示
+	//ステージの作成
 	m_backGround = NewGO<BackGround>(0, "background");
-
-	//ガレキブロック。
-	DebrisBlock* debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = DEBRISBLOCK_NORTHWEST_POSITION;
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = DEBRISBLOCK_SOUTHEAST_POSITION;
-
-	debrisblock = NewGO<DebrisBlock>(0, "debrisblock");
-	debrisblock->m_position = DEBRISBLOCK_CENTER_POSITION;
-
-	Repulsion* rep = NewGO<Repulsion>(0, "repulsion");
-	rep->m_position = REPULTIONFLOOR_EAST_POSITION;
-	rep->m_rot.SetRotationDeg(Vector3::AxisY, REPULTIONFLOOR_DEGREES_TO_WEST);
-	rep = NewGO<Repulsion>(0, "repulsion");
-	rep->m_position = REPULTIONFLOOR_WEST_POSITION;
-	rep->m_rot.SetRotationDeg(Vector3::AxisY, REPULTIONFLOOR_DEGREES_TO_EAST);
 
 	//空を作成。キューブマップじゃなくてただの板ポリ。
 	m_sky = NewGO<SkyBoard>(0);

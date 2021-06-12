@@ -11,30 +11,25 @@ class Debris : public IGameObject
 	bool Start() override;
 	void Update() override;
 
-	//地面に落ちている時の挙動
+	/**
+	 * @brief 地面に落ちている時の挙動
+	*/
 	void AsDropBehave();
 
-	//弾として発射されている時の挙動
+	/**
+	 * @brief 弾として発射されている時の挙動
+	*/
 	void AsBulletBehave();
 
-	//プレイヤーに保持されている時の挙動
+	/**
+	 * @brief プレイヤーに保持されている時の挙動
+	*/
 	void AsHoldBehave();
 
-	//何かに当たった後の挙動
+	/**
+	 * @brief 何かに当たった後の挙動
+	*/
 	void AsPopBehave();
-
-	prefab::CSkinModelRender* m_skinModelRender = nullptr;//ガレキのモデル
-
-	MyCapsuleCollider m_bulletCollider;//プレイヤーとの当たり判定用のカプセル状の当たり判定
-
-	BackGround* m_stageModel = nullptr;//当たり判定用のステージのクラス
-
-	GameScene* m_gameScene = nullptr;
-
-	const float m_velocity = 50.0f;//弾速
-
-	//スペシャルチャージャー用
-	float m_specialChargeCount = 0.0f;	//スペシャルゲージを増やすまでのカウント
 public:
 	//ガレキの状態
 	enum enDebrisState
@@ -45,27 +40,79 @@ public:
 		enPop,//何かに当たった後
 	};
 
-	enDebrisState m_debrisState = enDrop;
-
 	//ガレキの形
 	enum enDebrisShape
 	{
-		enStone,//石
+		enScrap,//石
 		enSword,//剣
 		//ここから他のアイテム(魔法の杖)など追加していく?
 		enSpecialCharger,
 	};
 
-	enDebrisShape m_debrisShape = enStone;
+	/**
+	 * @brief ガレキの座標を設定
+	 * @param pos 座標
+	*/
+	void SetPosition(const Vector3& pos) { m_position = pos; }
 
-	Vector3 m_position;//座標
-	Vector3 m_oldPosition;//前フレームの座標
+	/**
+	 * @brief ガレキの座標を取得
+	 * @return 座標
+	*/
+	Vector3 GetPosition() { return m_position; }
 
-	Player* m_parent = nullptr;//親のプレイヤー(ホールド時、発射時に使用)
+	/**
+	 * @brief ガレキの状態を設定
+	 * @param state ガレキの状態
+	*/
+	void SetDebrisState(enDebrisState state) { m_debrisState = state; }
 
-	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };//移動する方向
+	/**
+	 * @brief ガレキの状態を取得
+	 * @return ガレキの状態
+	*/
+	enDebrisState GetDebrisState() { return m_debrisState; }
 
-	//地面についているかどうか
-	bool m_isOnGround = false;
+	/**
+	 * @brief ガレキの形状を設定
+	 * @param shape ガレキの形状
+	*/
+	void SetDebrisShape(enDebrisShape shape) { m_debrisShape = shape; }
+
+	/**
+	 * @brief ガレキを所有するプレイヤーを取得
+	 * @param player プレイヤー
+	*/
+	void SetParent(Player* player) { m_parent = player; }
+
+	/**
+	 * @brief ガレキの移動方向を設定
+	 * @param direction 移動方向 
+	*/
+	void SetMoveDirection(const Vector3 direction) 
+	{
+		m_moveDirection = direction;
+		m_moveDirection.Normalize();
+	}
+
+	/**
+	 * @brief ガレキが地面に存在するかのフラグを設定
+	 * @param flag フラグ
+	*/
+	void SetOnGroundFlag(bool flag) { m_isOnGround = flag; }
+private:
+	prefab::CSkinModelRender* m_skinModelRender = nullptr;	//ガレキのモデル
+	Vector3 m_position;										//座標
+	Vector3 m_oldPosition;									//前フレームの座標
+	Vector3 m_moveDirection = { 1.0f,0.0f,0.0f };			//移動する方向
+	enDebrisState m_debrisState = enDrop;					//ガレキの状態
+	enDebrisShape m_debrisShape = enScrap;					//ガレキの形状
+	bool m_isOnGround = false;								//地面についているかどうか
+	MyCapsuleCollider m_bulletCollider;						//プレイヤーとの当たり判定用のカプセル状の当たり判定
+	BackGround* m_stageModel = nullptr;						//当たり判定用のステージのクラス
+	GameScene* m_gameScene = nullptr;						//ゲームシーン
+	//スペシャルチャージャー用
+	int m_specialChargeCount = 0;							//スペシャルゲージを増やすまでのカウント
+	Player* m_parent = nullptr;								//親のプレイヤー(ホールド時、発射時に使用)
 };
 

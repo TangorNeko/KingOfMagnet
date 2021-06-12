@@ -610,7 +610,7 @@ void Player::Attack()
 			//一番最初に保持したガレキを発射
 			auto debris = m_holdDebrisVector.front();
 			//保持したガレキを発射モードにする
-			debris->m_debrisState = Debris::enBullet;
+			debris->SetDebrisState(Debris::enBullet);
 
 			//キャラクターのスピードを遅くする。
 			m_characterSpeed = 0.5f;
@@ -630,14 +630,13 @@ void Player::Attack()
 			if (hitFlag)
 			{
 				//照準の指す方向に飛ばす
-				debris->m_moveDirection = crossPoint - debris->m_position;
-				debris->m_moveDirection.Normalize();
+				debris->SetMoveDirection(crossPoint - debris->GetPosition());
 			}
 			else //ない。
 			{
-				debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-				debris->m_moveDirection.y = 0.0f;
-				debris->m_moveDirection.Normalize();
+				Vector3 moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				moveDirection.y = 0.0f;
+				debris->SetMoveDirection(moveDirection);
 			}
 
 			//発射したガレキを保持リストから削除
@@ -823,9 +822,8 @@ void Player::SpecialAttack()
 					for (auto debris : m_holdDebrisVector)
 					{
 						m_AttackNum++;//攻撃回数
-						debris->m_debrisState = Debris::enBullet;
-						debris->m_moveDirection = crossPoint - debris->m_position;
-						debris->m_moveDirection.Normalize();
+						debris->SetDebrisState(Debris::enBullet);
+						debris->SetMoveDirection(crossPoint - debris->GetPosition());
 					}
 				}
 				else
@@ -833,10 +831,10 @@ void Player::SpecialAttack()
 					for (auto debris : m_holdDebrisVector)
 					{
 						m_AttackNum++;//攻撃回数
-						debris->m_debrisState = Debris::enBullet;
-						debris->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-						debris->m_moveDirection.y = 0.0f;
-						debris->m_moveDirection.Normalize();
+						debris->SetDebrisState(Debris::enBullet);
+						Vector3 moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+						moveDirection.y = 0.0f;
+						debris->SetMoveDirection(moveDirection);
 					}
 				}
 
@@ -895,10 +893,12 @@ void Player::ThrowBomb()
 			//選択している爆弾を発射
 			auto debris = m_holdBombVector.begin() + m_selectBombNo;
 			//保持した爆弾を発射モードにする
-			(*debris)->m_bombState = Bomb::enBullet;
+			(*debris)->SetBombState(Bomb::enBullet);
 
 			//投げ始めの位置を調整
-			(*debris)->m_position.y -= 30.0f;
+			Vector3 throwPosition = (*debris)->GetPosition();
+			throwPosition.y -= 30.0f;
+			(*debris)->SetPosition(throwPosition);
 
 			//キャラクターのスピードを遅くする。
 			m_characterSpeed = 0.5f;
@@ -912,7 +912,7 @@ void Player::ThrowBomb()
 			Vector3 front = g_camera3D[m_playerNum]->GetForward();
 			front.y += 0.5f;
 			front.Normalize();
-			(*debris)->m_moveDirection = front;
+			(*debris)->SetMoveDirection(front);
 
 			//発射した爆弾を保持リストから削除
 			m_holdBombVector.erase(m_holdBombVector.begin() + m_selectBombNo);
@@ -961,8 +961,7 @@ void Player::HoldDebris()
 			//次に発射するガレキのみ自分の前に。
 			if(i == 0)
 			{ 
-				debris->m_position = m_magPosition;
-				debris->m_position += cameraDir * 100.0f;
+				debris->SetPosition(m_magPosition + (cameraDir * 100));
 			}
 			else
 			{
@@ -977,7 +976,7 @@ void Player::HoldDebris()
 				debrisRot.Apply(tmp);
 
 				//回転の中心点から伸ばす
-				debris->m_position = centerOfRotation + tmp;
+				debris->SetPosition(centerOfRotation + tmp);
 			}
 
 			i++;
@@ -1043,7 +1042,7 @@ void Player::HoldBomb()
 			debrisRot.Apply(tmp);
 
 			//回転の中心点から伸ばす
-			debris->m_position = centerOfRotation + tmp;
+			debris->SetPosition(centerOfRotation + tmp);
 
 			i++;
 		}
@@ -1158,8 +1157,8 @@ void Player::MagneticBurst()
 					{
 						m_StealNum++;//敵の弾を奪った回数
 						//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
-						(*iterator)->m_isOnGround = false;
-						(*iterator)->m_debrisState = Debris::enDrop;
+						(*iterator)->SetOnGroundFlag(false);
+						(*iterator)->SetDebrisState(Debris::enDrop);
 
 						//カウントをすすめる
 						i++;
@@ -1207,7 +1206,7 @@ void Player::MagneticBurst()
 				if (m_enemy->m_holdBombVector.size() != 0)
 				{
 					//爆弾をドロップさせる。
-					(*m_enemy->m_holdBombVector.begin())->m_bombState = Bomb::enDrop;
+					(*m_enemy->m_holdBombVector.begin())->SetBombState(Bomb::enDrop);
 
 					//ドロップさせた爆弾を相手のコンテナから削除
 					m_enemy->m_holdBombVector.erase(m_enemy->m_holdBombVector.begin());

@@ -21,8 +21,17 @@
 #include "TransitionGenerator.h"
 
 
-//TODO:定数　仮でstdafx.hに置く、場所は検討
+//TODO:定数　いろんな所で使えそうな定数は仮でstdafx.hに置く、場所は検討
 const int PAD_PLAYER1 = 0;
 const int PAD_PLAYER2 = 1;
 
+const int NUMBER_PLAYER1 = 0;
+const int NUMBER_PLAYER2 = 1;
+
 const int TRANSITION_TIME = 50;
+
+const int MAGNETSTATE_GRAVITY = -1;
+const int MAGNETSTATE_REPULSION = 1;
+
+const float BIRST_AFFECT_RANGE_MIN = 50.0f;
+const float BIRST_AFFECT_RANGE_MAX = 500.0f;
