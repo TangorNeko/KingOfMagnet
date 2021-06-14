@@ -1441,9 +1441,9 @@ void Player::Damage(int damage)
 
 	//与えたダメージ量を相手に表示する
 	DamageDisplay* damagedisplay = NewGO<DamageDisplay>(0, "damagedisplay");
-	damagedisplay->m_damagePos = m_position;
-	damagedisplay->m_enemyNum = m_enemy->m_playerNum;
-	damagedisplay->m_damage = damage;
+	damagedisplay->SetDamagePosition(m_position);
+	damagedisplay->SetEnemyNum(m_enemy->m_playerNum);
+	damagedisplay->SetDamage(damage);
 
 	//HP200以下で赤くなる
 	if (m_hp <= 200 && m_hpBarRedFlag == false) {
