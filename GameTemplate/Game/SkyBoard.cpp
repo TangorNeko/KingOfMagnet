@@ -1,14 +1,22 @@
 #include "stdafx.h"
 #include "SkyBoard.h"
 
+namespace
+{
+	const float SKY_TEXTURE_SIZE = 2824.0f;
+	const Vector3 POSITION_SKY = { 0.0f,10000.0f,0.0f };
+	const float SKY_SCROLL_VALUE = 0.1f;
+}
+
 bool SkyBoard::Start()
 {
 	ModelInitData skyInitData;
 	skyInitData.m_tkmFilePath = "Assets/modelData/SkyBoard.tkm";
 
 	//ここでテクスチャのサイズを指定。
-	m_skyData.textureSize = 2824.0f;
+	m_skyData.textureSize = SKY_TEXTURE_SIZE;
 
+	//空の初期化データを作成
 	skyInitData.m_fxFilePath = "Assets/shader/SkyBoard.fx";
 	skyInitData.m_vsEntryPointFunc = "VSMain";
 	skyInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
@@ -17,22 +25,22 @@ bool SkyBoard::Start()
 	skyInitData.m_expandConstantBuffer[0] = &m_skyData;
 	skyInitData.m_expandConstantBufferSize[0] = sizeof(m_skyData);
 
-	m_skyModel[0].Init(skyInitData);
-	m_skyModel[1].Init(skyInitData);
-
-	m_skyModel[0].UpdateWorldMatrix({ 0.0f,10000.0f,0.0f }, Quaternion::Identity,Vector3::One);
-	m_skyModel[1].UpdateWorldMatrix({ 0.0f,10000.0f,0.0f }, Quaternion::Identity, Vector3::One);
-
+	//空のモデルを2画面分初期化
+	for (auto& skymodel : m_skyModel)
+	{
+		skymodel.Init(skyInitData);
+		skymodel.UpdateWorldMatrix(POSITION_SKY, Quaternion::Identity, Vector3::One);
+	}
 
 	return true;
 }
 
 void SkyBoard::Update()
 {
-	//テクスチャを0.25ずつスクロール。
-	m_skyData.scrollingValue += 0.1f;
+	//テクスチャをスクロールさせる
+	m_skyData.scrollingValue += SKY_SCROLL_VALUE;
 
-	//空のテクスチャのサイズがを超えたら0にするようにしている。
+	//スクロール量が空のテクスチャのサイズを超えたら一周したので0にするようにしている。
 	if (m_skyData.scrollingValue >= m_skyData.textureSize)
 	{
 		m_skyData.scrollingValue = 0;
@@ -45,11 +53,11 @@ void SkyBoard::Render(RenderContext& rc, Camera* camera)
 	{
 	case RenderContext::eStep_RenderViewport1:
 		//1P画面用。
-		m_skyModel[0].Draw(rc, camera);
+		m_skyModel[NUMBER_PLAYER1].Draw(rc, camera);
 		break;
 	case RenderContext::eStep_RenderViewport2:
 		//2P画面用。
-		m_skyModel[1].Draw(rc, camera);
+		m_skyModel[NUMBER_PLAYER2].Draw(rc, camera);
 		break;
 	default:
 		break;
