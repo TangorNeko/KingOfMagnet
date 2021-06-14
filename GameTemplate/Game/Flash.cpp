@@ -4,6 +4,19 @@
 #include "Player.h"
 #include "GameScene.h"
 
+namespace
+{
+	const Vector3 CENTER_OF_SCREEN = { 0.0f,0.0f,0.0f };
+	const float SOUND_SE_FLASH1_VOLUME = 0.3f;
+	const float SOUND_SE_FLASH2_VOLUME = 0.4f;
+	const Vector3 EFFECT_FLASH_SCALE = { 25.0f,25.0f,25.0f };
+	const float FLASH_AFFECT_ANGLE = 0.2f;
+	const int SPRITE_FLASH_WIDTH = 640;
+	const int SPRITE_FLASH_HEIGHT = 720;
+	const Vector3 SPRITE_COLOR_WHITE = { 1.0f,1.0f,1.0f };
+	const float FLASH_DECAY_VALUE = 0.002f;
+}
+
 Flash::~Flash()
 {
 	DeleteGO(m_spriteRender);
@@ -13,20 +26,20 @@ Flash::~Flash()
 bool Flash::Start()
 {
 	//âπÇçƒê∂
-	prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);;
-	ss1->Init(L"Assets/sound/ëMåıíe.wav", SoundType::enSE);
-	ss1->SetVolume(0.3f);
-	ss1->Play(false);
-	prefab::CSoundSource* ss2 = NewGO<prefab::CSoundSource>(0);;
-	ss2->Init(L"Assets/sound/ëMåıíe2.wav", SoundType::enSE);
-	ss2->SetVolume(0.4f);
-	ss2->Play(false);
+	prefab::CSoundSource* flashSound1 = NewGO<prefab::CSoundSource>(0);;
+	flashSound1->Init(L"Assets/sound/ëMåıíe.wav", SoundType::enSE);
+	flashSound1->SetVolume(SOUND_SE_FLASH1_VOLUME);
+	flashSound1->Play(false);
+	prefab::CSoundSource* flashSound2 = NewGO<prefab::CSoundSource>(0);;
+	flashSound2->Init(L"Assets/sound/ëMåıíe2.wav", SoundType::enSE);
+	flashSound2->SetVolume(SOUND_SE_FLASH2_VOLUME);
+	flashSound2->Play(false);
 
 	//ÉGÉtÉFÉNÉgÇçƒê∂
 	m_effect = NewGO<prefab::CEffect>(0);
 	m_effect->Init(u"Assets/effect/ëMåı.efk");
 	m_effect->SetPosition(m_position);
-	m_effect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_effect->SetScale(EFFECT_FLASH_SCALE);
 	m_effect->Play();
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
@@ -37,14 +50,13 @@ bool Flash::Start()
 			float n = player->m_front.Dot(angle);
 
 			if (m_parentNum != player->m_playerNum &&
-				n > 0.2f)
+				n > FLASH_AFFECT_ANGLE)
 			{
 				m_flashFlag = true;
 				m_spriteRender = NewGO<prefab::CSpriteRender>(0);
 				m_spriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(player->m_playerNum));
-				m_position_sprite = { 0,0,0 };//âÊñ ÇÃíÜêS
-				m_spriteRender->SetPosition(m_position_sprite);
-				m_spriteRender->Init("Assets/Image/White.dds", 640, 720);
+				m_spriteRender->SetPosition(CENTER_OF_SCREEN);
+				m_spriteRender->Init("Assets/Image/White.dds", SPRITE_FLASH_WIDTH, SPRITE_FLASH_HEIGHT);
 			}
 			return true;
 		});
@@ -59,8 +71,8 @@ void Flash::Update()
 		if (m_flashFlag == true)
 		{
 			//AlphaÇå∏ÇÁÇµÇƒèôÅXÇ…âÊëúÇîñÇ≠Ç∑ÇÈ
-			m_spriteRender->SetMulColor({ 1.0f,1.0f,1.0f,m_Alpha });
-			m_Alpha -= 0.002;
+			m_spriteRender->SetMulColor({ SPRITE_COLOR_WHITE.x,SPRITE_COLOR_WHITE.y,SPRITE_COLOR_WHITE.z,m_Alpha });
+			m_Alpha -= FLASH_DECAY_VALUE;
 			if (m_Alpha < 0)
 			{
 				m_deleteFlag = true;

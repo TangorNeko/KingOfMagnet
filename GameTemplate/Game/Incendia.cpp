@@ -4,6 +4,16 @@
 #include "Player.h"
 #include "GameScene.h"
 
+namespace
+{
+	const float SOUND_SE_BURN_VOLUME = 1.0f;
+	const Vector3 EFFECT_BURN_SCALE = { 25.0f, 15.0f, 25.0f };
+	const float BURN_RANGE = 250.0f;
+	const int BURN_DAMAGE = 30;
+	const int DAMAGE_COUNT_DAMAGE = 0;
+	const int DAMAGE_COUNT_RESET = 30;
+}
+
 Incendia::~Incendia()
 {
 	m_effect->Stop();
@@ -12,15 +22,16 @@ Incendia::~Incendia()
 bool Incendia::Start()
 {
 	//音を再生
-	prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);
-	ss->Init(L"Assets/sound/炎.wav", SoundType::enSE);
-	ss->Play(false);
+	prefab::CSoundSource* burnSound = NewGO<prefab::CSoundSource>(0);
+	burnSound->Init(L"Assets/sound/炎.wav", SoundType::enSE);
+	burnSound->SetVolume(SOUND_SE_BURN_VOLUME);
+	burnSound->Play(false);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
 	m_effect->Init(u"Assets/effect/焼夷.efk");
 	m_effect->SetPosition(m_position);
-	m_effect->SetScale({ 25.0f, 15.0f, 25.0f });
+	m_effect->SetScale(EFFECT_BURN_SCALE);
 	m_effect->Play();
 
 	m_gameScene = FindGO<GameScene>("gamescene");
@@ -34,27 +45,31 @@ void Incendia::Update()
 	{
 		return;
 	}
+
+
 	if (m_deleteFlag == false)
 	{
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
-				//ダメージを食らう間隔
-				if (m_damageCountdown[player->m_playerNum] > 0)
+				//ダメージを食らう間隔をカウント
+				if (m_damageCountdown[player->m_playerNum] > DAMAGE_COUNT_DAMAGE)
+				{
 					m_damageCountdown[player->m_playerNum]--;
+				}
 
 				//プレイヤーが近ければ
 				Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
 				float dis = diff.Length();		//disはdistance(距離)
 				dis = fabsf(dis);
-				if (dis <= 250.0f)
+				if (dis <= BURN_RANGE)
 				{
 					//少しずつダメージを受ける。		
-					if (m_damageCountdown[player->m_playerNum] <= 0)
+					if (m_damageCountdown[player->m_playerNum] <= DAMAGE_COUNT_DAMAGE)
 					{
-						player->Damage(30);
+						player->Damage(BURN_DAMAGE);
 						player->m_TakeAttackNum++;//攻撃を受けた回数
 						//次に炎上ダメージを受けるまでの間隔を設定
-						m_damageCountdown[player->m_playerNum] = 30;
+						m_damageCountdown[player->m_playerNum] = DAMAGE_COUNT_RESET;
 					}
 				}
 				return true;
@@ -67,7 +82,7 @@ void Incendia::Update()
 			m_deleteFlag = true;
 	}
 
-	else if (m_deleteFlag == true && m_effect->IsPlay() == false	)
+	else if (m_deleteFlag == true && m_effect->IsPlay() == false)
 	{
 		DeleteGO(this);
 	}

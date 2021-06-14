@@ -3,6 +3,13 @@
 #include "Explosion.h"
 #include "Player.h"
 
+namespace
+{
+	const float SOUND_SE_EXPLOSION_VOLUME = 1.1f;
+	const Vector3 EFFECT_EXPLOSION_SCALE = { 35.0f,35.0f,35.0f };
+	const float EXPLOSION_RANGE = 300.0f;
+}
+
 Explosion::~Explosion()
 {
 	m_effect->Stop();
@@ -11,16 +18,16 @@ Explosion::~Explosion()
 bool Explosion::Start()
 {
 	//音を再生
-	prefab::CSoundSource* ssExplosion = NewGO<prefab::CSoundSource>(0);;
-	ssExplosion->Init(L"Assets/sound/爆発音.wav", SoundType::enSE);
-	ssExplosion->SetVolume(1.1f);
-	ssExplosion->Play(false);
+	prefab::CSoundSource* explosionSound = NewGO<prefab::CSoundSource>(0);;
+	explosionSound->Init(L"Assets/sound/爆発音.wav", SoundType::enSE);
+	explosionSound->SetVolume(SOUND_SE_EXPLOSION_VOLUME);
+	explosionSound->Play(false);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
 	m_effect->Init(u"Assets/effect/爆発.efk");
 	m_effect->SetPosition(m_position);
-	m_effect->SetScale({ 35.0f, 35.0f, 35.0f });
+	m_effect->SetScale(EFFECT_EXPLOSION_SCALE);
 	m_effect->Play();
 
 	return true;
@@ -35,9 +42,9 @@ void Explosion::Update()
 				Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
 				float dis = diff.Length();		//disはdistance(距離)
 				dis = fabsf(dis);
-				if (dis <= 300.0f)
+				if (dis <= EXPLOSION_RANGE)
 				{
-					player->Damage(300 - dis);
+					player->Damage(EXPLOSION_RANGE - dis);
 					player->m_TakeAttackNum++;//攻撃を受けた回数
 				}
 				return true;

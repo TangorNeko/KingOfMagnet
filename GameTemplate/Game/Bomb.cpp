@@ -368,7 +368,7 @@ void Bomb::AsPopBehave()
 			m_explosionCount++;
 			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Explosion* explosion = NewGO<Explosion>(0);
-				explosion->m_position = crossPoint;
+				explosion->SetPosition(crossPoint);
 				DeleteGO(this);
 			}
 			break;
@@ -376,8 +376,8 @@ void Bomb::AsPopBehave()
 			m_explosionCount++;
 			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Flash* flash = NewGO<Flash>(0);
-				flash->m_position = crossPoint;
-				flash->m_parentNum = m_parent->m_playerNum;
+				flash->SetPosition(crossPoint);
+				flash->SetParentNum(m_parent->m_playerNum);
 				DeleteGO(this);
 			}
 			break;
@@ -385,7 +385,7 @@ void Bomb::AsPopBehave()
 			m_explosionCount++;
 			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Incendia* incendia = NewGO<Incendia>(0);
-				incendia->m_position = crossPoint;
+				incendia->SetPosition(crossPoint);
 				DeleteGO(this);
 			}
 			break;
