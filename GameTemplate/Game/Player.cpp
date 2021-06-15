@@ -753,8 +753,8 @@ void Player::SpecialAttack()
 			m_SPEffect->Play();
 
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
-			gravityBullet->m_position = m_magPosition;
-			gravityBullet->m_parent = this;
+			gravityBullet->SetPosition(m_magPosition);
+			gravityBullet->SetParent(this);
 
 			//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 			Vector3 crossPoint;
@@ -764,14 +764,16 @@ void Player::SpecialAttack()
 			if (hitFlag)
 			{
 				//照準の指す方向に飛ばす
-				gravityBullet->m_moveDirection = crossPoint - gravityBullet->m_position;
-				gravityBullet->m_moveDirection.Normalize();
+				Vector3 gravityMoveDirection = crossPoint - gravityBullet->GetPosition();
+				gravityMoveDirection.Normalize();
+				gravityBullet->SetMoveDirection(gravityMoveDirection);
 			}
 			else
 			{
-				gravityBullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-				gravityBullet->m_moveDirection.y = 0.0f;
-				gravityBullet->m_moveDirection.Normalize();
+				Vector3 gravityMoveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				gravityMoveDirection.y = 0.0f;
+				gravityMoveDirection.Normalize();
+				gravityBullet->SetMoveDirection(gravityMoveDirection);
 			}
 
 			//撃ったので必殺技ゲージを0に

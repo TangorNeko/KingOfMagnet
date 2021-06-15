@@ -6,56 +6,68 @@
 #include "GameScene.h"
 #include "Debris.h"
 
+namespace
+{
+	const Vector3 MODEL_GRAVITY_SCALE = { 0.05f,0.05f,0.05f, };
+	const float MODEL_GRAVITY_ROTATE_ANGLE = 0.2f;
+	const float SOUND_SE_GRAVITY_VOLUME = 1.5f;
+	const Vector3 EFFECT_GRAVITY_SCALE = { 25.0f,25.0f,25.0f };
+	const float GRAVITYBULLET_COLLISION_RADIUS = 30.0f;
+	const float GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MIN = 60.0f;
+	const float GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX = 400.0f;
+	const float GRAVITYBULLET_FLOAT_DEBRIS_SPEED = 11.0f;
+	const float GRAVITYBULLET_SPEED = 30.0f;
+	const float GRAVITYBULLET_BACUUMSPEED = 6.5f;
+	const int GRAVITYATTACKCOUNT_ATTACK = 180;
+	const int GRAVITYATTACKCOUNT_BACUUM = 30;
+	const int EFFECT_GRAVITY1_INTERVAL = 30;
+	const int EFFECT_GRAVITY2_INTERVAL = 60;
+	const int EFFECT_GRAVITY_PLAY = 0;
+}
+
 GravityBullet::~GravityBullet()
 {
-	DeleteGO(m_effect);
-
-	DeleteGO(m_effect2);
+	DeleteGO(m_gravityEffect);
+	DeleteGO(m_gravityEffect2);
 	DeleteGO(m_wearingEffect);
 	DeleteGO(m_inflateEffect);
 }
 
 bool GravityBullet::Start()
 {
-	OutputDebugStringA("beforeStart\n");
-
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
 
 	m_skinModelRender->Init("Assets/modelData/Gravity2.tkm");
-	m_skinModelRender->SetScale({ 0.05f,0.05f,0.05f, });
+	m_skinModelRender->SetScale(MODEL_GRAVITY_SCALE);
 
 	m_stageModel = FindGO<BackGround>("background");
 
 	m_gameScene = FindGO<GameScene>("gamescene");
 
 	//エフェクト
-	m_effect = NewGO<prefab::CEffect>(0);
-	m_effect->Init(u"Assets/effect/引力弾.efk");
-	m_effect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_gravityEffect = NewGO<prefab::CEffect>(0);
+	m_gravityEffect->Init(u"Assets/effect/引力弾.efk");
+	m_gravityEffect->SetScale(EFFECT_GRAVITY_SCALE);
 
-	m_effect2 = NewGO<prefab::CEffect>(0);
-	m_effect2->Init(u"Assets/effect/引力弾.efk");
-	m_effect2->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_gravityEffect2 = NewGO<prefab::CEffect>(0);
+	m_gravityEffect2->Init(u"Assets/effect/引力弾.efk");
+	m_gravityEffect2->SetScale(EFFECT_GRAVITY_SCALE);
 
 	m_inflateEffect = NewGO<prefab::CEffect>(0);
 	m_inflateEffect->Init(u"Assets/effect/引力弾2.efk");
-	m_inflateEffect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_inflateEffect->SetScale(EFFECT_GRAVITY_SCALE);
 
 	m_wearingEffect = NewGO<prefab::CEffect>(0);
 	m_wearingEffect->Init(u"Assets/effect/Blackhole3.efk");
-	m_wearingEffect->SetScale({ 25.0f, 25.0f, 25.0f });
+	m_wearingEffect->SetScale(EFFECT_GRAVITY_SCALE);
 	m_wearingEffect->SetPosition(m_position);
 	m_wearingEffect->Play();
-
-	OutputDebugStringA("afterStart\n");
 
 	return true;
 }
 
 void GravityBullet::Update()
 {
-	OutputDebugStringA("beforeUpdate\n");
-
 	//ポーズ中ならスキップ。
 	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
 	{
@@ -84,20 +96,17 @@ void GravityBullet::Update()
 		AsFinishBehave();
 		break;
 	}
-
-	OutputDebugStringA("afterUpdate\n");
 }
 
 void GravityBullet::AsBulletBehave()
 {
-	OutputDebugStringA("beforeBulletBehave\n");
 	//移動処理。
-	m_position += m_moveDirection * m_velocity;
+	m_position += m_moveDirection * GRAVITYBULLET_SPEED;
 
 	//プレイヤーとの当たり判定用
 	m_bulletCollider.SetStartPoint(m_oldPosition);
 	m_bulletCollider.SetEndPoint(m_position);
-	m_bulletCollider.SetRadius(30.0f);
+	m_bulletCollider.SetRadius(GRAVITYBULLET_COLLISION_RADIUS);
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
@@ -129,27 +138,26 @@ void GravityBullet::AsBulletBehave()
 	m_wearingEffect->SetPosition(m_position);
 
 	//弾を回転させる。
-	angle += 0.2f;
+	angle += MODEL_GRAVITY_ROTATE_ANGLE;
 	if (angle >= 360.0f)
+	{
 		angle = 0.0f;
+	}
+
 	Quaternion qRot;
 	qRot.SetRotation(Vector3::AxisY, angle);
 	m_skinModelRender->SetRotation(qRot);
 	m_skinModelRender->SetPosition(m_position);
-
-	OutputDebugStringA("afterBulletBehave\n");
 }
 
 void GravityBullet::AsExplodeBehave()
 {
-	OutputDebugStringA("beforeExplodeBehave\n");
-
 	//周囲のガレキを浮かせるモードに。
 	QueryGOs<Debris>("debris", [this](Debris* debris)->bool
 		{
 			Vector3 diff = m_position - debris->GetPosition();
 
-			if (diff.Length() < 400.0f && debris->GetDebrisState() == Debris::enDrop)
+			if (diff.Length() < GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX && debris->GetDebrisState() == Debris::enDrop)
 			{
 				//HACK:浮いてる途中に拾われないかつダメージを直で受けないようにPopにしている。
 				//正直あんまり良いとは思わない DebrisのStateを増やす?
@@ -163,8 +171,8 @@ void GravityBullet::AsExplodeBehave()
 		});
 
 	//爆発の瞬間にエフェクトを発生させる。
-	m_effect->SetPosition(m_position);
-	m_effect->Play();
+	m_gravityEffect->SetPosition(m_position);
+	m_gravityEffect->Play();
 	m_inflateEffect->SetPosition(m_position);
 	m_inflateEffect->Play();
 
@@ -174,31 +182,26 @@ void GravityBullet::AsExplodeBehave()
 	DeleteGO(m_skinModelRender);
 
 	//音を鳴らす
-	prefab::CSoundSource* ssGravity = NewGO<prefab::CSoundSource>(0);
-	ssGravity->Init(L"Assets/sound/暗黒魔法.wav", SoundType::enSE);
-	ssGravity->SetVolume(1.5f);
-	ssGravity->Play(false);
+	prefab::CSoundSource* gravitySound = NewGO<prefab::CSoundSource>(0);
+	gravitySound->Init(L"Assets/sound/暗黒魔法.wav", SoundType::enSE);
+	gravitySound->SetVolume(SOUND_SE_GRAVITY_VOLUME);
+	gravitySound->Play(false);
 
 	//爆発したので引力を発生させる状態へ
 	m_gravityBulletState = enGravity;
-
-	OutputDebugStringA("afterExplodeBehave\n");
 }
 
 void GravityBullet::AsGravityBehave()
 {
-	OutputDebugStringA("beforeGravityBehave\n");
-
 	//HACK:Pop状態では常にm_position.yがマイナス10され続けているので
 	//毎フレーム+11することで1ずつ浮く形になっている。
 	//またenPop状態でm_position.yがマイナス10された時地形に当たっていたら
 	//Drop状態に移行するため毎フレームPopにしている。処理が汚い。
-	//TODO:後から直す。
 	for (auto debris : m_controlDebrisVector)
 	{
 		debris->SetDebrisState(Debris::enPop);
 		Vector3 position = debris->GetPosition();
-		position.y += 11.0f;
+		position.y += GRAVITYBULLET_FLOAT_DEBRIS_SPEED;
 		debris->SetPosition(position);
 	}
 
@@ -206,18 +209,18 @@ void GravityBullet::AsGravityBehave()
 	m_gravityTimeCount++;
 
 	//カウンターが180以上か、プレイヤーから攻撃指示が出たらフィニッシュ状態へ移行。
-	if (m_gravityTimeCount >= 180 || m_parent->m_isGravityBulletAttack == true)
+	if (m_gravityTimeCount >= GRAVITYATTACKCOUNT_ATTACK || m_parent->m_isGravityBulletAttack == true)
 	{
 		m_gravityBulletState = enFinish;
 	}
 	//爆発してからプレイヤーを吸い寄せ始めるまでに少しタイムラグを設ける。
-	else if (m_gravityTimeCount >= 30)
+	else if (m_gravityTimeCount >= GRAVITYATTACKCOUNT_BACUUM)
 	{
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				Vector3 diff = m_position - player->m_position;
-				if (diff.Length() > 60.0f &&	//近すぎてもダメ
-					diff.Length() < 400.0f && player != m_parent)
+				if (diff.Length() > GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MIN &&	//近すぎてもダメ
+					diff.Length() < GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX && player != m_parent)
 				{
 					//Y軸も吸い寄せると床抜けすることがあるのでy軸を除く。
 					Vector3 toGravity = diff;
@@ -225,7 +228,7 @@ void GravityBullet::AsGravityBehave()
 					toGravity.Normalize();
 
 					//吸い寄せスピード分乗算
-					toGravity *= m_bacuumSpeed;
+					toGravity *= GRAVITYBULLET_BACUUMSPEED;
 
 					//敵プレイヤーのキャラコンに実行させる
 					//正直このやり方も良いといえるのか分からない。
@@ -234,23 +237,20 @@ void GravityBullet::AsGravityBehave()
 				return true;
 			});
 	}
-	if (m_gravityTimeCount % 60 == 0) 
+	if (m_gravityTimeCount % EFFECT_GRAVITY2_INTERVAL == EFFECT_GRAVITY_PLAY)
 	{
-		m_effect2->SetPosition(m_position);
-		m_effect2->Play();
+		m_gravityEffect2->SetPosition(m_position);
+		m_gravityEffect2->Play();
 	}
-	else if (m_gravityTimeCount % 30 == 0)
+	else if (m_gravityTimeCount % EFFECT_GRAVITY1_INTERVAL == EFFECT_GRAVITY_PLAY)
 	{
-		m_effect->SetPosition(m_position);
-		m_effect->Play();
+		m_gravityEffect->SetPosition(m_position);
+		m_gravityEffect->Play();
 	}
-
-	OutputDebugStringA("afterGravityBehave\n");
 }
 
 void GravityBullet::AsFinishBehave()
 {
-	OutputDebugStringA("beforeFinishBehave\n");
 	//浮かせたガレキに攻撃を指示。
 	for (auto debris : m_controlDebrisVector)
 	{
@@ -270,6 +270,4 @@ void GravityBullet::AsFinishBehave()
 
 	//フィニッシュ攻撃を指示したので引力弾としての役目は終わり。
 	DeleteGO(this);
-
-	OutputDebugStringA("afterFinishBehave\n");
 }
