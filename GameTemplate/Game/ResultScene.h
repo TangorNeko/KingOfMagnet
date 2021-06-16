@@ -7,8 +7,6 @@ public:
 	~ResultScene();
 	void ResultDisplay();
 
-	prefab::CDirectionLight* m_stageLight = nullptr;
-
 	prefab::CSpriteRender* m_Down_SpriteRender = nullptr;
 	prefab::CSpriteRender* m_Up_SpriteRender = nullptr;
 	prefab::CSpriteRender* m_Under_SpriteRender = nullptr;
@@ -21,7 +19,7 @@ public:
 	prefab::CSkinModelRender* m_P2_skinModelRender = nullptr;
 
 	//勝者を照らすライト
-	prefab::CDirectionLight* m_winnerDirectionLight = nullptr;
+	prefab::CDirectionLight* m_directionLight = nullptr;
 
 	enum {
 		enAnimationClip_Win,
@@ -30,22 +28,9 @@ public:
 	};
 	AnimationClip m_animationClips[enAnimationClip_Num];
 
-	//勝者、敗者のポジション
-	Vector3 m_WinnerPos = { 60,25,100 };
-	Vector3 m_LoserPos = { -50,40,100 };
-	//カメラのポジション
-	Vector3 m_cameraPos = { 0,90,250 };
-
-	Vector3 m_DownPos = { Vector3::Zero };
-	Vector3 m_UpPos = { Vector3::Zero };
-	Vector3 m_UnderPos = { Vector3::Zero };
-	Vector3 m_LosePos = { 350.0f,220.0f,0.0f };
-	Vector3 m_WinPos = { -200.0f,280.0f,0.0f };
-	Vector3 m_CommandPos = { 0.0f,-278.0f,0.0f };
 	bool m_RetryOn = true;
 	int m_loserNum = 0;
 
-	const float CoverMove = 400.0f;
 	bool m_moveEndFlag = false;		//移動完了
 	int m_moveTimer = 0;
 	const int MoveLimit = 120;
