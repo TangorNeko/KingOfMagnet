@@ -6,7 +6,7 @@
 namespace
 {
 	const int DAMAGEDISPLAY_DELETE_TIME = 50;
-	const Vector4 FONT_DAMAGE_COLOR = { 1.0f,1.0f,0.1f,1.0f };
+	const Vector4 FONT_DAMAGE_COLOR = { 1.0f,0.1f,0.1f,1.0f };
 	const Vector4 FONT_SHADOW_COLOR = { 0.0f,0.0f,0.0f,1.0f };
 	const float FONT_SHADOW_OFFSET = 2.0f;
 	const float DAMAGEPOSITION_Y_SPACER = 100.0f;
