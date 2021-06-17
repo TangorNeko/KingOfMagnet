@@ -32,7 +32,7 @@ namespace
 	const int SPRITE_COVER_LOWER_HEIGHT = 720;
 	const float SPRITE_COVER_MOVE_AMOUNT = 400.0f;
 	const int SPRITE_MOVETIMER_START = 0;
-	const int SPRITE_MOVETIMER_SHAKE = 60;
+	const int SPRITE_MOVETIMER_DISPLAY_AND_SHAKE = 60;
 	const int SPRITE_MOVETIMER_PLAY_SE1 = 25;
 	const int SPRITE_MOVETIMER_PLAY_SE2 = 55;
 	const int SPRITE_MOVETIMER_PLAY_BGM = 80;
@@ -162,12 +162,17 @@ void ResultScene::Update()
 			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,20.0f }, 12, 42, true);
 
 		}
-		else if (m_moveTimer == SPRITE_MOVETIMER_SHAKE) {
+		else if (m_moveTimer == SPRITE_MOVETIMER_DISPLAY_AND_SHAKE) {
+			//窓と、文字系スプライトの表示
 			m_Under_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
 			m_Win_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
 			m_Lose_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
 			m_Command_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
-			m_Lose_SpriteRender->GetSpriteSupporter().SpriteShake({20.0f,0.0f}, 24, 0);		//シェイク
+			
+			//Loseスプライトにこれ以降ずっとシェイクを指示
+			m_Lose_SpriteRender->GetSpriteSupporter().SpriteShake({20.0f,0.0f}, 24, 0);
+
+			//これ以降winの文字を動かすようにフラグを設定
 			m_win_lose_MoveFlag = true;
 		}
 
@@ -188,10 +193,10 @@ void ResultScene::Update()
 		//BGM
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_BGM)
 		{	
-			ssBGM = NewGO<prefab::CSoundSource>(0);;
-			ssBGM->Init(L"Assets/sound/リザルト曲.wav", SoundType::enBGM);
-			ssBGM->SetVolume(0.2f);
-			ssBGM->Play(true);
+			m_resultBGM = NewGO<prefab::CSoundSource>(0);;
+			m_resultBGM->Init(L"Assets/sound/リザルト曲.wav", SoundType::enBGM);
+			m_resultBGM->SetVolume(0.2f);
+			m_resultBGM->Play(true);
 		}
 
 		m_moveTimer++;
@@ -234,7 +239,7 @@ void ResultScene::Update()
 		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
 
 			if (m_RetryOn == true) {
-				DeleteGO(ssBGM);
+				DeleteGO(m_resultBGM);
 				//SE
 				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
 				ss->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
@@ -247,7 +252,7 @@ void ResultScene::Update()
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {
-				DeleteGO(ssBGM);
+				DeleteGO(m_resultBGM);
 				//SE
 				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
 				ss->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
