@@ -1476,6 +1476,11 @@ void Player::Damage(int damage)
 //必殺技ゲージをチャージする。
 void Player::ChargeSpecialAttackGauge(int charge)
 {
+	if (m_gameScene->GetGameState() != GameScene::enPlaying)
+	{
+		return;
+	}
+
 	m_specialAttackGauge += charge;
 	
 	if (m_specialAttackGauge >= 100)
