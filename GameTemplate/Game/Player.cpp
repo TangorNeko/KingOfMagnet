@@ -753,8 +753,8 @@ void Player::SpecialAttack()
 			m_SPEffect->Play();
 
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
-			gravityBullet->m_position = m_magPosition;
-			gravityBullet->m_parent = this;
+			gravityBullet->SetPosition(m_magPosition);
+			gravityBullet->SetParent(this);
 
 			//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 			Vector3 crossPoint;
@@ -764,14 +764,16 @@ void Player::SpecialAttack()
 			if (hitFlag)
 			{
 				//照準の指す方向に飛ばす
-				gravityBullet->m_moveDirection = crossPoint - gravityBullet->m_position;
-				gravityBullet->m_moveDirection.Normalize();
+				Vector3 gravityMoveDirection = crossPoint - gravityBullet->GetPosition();
+				gravityMoveDirection.Normalize();
+				gravityBullet->SetMoveDirection(gravityMoveDirection);
 			}
 			else
 			{
-				gravityBullet->m_moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
-				gravityBullet->m_moveDirection.y = 0.0f;
-				gravityBullet->m_moveDirection.Normalize();
+				Vector3 gravityMoveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
+				gravityMoveDirection.y = 0.0f;
+				gravityMoveDirection.Normalize();
+				gravityBullet->SetMoveDirection(gravityMoveDirection);
 			}
 
 			//撃ったので必殺技ゲージを0に
@@ -1441,9 +1443,9 @@ void Player::Damage(int damage)
 
 	//与えたダメージ量を相手に表示する
 	DamageDisplay* damagedisplay = NewGO<DamageDisplay>(0, "damagedisplay");
-	damagedisplay->m_damagePos = m_position;
-	damagedisplay->m_enemyNum = m_enemy->m_playerNum;
-	damagedisplay->m_damage = damage;
+	damagedisplay->SetDamagePosition(m_position);
+	damagedisplay->SetEnemyNum(m_enemy->m_playerNum);
+	damagedisplay->SetDamage(damage);
 
 	//HP200以下で赤くなる
 	if (m_hp <= 200 && m_hpBarRedFlag == false) {
@@ -1474,6 +1476,11 @@ void Player::Damage(int damage)
 //必殺技ゲージをチャージする。
 void Player::ChargeSpecialAttackGauge(int charge)
 {
+	if (m_gameScene->GetGameState() != GameScene::enPlaying)
+	{
+		return;
+	}
+
 	m_specialAttackGauge += charge;
 	
 	if (m_specialAttackGauge >= 100)

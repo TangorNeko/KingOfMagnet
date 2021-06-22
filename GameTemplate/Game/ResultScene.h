@@ -3,55 +3,42 @@ class ResultScene:public IGameObject
 {
 	bool Start();
 	void Update();
-public:
 	~ResultScene();
-	void ResultDisplay();
 
-	prefab::CDirectionLight* m_stageLight = nullptr;
+public:
 
-	prefab::CSpriteRender* m_Down_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Up_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Under_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Lose_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Win_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_Command_SpriteRender = nullptr;
-	prefab::CSpriteRender* m_BG_SpriteRender = nullptr;
-
-	prefab::CSkinModelRender* m_P1_skinModelRender = nullptr;
-	prefab::CSkinModelRender* m_P2_skinModelRender = nullptr;
-
-	//勝者を照らすライト
-	prefab::CDirectionLight* m_winnerDirectionLight = nullptr;
+	/**
+	 * @brief 敗者の番号を設定
+	 * @param playerNum 敗者のプレイヤー番号
+	*/
+	void SetLoserNum(int playerNum)
+	{
+		m_loserNum = playerNum;
+	}
 
 	enum {
 		enAnimationClip_Win,
 		enAnimationClip_Lose,
 		enAnimationClip_Num,
 	};
-	AnimationClip m_animationClips[enAnimationClip_Num];
 
-	//勝者、敗者のポジション
-	Vector3 m_WinnerPos = { 60,25,100 };
-	Vector3 m_LoserPos = { -50,40,100 };
-	//カメラのポジション
-	Vector3 m_cameraPos = { 0,90,250 };
-
-	Vector3 m_DownPos = { Vector3::Zero };
-	Vector3 m_UpPos = { Vector3::Zero };
-	Vector3 m_UnderPos = { Vector3::Zero };
-	Vector3 m_LosePos = { 350.0f,220.0f,0.0f };
-	Vector3 m_WinPos = { -200.0f,280.0f,0.0f };
-	Vector3 m_CommandPos = { 0.0f,-278.0f,0.0f };
-	bool m_RetryOn = true;
-	int m_loserNum = 0;
-
-	const float CoverMove = 400.0f;
-	bool m_moveEndFlag = false;		//移動完了
-	int m_moveTimer = 0;
-	const int MoveLimit = 120;
-	bool m_win_lose_MoveFlag = false;
-
-	//BGM
-	prefab::CSoundSource* ssBGM = nullptr;
+private:
+	AnimationClip m_animationClips[enAnimationClip_Num];		//キャラクターのアニメーション
+	prefab::CSkinModelRender* m_P1_skinModelRender = nullptr;	//プレイヤー1のモデル
+	prefab::CSkinModelRender* m_P2_skinModelRender = nullptr;	//プレイヤー2のモデル
+	prefab::CDirectionLight* m_directionLight = nullptr;		//勝者を照らすライト
+	prefab::CSpriteRender* m_Down_SpriteRender = nullptr;		//下側のシャッターのスプライト
+	prefab::CSpriteRender* m_Up_SpriteRender = nullptr;			//上側のシャッターのスプライト
+	prefab::CSpriteRender* m_Under_SpriteRender = nullptr;		//プレイヤーを表示する窓のスプライト
+	prefab::CSpriteRender* m_Lose_SpriteRender = nullptr;		//LOSEのスプライト
+	prefab::CSpriteRender* m_Win_SpriteRender = nullptr;		//WINのスプライト
+	prefab::CSpriteRender* m_Command_SpriteRender = nullptr;	//リトライ、タイトルへのスプライト
+	prefab::CSpriteRender* m_BG_SpriteRender = nullptr;			//背景のスプライト
+	bool m_RetryOn = true;										//リトライのコマンド選択中?(falseならタイトルへのコマンド選択中)
+	int m_loserNum = 0;											//敗者のプレイヤー番号
+	bool m_moveEndFlag = false;									//移動完了
+	int m_moveTimer = 0;										//スプライトの移動タイマー
+	bool m_win_lose_MoveFlag = false;							//Winの文字を拡大縮小させる?
+	prefab::CSoundSource* m_resultBGM = nullptr;				//リザルトBGM
 };
 

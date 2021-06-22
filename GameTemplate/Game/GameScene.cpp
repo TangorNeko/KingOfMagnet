@@ -379,7 +379,7 @@ void GameScene::Update()
 		{
 			NewGO<ResultScene>(0, "resultscene");
 			ResultScene* resultscene = FindGO<ResultScene>("resultscene");
-			resultscene->m_loserNum = m_player1->m_loserNum;
+			resultscene->SetLoserNum(m_player1->m_loserNum);
 			DeleteGO(this);
 		}
 	}
