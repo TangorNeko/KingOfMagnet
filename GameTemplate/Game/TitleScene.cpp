@@ -92,7 +92,7 @@ TitleScene::~TitleScene()
 bool TitleScene::Start()
 {	
 	//ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“
-	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME,true);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME_NORMAL,true);
 	//”wŒi‚Ìƒ‚ƒfƒ‹
 	m_BG_ModelRender = NewGO<prefab::CSkinModelRender>(0);
 	m_BG_ModelRender->Init("Assets/modelData/TitleCylinder.tkm");
@@ -427,7 +427,7 @@ void TitleScene::CommandSelectMove() {
 	
 	if (m_commandTimer == COMMANDTIMER_START_TRANSITION && m_titleCommand == TitleScene::TC_Start)
 	{
-		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, false);
+		TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, false);
 	}
 
 	if (m_commandTimer == COMMANDTIMER_EXECUTE_COMMAND) {
