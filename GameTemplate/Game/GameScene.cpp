@@ -297,7 +297,7 @@ bool GameScene::Start()
 	m_gameBGM->Init(L"Assets/sound/サイバー風BGM.wav", SoundType::enBGM);
 	m_gameBGM->SetVolume(SOUND_BGM_GAME_VOLUME);
 	m_gameBGM->Play(true);
-	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, true);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
 	return true;
 }
 
@@ -372,7 +372,7 @@ void GameScene::Update()
 
 		if (m_gameEndCount == GAMEENDTIMER_START_TRANSITION)
 		{
-			TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, false);
+			TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, false);
 		}
 
 		if (m_gameEndCount > GAMEENDTIMER_GOTO_RESULT)
@@ -392,7 +392,7 @@ void GameScene::Update()
 		if (m_drawFontCount == DRAWTIMER_START_TRANSITION)
 		{
 			//トランジション
-			TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, false);
+			TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, false);
 		}
 
 		if (m_drawFontCount == DRAWTIMER_GOTO_REMATCH)

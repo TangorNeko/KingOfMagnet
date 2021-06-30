@@ -39,6 +39,71 @@ namespace
 	const int SPRITE_MOVETIMER_END = 120;
 	const Vector3 DIRECTIONLIGHT_RESULT_DIRECTION = { 0.0f,-1.0f,-1.0f };
 	const Vector3 DIRECTIONLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };
+	const float SOUND_SE_RESULT = 1.2f;
+	const float SOUND_BGM_RESULT = 0.2f;
+
+	const int SPRITEMOVELIST_ZERO = 0;
+
+	const Vector2 SPRITE_UP_CLOSE_MOVEMENT = { 0.0f,-SPRITE_COVER_MOVE_AMOUNT - 20.0f };
+	const Vector2 SPRITE_UP_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,40.0f };
+	const Vector2 SPRITE_UP_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,-20.0f };
+
+	const Vector2 SPRITE_DOWN_CLOSE_MOVEMENT = { 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f };
+	const Vector2 SPRITE_DOWN_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,-40.0f };
+	const Vector2 SPRITE_DOWN_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,20.0f };
+	
+	const Vector2 SPRITE_COMMAND_CLOSE_MOVEMENT = { 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f };
+	const Vector2 SPRITE_COMMAND_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,-40.0f };
+	const Vector2 SPRITE_COMMAND_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,20.0f };
+
+	const int SPRITE_CLOSE_MOVETIME = 30;
+	const int SPRITE_CLOSE_REBOUND_MOVETIME = 12;
+
+	const int SPRITE_CLOSE_MOVEDELAY = 0;
+	const int SPRITE_CLOSE_REBOUND_UP_MOVEDELAY = 30;
+	const int SPRITE_CLOSE_REBOUND_DOWN_MOVEDELAY = 42;
+
+	const int SPRITE_MOVEDELAY_ZERO = 0;
+	const int SPRITE_APPEAR_TIME = 12;
+
+	const Vector2 SPRITE_LOSE_SHAKE_MOVEMENT = { 20.0f,0.0f };
+	const int SPRITE_LOSE_SHAKE_MOVETIME = 24;
+
+	const Vector3 SPRITE_WIN_HORIZONTAL_SCALE_MIDDLE = { 1.2f,0.8f,1.0f };
+	const Vector3 SPRITE_WIN_HORIZONTAL_SCALE_HEAVY = { 1.5f,0.5f,1.0f };
+	const Vector3 SPRITE_WIN_VERTICAL_SCALE_LIGHT = { 0.9f,1.1f,1.0f };
+	const Vector3 SPRITE_WIN_VERTICAL_SCALE_MIDDLE = { 0.8f,1.2f,1.0f };
+	const Vector3 SPRITE_WIN_VERTICAL_SCALE_HEAVY = { 0.6f,1.4f,1.0f };
+	const Vector3 SPRITE_WIN_SCALE_DEFAULT = { 1.0f,1.0f,1.0f };
+
+	const int SPRITE_WIN_MOVETIME_FAST = 6;
+	const int SPRITE_WIN_MOVETIME_LATE = 12;
+	const int SPRITE_WIN_MOVETIME_WAIT = 90;
+
+	const int SPRITE_WIN_MOVEDELAY_START = 0;
+	const int SPRITE_WIN_MOVEDELAY_VERTICAL_MIDDLE = 12;
+	const int SPRITE_WIN_MOVEDELAY_HORIZONTAL_HEAVY = 12;
+	const int SPRITE_WIN_MOVEDELAY_VERTICAL_HEAVY = 18;
+	const int SPRITE_WIN_MOVEDELAY_HORIZONTAL_MIDDLE = 30;
+	const int SPRITE_WIN_MOVEDELAY_VERTICAL_LIGHT = 36;
+	const int SPRITE_WIN_MOVEDELAY_TO_DEFAULT = 42;
+
+
+	const Vector2 SPRITE_WIN_FALL_MOVEMENT_LIGHT = { 0.0f,-10.0f };
+	const Vector2 SPRITE_WIN_FALL_MOVEMENT_HEAVY = { 0.0f,-60.0f };
+	const Vector2 SPRITE_WIN_RISE_MOVEMENT_LIGHT = { 0.0f,20.0f };
+	const Vector2 SPRITE_WIN_RISE_MOVEMENT_HEAVY = { 0.0f,60.0f };
+	const Vector2 SPRITE_WIN_WAIT_MOVEMENT = { 0.0f,0.0f };
+
+	const Vector2 SPRITE_COMMAND_UP_MOVEMENT = { 0.0f,5.0f };
+	const Vector2 SPRITE_COMMAND_DOWN_MOVEMENT = { 0.0f,-5.0f };
+	const int SPRITE_COMMAND_UP_MOVETIME = 6;
+	const int SPRITE_COMMAND_DOWN_MOVETIME = 6;
+	const int SPRITE_COMMAND_UP_MOVEDELAY = 0;
+	const int SPRITE_COMMAND_DOWN_MOVEDELAY = 6;
+
+	const int TRANSITION_TIME_TO_TITLE = 15;
+	const int TRANSITION_TIME_RETRY = 2;
 }
 
 ResultScene::~ResultScene()
@@ -56,7 +121,7 @@ ResultScene::~ResultScene()
 }			 
 bool ResultScene::Start()
 {	
-	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME, true);
+	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
 
 	//背景
 	m_BG_SpriteRender = NewGO<prefab::CSpriteRender>(0);
@@ -150,27 +215,28 @@ void ResultScene::Update()
 	if (m_moveEndFlag == false) {
 		if (m_moveTimer == SPRITE_MOVETIMER_START) {
 			//移動予約
-			m_Up_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-SPRITE_COVER_MOVE_AMOUNT - 20.0f }, 30, 0, true);
-			m_Up_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,40.0f }, 12, 30, true);
-			m_Up_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-20.0f }, 12, 42, true);
+			m_Up_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_UP_CLOSE_MOVEMENT, SPRITE_CLOSE_MOVETIME, SPRITE_CLOSE_MOVEDELAY, true);
+			m_Up_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_UP_CLOSE_REBOUND_UP_MOVEMENT, SPRITE_CLOSE_REBOUND_MOVETIME, SPRITE_CLOSE_REBOUND_UP_MOVEDELAY, true);
+			m_Up_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_UP_CLOSE_REBOUND_DOWN_MOVEMENT, SPRITE_CLOSE_REBOUND_MOVETIME, SPRITE_CLOSE_REBOUND_DOWN_MOVEDELAY, true);
 
-			m_Down_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f }, 30, 0, true);
-			m_Down_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-40.0f }, 12, 30, true);
-			m_Down_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,20.0f }, 12, 42, true);
-			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f }, 30, 0, true);
-			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-40.0f }, 12, 30, true);
-			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,20.0f }, 12, 42, true);
+			m_Down_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_DOWN_CLOSE_MOVEMENT, SPRITE_CLOSE_MOVETIME, SPRITE_CLOSE_MOVEDELAY, true);
+			m_Down_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_DOWN_CLOSE_REBOUND_UP_MOVEMENT, SPRITE_CLOSE_REBOUND_MOVETIME, SPRITE_CLOSE_REBOUND_UP_MOVEDELAY, true);
+			m_Down_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_DOWN_CLOSE_REBOUND_DOWN_MOVEMENT, SPRITE_CLOSE_REBOUND_MOVETIME, SPRITE_CLOSE_REBOUND_DOWN_MOVEDELAY, true);
+
+			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_CLOSE_MOVEMENT, SPRITE_CLOSE_MOVETIME, SPRITE_CLOSE_MOVEDELAY, true);
+			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_CLOSE_REBOUND_DOWN_MOVEMENT, SPRITE_CLOSE_REBOUND_MOVETIME, SPRITE_CLOSE_REBOUND_UP_MOVEDELAY, true);
+			m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_CLOSE_REBOUND_UP_MOVEMENT, SPRITE_CLOSE_REBOUND_MOVETIME, SPRITE_CLOSE_REBOUND_DOWN_MOVEDELAY, true);
 
 		}
 		else if (m_moveTimer == SPRITE_MOVETIMER_DISPLAY_AND_SHAKE) {
 			//窓と、文字系スプライトの表示
-			m_Under_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
-			m_Lose_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
-			m_Command_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, 12, 0);
+			m_Under_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, SPRITE_APPEAR_TIME, SPRITE_MOVEDELAY_ZERO);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, SPRITE_APPEAR_TIME, SPRITE_MOVEDELAY_ZERO);
+			m_Lose_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, SPRITE_APPEAR_TIME, SPRITE_MOVEDELAY_ZERO);
+			m_Command_SpriteRender->GetSpriteSupporter().SpriteColor(Vector4::White, SPRITE_APPEAR_TIME, SPRITE_MOVEDELAY_ZERO);
 			
 			//Loseスプライトにこれ以降ずっとシェイクを指示
-			m_Lose_SpriteRender->GetSpriteSupporter().SpriteShake({20.0f,0.0f}, 24, 0);
+			m_Lose_SpriteRender->GetSpriteSupporter().SpriteShake(SPRITE_LOSE_SHAKE_MOVEMENT, SPRITE_LOSE_SHAKE_MOVETIME, SPRITE_MOVEDELAY_ZERO);
 
 			//これ以降winの文字を動かすようにフラグを設定
 			m_win_lose_MoveFlag = true;
@@ -178,24 +244,24 @@ void ResultScene::Update()
 
 		//SE
 		if (m_moveTimer == SPRITE_MOVETIMER_PLAY_SE1) {
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
-			ss->SetVolume(1.2f);
-			ss->Play(false);
+			prefab::CSoundSource* resultSE = NewGO<prefab::CSoundSource>(0);;
+			resultSE->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
+			resultSE->SetVolume(SOUND_SE_RESULT);
+			resultSE->Play(false);
 		}
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_SE2)
 		{
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
-			ss->SetVolume(1.2f);
-			ss->Play(false);
+			prefab::CSoundSource* resultSE = NewGO<prefab::CSoundSource>(0);;
+			resultSE->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
+			resultSE->SetVolume(SOUND_SE_RESULT);
+			resultSE->Play(false);
 		}
 		//BGM
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_BGM)
 		{	
 			m_resultBGM = NewGO<prefab::CSoundSource>(0);;
 			m_resultBGM->Init(L"Assets/sound/リザルト曲.wav", SoundType::enBGM);
-			m_resultBGM->SetVolume(0.2f);
+			m_resultBGM->SetVolume(SOUND_BGM_RESULT);
 			m_resultBGM->Play(true);
 		}
 
@@ -206,61 +272,57 @@ void ResultScene::Update()
 	}
 	else if(m_moveEndFlag == true){
 		//上か下ボタンを押すとリトライと、タイトルが切り替える
-		if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[1]->IsTrigger(enButtonDown) || g_pad[0]->IsTrigger(enButtonDown) || g_pad[1]->IsTrigger(enButtonUp)) {
+		if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp)) {
 			if (m_RetryOn == true)
 			{
-				m_Command_SpriteRender->Init("Assets/Image/Result_Command_Title.dds", 400, 76);
-				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,5.0f }, 6, 0, true);
-				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-5.0f }, 6, 6, true);
+				m_Command_SpriteRender->Init("Assets/Image/Result_Command_Title.dds", SPRITE_COMMAND_WIDTH, SPRITE_COMMAND_HEIGHT);
+				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_UP_MOVEMENT, SPRITE_COMMAND_UP_MOVETIME, SPRITE_COMMAND_UP_MOVEDELAY, true);
+				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_DOWN_MOVEMENT, SPRITE_COMMAND_DOWN_MOVETIME, SPRITE_COMMAND_DOWN_MOVEDELAY, true);
 				m_RetryOn = false;
 
 				//SE
-				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
-				ss->SetVolume(1.0f);
-				ss->Play(false);
+				prefab::CSoundSource* cursorMoveSE = NewGO<prefab::CSoundSource>(0);;
+				cursorMoveSE->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
+				cursorMoveSE->Play(false);
 			}
 			else
 			{
-				m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", 400, 76);
-				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,5.0f }, 6, 0, true);
-				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-5.0f }, 6, 6, true);
+				m_Command_SpriteRender->Init("Assets/Image/Result_Command_Retry.dds", SPRITE_COMMAND_WIDTH, SPRITE_COMMAND_HEIGHT);
+				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_UP_MOVEMENT, SPRITE_COMMAND_UP_MOVETIME, SPRITE_COMMAND_UP_MOVEDELAY, true);
+				m_Command_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_COMMAND_DOWN_MOVEMENT, SPRITE_COMMAND_DOWN_MOVETIME, SPRITE_COMMAND_DOWN_MOVEDELAY, true);
 				m_RetryOn = true;
 
 				//SE
-				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
-				ss->SetVolume(1.0f);
-				ss->Play(false);
+				prefab::CSoundSource* cursorMoveSE = NewGO<prefab::CSoundSource>(0);;
+				cursorMoveSE->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
+				cursorMoveSE->Play(false);
 			}
 		}
 
 		//スタートでAボタンを押すとキャラ選択画面に遷移する
-		if (g_pad[0]->IsTrigger(enButtonA) || g_pad[1]->IsTrigger(enButtonA)) {
+		if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonA) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonA)) {
 
 			if (m_RetryOn == true) {
 				DeleteGO(m_resultBGM);
 				//SE
-				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
-				ss->SetVolume(1.0f);
-				ss->Play(false);
+				prefab::CSoundSource* resultSelectSE = NewGO<prefab::CSoundSource>(0);;
+				resultSelectSE->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
+				resultSelectSE->Play(false);
 
 				//トランジション
-				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, 3, false);
+				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_RETRY, false);
 				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {
 				DeleteGO(m_resultBGM);
 				//SE
-				prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-				ss->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
-				ss->SetVolume(1.0f);
-				ss->Play(false);
+				prefab::CSoundSource* resultSelectSE = NewGO<prefab::CSoundSource>(0);;
+				resultSelectSE->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
+				resultSelectSE->Play(false);
 
 				//トランジション
-				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, 15, false);
+				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME_TO_TITLE, false);
 				TitleScene* titlescene = NewGO<TitleScene>(0, "titlescene");
 				DeleteGO(this);
 			}
@@ -269,20 +331,20 @@ void ResultScene::Update()
 
 	if (m_win_lose_MoveFlag == true) {
 
-		if (m_Win_SpriteRender->GetSpriteSupporter().GetSpriteMoveListLen() == 0) {
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-10.0f }, 12, 0, true);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale({ 1.2f,0.8f,1.0f }, 12, 0);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,60.0f }, 12, 12, true);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale({ 0.8f,1.2f,1.0f }, 12, 12);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,-60.0f }, 6, 12, true);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale({ 1.5f,0.5f,1.0f }, 6, 12);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,20.0f }, 12, 18, true);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale({ 0.6f,1.4f,1.0f }, 12, 18);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ SPRITE_WINNER_POSITION.x,SPRITE_WINNER_POSITION.y }, 6, 30);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale({ 1.2f,0.8f,1.0f }, 6, 30);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ 0.0f,0.0f }, 90, 30, true);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale({ 0.9f,1.1f,1.0f }, 6, 36);
-			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(1.0f, 6, 42);
+		if (m_Win_SpriteRender->GetSpriteSupporter().GetSpriteMoveListLen() == SPRITEMOVELIST_ZERO) {
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_WIN_FALL_MOVEMENT_LIGHT, SPRITE_WIN_MOVETIME_LATE, SPRITE_WIN_MOVEDELAY_START, true);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_HORIZONTAL_SCALE_MIDDLE, SPRITE_WIN_MOVETIME_LATE, SPRITE_WIN_MOVEDELAY_START);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_WIN_RISE_MOVEMENT_HEAVY, SPRITE_WIN_MOVETIME_LATE, SPRITE_WIN_MOVEDELAY_VERTICAL_MIDDLE, true);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_VERTICAL_SCALE_MIDDLE, SPRITE_WIN_MOVETIME_LATE, SPRITE_WIN_MOVEDELAY_VERTICAL_MIDDLE);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_WIN_FALL_MOVEMENT_HEAVY, SPRITE_WIN_MOVETIME_FAST, SPRITE_WIN_MOVEDELAY_HORIZONTAL_HEAVY, true);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_HORIZONTAL_SCALE_HEAVY, SPRITE_WIN_MOVETIME_FAST, SPRITE_WIN_MOVEDELAY_HORIZONTAL_HEAVY);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_WIN_RISE_MOVEMENT_LIGHT, SPRITE_WIN_MOVETIME_LATE, SPRITE_WIN_MOVEDELAY_VERTICAL_HEAVY, true);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_VERTICAL_SCALE_HEAVY, SPRITE_WIN_MOVETIME_LATE, SPRITE_WIN_MOVEDELAY_VERTICAL_HEAVY);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove({ SPRITE_WINNER_POSITION.x,SPRITE_WINNER_POSITION.y }, SPRITE_WIN_MOVETIME_FAST, SPRITE_WIN_MOVEDELAY_HORIZONTAL_MIDDLE);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_HORIZONTAL_SCALE_MIDDLE, SPRITE_WIN_MOVETIME_FAST, SPRITE_WIN_MOVEDELAY_HORIZONTAL_MIDDLE);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteMove(SPRITE_WIN_WAIT_MOVEMENT, SPRITE_WIN_MOVETIME_WAIT, SPRITE_WIN_MOVEDELAY_VERTICAL_LIGHT, true);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_VERTICAL_SCALE_LIGHT, SPRITE_WIN_MOVETIME_FAST, SPRITE_WIN_MOVEDELAY_VERTICAL_LIGHT);
+			m_Win_SpriteRender->GetSpriteSupporter().SpriteScale(SPRITE_WIN_SCALE_DEFAULT, SPRITE_WIN_MOVETIME_FAST, SPRITE_WIN_MOVEDELAY_TO_DEFAULT);
 		}
 
 	}
