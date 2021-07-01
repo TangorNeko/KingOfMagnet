@@ -289,16 +289,16 @@ void Player::Update()
 		//キャラを前に向かせる
 
 		//カメラの前方向
-		m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
-		m_front.y = 0.0f;
-		m_front.Normalize();
+		m_cameraFront = m_position - g_camera3D[m_playerNum]->GetPosition();
+		m_cameraFront.y = 0.0f;
+		m_cameraFront.Normalize();
 
 		//カメラの右方向
-		right = Cross(g_vec3AxisY, m_front);
+		m_cameraRight = Cross(g_vec3AxisY, m_cameraFront);
 
-		n = m_front.Dot(Vector3::AxisZ);//内積
-		float angle = acosf(n);//アークコサイン
-		if (m_front.x < 0) {
+		float dot = m_cameraFront.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(dot);//アークコサイン
+		if (m_cameraFront.x < 0) {
 			angle *= -1;
 		}
 		m_rot.SetRotation(Vector3::AxisY, angle);
@@ -345,17 +345,6 @@ void Player::Update()
 
 			//爆弾を投げる
 			ThrowBomb();
-
-			//グレネード用。仮です。
-			/*if (g_pad[m_playerNum]->IsTrigger(enButtonY))
-			{
-				Bomb* debris = NewGO<Bomb>(0, "bomb");
-				debris->m_bombShape = Bomb::enIncendiaryGrenade;
-				debris->m_bombState = Bomb::enDrop;
-				debris->m_parent = this;
-				debris->m_position = m_magPosition;
-				debris->m_moveDirection = m_characterDirection;
-			}*/
 		}
 
 		//攻撃後の隙のタイマーを減らしていく
@@ -417,16 +406,16 @@ void Player::Update()
 		//キャラを前に向かせる
 
 		//カメラの前方向
-		m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
-		m_front.y = 0.0f;
-		m_front.Normalize();
+		m_cameraFront = m_position - g_camera3D[m_playerNum]->GetPosition();
+		m_cameraFront.y = 0.0f;
+		m_cameraFront.Normalize();
 
 		//カメラの右方向
-		right = Cross(g_vec3AxisY, m_front);
+		m_cameraRight = Cross(g_vec3AxisY, m_cameraFront);
 
-		n = m_front.Dot(Vector3::AxisZ);//内積
-		float angle = acosf(n);//アークコサイン
-		if (m_front.x < 0) {
+		float dot = m_cameraFront.Dot(Vector3::AxisZ);//内積
+		float angle = acosf(dot);//アークコサイン
+		if (m_cameraFront.x < 0) {
 			angle *= -1;
 		}
 		m_rot.SetRotation(Vector3::AxisY, angle);
@@ -494,30 +483,30 @@ void Player::Move()
 	Vector3 oldPos = m_position;
 
 	//カメラの前方向
-	m_front = m_position - g_camera3D[m_playerNum]->GetPosition();
-	m_front.y = 0.0f;
-	m_front.Normalize();
+	m_cameraFront = m_position - g_camera3D[m_playerNum]->GetPosition();
+	m_cameraFront.y = 0.0f;
+	m_cameraFront.Normalize();
 
 	//カメラの右方向
-	right = Cross(g_vec3AxisY, m_front);
+	m_cameraRight = Cross(g_vec3AxisY, m_cameraFront);
 
-	n = m_front.Dot(Vector3::AxisZ);//内積
-	float angle = acosf(n);//アークコサイン
-	if (m_front.x < 0) {
+	float dot = m_cameraFront.Dot(Vector3::AxisZ);//内積
+	float angle = acosf(dot);//アークコサイン
+	if (m_cameraFront.x < 0) {
 		angle *= -1;
 	}
 	m_rot.SetRotation(Vector3::AxisY, angle);
 	m_skinModelRender->SetRotation(m_rot);
-	m_moveSpeed = m_front * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + right * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
+	m_moveAmount = m_cameraFront * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + m_cameraRight * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
 	if (m_charaCon.IsOnGround() == false)
 	{
 		if (m_fallLoop < 75)
 		{
 			m_fallLoop++;
 		}
-		if (m_moveSpeed.y > -0.001)
+		if (m_moveAmount.y > -0.001)
 		{
-			m_moveSpeed.y -= 0.005f * (m_fallLoop * m_fallLoop);
+			m_moveAmount.y -= 0.005f * (m_fallLoop * m_fallLoop);
 		}
 	}
 	else
@@ -525,14 +514,7 @@ void Player::Move()
 		m_fallLoop = 0;
 	}
 
-	if (m_moveSpeed.Length() != 0)
-	{
-		m_characterDirection = m_moveSpeed;
-		m_characterDirection.y = 0;
-		m_characterDirection.Normalize();
-	}
-
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+	m_position = m_charaCon.Execute(m_moveAmount, 1.0f);
 	m_magPosition = m_position;
 	m_magPosition.y += 50.0f;
 	m_skinModelRender->SetPosition(m_position);
@@ -744,9 +726,9 @@ void Player::SpecialAttack()
 			//発射エフェクト
 			m_SPEffect->Init(u"Assets/effect/引力弾発射.efk");
 			m_SPEffect->SetPosition({
-				m_position.x + m_front.x * 50.0f,
+				m_position.x + m_cameraFront.x * 50.0f,
 				m_position.y + 50.0f,
-				m_position.z + m_front.z * 50.0f
+				m_position.z + m_cameraFront.z * 50.0f
 				});
 			m_SPEffect->Play();
 
@@ -805,9 +787,9 @@ void Player::SpecialAttack()
 				//発射エフェクト
 				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
 				m_SPEffect->SetPosition({ 
-					m_position.x + m_front.x * 50.0f,
+					m_position.x + m_cameraFront.x * 50.0f,
 					m_position.y + 50.0f,
-					m_position.z + m_front.z * 50.0f
+					m_position.z + m_cameraFront.z * 50.0f
 					});
 				m_SPEffect->Play();
 
@@ -1306,8 +1288,8 @@ void Player::Camera()
 		m_toCameraDir = toEnemy * -1.0f;
 
 		//コントローラーの入力でカメラの向きをちょっとずらせる
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 5.0f);
-		qRotY.Apply(m_toCameraDir);
+		m_cameraQRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * 5.0f);
+		m_cameraQRotY.Apply(m_toCameraDir);
 
 		Quaternion qRotX;
 		Vector3 right = g_camera3D[m_playerNum]->GetRight();
@@ -1318,8 +1300,8 @@ void Player::Camera()
 	else
 	{
 		//ロックされていない時はカメラへのベクトルを回転させる。
-		qRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * m_sensitivity);
-		qRotY.Apply(m_toCameraDir);
+		m_cameraQRotY.SetRotationDeg(Vector3::AxisY, g_pad[m_playerNum]->GetRStickXF() * m_sensitivity);
+		m_cameraQRotY.Apply(m_toCameraDir);
 
 		Quaternion qRotX;
 		Vector3 right = g_camera3D[m_playerNum]->GetRight();
@@ -1341,16 +1323,16 @@ void Player::Camera()
 	}
 
 	//本来のカメラ位置
-	cameraPos = targetPos + m_toCameraDir * 125.0f;
+	m_cameraPos = targetPos + m_toCameraDir * 125.0f;
 
 	//バネカメラ的なもの　カメラのターゲット位置から本来のカメラ位置へのベクトルがステージに衝突しているか判定
 	Vector3 crossPoint;
-	bool isHit = m_stageModel->isLineHitModel(targetPos, cameraPos, crossPoint);
+	bool isHit = m_stageModel->isLineHitModel(targetPos, m_cameraPos, crossPoint);
 
 	if (isHit == false)
 	{
 		//当たっていないなら本来のカメラ位置
-		g_camera3D[m_playerNum]->SetPosition(cameraPos);
+		g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
 	}
 	else
 	{
@@ -1362,10 +1344,10 @@ void Player::Camera()
 	//ライト
 	Vector3 PlayerWaistPos = m_position;
 	PlayerWaistPos.y += 40;
-	Vector3 Direction = PlayerWaistPos - cameraPos;
+	Vector3 Direction = PlayerWaistPos - m_cameraPos;
 	Direction.Normalize();
 	m_spotLight->SetDirection(Direction);
-	m_spotLight->SetPosition(cameraPos);
+	m_spotLight->SetPosition(m_cameraPos);
 }
 
 //当たり判定
@@ -1553,7 +1535,7 @@ void Player::Win()
 
 	m_skinModelRender->SetPosition(m_position);
 
-	m_LastFrontDir = m_front;
+	m_LastFrontDir = m_cameraFront;
 }
 
 //敗北した時
@@ -1585,7 +1567,7 @@ void Player::Lose()
 
 	m_skinModelRender->SetPosition(m_position);
 
-	m_LastFrontDir = m_front;
+	m_LastFrontDir = m_cameraFront;
 }
 
 
@@ -1620,7 +1602,7 @@ void Player::TryChangeStatusBurst()
 //走り状態に切り替えできたら切り替える。
 void Player::TryChangeStatusRun()
 {
-	if (m_moveSpeed.LengthSq() > 5.0f) {
+	if (m_moveAmount.LengthSq() > 5.0f) {
 		m_animStatus = enStatus_Run;
 	}
 }
@@ -1628,7 +1610,7 @@ void Player::TryChangeStatusRun()
 //歩き状態に切り替えできたら切り替える。
 void Player::TryChangeStatusWalk()
 {
-	if (m_moveSpeed.LengthSq() <= 5.0f && m_moveSpeed.LengthSq() > 0.0f) {
+	if (m_moveAmount.LengthSq() <= 5.0f && m_moveAmount.LengthSq() > 0.0f) {
 		m_animStatus = enStatus_Walk;
 	}
 }
@@ -1646,7 +1628,7 @@ void Player::TryChangeStatusFall()
 //待機状態に切り替えできたら切り替える。
 void Player::TryChangeStatusIdle()
 {
-	if (m_moveSpeed.LengthSq() <= 0.001f) {
+	if (m_moveAmount.LengthSq() <= 0.001f) {
 		m_animStatus = enStatus_Idle;
 	}
 }
@@ -1808,15 +1790,15 @@ bool Player::GetShootPoint(Vector3& crossPoint)
 void Player::KnockBack() {
 	//ノックバックする向きを設定
 	if (m_isknockBackCount == 0) {
-		m_moveSpeed.y = 0.0f;
+		m_moveAmount.y = 0.0f;
 	}
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f);
+	m_position = m_charaCon.Execute(m_moveAmount, 1.0f);
 	m_skinModelRender->SetPosition(m_position);
 
 	m_isknockBackCount++;
 
 	if (m_isknockBackCount >= 7) {
-		m_moveSpeed = { 0.0f,0.0f,0.0f };
+		m_moveAmount = { 0.0f,0.0f,0.0f };
 		m_isknockBackCount = 0;
 		m_isKnockBack = false;
 	}	
@@ -1841,7 +1823,7 @@ void Player::OpeningCamera()
 		qRotY.SetRotation(Vector3::AxisY, m_addY);
 		//クォータニオンを使ってtoPosを回す
 		qRotY.Apply(toPos);
-		m_cameraPos = toPos;
+		m_sequenceCameraPos = toPos;
 		g_camera3D[m_playerNum]->SetTarget(m_targetPos);
 	}
 	else//キャラに向かってカメラを移動させる
@@ -1850,25 +1832,25 @@ void Player::OpeningCamera()
 		PlayerPos.y = m_position.y + 90.0f;//プレイヤーの頭の位置
 		
 		
-		Vector3 targetVec = PlayerPos - m_cameraPos;
+		Vector3 targetVec = PlayerPos - m_sequenceCameraPos;
 		if (targetVec.Length() < 250)//カメラが近づけばオープニングカメラ終了
 		{
 			m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
 		}
 		targetVec.Normalize();
-		m_cameraPos += targetVec*m_gain;
+		m_sequenceCameraPos += targetVec*m_gain;
 		m_gain += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}
-	g_camera3D[m_playerNum]->SetPosition(m_cameraPos);
+	g_camera3D[m_playerNum]->SetPosition(m_sequenceCameraPos);
 
 	//キャラを初期方向に向かせる
 
-	//キャラの前方向はm_characterDirection;
+	//キャラの前方向はm_cameraFront;
 
-	n = m_characterDirection.Dot(Vector3::AxisZ);//内積
-	float angle = acosf(n);//アークコサイン
-	if (m_characterDirection.x < 0) {
+	float dot = m_cameraFront.Dot(Vector3::AxisZ);//内積
+	float angle = acosf(dot);//アークコサイン
+	if (m_cameraFront.x < 0) {
 		angle *= -1;
 	}
 	m_rot.SetRotation(Vector3::AxisY, angle);
@@ -1923,10 +1905,10 @@ void Player::FinalHit()//決着がついたときのカメラ
 		winnerHeadPos.y += 50;//勝者の頭の位置
 		Vector3 LastRight = Cross(g_vec3AxisY, m_LastFrontDir);//最後に向いていた向きの右ベクトル
 		Vector3 targetPos = m_position;//ターゲットポジション
-		m_cameraPos = targetPos;//カメラのポジション
+		m_sequenceCameraPos = targetPos;//カメラのポジション
 		targetPos.y += 20;//少し上に設定する
 		targetPos += m_LastFrontDir * -30;//キャラの少し後ろに伸ばす	
-		m_cameraPos.y += 100;//キャラより少し上くらい
+		m_sequenceCameraPos.y += 100;//キャラより少し上くらい
 		//ループの値に合わせてステータスを変える
 		if (m_LoseCameraLoop == 0)
 		{
@@ -1954,15 +1936,15 @@ void Player::FinalHit()//決着がついたときのカメラ
 		case 0://右からのカメラ
 			m_skinModelRender->SetAnimationSpeed(0.1f);//アニメーションを遅くする
 			m_enemy->m_skinModelRender->SetAnimationSpeed(0.1f);
-			m_cameraPos += LastRight * 200;//右
+			m_sequenceCameraPos += LastRight * 200;//右
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 1://左からのカメラ
-			m_cameraPos += LastRight * -200;//左
+			m_sequenceCameraPos += LastRight * -200;//左
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 2://前からのカメラ
-			m_cameraPos += m_LastFrontDir * 200;//正面
+			m_sequenceCameraPos += m_LastFrontDir * 200;//正面
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 3://自分を写しながら敵を向いたカメラ
@@ -1971,7 +1953,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
 			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFrontDir * 200) - m_position;
 			m_winnerVec.Normalize();
-			m_cameraPos += m_winnerVec*-200;//後ろ
+			m_sequenceCameraPos += m_winnerVec*-200;//後ろ
 			m_winnerWaistPos = m_enemy->m_position;//敵の腰の位置
 			m_winnerWaistPos.y += 20;
 			g_camera3D[0]->SetTarget(m_winnerWaistPos);
@@ -1985,9 +1967,9 @@ void Player::FinalHit()//決着がついたときのカメラ
 			{
 				m_enemy->m_WinAnimOn = true;
 			}
-			m_cameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//指数関数的にカメラが近づく
+			m_sequenceCameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//指数関数的にカメラが近づく
 
-			m_cameraPos += m_winnerVec * -200;//case3のときのカメラの位置と合わせるため
+			m_sequenceCameraPos += m_winnerVec * -200;//case3のときのカメラの位置と合わせるため
 			
 			g_camera3D[0]->SetTarget(m_winnerWaistPos);
 			break;
@@ -2056,7 +2038,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 			m_winnerSprite2->SetScale({ 1.0f, 1.0f, 1.0f });		
 		}
 
-		g_camera3D[0]->SetPosition(m_cameraPos);
+		g_camera3D[0]->SetPosition(m_sequenceCameraPos);
 		m_LoseCameraLoop++;
 	}
 	else//勝者のとき

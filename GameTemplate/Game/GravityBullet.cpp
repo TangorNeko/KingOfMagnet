@@ -218,7 +218,7 @@ void GravityBullet::AsGravityBehave()
 	{
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
-				Vector3 diff = m_position - player->m_position;
+				Vector3 diff = m_position - player->GetPosition();
 				if (diff.Length() > GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MIN &&	//ãﬂÇ∑Ç¨ÇƒÇ‡É_ÉÅ
 					diff.Length() < GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX && player != m_parent)
 				{

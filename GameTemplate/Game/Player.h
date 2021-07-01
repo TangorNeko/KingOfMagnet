@@ -195,6 +195,36 @@ public://リファクタリング中に作られた関数
 		m_sensitivity = sensitivity;
 	}
 
+	void SetCameraFront(const Vector3& front)
+	{
+		m_cameraFront = front;
+	}
+
+	const Vector3& GetCameraFront()
+	{
+		return m_cameraFront;
+	}
+
+	void SetToCameraDirection(const Vector3& direction)
+	{
+		m_toCameraDir = direction;
+	}
+
+	void SetPosition(const Vector3& position)
+	{
+		m_position = position;
+	}
+
+	const Vector3& GetPosition()
+	{
+		return m_position;
+	}
+
+	void SetMoveAmount(const Vector3& moveAmount)
+	{
+		m_moveAmount = moveAmount;
+	}
+
 public:
 
 	//アニメーションの数
@@ -249,22 +279,20 @@ public:
 
 	prefab::CFontRender* m_bulletNumFont = nullptr;//残弾数
 	prefab::CFontRender* m_bulletNumFont2 = nullptr;//残弾数
+private:
 
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion m_rot;//キャラクターの回転
 	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率 **定数化**
-	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
-	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
-	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };//カメラへの向き
+	Vector3 m_moveAmount = { 0.0f,0.0f,0.0f };//キャラコンに実行させる移動量
+	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };//プレイヤーからカメラへの向き
 
-	Vector3 m_front;//カメラの前方向
-	Vector3 right;//カメラの右方向
-	Vector3 cameraPos;//カメラのポジション
-	Quaternion qRotY;
-	float n;//内積
-private:
+	Vector3 m_cameraFront;//カメラの前方向
+	Vector3 m_cameraRight;//カメラの右方向
+	Vector3 m_cameraPos;//カメラのポジション
+	Quaternion m_cameraQRotY;
 	float m_sensitivity = 2.0f;//視点感度
-	Vector3 m_cameraPos;
+	Vector3 m_sequenceCameraPos;
 	Vector3 m_targetPos = { 0.0f,0.0f,0.0f }; //  **定数化**
 	float m_gain = 10;//カメラとターゲットとの距離	
 	float m_addY = 0.0f;
@@ -355,12 +383,10 @@ private:
 	//足音
 	int m_footstepsTimer = 0;
 
-	//必殺技ゲージがどれだけ溜まっているかを表示
-	prefab::CFontRender* m_ChargeSPFontRender = nullptr;
+	prefab::CFontRender* m_ChargeSPFontRender = nullptr;//必殺技ゲージの溜まり具合のフォント
 
-	//勝利表示
-	prefab::CSpriteRender* m_winnerSprite1 = nullptr;
-	prefab::CSpriteRender* m_winnerSprite2 = nullptr;
+	prefab::CSpriteRender* m_resultWinnerSprite = nullptr;//勝者を表示するスプライト(○P)
+	prefab::CSpriteRender* m_resultWinSprite = nullptr;//勝利のスプライト(WIN!)
 };
 
 

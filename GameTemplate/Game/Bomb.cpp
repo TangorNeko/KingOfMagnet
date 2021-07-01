@@ -127,7 +127,7 @@ void Bomb::AsDropBehave()
 {
 	QueryGOs<Player>("Player", [this](Player* player)->bool {
 
-		Vector3 toPlayer = player->m_position - m_position;
+		Vector3 toPlayer = player->GetPosition() - m_position;
 
 		//引力の時のみ
 		if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
@@ -328,7 +328,7 @@ void Bomb::AsHoldBehave()
 	//爆弾の回転クォータニオン
 	Quaternion DebrisRot;
 	//キャラの向きを取得
-	Vector3 CharacterDirection = m_parent->m_toCameraDir * -1.0f;
+	Vector3 CharacterDirection = m_parent->GetCameraFront();
 	//上下方向の向きは無視する。
 	CharacterDirection.y = 0.0f;
 	CharacterDirection.Normalize();

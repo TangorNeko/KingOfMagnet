@@ -152,7 +152,7 @@ bool GameScene::Start()
 	m_stageLight->SetColor(STAGELIGHT_COLOR);
 
 	m_player1 = NewGO<Player>(0, "Player");
-	m_player1->m_position = PLAYER1_STARTPOSITION;
+	m_player1->SetPosition(PLAYER1_STARTPOSITION);
 	m_player1->SetPlayerNum(NUMBER_PLAYER1);
 
 	std::random_device device;
@@ -168,12 +168,12 @@ bool GameScene::Start()
 	{
 		m_player1->SetMagPower(MAGNETSTATE_GRAVITY);
 	}
-	m_player1->m_toCameraDir = STARTDIRECTION_PLAYER1_TOCAMERA;
-	m_player1->m_characterDirection = STARTDIRECTION_PLAYER1_MODEL;
+	m_player1->SetToCameraDirection(STARTDIRECTION_PLAYER1_TOCAMERA);
+	m_player1->SetCameraFront(STARTDIRECTION_PLAYER1_MODEL);
 	m_player1->SetSensitivity(m_P1Sensitivity);
 
 	m_player2 = NewGO<Player>(0, "Player");
-	m_player2->m_position = PLAYER2_STARTPOSITION;
+	m_player2->SetPosition(PLAYER2_STARTPOSITION);
 	m_player2->SetPlayerNum(NUMBER_PLAYER2);
 
 	//プレイヤー2の磁力の状態をランダムに決定
@@ -186,8 +186,8 @@ bool GameScene::Start()
 	{
 		m_player2->SetMagPower(MAGNETSTATE_GRAVITY);
 	}
-	m_player2->m_toCameraDir = STARTDIRECTION_PLAYER2_TOCAMERA;
-	m_player2->m_characterDirection = STARTDIRECTION_PLAYER2_MODEL;
+	m_player2->SetToCameraDirection(STARTDIRECTION_PLAYER2_TOCAMERA);
+	m_player2->SetCameraFront(STARTDIRECTION_PLAYER2_MODEL);
 	m_player2->SetSensitivity(m_P2Sensitivity);
 
 	//各プレイヤーに敵を渡す

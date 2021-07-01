@@ -56,7 +56,7 @@ void DebrisBlock::Update()
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
-			Vector3 toPlayer = player->m_position - m_position;
+			Vector3 toPlayer = player->GetPosition() - m_position;
 
 			//引力バーストしているプレイヤーが距離500以内に近づき、タイマーが上がっていて、ゲームに存在できる最大数未満であれば新しくガレキを生成
 			if (player->GetMagPower() == MAGNETSTATE_GRAVITY && player->IsBurst() == true && m_factoryTimer == FACTORY_TIMER_CAN_CREATE && toPlayer.Length() < FACTORY_MAX_CREATE_DISTANCE)

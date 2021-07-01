@@ -55,7 +55,7 @@ void Repulsion::Update()
 			int playerNum = player->GetPlayerNum();
 
 				//斥力床の中心とプレイヤーとの距離
-				Vector3 diff = player->m_position - m_position;
+				Vector3 diff = player->GetPosition() - m_position;
 				//立方体の範囲に入れば斥力を与える
 				if (fabsf(diff.x) < REPULSION_AREA_LENGTH && fabsf(diff.z) < REPULSION_AREA_LENGTH)
 				{

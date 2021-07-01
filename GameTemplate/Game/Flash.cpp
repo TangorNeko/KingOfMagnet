@@ -44,10 +44,10 @@ bool Flash::Start()
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
-			Vector3 angle = m_position - player->m_position;
+			Vector3 angle = m_position - player->GetPosition();
 			angle.Normalize();
 
-			float n = player->m_front.Dot(angle);
+			float n = player->GetCameraFront().Dot(angle);
 
 			if (m_parentNum != player->GetPlayerNum() &&
 				n > FLASH_AFFECT_ANGLE)

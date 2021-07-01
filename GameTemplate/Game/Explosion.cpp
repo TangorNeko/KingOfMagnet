@@ -39,7 +39,7 @@ void Explosion::Update()
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				//ƒvƒŒƒCƒ„[‚ª‹ß‚¯‚ê‚Î
-				Vector3 diff = m_position - player->m_position;		//diff‚Ídifference(·)
+				Vector3 diff = m_position - player->GetPosition();		//diff‚Ídifference(·)
 				float dis = diff.Length();		//dis‚Ídistance(‹——£)
 				dis = fabsf(dis);
 				if (dis <= EXPLOSION_RANGE)
