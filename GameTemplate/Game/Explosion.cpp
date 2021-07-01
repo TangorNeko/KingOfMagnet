@@ -45,7 +45,6 @@ void Explosion::Update()
 				if (dis <= EXPLOSION_RANGE)
 				{
 					player->Damage(EXPLOSION_RANGE - dis);
-					player->m_TakeAttackNum++;//UŒ‚‚ğó‚¯‚½‰ñ”
 				}
 				return true;
 			});

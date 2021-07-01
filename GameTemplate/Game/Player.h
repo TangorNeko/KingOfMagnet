@@ -110,9 +110,6 @@ public:
 	//敗北した時
 	void Lose();
 
-	//リザルト表示
-	void ResultDisplay();
-
 	//ファイナルカメラ
 	void FinalHit();
 
@@ -125,7 +122,7 @@ public:
 public:
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion m_rot;//キャラクターの回転
-	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率
+	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率 **定数化**
 	Vector3 m_moveSpeed = { 0.0f,0.0f,0.0f };//キャラクターの移動速度
 	Vector3 m_characterDirection = { 0.0f,0.0f,1.0f };//キャラクターの向き
 	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };//カメラへの向き
@@ -135,14 +132,12 @@ public:
 	Vector3 cameraPos;//カメラのポジション
 	Quaternion qRotY;
 	float n;//内積
-	float angle;//アークコサイン
 	float m_sensitivity = 2.0f;//視点感度
 	Vector3 m_cameraPos;
-	Vector3 m_targetPos = { 0.0f,0.0f,0.0f };
+	Vector3 m_targetPos = { 0.0f,0.0f,0.0f }; //  **定数化**
 	float m_gain = 10;//カメラとターゲットとの距離	
 	float m_addY = 0.0f;
 	int m_cameraLoopCount = 0;
-	bool m_opning = true;
 	bool m_hpBarRedFlag = false;
 
 	int m_fallLoop = 0;//落下制御用のループカウント
@@ -232,25 +227,11 @@ public:
 	//メビウスゲージ
 	MobiusGauge* m_mobiusGauge = nullptr;
 
-	//リザルト関連
-	Vector2 m_resultPos = { -1200.0f,100.0f };
-	bool m_resultFirstTime = true;
-	bool m_displayOff = false;
-	float m_AttackNum = 0;//攻撃回数	
-	float m_TakeAttackNum = 0; //攻撃を受けた回数
-	float m_HitRate = 0;//命中率
-	int m_BurstNum = 0;//バースト回数
-	int m_StealNum = 0;//敵の弾を奪った回数
-	int m_LandingNum = 0;//落ちた回数
-	int m_ReceivedDamage = 0;//受けたダメージ
-	int m_SaveSP = 0;//溜まった必殺技ポイント
-
 	//ファイナルヒット関連
 	bool m_Lose = false;//負けたかどうか
 	bool m_WinAnimOn = false;//勝者アニメーションを開始する
 	int m_LoseCameraLoop = 0;//ファイナルヒットカメラのループカウント
 	bool m_FirstTime = true;//最初の一度だけ
-	int m_winnerNum = 0;//勝者のプレイヤー番号
 	int m_loserNum = 0;//敗者のプレイヤー番号
 	int m_LastCameraStatus = 0;//状態遷移番号
 	float m_coef = 0.0f;//ベクターに掛ける値(coefficient)

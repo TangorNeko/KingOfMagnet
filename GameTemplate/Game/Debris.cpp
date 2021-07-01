@@ -348,7 +348,6 @@ void Debris::AsBulletBehave()
 							hitSE->SetVolume(SOUND_SE_SCRAP_HIT_VOLUME);
 							hitSE->Play(false);
 						}
-						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						player->Damage(DAMAGE_SCRAP);
 						break;
 					case enSword:
@@ -358,7 +357,6 @@ void Debris::AsBulletBehave()
 							hitSE->SetVolume(SOUND_SE_SWORD_HIT_VOLUME);
 							hitSE->Play(false);
 						}
-						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						player->Damage(DAMAGE_SWORD);
 						break;
 					case enSpecialCharger:
@@ -368,7 +366,6 @@ void Debris::AsBulletBehave()
 							hitSE->SetVolume(SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
 							hitSE->Play(false);
 						}
-						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						player->Damage(DAMAGE_SPECIALCHARGER);
 						break;
 					}

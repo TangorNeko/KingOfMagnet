@@ -67,7 +67,6 @@ void Incendia::Update()
 					if (m_damageCountdown[player->m_playerNum] <= DAMAGE_COUNT_DAMAGE)
 					{
 						player->Damage(BURN_DAMAGE);
-						player->m_TakeAttackNum++;//UŒ‚‚ðŽó‚¯‚½‰ñ”
 						//ŽŸ‚É‰Šãƒ_ƒ[ƒW‚ðŽó‚¯‚é‚Ü‚Å‚ÌŠÔŠu‚ðÝ’è
 						m_damageCountdown[player->m_playerNum] = DAMAGE_COUNT_RESET;
 					}

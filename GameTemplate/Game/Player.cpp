@@ -539,7 +539,6 @@ void Player::Move()
 
 	//穴に落ちた時の処理
 	if (m_position.y <= -750.0f) {
-		m_LandingNum++;//落ちた回数
 		Damage(100);
 
 		//敵から最も遠いリスポーン地点に移動する。
@@ -600,7 +599,6 @@ void Player::Attack()
 		//ガレキを一つでも持っているなら
 		if (m_holdDebrisVector.empty() == false)
 		{
-			m_AttackNum++;//攻撃回数
 			//音を鳴らす
 			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 			ssShoot->Init(L"Assets/sound/シュート音.wav", SoundType::enSE);
@@ -823,7 +821,6 @@ void Player::SpecialAttack()
 					//照準の指す方向に飛ばす
 					for (auto debris : m_holdDebrisVector)
 					{
-						m_AttackNum++;//攻撃回数
 						debris->SetDebrisState(Debris::enBullet);
 						debris->SetMoveDirection(crossPoint - debris->GetPosition());
 					}
@@ -832,7 +829,6 @@ void Player::SpecialAttack()
 				{
 					for (auto debris : m_holdDebrisVector)
 					{
-						m_AttackNum++;//攻撃回数
 						debris->SetDebrisState(Debris::enBullet);
 						Vector3 moveDirection = m_position - g_camera3D[m_playerNum]->GetPosition();
 						moveDirection.y = 0.0f;
@@ -886,7 +882,6 @@ void Player::ThrowBomb()
 		//爆弾を一つでも持っているなら
 		if (m_holdBombVector.empty() == false)
 		{
-			m_AttackNum++;//攻撃回数
 			//音を鳴らす
 			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
 			ssThrow->Init(L"Assets/sound/投げる音.wav", SoundType::enSE);
@@ -1074,7 +1069,6 @@ void Player::MagneticBehavior()
 	//LB1を押して攻撃中でなかった場合バースト状態に移行
 	if (g_pad[m_playerNum]->IsTrigger(enButtonLB1) && m_isAttacking == false)
 	{
-		m_BurstNum++;//バーストを使った回数
 		//磁力ゲージを300消費。
 		m_charge -= 300.0f;
 		if (m_charge < 0)
@@ -1157,7 +1151,6 @@ void Player::MagneticBurst()
 					//敵の持っているガレキのリストを走査
 					for (auto iterator = m_enemy->m_holdDebrisVector.begin(); iterator != m_enemy->m_holdDebrisVector.end(); iterator++)
 					{
-						m_StealNum++;//敵の弾を奪った回数
 						//ドロップ状態にさせていく。すぐ吸うのでポップ状態ではない。
 						(*iterator)->SetOnGroundFlag(false);
 						(*iterator)->SetDebrisState(Debris::enDrop);
@@ -1423,7 +1416,6 @@ void Player::Collision()
 //自分の体力にダメージを与える
 void Player::Damage(int damage)
 {	
-	m_ReceivedDamage += damage;//受けたダメージ
 	m_hp -= damage;
 	m_HitOn = true;//アニメーションフラグ
 	m_Hitcount = 30;//
@@ -1512,8 +1504,6 @@ void Player::ChargeSpecialAttackGauge(int charge)
 	}
 	else
 	{
-		m_SaveSP += charge;//溜まった必殺技ポイント
-
 		m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 
 		if (m_playerNum == 0)
@@ -2078,27 +2068,6 @@ void Player::FinalHit()//決着がついたときのカメラ
 		else
 		{
 			m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
-		}
-	}
-}
-void Player::ResultDisplay()
-{
-	if (m_resultFirstTime == true)
-	{
-		m_resultFirstTime = false;
-		if (m_playerNum == 0)
-		{
-			//命中率を計算(0で割るとバグるため＋１をしておく)
-			m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
-
-			//体力、チャージ、現在の自分の磁力の状態の表示
-
-		}
-		if (m_playerNum == 1)
-		{
-			//命中率を計算(0で割るとバグるため＋１をしておく)
-			m_HitRate = ((m_enemy->m_TakeAttackNum + 1) / (m_AttackNum + 1)) * 100;
-
 		}
 	}
 }
