@@ -111,7 +111,7 @@ void GravityBullet::AsBulletBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
+			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//当たり判定にヒットしているなら爆発。
 				if (player->m_collider.isHitCapsule(m_bulletCollider))
@@ -209,7 +209,7 @@ void GravityBullet::AsGravityBehave()
 	m_gravityTimeCount++;
 
 	//カウンターが180以上か、プレイヤーから攻撃指示が出たらフィニッシュ状態へ移行。
-	if (m_gravityTimeCount >= GRAVITYATTACKCOUNT_ATTACK || m_parent->m_isGravityBulletAttack == true)
+	if (m_gravityTimeCount >= GRAVITYATTACKCOUNT_ATTACK || m_parent->GetGravityAttackFlag() == true)
 	{
 		m_gravityBulletState = enFinish;
 	}

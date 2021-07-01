@@ -156,10 +156,10 @@ void Debris::AsDropBehave()
 
 		Vector3 toPlayer = player->m_position - m_position;
 			//引力の時のみ
-			if (player->m_magPower == MAGNETSTATE_GRAVITY)
+			if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
 			{
 				//バーストしてたら引っ張ってくる
-				if (player->m_isBurst == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+				if (player->IsBurst() == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 				{
 					m_isOnGround = false;
 
@@ -207,7 +207,7 @@ void Debris::AsDropBehave()
 					player->m_holdDebrisVector.push_back(this);
 					//テキスト更新
 					player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
-					if (player->m_playerNum == NUMBER_PLAYER1)
+					if (player->GetPlayerNum() == NUMBER_PLAYER1)
 					{
 						if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
 							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT);
@@ -226,10 +226,10 @@ void Debris::AsDropBehave()
 			}
 
 			//斥力の時
-			else if (player->m_magPower == MAGNETSTATE_REPULSION)
+			else if (player->GetMagPower() == MAGNETSTATE_REPULSION)
 			{
 				//バーストしてたら弾き飛ばす
-				if (player->m_isBurst == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+				if (player->IsBurst() == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 				{
 					//弾き飛ばすのでプレイヤーへの向きとは反対側
 					Vector3 moveDir = toPlayer * -1;
@@ -293,18 +293,18 @@ void Debris::AsBulletBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
+			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//敵プレイヤーが磁力バーストしている時
-				if (player->m_isBurst == true)
+				if (player->IsBurst() == true)
 				{
-					Vector3 toPlayer = player->m_magPosition - m_position;
+					Vector3 toPlayer = player->GetMagPosition() - m_position;
 
 					//敵との距離が500未満なら
 					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 					{
 						//引力なら
-						if (player->m_magPower == MAGNETSTATE_GRAVITY)
+						if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
 						{
 							//プレイヤーに向かうベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();
@@ -343,7 +343,7 @@ void Debris::AsBulletBehave()
 					{
 					case enScrap:
 						//音を再生
-						if (player->m_hp > 0) {
+						if (player->GetHP() > 0) {
 							hitSE->Init(L"Assets/sound/ダメージ音.wav",SoundType::enSE);
 							hitSE->SetVolume(SOUND_SE_SCRAP_HIT_VOLUME);
 							hitSE->Play(false);
@@ -352,7 +352,7 @@ void Debris::AsBulletBehave()
 						break;
 					case enSword:
 						//音を再生
-						if (player->m_hp > 0) {
+						if (player->GetHP() > 0) {
 							hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
 							hitSE->SetVolume(SOUND_SE_SWORD_HIT_VOLUME);
 							hitSE->Play(false);
@@ -361,7 +361,7 @@ void Debris::AsBulletBehave()
 						break;
 					case enSpecialCharger:
 						//音を再生(仮)
-						if (player->m_hp > 0) {
+						if (player->GetHP() > 0) {
 							hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
 							hitSE->SetVolume(SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
 							hitSE->Play(false);
@@ -369,14 +369,15 @@ void Debris::AsBulletBehave()
 						player->Damage(DAMAGE_SPECIALCHARGER);
 						break;
 					}
-					player->m_damegeEffectFront = m_moveDirection * -1;
+
+					player->SetDamageEffectFront(m_moveDirection * -1);
 
 					//当たった所からポップさせる
 					m_debrisState = enPop;
 					m_isOnGround = false;
 
 					//プレイヤーをノックバックさせる。
-					player->m_isKnockBack = true;
+					player->SetKnockBackFlag(true);
 					player->m_moveSpeed = m_moveDirection * PLAYER_KNOCKBACK_SPEED;
 				}
 			}
@@ -407,7 +408,7 @@ void Debris::AsHoldBehave()
 		{
 			//スペシャルチャージャーを持っていると、ゲージが少しずつ溜まる。
 			if (m_debrisShape == enSpecialCharger) {
-				if (player->m_playerNum == m_parent->m_playerNum) {
+				if (player->GetPlayerNum() == m_parent->GetPlayerNum()) {
 
 					m_specialChargeCount++;
 

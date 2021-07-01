@@ -95,6 +95,9 @@ private:
 	//発射先の計算。
 	bool GetShootPoint(Vector3& crossPoint);
 
+	//ファイナルカメラ
+	void FinalHit();
+
 	//ライト
 	prefab::CSpotLight* m_spotLight = nullptr;
 
@@ -110,16 +113,120 @@ public:
 	//敗北した時
 	void Lose();
 
-	//ファイナルカメラ
-	void FinalHit();
-
 	//必殺技ゲージをチャージする。
 	void ChargeSpecialAttackGauge(int charge);
 
 	//ノックバックをする。
 	void KnockBack();
 
+public://リファクタリング中に作られた関数
+	void SetDamageEffectFront(const Vector3& front)
+	{
+		m_damageEffectFront = front;
+	}
+
+	void SetKnockBackFlag(bool flag)
+	{
+		m_isKnockBack = flag;
+	}
+
+	bool GetGravityAttackFlag()
+	{
+		return m_isGravityBulletAttack;
+	}
+
+	void SetEnemy(Player* enemy)
+	{
+		m_enemy = enemy;
+	}
+
+	const Vector3& GetMagPosition()
+	{
+		return m_magPosition;
+	}
+
+	int GetPlayerNum()
+	{
+		return m_playerNum;
+	}
+
+	void SetPlayerNum(int playerNum)
+	{
+		m_playerNum = playerNum;
+	}
+
+	int GetMagPower()
+	{
+		return m_magPower;
+	}
+
+	void SetMagPower(int magPower)
+	{
+		m_magPower = magPower;
+	}
+
+	bool IsBurst()
+	{
+		return m_isBurst;
+	}
+
+	int GetHP()
+	{
+		return m_hp;
+	}
+
 public:
+
+	//アニメーションの数
+	enum {
+		enAnimationClip_Attack,
+		enAnimationClip_Run,
+		enAnimationClip_Idle,
+		enAnimationClip_Walk,
+		enAnimationClip_Move,
+		enAnimationClip_Fall,
+		enAnimationClip_SpecialAttack,
+		enAnimationClip_Burst,
+		enAnimationClip_Hit,
+		enAnimationClip_Death,
+		enAnimationClip_Winner,
+		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
+	};
+
+	//状態の数
+	enum EnStatus {
+		enStatus_Attack,	//攻撃状態
+		enStatus_Run,		//走り状態
+		enStatus_Idle,		//待機状態
+		enStatus_Walk,		//歩き状態
+		enStatus_Move,		//移動アクション状態		
+		enStatus_Fall,		//落下状態
+		enStatus_SpecialAttack,//必殺技状態
+		enStatus_Burst,		//バースト状態
+		enStatus_Hit,		//被弾状態		
+		enStatus_Num,		//状態の数。
+	};
+
+public:
+	//ガレキ、爆弾の操作系
+	std::vector<Debris*> m_holdDebrisVector;//保持しているガレキが格納されるコンテナ
+	float m_holdDebrisRotateDeg = 0;//保持しているガレキの回転角度
+
+	std::vector<Bomb*> m_holdBombVector;//保持している爆弾が格納されるコンテナ
+	int m_selectBombNo = 0;//選択している爆弾の番号
+
+	//ファイナルヒット関連
+	bool m_Lose = false;//負けたかどうか
+	bool m_WinAnimOn = false;//勝者アニメーションを開始する
+	int m_LoseCameraLoop = 0;//ファイナルヒットカメラのループカウント
+	bool m_FirstTime = true;//最初の一度だけ
+	int m_loserNum = 0;//敗者のプレイヤー番号
+	int m_LastCameraStatus = 0;//状態遷移番号
+	float m_coef = 0.0f;//ベクターに掛ける値(coefficient)
+	Vector3 m_LastFrontDir;//キャラが最後に向いた向き
+	Vector3 m_winnerVec;//敗者から勝者に向かうベクトル
+	Vector3 m_winnerWaistPos;//勝者の腰の位置
+
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion m_rot;//キャラクターの回転
 	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率 **定数化**
@@ -152,9 +259,11 @@ public:
 	TriangleCollider m_triCollider[2];//単純な三角形の当たり判定(発射先の判定に使う)
 	MyCapsuleCollider m_collider;//カプセル状の当たり判定(弾の当たり判定に使う)
 
-	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
 	prefab::CFontRender* m_bulletNumFont = nullptr;//残弾数
 	prefab::CFontRender* m_bulletNumFont2 = nullptr;//残弾数
+private:
+
+	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
 
 	prefab::CSpriteRender* m_crosshairRender = nullptr; //照準のスプライト
 	
@@ -168,48 +277,17 @@ public:
 	int m_attackCount = 0;//攻撃の隙で移動速度が落ちている時間。
 	bool m_isSteal = false;//一回の引力バースト中にすでに敵の弾を奪ったか
 
+
+
 	Vector3 m_magPosition = { 0.0f,0.0f,0.0f };//磁力が出ている原点
 
-	std::vector<Debris*> m_holdDebrisVector;//保持しているガレキが格納されるコンテナ
-	float m_holdDebrisRotateDeg = 0;//保持しているガレキの回転角度
-
-	std::vector<Bomb*> m_holdBombVector;//保持している爆弾が格納されるコンテナ
-	int m_selectBombNo = 0;//選択している爆弾の番号
-
-	//アニメーションの数
-	enum {
-		enAnimationClip_Attack,
-		enAnimationClip_Run,
-		enAnimationClip_Idle,
-		enAnimationClip_Walk,
-		enAnimationClip_Move,
-		enAnimationClip_Fall,
-		enAnimationClip_SpecialAttack,
-		enAnimationClip_Burst,
-		enAnimationClip_Hit,
-		enAnimationClip_Death,
-		enAnimationClip_Winner,
-		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
-	};
-
-	//状態の数
-	enum EnStatus {
-		enStatus_Attack,	//攻撃状態
-		enStatus_Run,		//走り状態
-		enStatus_Idle,		//待機状態
-		enStatus_Walk,		//歩き状態
-		enStatus_Move,		//移動アクション状態		
-		enStatus_Fall,		//落下状態
-		enStatus_SpecialAttack,//必殺技状態
-		enStatus_Burst,		//バースト状態
-		enStatus_Hit,		//被弾状態		
-		enStatus_Num,		//状態の数。
-	};
 
 	AnimationClip animationClips[enAnimationClip_num];//アニメーションクリップ
 	EnStatus m_animStatus = enStatus_Idle;	//現在の状態。
 
 	Player* m_enemy = nullptr; //敵
+
+
 
 	int m_specialAttackGauge = 0;//必殺技のゲージ
 	int m_oldSpecialAttackGauge = 0;
@@ -227,20 +305,11 @@ public:
 	//メビウスゲージ
 	MobiusGauge* m_mobiusGauge = nullptr;
 
-	//ファイナルヒット関連
-	bool m_Lose = false;//負けたかどうか
-	bool m_WinAnimOn = false;//勝者アニメーションを開始する
-	int m_LoseCameraLoop = 0;//ファイナルヒットカメラのループカウント
-	bool m_FirstTime = true;//最初の一度だけ
-	int m_loserNum = 0;//敗者のプレイヤー番号
-	int m_LastCameraStatus = 0;//状態遷移番号
-	float m_coef = 0.0f;//ベクターに掛ける値(coefficient)
-	Vector3 m_LastFrontDir;//キャラが最後に向いた向き
-	Vector3 m_winnerVec;//敗者から勝者に向かうベクトル
-	Vector3 m_winnerWaistPos;//勝者の腰の位置
+
+
 
 	//ダメージエフェクト関連
-	Vector3 m_damegeEffectFront = {0.0f,0.0f,0.0f};
+	Vector3 m_damageEffectFront = {0.0f,0.0f,0.0f};
 
 	//斥力・引力エフェクト関連
 	prefab::CEffect* m_magEffect[2] = { nullptr,nullptr };		//2つのエフェクトを連続で再生し続ける。

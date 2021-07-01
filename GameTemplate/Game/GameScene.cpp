@@ -153,7 +153,7 @@ bool GameScene::Start()
 
 	m_player1 = NewGO<Player>(0, "Player");
 	m_player1->m_position = PLAYER1_STARTPOSITION;
-	m_player1->m_playerNum = NUMBER_PLAYER1;
+	m_player1->SetPlayerNum(NUMBER_PLAYER1);
 
 	std::random_device device;
 	std::mt19937_64 rnd(device());
@@ -162,11 +162,11 @@ bool GameScene::Start()
 	int mag = rnd() % NUMBER_MAGNET_STATUS;
 	if (mag)
 	{
-		m_player1->m_magPower = MAGNETSTATE_REPULSION;
+		m_player1->SetMagPower(MAGNETSTATE_REPULSION);
 	}
 	else
 	{
-		m_player1->m_magPower = MAGNETSTATE_GRAVITY;
+		m_player1->SetMagPower(MAGNETSTATE_GRAVITY);
 	}
 	m_player1->m_toCameraDir = STARTDIRECTION_PLAYER1_TOCAMERA;
 	m_player1->m_characterDirection = STARTDIRECTION_PLAYER1_MODEL;
@@ -174,25 +174,25 @@ bool GameScene::Start()
 
 	m_player2 = NewGO<Player>(0, "Player");
 	m_player2->m_position = PLAYER2_STARTPOSITION;
-	m_player2->m_playerNum = NUMBER_PLAYER2;
+	m_player2->SetPlayerNum(NUMBER_PLAYER2);
 
 	//プレイヤー2の磁力の状態をランダムに決定
 	mag = rnd() % NUMBER_MAGNET_STATUS;
 	if (mag)
 	{
-		m_player2->m_magPower = MAGNETSTATE_REPULSION;
+		m_player2->SetMagPower(MAGNETSTATE_REPULSION);
 	}
 	else
 	{
-		m_player2->m_magPower = MAGNETSTATE_GRAVITY;
+		m_player2->SetMagPower(MAGNETSTATE_GRAVITY);
 	}
 	m_player2->m_toCameraDir = STARTDIRECTION_PLAYER2_TOCAMERA;
 	m_player2->m_characterDirection = STARTDIRECTION_PLAYER2_MODEL;
 	m_player2->m_sensitivity = m_P2Sensitivity;
 
 	//各プレイヤーに敵を渡す
-	m_player2->m_enemy = m_player1;
-	m_player1->m_enemy = m_player2;
+	m_player2->SetEnemy(m_player1);
+	m_player1->SetEnemy(m_player2);
 	
 	//ステージの作成
 	m_backGround = NewGO<BackGround>(0, "background");
@@ -417,7 +417,7 @@ void GameScene::Update()
 
 void GameScene::WinnerJudge()
 {
-	if (m_player1->m_hp > m_player2->m_hp)
+	if (m_player1->GetHP() > m_player2->GetHP())
 	{
 		//1Pの勝ち
 		m_player1->Win();
@@ -427,7 +427,7 @@ void GameScene::WinnerJudge()
 		m_gameState = enResult;
 
 	}
-	else if(m_player1->m_hp < m_player2->m_hp)
+	else if(m_player1->GetHP() < m_player2->GetHP())
 	{
 		//2Pの勝ち
 		m_player1->Lose();

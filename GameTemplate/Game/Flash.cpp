@@ -49,12 +49,12 @@ bool Flash::Start()
 
 			float n = player->m_front.Dot(angle);
 
-			if (m_parentNum != player->m_playerNum &&
+			if (m_parentNum != player->GetPlayerNum() &&
 				n > FLASH_AFFECT_ANGLE)
 			{
 				m_flashFlag = true;
 				m_spriteRender = NewGO<prefab::CSpriteRender>(0);
-				m_spriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(player->m_playerNum));
+				m_spriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(player->GetPlayerNum()));
 				m_spriteRender->SetPosition(CENTER_OF_SCREEN);
 				m_spriteRender->Init("Assets/Image/White.dds", SPRITE_FLASH_WIDTH, SPRITE_FLASH_HEIGHT);
 			}

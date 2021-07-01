@@ -1449,12 +1449,12 @@ void Player::Damage(int damage)
 	m_hitEffect->SetPosition({ m_position.x, m_position.y + 50, m_position.z });
 
 	//カメラの前方向
-	m_damegeEffectFront.y = 0.0f;
-	m_damegeEffectFront.Normalize();
+	m_damageEffectFront.y = 0.0f;
+	m_damageEffectFront.Normalize();
 
-	float innerProduct = m_damegeEffectFront.Dot(Vector3::AxisZ); //内積
+	float innerProduct = m_damageEffectFront.Dot(Vector3::AxisZ); //内積
 	float angle = acosf(innerProduct);//アークコサイン
-	/*if (m_damegeEffectFront.x < 0) {
+	/*if (m_damageEffectFront.x < 0) {
 		angle *= -1;
 	}*/
 	Quaternion rot;

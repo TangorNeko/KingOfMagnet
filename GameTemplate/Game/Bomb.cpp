@@ -130,10 +130,10 @@ void Bomb::AsDropBehave()
 		Vector3 toPlayer = player->m_position - m_position;
 
 		//引力の時のみ
-		if (player->m_magPower == MAGNETSTATE_GRAVITY)
+		if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
 		{
 			//バーストしてたら引っ張ってくる
-			if (player->m_isBurst == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+			if (player->IsBurst() == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 			{
 				m_isOnGround = false;
 
@@ -185,10 +185,10 @@ void Bomb::AsDropBehave()
 		}
 
 		//斥力の時
-		else if (player->m_magPower == MAGNETSTATE_REPULSION)
+		else if (player->GetMagPower() == MAGNETSTATE_REPULSION)
 		{
 			//バーストしてたら弾き飛ばす
-			if (player->m_isBurst == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+			if (player->IsBurst() == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 			{
 				//弾き飛ばすのでプレイヤーへの向きとは反対側
 				Vector3 moveDir = toPlayer * -1;
@@ -251,18 +251,18 @@ void Bomb::AsBulletBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
+			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//敵プレイヤーが磁力バーストしている時
-				if (player->m_isBurst == true)
+				if (player->IsBurst() == true)
 				{
-					Vector3 toPlayer = player->m_magPosition - m_position;
+					Vector3 toPlayer = player->GetMagPosition() - m_position;
 
 					//敵との距離が500未満なら
 					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 					{						
 						//引力なら
-						if (player->m_magPower == MAGNETSTATE_GRAVITY)
+						if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
 						{
 							//プレイヤーに向かうベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();
@@ -377,7 +377,7 @@ void Bomb::AsPopBehave()
 			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Flash* flash = NewGO<Flash>(0);
 				flash->SetPosition(crossPoint);
-				flash->SetParentNum(m_parent->m_playerNum);
+				flash->SetParentNum(m_parent->GetPlayerNum());
 				DeleteGO(this);
 			}
 			break;

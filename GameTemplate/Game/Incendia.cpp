@@ -52,9 +52,9 @@ void Incendia::Update()
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				//ダメージを食らう間隔をカウント
-				if (m_damageCountdown[player->m_playerNum] > DAMAGE_COUNT_DAMAGE)
+				if (m_damageCountdown[player->GetPlayerNum()] > DAMAGE_COUNT_DAMAGE)
 				{
-					m_damageCountdown[player->m_playerNum]--;
+					m_damageCountdown[player->GetPlayerNum()]--;
 				}
 
 				//プレイヤーが近ければ
@@ -64,11 +64,11 @@ void Incendia::Update()
 				if (dis <= BURN_RANGE)
 				{
 					//少しずつダメージを受ける。		
-					if (m_damageCountdown[player->m_playerNum] <= DAMAGE_COUNT_DAMAGE)
+					if (m_damageCountdown[player->GetPlayerNum()] <= DAMAGE_COUNT_DAMAGE)
 					{
 						player->Damage(BURN_DAMAGE);
 						//次に炎上ダメージを受けるまでの間隔を設定
-						m_damageCountdown[player->m_playerNum] = DAMAGE_COUNT_RESET;
+						m_damageCountdown[player->GetPlayerNum()] = DAMAGE_COUNT_RESET;
 					}
 				}
 				return true;
