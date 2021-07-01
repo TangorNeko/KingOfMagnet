@@ -10,6 +10,54 @@
 #include "MobiusGauge.h"
 #include "ResultScene.h"
 
+namespace
+{
+	const float PLAYER_CHARACON_RADIUS = 10.0f;
+	const float PLAYER_CHARACON_HEIGHT = 50.0f;
+	const Vector4 FONT_SHADOWCOLOR = { 0.0f,0.0f,0.0f,1.0f };
+	const int FONT_SHADOWOFFSET = 3;
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE = { -170.0f, -270.0f };
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_TENSPLACE = Vector2::Zero;
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_ONESPLACE = { 60.0f, -270.0f };
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_TENSPLACE = Vector2::Zero;
+	const Vector2 FONT_BULLETMAX_POSITION_PLAYER1 = { -130.0f, -283.0f };
+	const Vector2 FONT_BULLETMAX_POSITION_PLAYER2 = { 100.0f, -283.0f };
+	const Vector2 FONT_BULLETMAX_SCALE = { 0.7f,0.7f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER1 = { -553.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER2 = { 498.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_SCALE = { 0.7f,0.7f };
+	const Vector4 FONT_SPGAUGE_COLOR = { 1.0f,1.0f, 0.0f,1.0f };
+
+	const int SPRITE_SIGHT_WIDTH = 32;
+	const int SPRITE_SIGHT_HEIGHT = 32;
+
+	const int SPRITE_HPBAR_WIDTH = 308;
+	const int SPRITE_HPBAR_HEIGHT = 32;
+	const Vector3 SPRITE_HPBAR_POSITION_PLAYER1 = { -10.0f,325.0f,0.0f };
+	const Vector3 SPRITE_HPBAR_POSITION_PLAYER2 = { 10.0f,325.0f,0.0f };
+	const int SPRITE_DAMAGEBAR_WIDTH = 316;
+	const int SPRITE_DAMAGEBAR_HEIGHT = 36;
+	const Vector3 SPRITE_DAMAGEBAR_POSITION_PLAYER1 = { 290.0f,325.0f,0.0f };
+	const Vector3 SPRITE_DAMAGEBAR_POSITION_PLAYER2 = { -290.0f,325.0f,0.0f };
+	const int SPRITE_DARKBAR_WIDTH = 316;
+	const int SPRITE_DARKBAR_HEIGHT = 36;
+	const Vector3 SPRITE_DARKHPBAR_POSITION_PLAYER1 = { 290.0f,325.0f,0.0f };
+	const Vector3 SPRITE_DARKHPBAR_POSITION_PLAYER2 = { -290.0f,325.0f,0.0f };
+	const Vector3 SPRITE_BAR_SCALE_PLAYER2 = { -1.0f, 1.0f, -1.0f };
+	const Vector3 MOBIUSGAUGE_POSITION_PLAYER1 = { -525.0f,-280.0f,0.0f };
+	const Vector3 MOBIUSGAUGE_POSITION_PLAYER2 = { 525.0f,-280.0f,0.0f };
+
+	const Vector3 LIGHT_PLAYER_SPOTLIGHT_COLOR = { 10.0f, 10.0f, 10.0f };
+	const float LIGHT_PLAYER_SPOTLIGHT_RANGE = 250.0f;
+	const float LIGHT_PLAYER_SPOTLIGHT_ANGLE = 30.0f;
+
+	const Vector3 EFFECT_MAGNET_SCALE = { 25.0f,25.0f,25.0f };
+	const Vector3 EFFECT_BURST_SCALE = { 50.0f, 50.0f, 50.0f };
+	const Vector3 EFFECT_HIT_SCALE = { 10.0f, 10.0f, 10.0f };
+	const Vector3 EFFECT_SPFIRE_SCALE = { 20.0f, 20.0f, 20.0f };
+	const Vector3 EFFECT_SPGAUGEMAX_SCALE = { 8.0f, 8.0f, 8.0f };
+	const Vector3 EFFECT_SPCHARGE_SCALE = { 70.0f, 70.0f, 70.0f };
+}
 Player::Player()
 {
 }
@@ -21,9 +69,9 @@ Player::~Player()
 	{
 		DeleteGO(m_bulletNumFont);
 	}
-	if (m_bulletNumFont2 != nullptr)
+	if (m_bulletMaxFont != nullptr)
 	{
-		DeleteGO(m_bulletNumFont2);
+		DeleteGO(m_bulletMaxFont);
 	}
 
 	if (m_crosshairRender != nullptr)
@@ -40,9 +88,9 @@ Player::~Player()
 	{
 		DeleteGO(m_HPBarDarkSpriteRender);
 	}
-	if (m_HPBarRedSpriteRender != nullptr)
+	if (m_DamageBarSpriteRender != nullptr)
 	{
-		DeleteGO(m_HPBarRedSpriteRender);
+		DeleteGO(m_DamageBarSpriteRender);
 	}
 
 	if (m_mobiusGauge != nullptr)
@@ -54,13 +102,13 @@ Player::~Player()
 	m_magEffect[1]->Stop();
 	m_burstEffect->Stop();
 	m_hitEffect->Stop();
-	m_SPEffect->Stop();
+	m_SPFireEffect->Stop();
 	m_SPGaugeMaxEffect->Stop();
 	DeleteGO(m_magEffect[0]);
 	DeleteGO(m_magEffect[1]);
 	DeleteGO(m_burstEffect);
 	DeleteGO(m_hitEffect);
-	DeleteGO(m_SPEffect);
+	DeleteGO(m_SPFireEffect);
 	DeleteGO(m_SPGaugeMaxEffect);
 	DeleteGO(m_SPChargeEffectRed);
 	DeleteGO(m_SPChargeEffectBlue);
@@ -68,7 +116,10 @@ Player::~Player()
 	DeleteGO(m_spotLight);
 
 	if (m_chargeSPFontRender != nullptr)
-		DeleteGO(m_chargeSPFontRender);	
+	{
+		DeleteGO(m_chargeSPFontRender);
+	}
+
 	DeleteGO(m_resultWinnerSprite);
 	DeleteGO(m_resultWinSprite);
 }
@@ -99,167 +150,166 @@ bool Player::Start()
 	
 	//モデルの初期化
 	m_skinModelRender = NewGO<prefab::CSkinModelRender>(0);
-	if (m_playerNum == 0)//プレイヤーの色を変える
+	if (m_playerNum == NUMBER_PLAYER1)//プレイヤーの色を変える
+	{
 		m_skinModelRender->Init("Assets/modelData/Player1.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
-	if (m_playerNum == 1)
+	}
+	else if (m_playerNum == NUMBER_PLAYER2)
+	{
 		m_skinModelRender->Init("Assets/modelData/Player2.tkm", "Assets/modelData/Mage.tks", animationClips, enAnimationClip_num);
-
+	}
 	m_skinModelRender->SetShadowCasterFlag(true);
 	m_skinModelRender->SetScale(m_scale);
 	m_skinModelRender->SetPosition(m_position);
 
 	//キャラコンの初期化
-	m_charaCon.Init(10.0f, 50.0f, m_position);
+	m_charaCon.Init(PLAYER_CHARACON_RADIUS, PLAYER_CHARACON_HEIGHT, m_position);
 
 	//残弾数表示の初期化
 	m_bulletNumFont = NewGO<prefab::CFontRender>(6);
 	m_bulletNumFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	m_bulletNumFont->SetShadowFlag(true);
-	m_bulletNumFont->SetShadowColor({ 0,0,0,1 });
-	m_bulletNumFont->SetShadowOffset(3);
-	if (m_playerNum == 0)
+	m_bulletNumFont->SetShadowColor(FONT_SHADOWCOLOR);
+	m_bulletNumFont->SetShadowOffset(FONT_SHADOWOFFSET);
+	if (m_playerNum == NUMBER_PLAYER1)
 	{
-		m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+		m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE);
 	}
 	else
 	{
-		m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+		m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_ONESPLACE);
 	}
-	m_bulletNumFont->SetScale({ 1.0f,1.0f });
-	m_bulletNumFont->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
 	m_bulletNumFont->SetText(std::to_wstring(m_holdDebrisVector.size()));
 
-	m_bulletNumFont2 = NewGO<prefab::CFontRender>(6);
-	m_bulletNumFont2->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	m_bulletNumFont2->SetShadowFlag(true);
-	m_bulletNumFont2->SetShadowColor({ 0,0,0,1 });
-	m_bulletNumFont2->SetShadowOffset(3);
-	if (m_playerNum == 0)
+	m_bulletMaxFont = NewGO<prefab::CFontRender>(6);
+	m_bulletMaxFont->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	m_bulletMaxFont->SetShadowFlag(true);
+	m_bulletMaxFont->SetShadowColor(FONT_SHADOWCOLOR);
+	m_bulletMaxFont->SetShadowOffset(FONT_SHADOWOFFSET);
+	if (m_playerNum == NUMBER_PLAYER1)
 	{
-		m_bulletNumFont2->SetPosition({ -130.0f, -283.0f });
+		m_bulletMaxFont->SetPosition(FONT_BULLETMAX_POSITION_PLAYER1);
 	}
 	else
 	{
-		m_bulletNumFont2->SetPosition({ 100.0f, -283.0f });
+		m_bulletMaxFont->SetPosition(FONT_BULLETMAX_POSITION_PLAYER2);
 	}
-	m_bulletNumFont2->SetScale({ 0.7f,0.7f });
-	m_bulletNumFont2->SetColor({ 1.0f,1.0f, 1.0f,1.0f });
-	m_bulletNumFont2->SetText(L"/10");
+	m_bulletMaxFont->SetScale(FONT_BULLETMAX_SCALE);
+	m_bulletMaxFont->SetText(L"/10");
 
 	//必殺ゲージの溜まり具合を表示するフォント
 	m_chargeSPFontRender = NewGO<prefab::CFontRender>(6);
 	m_chargeSPFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
 	m_chargeSPFontRender->SetShadowFlag(true);
-	m_chargeSPFontRender->SetShadowColor({ 0,0,0,1 });
-	m_chargeSPFontRender->SetShadowOffset(3);
-	if (m_playerNum == 0)
+	m_chargeSPFontRender->SetShadowColor(FONT_SHADOWCOLOR);
+	m_chargeSPFontRender->SetShadowOffset(FONT_SHADOWOFFSET);
+	if (m_playerNum == NUMBER_PLAYER1)
 	{
-		m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
 	}
 	else
 	{
-		m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
 	}
-	m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
-	m_chargeSPFontRender->SetColor({ 1.0f,1.0f, 0.0f,1.0f });
+	m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
+	m_chargeSPFontRender->SetColor(FONT_SPGAUGE_COLOR);
 	m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 
 	//照準表示の初期化
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
 	m_crosshairRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
-	m_crosshairRender->Init("Assets/Image/Sight.dds", 32, 32);
+	m_crosshairRender->Init("Assets/Image/Sight.dds", SPRITE_SIGHT_WIDTH, SPRITE_SIGHT_HEIGHT);
 
 	//ステージのクラスを取得
 	m_stageModel = FindGO<BackGround>("background");
 
 	//HPバー
 	m_HPBarSpriteRender = NewGO<prefab::CSpriteRender>(1);
-	m_HPBarSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_HPBarSpriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
 
-	m_HPBarSpriteRender->Init("Assets/Image/HP_Bar.dds",308, 32);
-	if (m_playerNum == 0) {
-		m_HPBarSpriteRender->SetPosition({ -10.0f,325.0f,0.0f });
+	m_HPBarSpriteRender->Init("Assets/Image/HP_Bar.dds", SPRITE_HPBAR_WIDTH, SPRITE_HPBAR_HEIGHT);
+	if (m_playerNum == NUMBER_PLAYER1) {
+		m_HPBarSpriteRender->SetPosition(SPRITE_HPBAR_POSITION_PLAYER1);
 	}
-	else if (m_playerNum == 1) {
-		m_HPBarSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
-		m_HPBarSpriteRender->SetPosition({ 10.0f,325.0f,0.0f });
+	else if (m_playerNum == NUMBER_PLAYER2) {
+		m_HPBarSpriteRender->SetScale(SPRITE_BAR_SCALE_PLAYER2);
+		m_HPBarSpriteRender->SetPosition(SPRITE_HPBAR_POSITION_PLAYER2);
 	}
 	//レッド
-	m_HPBarRedSpriteRender = NewGO<prefab::CSpriteRender>(5);
-	m_HPBarRedSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_DamageBarSpriteRender = NewGO<prefab::CSpriteRender>(5);
+	m_DamageBarSpriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
 
-	m_HPBarRedSpriteRender->Init("Assets/Image/HP_Bar_Damage.dds", 316, 36);
-	if (m_playerNum == 0) {
-		m_HPBarRedSpriteRender->SetPosition({ 290.0f,325.0f,0.0f });
+	m_DamageBarSpriteRender->Init("Assets/Image/HP_Bar_Damage.dds", SPRITE_DAMAGEBAR_WIDTH, SPRITE_DAMAGEBAR_HEIGHT);
+	if (m_playerNum == NUMBER_PLAYER1) {
+		m_DamageBarSpriteRender->SetPosition(SPRITE_DAMAGEBAR_POSITION_PLAYER1);
 		//({ 290.0f,325.0f,0.0f });
 	}
-	else if (m_playerNum == 1) {
-		m_HPBarRedSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
-		m_HPBarRedSpriteRender->SetPosition({ -290.0f,325.0f,0.0f });
+	else if (m_playerNum == NUMBER_PLAYER2) {
+		m_DamageBarSpriteRender->SetScale(SPRITE_BAR_SCALE_PLAYER2);
+		m_DamageBarSpriteRender->SetPosition(SPRITE_DAMAGEBAR_POSITION_PLAYER2);
 	}
 	//
 	m_HPBarDarkSpriteRender = NewGO<prefab::CSpriteRender>(5);
-	m_HPBarDarkSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
+	m_HPBarDarkSpriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(m_playerNum));
 
-	m_HPBarDarkSpriteRender->Init("Assets/Image/HP_Bar_Dark_12.dds", 316, 36);
-	if (m_playerNum == 0) {
-		m_HPBarDarkSpriteRender->SetPosition({ 290.0f,325.0f,0.0f });
-		//({ 290.0f,325.0f,0.0f });
+	m_HPBarDarkSpriteRender->Init("Assets/Image/HP_Bar_Dark_12.dds", SPRITE_DARKBAR_WIDTH, SPRITE_DARKBAR_HEIGHT);
+	if (m_playerNum == NUMBER_PLAYER1) {
+		m_HPBarDarkSpriteRender->SetPosition(SPRITE_DARKHPBAR_POSITION_PLAYER1);
 	}
-	else if (m_playerNum == 1) {
-		m_HPBarDarkSpriteRender->SetScale({ -1.0f, 1.0f, -1.0f });
-		m_HPBarDarkSpriteRender->SetPosition({ -290.0f,325.0f,0.0f });
+	else if (m_playerNum == NUMBER_PLAYER2) {
+		m_HPBarDarkSpriteRender->SetScale(SPRITE_BAR_SCALE_PLAYER2);
+		m_HPBarDarkSpriteRender->SetPosition(SPRITE_DARKHPBAR_POSITION_PLAYER2);
 	}
 
 	m_mobiusGauge = NewGO<MobiusGauge>(0);
-	if (m_playerNum == 0) {
-		m_mobiusGauge->SetPosition({ -525.0f,-280.0f,0.0f });
+	if (m_playerNum == NUMBER_PLAYER1) {
+		m_mobiusGauge->SetPosition(MOBIUSGAUGE_POSITION_PLAYER1);
 	}
-	else if (m_playerNum == 1) {
-		m_mobiusGauge->SetPosition({ 525.0f,-280.0f,0.0f });
+	else if (m_playerNum == NUMBER_PLAYER2) {
+		m_mobiusGauge->SetPosition(MOBIUSGAUGE_POSITION_PLAYER2);
 	}
 
 	//プレイヤーのライト
 	m_spotLight = NewGO<prefab::CSpotLight>(0);
-	m_spotLight->SetColor({ 10.0f,10.0f,10.0f });
-	m_spotLight->SetRange(250.0f);
-	m_spotLight->SetAngleDeg(30.0f);
+	m_spotLight->SetColor(LIGHT_PLAYER_SPOTLIGHT_COLOR);
+	m_spotLight->SetRange(LIGHT_PLAYER_SPOTLIGHT_RANGE);
+	m_spotLight->SetAngleDeg(LIGHT_PLAYER_SPOTLIGHT_ANGLE);
 	
 	
 	//エフェクト関連
 	m_magEffect[0] = NewGO<prefab::CEffect>(0);
 	m_magEffect[1] = NewGO<prefab::CEffect>(0);
-	m_magEffect[0]->SetScale({ 25.0f, 25.0f, 25.0f });
-	m_magEffect[1]->SetScale({ 25.0f, 25.0f, 25.0f });
-	if (m_magnetState == 1) {
+	m_magEffect[0]->SetScale(EFFECT_MAGNET_SCALE);
+	m_magEffect[1]->SetScale(EFFECT_MAGNET_SCALE);
+	if (m_magnetState == MAGNETSTATE_REPULSION) {
 		m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
 		m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
 	}
-	else if (m_magnetState == -1) {
+	else if (m_magnetState == MAGNETSTATE_GRAVITY) {
 		m_magEffect[0]->Init(u"Assets/effect/引力.efk");
 		m_magEffect[1]->Init(u"Assets/effect/引力.efk");
 	}
 
 	m_burstEffect = NewGO<prefab::CEffect>(0);
-	m_burstEffect->SetScale({ 50.0f, 50.0f, 50.0f });
+	m_burstEffect->SetScale(EFFECT_BURST_SCALE);
 
 	m_hitEffect = NewGO<prefab::CEffect>(0);
 	m_hitEffect->Init(u"Assets/effect/ダメージ.efk");
-	m_hitEffect->SetScale({ 10.0f, 10.0f, 10.0f });
+	m_hitEffect->SetScale(EFFECT_HIT_SCALE);
 
-	m_SPEffect = NewGO<prefab::CEffect>(0);
-	m_SPEffect->SetScale({ 20.0f, 20.0f, 20.0f });
+	m_SPFireEffect = NewGO<prefab::CEffect>(0);
+	m_SPFireEffect->SetScale(EFFECT_SPFIRE_SCALE);
 
 	m_SPGaugeMaxEffect = NewGO<prefab::CEffect>(0);
 	m_SPGaugeMaxEffect->Init(u"Assets/effect/キュピーン.efk");
-	m_SPGaugeMaxEffect->SetScale({ 8.0f, 8.0f, 8.0f });
+	m_SPGaugeMaxEffect->SetScale(EFFECT_SPGAUGEMAX_SCALE);
 
 	m_SPChargeEffectRed = NewGO<prefab::CEffect>(0);
-	m_SPChargeEffectRed->SetScale({ 70.0f, 70.0f, 70.0f });
+	m_SPChargeEffectRed->SetScale(EFFECT_SPCHARGE_SCALE);
 	m_SPChargeEffectRed->Init(u"Assets/effect/斥力チャージ.efk");
 
 	m_SPChargeEffectBlue = NewGO<prefab::CEffect>(0);
-	m_SPChargeEffectBlue->SetScale({ 70.0f, 70.0f, 70.0f });
+	m_SPChargeEffectBlue->SetScale(EFFECT_SPCHARGE_SCALE);
 	m_SPChargeEffectBlue->Init(u"Assets/effect/引力チャージ.efk");
 	//ここまでエフェクト
 
@@ -436,25 +486,25 @@ void Player::DisplayStatus()
 	if (m_gameScene->GetGameState() == GameScene::GameState::enPlaying)
 	{
 		if (m_playerNum == 0) {
-			m_HPBarRedSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
-			if (m_HPBarDarkSpriteRender->GetPosition().x > m_HPBarRedSpriteRender->GetPosition().x) {
+			m_DamageBarSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
+			if (m_HPBarDarkSpriteRender->GetPosition().x > m_DamageBarSpriteRender->GetPosition().x) {
 				Vector3 DarkPos = m_HPBarDarkSpriteRender->GetPosition();
 				DarkPos.x -= 2.0f;
 				m_HPBarDarkSpriteRender->SetPosition(DarkPos);
-				if (m_HPBarDarkSpriteRender->GetPosition().x < m_HPBarRedSpriteRender->GetPosition().x) {	//オーバー修正
-					DarkPos.x = m_HPBarRedSpriteRender->GetPosition().x;
+				if (m_HPBarDarkSpriteRender->GetPosition().x < m_DamageBarSpriteRender->GetPosition().x) {	//オーバー修正
+					DarkPos.x = m_DamageBarSpriteRender->GetPosition().x;
 					m_HPBarDarkSpriteRender->SetPosition(DarkPos);
 				}
 			}
 		}
 		else if (m_playerNum == 1) {
-			m_HPBarRedSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
-			if (m_HPBarDarkSpriteRender->GetPosition().x < m_HPBarRedSpriteRender->GetPosition().x) {
+			m_DamageBarSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
+			if (m_HPBarDarkSpriteRender->GetPosition().x < m_DamageBarSpriteRender->GetPosition().x) {
 				Vector3 DarkPos = m_HPBarDarkSpriteRender->GetPosition();
 				DarkPos.x += 2.0f;
 				m_HPBarDarkSpriteRender->SetPosition(DarkPos);
-				if (m_HPBarDarkSpriteRender->GetPosition().x > m_HPBarRedSpriteRender->GetPosition().x) {	//オーバー修正
-					DarkPos.x = m_HPBarRedSpriteRender->GetPosition().x;
+				if (m_HPBarDarkSpriteRender->GetPosition().x > m_DamageBarSpriteRender->GetPosition().x) {	//オーバー修正
+					DarkPos.x = m_DamageBarSpriteRender->GetPosition().x;
 					m_HPBarDarkSpriteRender->SetPosition(DarkPos);
 				}
 			}
@@ -724,13 +774,13 @@ void Player::SpecialAttack()
 			ssSPShot->Play(false);
 
 			//発射エフェクト
-			m_SPEffect->Init(u"Assets/effect/引力弾発射.efk");
-			m_SPEffect->SetPosition({
+			m_SPFireEffect->Init(u"Assets/effect/引力弾発射.efk");
+			m_SPFireEffect->SetPosition({
 				m_position.x + m_cameraFront.x * 50.0f,
 				m_position.y + 50.0f,
 				m_position.z + m_cameraFront.z * 50.0f
 				});
-			m_SPEffect->Play();
+			m_SPFireEffect->Play();
 
 			GravityBullet* gravityBullet = NewGO<GravityBullet>(0, "gravitybullet");
 			gravityBullet->SetPosition(m_magPosition);
@@ -785,13 +835,13 @@ void Player::SpecialAttack()
 				ssSPShot->Play(false);
 
 				//発射エフェクト
-				m_SPEffect->Init(u"Assets/effect/斥力弾発射.efk");
-				m_SPEffect->SetPosition({ 
+				m_SPFireEffect->Init(u"Assets/effect/斥力弾発射.efk");
+				m_SPFireEffect->SetPosition({ 
 					m_position.x + m_cameraFront.x * 50.0f,
 					m_position.y + 50.0f,
 					m_position.z + m_cameraFront.z * 50.0f
 					});
-				m_SPEffect->Play();
+				m_SPFireEffect->Play();
 
 				//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 				Vector3 crossPoint;
@@ -1507,10 +1557,6 @@ void Player::ChargeSpecialAttackGauge(int charge)
 //勝利した時
 void Player::Win()
 {	
-	/*m_resultSpriteRender = NewGO<prefab::CSpriteRender>(2);
-	m_resultSpriteRender->SetDrawScreen((prefab::CSpriteRender::DrawScreen)m_playerNum);
-	m_resultSpriteRender->Init("Assets/Image/Syouri.dds", 256, 256);*/
-	//m_winnerNum = m_playerNum;
 	Vector3 crossPoint;
 	bool hitflag = false;
 
@@ -1865,16 +1911,16 @@ void Player::FinalHit()//決着がついたときのカメラ
 		//HPバー、画面分割線、メビウスゲージを消す
 		DeleteGO(m_bulletNumFont);
 		m_bulletNumFont = nullptr;
-		DeleteGO(m_bulletNumFont2);
-		m_bulletNumFont2 = nullptr;
+		DeleteGO(m_bulletMaxFont);
+		m_bulletMaxFont = nullptr;
 		DeleteGO(m_crosshairRender);
 		m_crosshairRender = nullptr;
 		DeleteGO(m_HPBarSpriteRender);
 		m_HPBarSpriteRender = nullptr;
 		DeleteGO(m_HPBarDarkSpriteRender);
 		m_HPBarDarkSpriteRender = nullptr;
-		DeleteGO(m_HPBarRedSpriteRender);
-		m_HPBarRedSpriteRender = nullptr;
+		DeleteGO(m_DamageBarSpriteRender);
+		m_DamageBarSpriteRender = nullptr;
 		DeleteGO(m_mobiusGauge);
 		DeleteGO(m_chargeSPFontRender);
 		m_chargeSPFontRender = nullptr;

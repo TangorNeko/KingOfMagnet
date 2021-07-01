@@ -10,9 +10,10 @@ class GameScene;
 
 class Player : public IGameObject
 {
-private:
+public:
 	Player();
 	~Player();
+private:
 	bool Start() override;
 	void Update() override;
 
@@ -267,7 +268,7 @@ public:
 	Vector3 m_winnerWaistPos;//勝者の腰の位置
 
 	prefab::CFontRender* m_bulletNumFont = nullptr;//残弾数
-	prefab::CFontRender* m_bulletNumFont2 = nullptr;//残弾数
+	prefab::CFontRender* m_bulletMaxFont = nullptr;//残弾数
 private:
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;		//キャラクターのモデル
@@ -327,9 +328,9 @@ private:
 	int m_isknockBackCount = 0;									//ノックバックし始めてからの経過フレーム
 
 	//体力等の情報表示
-	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;		//通常HPバーのスプライト
+	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;		//HPバーのスプライト
 	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;	//HPバーの黒い(体力がなくなった)部分のスプライト
-	prefab::CSpriteRender* m_HPBarRedSpriteRender = nullptr;	//体力が少ない状態のHPバーのスプライト
+	prefab::CSpriteRender* m_DamageBarSpriteRender = nullptr;	//受けたダメージ分のHPバーのスプライト
 	bool m_hpBarRedFlag = false;								//HPバーを赤くするか
 	MobiusGauge* m_mobiusGauge = nullptr;						//メビウスゲージ
 	prefab::CFontRender* m_chargeSPFontRender = nullptr;		//必殺技ゲージの溜まり具合のフォント
@@ -340,7 +341,7 @@ private:
 	prefab::CEffect* m_burstEffect = nullptr;					//磁力バーストのエフェクト
 	prefab::CEffect* m_hitEffect = nullptr;						//ダメージエフェクト
 	Vector3 m_damageEffectFront = { 0.0f,0.0f,0.0f };			//ダメージを食らった方向　エフェクトをダメージが食らった向きに
-	prefab::CEffect* m_SPEffect = nullptr;						//必殺技の発射エフェクト
+	prefab::CEffect* m_SPFireEffect = nullptr;						//必殺技の発射エフェクト
 	prefab::CEffect* m_SPGaugeMaxEffect = nullptr;				//必殺ゲージが最大まで溜まった時に出るエフェクト
 	prefab::CEffect* m_SPChargeEffectRed = nullptr;				//必殺技を放つ溜め動作のときのエフェクト　斥力
 	prefab::CEffect* m_SPChargeEffectBlue = nullptr;			//必殺技を放つ溜め動作のときのエフェクト　引力
