@@ -156,7 +156,7 @@ void Debris::AsDropBehave()
 
 		Vector3 toPlayer = player->GetPosition() - m_position;
 			//引力の時のみ
-			if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
+			if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 			{
 				//バーストしてたら引っ張ってくる
 				if (player->IsBurst() == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
@@ -226,7 +226,7 @@ void Debris::AsDropBehave()
 			}
 
 			//斥力の時
-			else if (player->GetMagPower() == MAGNETSTATE_REPULSION)
+			else if (player->GetMagnetState() == MAGNETSTATE_REPULSION)
 			{
 				//バーストしてたら弾き飛ばす
 				if (player->IsBurst() == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
@@ -304,7 +304,7 @@ void Debris::AsBulletBehave()
 					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 					{
 						//引力なら
-						if (player->GetMagPower() == MAGNETSTATE_GRAVITY)
+						if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 						{
 							//プレイヤーに向かうベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();

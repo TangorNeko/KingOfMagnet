@@ -10,12 +10,12 @@ class GameScene;
 
 class Player : public IGameObject
 {
-public:
+private:
 	Player();
 	~Player();
 	bool Start() override;
 	void Update() override;
-private:
+
 
 	//開始前カメラ移動
 	void OpeningCamera();
@@ -31,9 +31,6 @@ private:
 
 	//必殺技
 	void SpecialAttack();
-	bool m_SpecialAttackOn = false;//アニメーション用フラグ
-	int m_specialShotFlag = false;
-	int m_specialShotCount = 0;
 
 	//爆弾を投げる
 	void ThrowBomb();
@@ -82,9 +79,6 @@ private:
 
 	//被弾状態に切り替える
 	void TryChangeStatusHit();
-	bool m_HitOn = false;//被弾したかどうか
-	int m_Hitcount = 30;//被弾したときに流れるアニメーションのフレーム数
-
 
 	//アニメーションの状態更新
 	void UpdateState();
@@ -97,10 +91,6 @@ private:
 
 	//ファイナルカメラ
 	void FinalHit();
-
-	//ライト
-	prefab::CSpotLight* m_spotLight = nullptr;
-
 
 public:
 
@@ -155,14 +145,14 @@ public://リファクタリング中に作られた関数
 		m_playerNum = playerNum;
 	}
 
-	int GetMagPower()
+	int GetMagnetState()
 	{
-		return m_magPower;
+		return m_magnetState;
 	}
 
-	void SetMagPower(int magPower)
+	void SetMagnetState(int magPower)
 	{
-		m_magPower = magPower;
+		m_magnetState = magPower;
 	}
 
 	bool IsBurst()
@@ -226,7 +216,6 @@ public://リファクタリング中に作られた関数
 	}
 
 public:
-
 	//アニメーションの数
 	enum {
 		enAnimationClip_Attack,
@@ -240,21 +229,21 @@ public:
 		enAnimationClip_Hit,
 		enAnimationClip_Death,
 		enAnimationClip_Winner,
-		enAnimationClip_num,  //列挙内で使う要素の数を表すダミー
+		enAnimationClip_num,			//列挙内で使う要素の数を表すダミー
 	};
 
 	//状態の数
 	enum EnStatus {
-		enStatus_Attack,	//攻撃状態
-		enStatus_Run,		//走り状態
-		enStatus_Idle,		//待機状態
-		enStatus_Walk,		//歩き状態
-		enStatus_Move,		//移動アクション状態		
-		enStatus_Fall,		//落下状態
-		enStatus_SpecialAttack,//必殺技状態
-		enStatus_Burst,		//バースト状態
-		enStatus_Hit,		//被弾状態		
-		enStatus_Num,		//状態の数。
+		enStatus_Attack,		//攻撃状態
+		enStatus_Run,			//走り状態
+		enStatus_Idle,			//待機状態
+		enStatus_Walk,			//歩き状態
+		enStatus_Move,			//移動アクション状態		
+		enStatus_Fall,			//落下状態
+		enStatus_SpecialAttack,	//必殺技状態
+		enStatus_Burst,			//バースト状態
+		enStatus_Hit,			//被弾状態		
+		enStatus_Num,			//状態の数。
 	};
 
 public:
@@ -281,112 +270,100 @@ public:
 	prefab::CFontRender* m_bulletNumFont2 = nullptr;//残弾数
 private:
 
-	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
-	Quaternion m_rot;//キャラクターの回転
-	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率 **定数化**
-	Vector3 m_moveAmount = { 0.0f,0.0f,0.0f };//キャラコンに実行させる移動量
-	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };//プレイヤーからカメラへの向き
+	prefab::CSkinModelRender* m_skinModelRender = nullptr;		//キャラクターのモデル
+	prefab::CSpriteRender* m_crosshairRender = nullptr;			//照準のスプライト
+	prefab::CSpotLight* m_spotLight = nullptr;					//プレイヤーを後ろから照らすライト
 
-	Vector3 m_cameraFront;//カメラの前方向
-	Vector3 m_cameraRight;//カメラの右方向
-	Vector3 m_cameraPos;//カメラのポジション
-	Quaternion m_cameraQRotY;
-	float m_sensitivity = 2.0f;//視点感度
-	Vector3 m_sequenceCameraPos;
-	Vector3 m_targetPos = { 0.0f,0.0f,0.0f }; //  **定数化**
-	float m_gain = 10;//カメラとターゲットとの距離	
-	float m_addY = 0.0f;
-	int m_cameraLoopCount = 0;
-	bool m_hpBarRedFlag = false;
+	int m_playerNum = -1;										//プレイヤーの番号 1P(0)、2P(1)
+	int m_magnetState;											//磁力、引力状態(-1)、斥力(1)
+	int m_hp = 1000;											//体力
+	float m_magnetCharge = 1000;								//磁力ゲージの現在の量
 
-	int m_fallLoop = 0;//落下制御用のループカウント
-	float m_characterSpeed = 6.0;//キャラクターの移動速度
+	Vector3 m_position = { 0.0f,0.0f,0.0f };					//キャラクターの座標
+	Vector3 m_magPosition = { 0.0f,0.0f,0.0f };					//磁力が出ている地点
+	Quaternion m_rot;											//キャラクターの回転
+	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };						//キャラクターの拡大率 **定数化**
 
-	bool m_isLock = false; //ロックしているか。
+	CharacterController m_charaCon;								//プレイヤーのキャラコン
+	Vector3 m_moveAmount = { 0.0f,0.0f,0.0f };					//キャラコンに実行させる移動量
+	int m_fallLoop = 0;											//落下制御用のループカウント
+	float m_characterSpeed = 6.0;								//キャラクターの移動速度
 
-	GameScene* m_gameScene = nullptr;
-
-	BackGround* m_stageModel;//背景のモデル(当たり判定用)
-	CharacterController m_charaCon;//プレイヤーのキャラコン
-	TriangleCollider m_triCollider[2];//単純な三角形の当たり判定(発射先の判定に使う)
-	MyCapsuleCollider m_collider;//カプセル状の当たり判定(弾の当たり判定に使う)
+	Vector3 m_toCameraDir = { 0.0f,0.0f,-1.0f };				//プレイヤーからカメラへの向き
+	Vector3 m_cameraFront;										//カメラの前方向
+	Vector3 m_cameraRight;										//カメラの右方向
+	Vector3 m_cameraPos;										//カメラのポジション
+	Quaternion m_cameraQRotY;									//プレイヤーカメラのY軸の回転
+	float m_sensitivity = 2.0f;									//視点感度
+	bool m_isLockon = false;									//カメラロックオンしているか。
 
 
-	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
-
-	prefab::CSpriteRender* m_crosshairRender = nullptr; //照準のスプライト
+	BackGround* m_stageModel;									//背景のモデル(当たり判定用)
+	TriangleCollider m_triCollider[2];							//単純な三角形の当たり判定(発射先の判定に使う)
+	MyCapsuleCollider m_collider;								//カプセル状の当たり判定(弾の当たり判定に使う)
 	
-	int m_playerNum = -1;//プレイヤーの番号 1P(0)、2P(1)
-	int m_magPower;//磁力、引力状態(-1)、斥力(1)
-	float m_charge = 1000;//磁力ゲージの現在の量
-	int m_hp = 1000;//体力
-	bool m_isBurst = false;//バーストしているか。
-	int m_burstCount = 0;//バーストの持続時間
-	bool m_isAttacking = false; //攻撃を発射しているか。
-	int m_attackCount = 0;//攻撃の隙で移動速度が落ちている時間。
-	bool m_isSteal = false;//一回の引力バースト中にすでに敵の弾を奪ったか
+	bool m_isBurst = false;										//バーストしているか。
+	int m_burstCount = 0;										//バーストを使用してからの経過フレーム
+	bool m_isAttacking = false;									//攻撃を発射しているか。
+	int m_attackCount = 0;										//攻撃を発射してからの経過フレーム(隙)
+	bool m_isSteal = false;										//一回の引力バースト中にすでに敵の弾を奪ったか
 
+	//アニメーション関連
+	AnimationClip animationClips[enAnimationClip_num];			//アニメーションクリップ
+	EnStatus m_animStatus = enStatus_Idle;						//現在のアニメーションの状態
+	bool m_SpecialAttackOn = false;								//アニメーション用フラグ
+	bool m_HitOn = false;										//被弾したかどうか
+	int m_Hitcount = 30;										//被弾したときに流れるアニメーションのフレーム数
 
-
-	Vector3 m_magPosition = { 0.0f,0.0f,0.0f };//磁力が出ている原点
-
-
-	AnimationClip animationClips[enAnimationClip_num];//アニメーションクリップ
-	EnStatus m_animStatus = enStatus_Idle;	//現在の状態。
-
-	Player* m_enemy = nullptr; //敵
-
-
-
-	int m_specialAttackGauge = 0;//必殺技のゲージ
-	int m_oldSpecialAttackGauge = 0;
-	bool m_isGravityBulletAttack = false;//引力の必殺技の攻撃タイミングを指示する用変数。
+	//必殺技関連
+	int m_specialShotFlag = false;								//必殺技を発射中?
+	int m_specialShotCount = 0;									//必殺技を発射し始めてからの経過フレーム
+	int m_specialAttackGauge = 0;								//必殺技のゲージ量
+	int m_oldSpecialAttackGauge = 0;							//1フレーム前の必殺技ゲージ量
+	bool m_isGravityBulletAttack = false;						//引力の必殺技の攻撃タイミングを指示する用変数。
 
 	//ノックバック関連
-	bool m_isKnockBack = false;
-	int m_isknockBackCount = 0;
+	bool m_isKnockBack = false;									//ノックバック状態?
+	int m_isknockBackCount = 0;									//ノックバックし始めてからの経過フレーム
 
-	//HPバー
-	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;
-	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;
-	prefab::CSpriteRender* m_HPBarRedSpriteRender = nullptr;
+	//体力等の情報表示
+	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;		//通常HPバーのスプライト
+	prefab::CSpriteRender* m_HPBarDarkSpriteRender = nullptr;	//HPバーの黒い(体力がなくなった)部分のスプライト
+	prefab::CSpriteRender* m_HPBarRedSpriteRender = nullptr;	//体力が少ない状態のHPバーのスプライト
+	bool m_hpBarRedFlag = false;								//HPバーを赤くするか
+	MobiusGauge* m_mobiusGauge = nullptr;						//メビウスゲージ
+	prefab::CFontRender* m_chargeSPFontRender = nullptr;		//必殺技ゲージの溜まり具合のフォント
 
-	//メビウスゲージ
-	MobiusGauge* m_mobiusGauge = nullptr;
+	//エフェクト
+	prefab::CEffect* m_magEffect[2] = { nullptr,nullptr };		//磁力のエフェクト　2つのエフェクトを連続で再生し続ける。
+	int m_magEffectCallCount = 41;								//磁力エフェクトを呼ぶまでの時間
+	prefab::CEffect* m_burstEffect = nullptr;					//磁力バーストのエフェクト
+	prefab::CEffect* m_hitEffect = nullptr;						//ダメージエフェクト
+	Vector3 m_damageEffectFront = { 0.0f,0.0f,0.0f };			//ダメージを食らった方向　エフェクトをダメージが食らった向きに
+	prefab::CEffect* m_SPEffect = nullptr;						//必殺技の発射エフェクト
+	prefab::CEffect* m_SPGaugeMaxEffect = nullptr;				//必殺ゲージが最大まで溜まった時に出るエフェクト
+	prefab::CEffect* m_SPChargeEffectRed = nullptr;				//必殺技を放つ溜め動作のときのエフェクト　斥力
+	prefab::CEffect* m_SPChargeEffectBlue = nullptr;			//必殺技を放つ溜め動作のときのエフェクト　引力
+
+	//音
+	int m_footstepsTimer = 0;									//足音の鳴る間隔をカウントする
+
+	//勝敗表示
+	prefab::CSpriteRender* m_resultWinnerSprite = nullptr;		//勝者を表示するスプライト(○P)
+	prefab::CSpriteRender* m_resultWinSprite = nullptr;			//勝利のスプライト(WIN!)
+
+	GameScene* m_gameScene = nullptr;							//ゲームシーン
+	Player* m_enemy = nullptr;									//敵プレイヤー
 
 
 
 
-	//ダメージエフェクト関連
-	Vector3 m_damageEffectFront = {0.0f,0.0f,0.0f};
-
-	//斥力・引力エフェクト関連
-	prefab::CEffect* m_magEffect[2] = { nullptr,nullptr };		//2つのエフェクトを連続で再生し続ける。
-	int m_magEffectCallCount = 41;		//磁力エフェクトを呼ぶまでの時間
-
-	//斥力・引力バースト エフェクト関連
-	prefab::CEffect* m_burstEffect = nullptr;
-
-	//ダメージエフェクト
-	prefab::CEffect* m_hitEffect = nullptr;
-
-	//必殺技のエフェクト
-	prefab::CEffect* m_SPEffect = nullptr;
-
-	//必殺ゲージが最大まで溜まった時のエフェクト
-	prefab::CEffect* m_SPGaugeMaxEffect = nullptr;
-
-	//必殺技を放つ前隙のときのエフェクト
-	prefab::CEffect* m_SPFirstEffectRed = nullptr;
-	prefab::CEffect* m_SPFirstEffectBlue = nullptr;
-
-	//足音
-	int m_footstepsTimer = 0;
-
-	prefab::CFontRender* m_ChargeSPFontRender = nullptr;//必殺技ゲージの溜まり具合のフォント
-
-	prefab::CSpriteRender* m_resultWinnerSprite = nullptr;//勝者を表示するスプライト(○P)
-	prefab::CSpriteRender* m_resultWinSprite = nullptr;//勝利のスプライト(WIN!)
+	//後から分離したい
+	Vector3 m_sequenceCameraPos;//シーケンスカメラの座標
+	Vector3 m_targetPos = { 0.0f,0.0f,0.0f }; //  **定数化**
+	float m_openingCameraGainSpeed = 10;//カメラとターゲットとの接近速度	
+	float m_openingCameraRotationRad = 0.0f;//オープニングカメラの回転角度
+	int m_openingCameraCount = 0;//オープニングカメラが始まってからの経過フレーム
 };
 
 

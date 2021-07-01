@@ -162,11 +162,11 @@ bool GameScene::Start()
 	int mag = rnd() % NUMBER_MAGNET_STATUS;
 	if (mag)
 	{
-		m_player1->SetMagPower(MAGNETSTATE_REPULSION);
+		m_player1->SetMagnetState(MAGNETSTATE_REPULSION);
 	}
 	else
 	{
-		m_player1->SetMagPower(MAGNETSTATE_GRAVITY);
+		m_player1->SetMagnetState(MAGNETSTATE_GRAVITY);
 	}
 	m_player1->SetToCameraDirection(STARTDIRECTION_PLAYER1_TOCAMERA);
 	m_player1->SetCameraFront(STARTDIRECTION_PLAYER1_MODEL);
@@ -180,11 +180,11 @@ bool GameScene::Start()
 	mag = rnd() % NUMBER_MAGNET_STATUS;
 	if (mag)
 	{
-		m_player2->SetMagPower(MAGNETSTATE_REPULSION);
+		m_player2->SetMagnetState(MAGNETSTATE_REPULSION);
 	}
 	else
 	{
-		m_player2->SetMagPower(MAGNETSTATE_GRAVITY);
+		m_player2->SetMagnetState(MAGNETSTATE_GRAVITY);
 	}
 	m_player2->SetToCameraDirection(STARTDIRECTION_PLAYER2_TOCAMERA);
 	m_player2->SetCameraFront(STARTDIRECTION_PLAYER2_MODEL);

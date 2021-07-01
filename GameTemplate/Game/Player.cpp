@@ -62,15 +62,15 @@ Player::~Player()
 	DeleteGO(m_hitEffect);
 	DeleteGO(m_SPEffect);
 	DeleteGO(m_SPGaugeMaxEffect);
-	DeleteGO(m_SPFirstEffectRed);
-	DeleteGO(m_SPFirstEffectBlue);
+	DeleteGO(m_SPChargeEffectRed);
+	DeleteGO(m_SPChargeEffectBlue);
 
 	DeleteGO(m_spotLight);
 
-	if (m_ChargeSPFontRender != nullptr)
-		DeleteGO(m_ChargeSPFontRender);	
-	DeleteGO(m_winnerSprite1);
-	DeleteGO(m_winnerSprite2);
+	if (m_chargeSPFontRender != nullptr)
+		DeleteGO(m_chargeSPFontRender);	
+	DeleteGO(m_resultWinnerSprite);
+	DeleteGO(m_resultWinSprite);
 }
 
 bool Player::Start()
@@ -147,22 +147,22 @@ bool Player::Start()
 	m_bulletNumFont2->SetText(L"/10");
 
 	//必殺ゲージの溜まり具合を表示するフォント
-	m_ChargeSPFontRender = NewGO<prefab::CFontRender>(6);
-	m_ChargeSPFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
-	m_ChargeSPFontRender->SetShadowFlag(true);
-	m_ChargeSPFontRender->SetShadowColor({ 0,0,0,1 });
-	m_ChargeSPFontRender->SetShadowOffset(3);
+	m_chargeSPFontRender = NewGO<prefab::CFontRender>(6);
+	m_chargeSPFontRender->SetDrawScreen((prefab::CFontRender::DrawScreen)2);
+	m_chargeSPFontRender->SetShadowFlag(true);
+	m_chargeSPFontRender->SetShadowColor({ 0,0,0,1 });
+	m_chargeSPFontRender->SetShadowOffset(3);
 	if (m_playerNum == 0)
 	{
-		m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+		m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
 	}
 	else
 	{
-		m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+		m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
 	}
-	m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
-	m_ChargeSPFontRender->SetColor({ 1.0f,1.0f, 0.0f,1.0f });
-	m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+	m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+	m_chargeSPFontRender->SetColor({ 1.0f,1.0f, 0.0f,1.0f });
+	m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 
 	//照準表示の初期化
 	m_crosshairRender = NewGO<prefab::CSpriteRender>(1);
@@ -231,11 +231,11 @@ bool Player::Start()
 	m_magEffect[1] = NewGO<prefab::CEffect>(0);
 	m_magEffect[0]->SetScale({ 25.0f, 25.0f, 25.0f });
 	m_magEffect[1]->SetScale({ 25.0f, 25.0f, 25.0f });
-	if (m_magPower == 1) {
+	if (m_magnetState == 1) {
 		m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
 		m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
 	}
-	else if (m_magPower == -1) {
+	else if (m_magnetState == -1) {
 		m_magEffect[0]->Init(u"Assets/effect/引力.efk");
 		m_magEffect[1]->Init(u"Assets/effect/引力.efk");
 	}
@@ -254,13 +254,13 @@ bool Player::Start()
 	m_SPGaugeMaxEffect->Init(u"Assets/effect/キュピーン.efk");
 	m_SPGaugeMaxEffect->SetScale({ 8.0f, 8.0f, 8.0f });
 
-	m_SPFirstEffectRed = NewGO<prefab::CEffect>(0);
-	m_SPFirstEffectRed->SetScale({ 70.0f, 70.0f, 70.0f });
-	m_SPFirstEffectRed->Init(u"Assets/effect/斥力チャージ.efk");
+	m_SPChargeEffectRed = NewGO<prefab::CEffect>(0);
+	m_SPChargeEffectRed->SetScale({ 70.0f, 70.0f, 70.0f });
+	m_SPChargeEffectRed->Init(u"Assets/effect/斥力チャージ.efk");
 
-	m_SPFirstEffectBlue = NewGO<prefab::CEffect>(0);
-	m_SPFirstEffectBlue->SetScale({ 70.0f, 70.0f, 70.0f });
-	m_SPFirstEffectBlue->Init(u"Assets/effect/引力チャージ.efk");
+	m_SPChargeEffectBlue = NewGO<prefab::CEffect>(0);
+	m_SPChargeEffectBlue->SetScale({ 70.0f, 70.0f, 70.0f });
+	m_SPChargeEffectBlue->Init(u"Assets/effect/引力チャージ.efk");
 	//ここまでエフェクト
 
 	m_gameScene = FindGO<GameScene>("gamescene");
@@ -462,7 +462,7 @@ void Player::DisplayStatus()
 	}
 
 	//メビウスゲージの色を磁力から決定
-	if (m_magPower == 1)
+	if (m_magnetState == 1)
 	{
 		m_mobiusGauge->m_isRed = true;
 	}
@@ -472,7 +472,7 @@ void Player::DisplayStatus()
 	}
 
 	//メビウスゲージに現在の必殺技のチャージ量を渡す
-	m_mobiusGauge->m_charge = m_charge;
+	m_mobiusGauge->m_charge = m_magnetCharge;
 
 	m_mobiusGauge->m_spCharge = m_specialAttackGauge;
 }
@@ -667,17 +667,17 @@ void Player::SpecialAttack()
 	if (m_specialShotFlag == true)
 	{
 		//発射する前に、チャージするようなエフェクト
-		switch (m_magPower)
+		switch (m_magnetState)
 		{
 		case -1:
-			m_SPFirstEffectBlue->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
+			m_SPChargeEffectBlue->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
 			if (m_specialShotCount == 0)
-				m_SPFirstEffectBlue->Play();
+				m_SPChargeEffectBlue->Play();
 			break;
 		case 1:
-			m_SPFirstEffectRed->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
+			m_SPChargeEffectRed->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
 			if (m_specialShotCount == 0)
-				m_SPFirstEffectRed->Play();		
+				m_SPChargeEffectRed->Play();		
 			break;
 		}
 		if (m_specialShotCount == 0)
@@ -698,15 +698,15 @@ void Player::SpecialAttack()
 			m_specialShotCount = 0;
 			if (m_playerNum == 0)
 			{
-				m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
-				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
-				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+				m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
-				m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
-				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
-				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+				m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 		}
 	}
@@ -714,9 +714,9 @@ void Player::SpecialAttack()
 	if (m_specialShotCount >= 35) 
 	{
 		//引力なら
-		if (m_magPower == -1)
+		if (m_magnetState == -1)
 		{
-			//m_SPFirstEffectBlue->Stop();
+			//m_SPChargeEffectBlue->Stop();
 			//音を鳴らす
 			prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);
 			ssSPShot->Init(L"Assets/sound/引力弾発射.wav", SoundType::enSE);
@@ -762,20 +762,20 @@ void Player::SpecialAttack()
 			m_specialShotCount = 0;
 			if (m_playerNum == 0)
 			{
-				m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
-				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
-				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+				m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
-				m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
-				m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
-				m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+				m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 		}
 		else//斥力なら
 		{
-			//m_SPFirstEffectRed->Stop();
+			//m_SPChargeEffectRed->Stop();
 			//弾を1発でも持ってる?
 			if (m_holdDebrisVector.size() != 0)
 			{
@@ -836,15 +836,15 @@ void Player::SpecialAttack()
 				m_specialShotCount = 0;
 				if (m_playerNum == 0)
 				{
-					m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
-					m_ChargeSPFontRender->SetScale({0.7f,0.7f});
-					m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+					m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+					m_chargeSPFontRender->SetScale({0.7f,0.7f});
+					m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 				else
 				{
-					m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
-					m_ChargeSPFontRender->SetScale({ 0.7f,0.7f });
-					m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+					m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+					m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+					m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 			}
 			else
@@ -1032,7 +1032,7 @@ void Player::HoldBomb()
 void Player::MagneticBehavior()
 {
 	//磁力の状態によって動きが分岐。
-	switch (m_magPower)
+	switch (m_magnetState)
 	{
 	case -1://引力
 
@@ -1052,10 +1052,10 @@ void Player::MagneticBehavior()
 	if (g_pad[m_playerNum]->IsTrigger(enButtonLB1) && m_isAttacking == false)
 	{
 		//磁力ゲージを300消費。
-		m_charge -= 300.0f;
-		if (m_charge < 0)
+		m_magnetCharge -= 300.0f;
+		if (m_magnetCharge < 0)
 		{
-			m_charge = 0;
+			m_magnetCharge = 0;
 		}
 
 		m_isBurst = true;
@@ -1064,7 +1064,7 @@ void Player::MagneticBehavior()
 		//バースト音
 		prefab::CSoundSource* ssBurst = NewGO<prefab::CSoundSource>(0);;
 
-		switch (m_magPower)
+		switch (m_magnetState)
 		{
 		case -1://引力
 			//バースト音を再生
@@ -1108,7 +1108,7 @@ void Player::MagneticBurst()
 	force.Normalize();
 
 	//磁力の状態によって動きが分岐。
-	switch (m_magPower)
+	switch (m_magnetState)
 	{
 	case -1://引力
 
@@ -1231,20 +1231,20 @@ void Player::MagneticBurst()
 void Player::ChangeMagnetPower()
 {
 	//磁力ゲージの自然減少
-	m_charge -= 2.0f;
-	if (m_charge < 0)
+	m_magnetCharge -= 2.0f;
+	if (m_magnetCharge < 0)
 	{
-		m_charge = 0;
+		m_magnetCharge = 0;
 	}
 
 	//磁力ゲージが0以下かつ、バースト中や必殺技発動中でなければ
-	if (m_charge <= 0 && 
+	if (m_magnetCharge <= 0 && 
 		m_isBurst == false &&
 		m_specialShotFlag == false	
 		)	{
 		//磁力の状態が-1か1なので、-1を掛ければ反転する。
 		//普通にswitchしてもいいかも。
-		m_magPower *= -1;
+		m_magnetState *= -1;
 
 		if (m_isAttacking == true)
 		{
@@ -1253,14 +1253,14 @@ void Player::ChangeMagnetPower()
 		}
 
 		//チャージを回復。
-		m_charge = 1000.0f;
+		m_magnetCharge = 1000.0f;
 	
 		//磁力エフェクト変更
-		if (m_magPower == 1) {
+		if (m_magnetState == 1) {
 			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
 			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
 		}
-		else if (m_magPower == -1) {
+		else if (m_magnetState == -1) {
 			m_magEffect[0]->Init(u"Assets/effect/引力.efk");
 			m_magEffect[1]->Init(u"Assets/effect/引力.efk");
 		}
@@ -1273,14 +1273,14 @@ void Player::Camera()
 	//カメラ関連
 	if (g_pad[m_playerNum]->IsTrigger(enButtonRB3))
 	{
-		m_isLock = !m_isLock;//ロック切り替え
+		m_isLockon = !m_isLockon;//ロック切り替え
 	}
 
 	//プレイヤーの頭上90を基準として、そこからカメラに伸びるベクトルを回転させる。
 	Vector3 targetPos = m_position;
 	targetPos.y += 90.0f;
 
-	if (m_isLock)
+	if (m_isLockon)
 	{
 		//ロックしている時は、敵の中心からプレイヤーの頭上へのベクトルの延長線上にカメラがある。
 		Vector3 toEnemy = m_enemy->m_magPosition - targetPos;
@@ -1436,9 +1436,6 @@ void Player::Damage(int damage)
 
 	float innerProduct = m_damageEffectFront.Dot(Vector3::AxisZ); //内積
 	float angle = acosf(innerProduct);//アークコサイン
-	/*if (m_damageEffectFront.x < 0) {
-		angle *= -1;
-	}*/
 	Quaternion rot;
 	rot.SetRotation(Vector3::AxisY, angle);
 
@@ -1472,35 +1469,35 @@ void Player::ChargeSpecialAttackGauge(int charge)
 			ss->SetVolume(0.5f);
 			ss->Play(false);
 
-			m_ChargeSPFontRender->SetText(L"MAX");
+			m_chargeSPFontRender->SetText(L"MAX");
 			if (m_playerNum == 0)
 			{
-				m_ChargeSPFontRender->SetPosition({ -585.0f, -215.0f });
+				m_chargeSPFontRender->SetPosition({ -585.0f, -215.0f });
 			}
 			else
 			{
-				m_ChargeSPFontRender->SetPosition({ 465.0f, -215.0f });
+				m_chargeSPFontRender->SetPosition({ 465.0f, -215.0f });
 			}
-			m_ChargeSPFontRender->SetScale({1.0f,1.0f});
+			m_chargeSPFontRender->SetScale({1.0f,1.0f});
 		}
 	}
 	else
 	{
-		m_ChargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+		m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 
 		if (m_playerNum == 0)
 		{
 			if (m_specialAttackGauge < 10)
-				m_ChargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+				m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
 			else
-				m_ChargeSPFontRender->SetPosition({ -565.0f, -225.0f });
+				m_chargeSPFontRender->SetPosition({ -565.0f, -225.0f });
 		}
 		else
 		{
 			if (m_specialAttackGauge < 10)
-				m_ChargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+				m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
 			else											 
-				m_ChargeSPFontRender->SetPosition({ 485.0f, -225.0f });
+				m_chargeSPFontRender->SetPosition({ 485.0f, -225.0f });
 		}
 	}
 
@@ -1575,7 +1572,7 @@ void Player::Lose()
 //攻撃状態に切り替えできたら切り替える。
 void Player::TryChangeStatusAttack()
 {
-	if (m_magPower == 1 && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
+	if (m_magnetState == 1 && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
 		m_animStatus = enStatus_Attack;		
 	}
 }
@@ -1805,22 +1802,22 @@ void Player::KnockBack() {
 }
 void Player::OpeningCamera()
 {
-	m_cameraLoopCount++;
+	m_openingCameraCount++;
 
 	if (g_pad[m_playerNum]->IsTrigger(enButtonA))//オープニングカメラスキップ
 	{
 		m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
 	}
 	
-	if (m_cameraLoopCount < 250)//250フレーム経てば
+	if (m_openingCameraCount < 250)//250フレーム経てば
 	{
 		Vector3 toPos = m_position;
 		toPos.y = 400;
 		//toPosを回す。
 		Quaternion qRotY;
 		//Y軸回りに回転するクォータニオンをつくる
-		m_addY += 0.01;
-		qRotY.SetRotation(Vector3::AxisY, m_addY);
+		m_openingCameraRotationRad += 0.01;
+		qRotY.SetRotation(Vector3::AxisY, m_openingCameraRotationRad);
 		//クォータニオンを使ってtoPosを回す
 		qRotY.Apply(toPos);
 		m_sequenceCameraPos = toPos;
@@ -1838,8 +1835,8 @@ void Player::OpeningCamera()
 			m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
 		}
 		targetVec.Normalize();
-		m_sequenceCameraPos += targetVec*m_gain;
-		m_gain += 0.1;
+		m_sequenceCameraPos += targetVec*m_openingCameraGainSpeed;
+		m_openingCameraGainSpeed += 0.1;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}
 	g_camera3D[m_playerNum]->SetPosition(m_sequenceCameraPos);
@@ -1879,8 +1876,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		DeleteGO(m_HPBarRedSpriteRender);
 		m_HPBarRedSpriteRender = nullptr;
 		DeleteGO(m_mobiusGauge);
-		DeleteGO(m_ChargeSPFontRender);
-		m_ChargeSPFontRender = nullptr;
+		DeleteGO(m_chargeSPFontRender);
+		m_chargeSPFontRender = nullptr;
 		m_mobiusGauge = nullptr;
 		//弾も消す
 		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
@@ -2014,28 +2011,28 @@ void Player::FinalHit()//決着がついたときのカメラ
 		{
 			if (m_loserNum == 1)	//1Pが勝利した場合
 			{
-				m_winnerSprite1 = NewGO<prefab::CSpriteRender>(5);
-				m_winnerSprite1->Init("Assets/Image/1P.DDS", 148, 120);
-				m_winnerSprite1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-				m_winnerSprite1->SetPosition({ -120.0f, -120.0f, 0.0f });
-				m_winnerSprite1->SetScale({ 1.0f, 1.0f, 1.0f });				
+				m_resultWinnerSprite = NewGO<prefab::CSpriteRender>(5);
+				m_resultWinnerSprite->Init("Assets/Image/1P.DDS", 148, 120);
+				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
+				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });				
 			}
 			else if (m_loserNum == 0)	//2Pが勝利した場合
 			{
-				m_winnerSprite1 = NewGO<prefab::CSpriteRender>(5);
-				m_winnerSprite1->Init("Assets/Image/2P.DDS", 180, 128);
-				m_winnerSprite1->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-				m_winnerSprite1->SetPosition({ -120.0f, -120.0f, 0.0f });
-				m_winnerSprite1->SetScale({ 1.0f, 1.0f, 1.0f });			
+				m_resultWinnerSprite = NewGO<prefab::CSpriteRender>(5);
+				m_resultWinnerSprite->Init("Assets/Image/2P.DDS", 180, 128);
+				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
+				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });			
 			}
 		}
 		else if (m_LoseCameraLoop == 350)
 		{
-			m_winnerSprite2 = NewGO<prefab::CSpriteRender>(5);
-			m_winnerSprite2->Init("Assets/Image/Win.DDS", 300, 128);
-			m_winnerSprite2->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-			m_winnerSprite2->SetPosition({ 150.0f, -120.0f, 0.0f });
-			m_winnerSprite2->SetScale({ 1.0f, 1.0f, 1.0f });		
+			m_resultWinSprite = NewGO<prefab::CSpriteRender>(5);
+			m_resultWinSprite->Init("Assets/Image/Win.DDS", 300, 128);
+			m_resultWinSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
+			m_resultWinSprite->SetPosition({ 150.0f, -120.0f, 0.0f });
+			m_resultWinSprite->SetScale({ 1.0f, 1.0f, 1.0f });		
 		}
 
 		g_camera3D[0]->SetPosition(m_sequenceCameraPos);
