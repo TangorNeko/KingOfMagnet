@@ -333,7 +333,7 @@ void Debris::AsBulletBehave()
 				m_bulletCollider.SetEndPoint(m_position);
 
 				//当たり判定にヒットしているならダメージ。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
 					//ヒット音
 					prefab::CSoundSource* hitSE = NewGO<prefab::CSoundSource>(0);

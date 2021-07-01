@@ -114,7 +114,7 @@ void GravityBullet::AsBulletBehave()
 			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//当たり判定にヒットしているなら爆発。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
 					m_gravityBulletState = enExplode;
 				}
@@ -232,7 +232,7 @@ void GravityBullet::AsGravityBehave()
 
 					//敵プレイヤーのキャラコンに実行させる
 					//正直このやり方も良いといえるのか分からない。
-					player->m_charaCon.Execute(toGravity, 1.0f);
+					player->ExecuteCharacon(toGravity);
 				}
 				return true;
 			});

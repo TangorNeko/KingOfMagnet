@@ -175,6 +175,26 @@ public://リファクタリング中に作られた関数
 		return m_hp;
 	}
 
+	bool IsBulletHitCollider(const MyCapsuleCollider& bulletCollider)
+	{
+		return m_collider.isHitCapsule(bulletCollider);
+	}
+
+	void ExecuteCharacon(Vector3 moveSpeed)
+	{
+		m_charaCon.Execute(moveSpeed, 1.0f);
+	}
+
+	void ResetFall()
+	{
+		m_fallLoop = 0;
+	}
+
+	void SetSensitivity(float sensitivity)
+	{
+		m_sensitivity = sensitivity;
+	}
+
 public:
 
 	//アニメーションの数
@@ -227,6 +247,9 @@ public:
 	Vector3 m_winnerVec;//敗者から勝者に向かうベクトル
 	Vector3 m_winnerWaistPos;//勝者の腰の位置
 
+	prefab::CFontRender* m_bulletNumFont = nullptr;//残弾数
+	prefab::CFontRender* m_bulletNumFont2 = nullptr;//残弾数
+
 	Vector3 m_position = { 0.0f,0.0f,0.0f }; //キャラクターの座標
 	Quaternion m_rot;//キャラクターの回転
 	Vector3 m_scale = { 0.8f, 0.8f, 0.8f };//キャラクターの拡大率 **定数化**
@@ -239,6 +262,7 @@ public:
 	Vector3 cameraPos;//カメラのポジション
 	Quaternion qRotY;
 	float n;//内積
+private:
 	float m_sensitivity = 2.0f;//視点感度
 	Vector3 m_cameraPos;
 	Vector3 m_targetPos = { 0.0f,0.0f,0.0f }; //  **定数化**
@@ -259,9 +283,6 @@ public:
 	TriangleCollider m_triCollider[2];//単純な三角形の当たり判定(発射先の判定に使う)
 	MyCapsuleCollider m_collider;//カプセル状の当たり判定(弾の当たり判定に使う)
 
-	prefab::CFontRender* m_bulletNumFont = nullptr;//残弾数
-	prefab::CFontRender* m_bulletNumFont2 = nullptr;//残弾数
-private:
 
 	prefab::CSkinModelRender* m_skinModelRender = nullptr; //キャラクターのモデル
 

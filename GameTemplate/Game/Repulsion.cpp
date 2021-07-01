@@ -62,8 +62,10 @@ void Repulsion::Update()
 					if (diff.y < REPULSION_RANGE)//°‚Æ‚Ì‹——£‚ª‹ß‚¯‚ê‚Îã¸
 					{
 						Vector3 repulsionValue = REPULSION_SPEED;
-						player->m_charaCon.Execute(repulsionValue, 1.0f);
-						player->m_fallLoop = 0;
+						player->ExecuteCharacon(repulsionValue);
+
+						//—Ž‰º‚Ì‰Á‘¬‚ðƒŠƒZƒbƒg
+						player->ResetFall();
 					}
 
 					//SE

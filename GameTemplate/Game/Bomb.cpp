@@ -293,7 +293,7 @@ void Bomb::AsBulletBehave()
 				m_bulletCollider.SetEndPoint(m_position);
 
 				//当たり判定にヒットしているなら起爆。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
 					//当たった所からポップさせる
 					m_bombState = enPop;

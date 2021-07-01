@@ -1135,7 +1135,7 @@ void Player::MagneticBurst()
 		//‹ß‚·‚¬‚éŽž‚Íˆø‚Á’£‚ç‚È‚¢
 		if (toEnemy.Length() > 100.0f && toEnemy.Length() < 750.0f)
 		{
-			m_enemy->m_charaCon.Execute(force, 1.0f);
+			m_enemy->ExecuteCharacon(force);
 
 			//“G‚Ì’e‚ð‚Ü‚¾’D‚Á‚Ä‚¢‚È‚¢Žž
 			if (m_isSteal == false)
@@ -1224,7 +1224,7 @@ void Player::MagneticBurst()
 		force *= 10.0f;
 		if (toEnemy.Length() < 750.0f)
 		{
-			m_enemy->m_charaCon.Execute(force, 1.0f);
+			m_enemy->ExecuteCharacon(force);
 		}
 
 		break;

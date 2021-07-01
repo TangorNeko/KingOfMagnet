@@ -170,7 +170,7 @@ bool GameScene::Start()
 	}
 	m_player1->m_toCameraDir = STARTDIRECTION_PLAYER1_TOCAMERA;
 	m_player1->m_characterDirection = STARTDIRECTION_PLAYER1_MODEL;
-	m_player1->m_sensitivity = m_P1Sensitivity;
+	m_player1->SetSensitivity(m_P1Sensitivity);
 
 	m_player2 = NewGO<Player>(0, "Player");
 	m_player2->m_position = PLAYER2_STARTPOSITION;
@@ -188,7 +188,7 @@ bool GameScene::Start()
 	}
 	m_player2->m_toCameraDir = STARTDIRECTION_PLAYER2_TOCAMERA;
 	m_player2->m_characterDirection = STARTDIRECTION_PLAYER2_MODEL;
-	m_player2->m_sensitivity = m_P2Sensitivity;
+	m_player2->SetSensitivity(m_P2Sensitivity);
 
 	//ŠeƒvƒŒƒCƒ„[‚É“G‚ð“n‚·
 	m_player2->SetEnemy(m_player1);
