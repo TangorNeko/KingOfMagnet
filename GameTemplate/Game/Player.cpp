@@ -17,9 +17,9 @@ namespace
 	const Vector4 FONT_SHADOWCOLOR = { 0.0f,0.0f,0.0f,1.0f };
 	const int FONT_SHADOWOFFSET = 3;
 	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE = { -170.0f, -270.0f };
-	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_TENSPLACE = Vector2::Zero;
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_TENSPLACE = { -207.0f, -270.0f };
 	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_ONESPLACE = { 60.0f, -270.0f };
-	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_TENSPLACE = Vector2::Zero;
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_TENSPLACE = { 23.0f, -270.0f };
 	const Vector2 FONT_BULLETMAX_POSITION_PLAYER1 = { -130.0f, -283.0f };
 	const Vector2 FONT_BULLETMAX_POSITION_PLAYER2 = { 100.0f, -283.0f };
 	const Vector2 FONT_BULLETMAX_SCALE = { 0.7f,0.7f };
@@ -57,6 +57,67 @@ namespace
 	const Vector3 EFFECT_SPFIRE_SCALE = { 20.0f, 20.0f, 20.0f };
 	const Vector3 EFFECT_SPGAUGEMAX_SCALE = { 8.0f, 8.0f, 8.0f };
 	const Vector3 EFFECT_SPCHARGE_SCALE = { 70.0f, 70.0f, 70.0f };
+	const int EFFECT_MAGEFFECTCOUNT_CALL1 = 40;
+	const int EFFECT_MAGEFFECTCOUNT_CALL2 = 0;
+	const int EFFECT_MAGEFFECTCOUNT_AFTERCALL2 = 80;
+
+	const int PLAYER_FALLLOOP_MAX = 75;
+	const int PLAYER_FALLLOOP_ZERO = 0;
+
+	const float PLAYER_SPEED_RUN = 6.0f;
+	const float PLAYER_SPEED_WALK = 0.5f;
+	const float PLAYER_SPEED_STOP = 0.0f;
+
+	const float PLAYER_TO_MAGPOSITION = 50.0f;
+
+	const float HEIGHT_PLAYER_FALL = -750.0f;
+	const float HEIGHT_PLAYER_FALLSOUND_PLAY = -50.0f;
+	const float SOUND_SE_FALL_VOLUME = 0.5f;
+	const int DAMAGE_FALL = 100;
+
+	const int FOOTSTEPTIMER_WALK = 25;
+	const int FOOTSTEPTIMER_RUN = 17;
+	const int FOOTSTEPTIMER_RESET = 0;
+	const float SOUND_SE_FOOTSTEP_VOLUME = 0.2f;
+
+	const int PLAYER_ATTACKCOUNT_CANATTACK = 0;
+	const int PLAYER_ATTACKCOUNT_AFTERSHOOT = 10;
+	const int PLAYER_ATTACKCOUNT_AFTERBOMB = 60;
+
+	const float SOUND_SE_DEBRISSHOOT_VOLUME = 0.5f;
+
+	const int SIZE_TENSPLACE = 10;
+
+	const int PLAYER_SPGAUGE_MAX = 100;
+	const int PLAYER_SPGAUGE_ZERO = 0;
+	const int PLAYER_SPECIALSHOTCOUNT_ZERO = 0;
+	const int PLAYER_SPECIALSHOTCOUNT_SHOOT = 35;
+	const float SOUND_SE_SHOOTGRAVITY_VOLUME = 0.8f;
+
+	const float BULLETHOLDER_TO_CENTER_OF_BULLET_ROTATION = 100.0f;
+	const float BULLETHOLDER_TO_BEHIND_PLAYER = 30.0f;
+
+	const float DEBRIS_ROTATEDEG_PER_FRAME = 0.5f;
+	const Vector3 CENTER_TO_FIRSTDEBRIS = { 0.0f,50.0f,0.0f };
+
+	const int DEBRIS_NEXTSHOOT_INDEX = 0;
+	const float DEBRIS_NEXTSHOOT_DISTANCE = 100.0f;
+
+	const int BOMB_FIRST_OBTAIN_INDEX = 0;
+	const Vector3 CENTER_TO_FIRSTBOMB = { 0.0f,30.0f,0.0f };
+
+	const float PLAYER_BURST_COST = 300.0f;
+	const float PLAYER_MAGNETCHARGE_ZERO = 0.0f;
+	const float PLAYER_MAGNETCHARGE_MAX = 1000.0f;
+	const int PLAYER_BURSTCOUNT_START = 60;
+	const int PLAYER_BURSTCOUNT_END = 0;
+	const float SOUND_SE_BURST_VOLUME = 1.5f;
+	const float BURST_RANGE_MIN = 100.0f;
+	const float BURST_RANGE_MAX = 750.0f;
+
+	const int SPGAUGE_BULLETSTEAL_POINT = 25;
+
+	const float PLAYER_MAGNETCHARGE_DECAY_VALUE = 2.0f;
 }
 Player::Player()
 {
@@ -400,11 +461,11 @@ void Player::Update()
 		//攻撃後の隙のタイマーを減らしていく
 		m_attackCount--;
 		//攻撃のクールタイムが終わると移動速度を戻す
-		if (m_attackCount <= 0 && m_isBurst == false)
+		if (m_attackCount <= PLAYER_ATTACKCOUNT_CANATTACK && m_isBurst == false)
 		{
-			m_attackCount = 0;
+			m_attackCount = PLAYER_ATTACKCOUNT_CANATTACK;
 			m_isAttacking = false;
-			m_characterSpeed = 6.0;
+			m_characterSpeed = PLAYER_SPEED_RUN;
 		}
 		//状態更新。
 		UpdateState();
@@ -417,20 +478,23 @@ void Player::Update()
 		//斥力・引力エフェクト			
 
 		//磁力エフェクトを再生
-		if (m_magEffectCallCount == 40) {
-			m_magEffect[1]->Play();
-		}
-		else if (m_magEffectCallCount <= 0) {
+		if (m_magEffectCallCount == EFFECT_MAGEFFECTCOUNT_CALL1) {
 			m_magEffect[0]->Play();
-			m_magEffectCallCount = 80;
+		}
+		else if (m_magEffectCallCount <= EFFECT_MAGEFFECTCOUNT_CALL2) {
+			m_magEffect[1]->Play();
+			m_magEffectCallCount = EFFECT_MAGEFFECTCOUNT_AFTERCALL2;
 		}
 		m_magEffectCallCount--;
 
 		m_magEffect[0]->SetPosition(m_position);
 		m_magEffect[1]->SetPosition(m_position);
 			
-		if(m_SPGaugeMaxEffect->IsPlay())
-			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
+		//必殺技ゲージが溜まった瞬間のエフェクトが再生されていれば
+		if (m_SPGaugeMaxEffect->IsPlay())
+		{
+			m_SPGaugeMaxEffect->SetPosition(m_magPosition);
+		}
 	
 	}
 	else if(m_gameScene->GetGameState() == GameScene::GameState::enResult)
@@ -485,7 +549,7 @@ void Player::DisplayStatus()
 	//HPバー更新
 	if (m_gameScene->GetGameState() == GameScene::GameState::enPlaying)
 	{
-		if (m_playerNum == 0) {
+		if (m_playerNum == NUMBER_PLAYER1) {
 			m_DamageBarSpriteRender->SetPosition({ -9.0f + m_hp / 1000.0f * 299, 325.0f,0.0f });
 			if (m_HPBarDarkSpriteRender->GetPosition().x > m_DamageBarSpriteRender->GetPosition().x) {
 				Vector3 DarkPos = m_HPBarDarkSpriteRender->GetPosition();
@@ -497,7 +561,7 @@ void Player::DisplayStatus()
 				}
 			}
 		}
-		else if (m_playerNum == 1) {
+		else if (m_playerNum == NUMBER_PLAYER2) {
 			m_DamageBarSpriteRender->SetPosition({ 9.0f + m_hp / 1000.0f * -299, 325.0f,0.0f });
 			if (m_HPBarDarkSpriteRender->GetPosition().x < m_DamageBarSpriteRender->GetPosition().x) {
 				Vector3 DarkPos = m_HPBarDarkSpriteRender->GetPosition();
@@ -512,7 +576,7 @@ void Player::DisplayStatus()
 	}
 
 	//メビウスゲージの色を磁力から決定
-	if (m_magnetState == 1)
+	if (m_magnetState == MAGNETSTATE_REPULSION)
 	{
 		m_mobiusGauge->m_isRed = true;
 	}
@@ -522,7 +586,7 @@ void Player::DisplayStatus()
 	}
 
 	//メビウスゲージに現在の必殺技のチャージ量を渡す
-	m_mobiusGauge->m_charge = m_magnetCharge;
+	m_mobiusGauge->m_magnetCharge = m_magnetCharge;
 
 	m_mobiusGauge->m_spCharge = m_specialAttackGauge;
 }
@@ -550,7 +614,7 @@ void Player::Move()
 	m_moveAmount = m_cameraFront * g_pad[m_playerNum]->GetLStickYF() * m_characterSpeed + m_cameraRight * g_pad[m_playerNum]->GetLStickXF() * m_characterSpeed;
 	if (m_charaCon.IsOnGround() == false)
 	{
-		if (m_fallLoop < 75)
+		if (m_fallLoop < PLAYER_FALLLOOP_MAX)
 		{
 			m_fallLoop++;
 		}
@@ -566,12 +630,12 @@ void Player::Move()
 
 	m_position = m_charaCon.Execute(m_moveAmount, 1.0f);
 	m_magPosition = m_position;
-	m_magPosition.y += 50.0f;
+	m_magPosition.y += PLAYER_TO_MAGPOSITION;
 	m_skinModelRender->SetPosition(m_position);
 
 	//穴に落ちた時の処理
-	if (m_position.y <= -750.0f) {
-		Damage(100);
+	if (m_position.y <= HEIGHT_PLAYER_FALL) {
+		Damage(DAMAGE_FALL);
 
 		//敵から最も遠いリスポーン地点に移動する。
 		Vector3 respawnPoint = m_stageModel->GetRespawnPoint(m_enemy->m_position);
@@ -580,7 +644,7 @@ void Player::Move()
 		m_skinModelRender->SetPosition(m_position);
 
 		//リスポーンしたので落下加速用のカウントをリセット。
-		m_fallLoop = 0;
+		m_fallLoop = PLAYER_FALLLOOP_ZERO;
 	}
 
 	//足音
@@ -589,36 +653,36 @@ void Player::Move()
 		m_footstepsTimer++;
 		
 		if (m_animStatus == enStatus_Walk) {
-			if (m_footstepsTimer >= 25)
+			if (m_footstepsTimer >= FOOTSTEPTIMER_WALK)
 			{
 				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 				ssShoot->Init(L"Assets/sound/足音.wav", SoundType::enSE);
-				ssShoot->SetVolume(0.2f);
+				ssShoot->SetVolume(SOUND_SE_FOOTSTEP_VOLUME);
 				ssShoot->Play(false);
 
-				m_footstepsTimer = 0;
+				m_footstepsTimer = FOOTSTEPTIMER_RESET;
 			}
 		}
 		if (m_animStatus == enStatus_Run) {
-			if (m_footstepsTimer >= 17)
+			if (m_footstepsTimer >= FOOTSTEPTIMER_RUN)
 			{
 				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 				ssShoot->Init(L"Assets/sound/足音.wav", SoundType::enSE);
-				ssShoot->SetVolume(0.2f);
+				ssShoot->SetVolume(SOUND_SE_FOOTSTEP_VOLUME);
 				ssShoot->Play(false);
 				
-				m_footstepsTimer = 0;
+				m_footstepsTimer = FOOTSTEPTIMER_RESET;
 			}
 		}
 	}
 	else
-		m_footstepsTimer = 0;
+		m_footstepsTimer = FOOTSTEPTIMER_RESET;
 
-	if (oldPos.y >= -50.0f && m_position.y < -50.0f)
+	if (oldPos.y >= HEIGHT_PLAYER_FALLSOUND_PLAY && m_position.y < HEIGHT_PLAYER_FALLSOUND_PLAY)
 	{
 		prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 		ssShoot->Init(L"Assets/sound/落下音.wav", SoundType::enSE);
-		ssShoot->SetVolume(0.5f);
+		ssShoot->SetVolume(SOUND_SE_FALL_VOLUME);
 		ssShoot->Play(false);
 	}	
 }
@@ -626,7 +690,7 @@ void Player::Move()
 //攻撃
 void Player::Attack()
 {
-	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_attackCount == 0)
+	if (g_pad[m_playerNum]->IsPress(enButtonRB1) && m_attackCount == PLAYER_ATTACKCOUNT_CANATTACK)
 	{
 		//ガレキを一つでも持っているなら
 		if (m_holdDebrisVector.empty() == false)
@@ -634,7 +698,7 @@ void Player::Attack()
 			//音を鳴らす
 			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
 			ssShoot->Init(L"Assets/sound/シュート音.wav", SoundType::enSE);
-			ssShoot->SetVolume(0.5f);
+			ssShoot->SetVolume(SOUND_SE_DEBRISSHOOT_VOLUME);
 			ssShoot->Play(false);
 
 			//一番最初に保持したガレキを発射
@@ -643,13 +707,13 @@ void Player::Attack()
 			debris->SetDebrisState(Debris::enBullet);
 
 			//キャラクターのスピードを遅くする。
-			m_characterSpeed = 0.5f;
+			m_characterSpeed = PLAYER_SPEED_WALK;
 
 			//攻撃中のフラグをオン
 			m_isAttacking = true;
 
 			//攻撃の隙の持続時間
-			m_attackCount = 10;
+			m_attackCount = PLAYER_ATTACKCOUNT_AFTERSHOOT;
 			
 			//この場所に向かって撃つ(GetShootPointの中での参照受け取り用)
 			Vector3 crossPoint;
@@ -674,20 +738,20 @@ void Player::Attack()
 
 			//テキスト更新
 			m_bulletNumFont->SetText(std::to_wstring(m_holdDebrisVector.size()));
-			if (m_playerNum == 0)
+			if (m_playerNum == NUMBER_PLAYER1)
 			{
-				if (m_holdDebrisVector.size() >= 10)
-					m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+				if (m_holdDebrisVector.size() >= SIZE_TENSPLACE)
+					m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_TENSPLACE);
 
 				else 
-					m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+					m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE);
 			}
 			else
 			{
-				if (m_holdDebrisVector.size() >= 10)
-					m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+				if (m_holdDebrisVector.size() >= SIZE_TENSPLACE)
+					m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_TENSPLACE);
 				else
-					m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+					m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_ONESPLACE);
 			}
 		}
 
@@ -709,7 +773,7 @@ void Player::SpecialAttack()
 
 	//必殺技ポイントが溜まっていてボタンを押したら
 	//アニメーションに発射タイミングを合わせる。
-	if (m_specialAttackGauge >= 100 && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
+	if (m_specialAttackGauge >= PLAYER_SPGAUGE_MAX && g_pad[m_playerNum]->IsTrigger(enButtonLB3))
 	{
 		m_SpecialAttackOn = true;		//アニメーションを必殺技にする。
 		m_specialShotFlag = true;
@@ -719,58 +783,62 @@ void Player::SpecialAttack()
 		//発射する前に、チャージするようなエフェクト
 		switch (m_magnetState)
 		{
-		case -1:
-			m_SPChargeEffectBlue->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
-			if (m_specialShotCount == 0)
+		case MAGNETSTATE_GRAVITY:
+			m_SPChargeEffectBlue->SetPosition(m_magPosition);
+			if (m_specialShotCount == PLAYER_SPECIALSHOTCOUNT_ZERO)
+			{
 				m_SPChargeEffectBlue->Play();
+			}
 			break;
-		case 1:
-			m_SPChargeEffectRed->SetPosition({ m_position.x, m_position.y + 50.0f, m_position.z });
-			if (m_specialShotCount == 0)
-				m_SPChargeEffectRed->Play();		
+		case MAGNETSTATE_REPULSION:
+			m_SPChargeEffectRed->SetPosition(m_magPosition);
+			if (m_specialShotCount == PLAYER_SPECIALSHOTCOUNT_ZERO)
+			{
+				m_SPChargeEffectRed->Play();
+			}
 			break;
 		}
-		if (m_specialShotCount == 0)
+		if (m_specialShotCount == PLAYER_SPECIALSHOTCOUNT_ZERO)
 		{
 			prefab::CSoundSource* ssSPCharge = NewGO<prefab::CSoundSource>(0);
 			ssSPCharge->Init(L"Assets/sound/パワーチャージ.wav", SoundType::enSE);
 			ssSPCharge->Play(false);
 		}
 
-		m_specialShotCount += 1;
+		m_specialShotCount++;
 
 		//発射前にダメージを受けたらキャンセル
 		if (m_HitOn == true) 
 		{
 			//ゲージも0に。
-			m_specialAttackGauge = 0;
+			m_specialAttackGauge = PLAYER_SPGAUGE_ZERO;
 			m_specialShotFlag = false;
-			m_specialShotCount = 0;
-			if (m_playerNum == 0)
+			m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
+			if (m_playerNum == NUMBER_PLAYER1)
 			{
-				m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
-				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
-				m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
-				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 		}
 	}
 
-	if (m_specialShotCount >= 35) 
+	if (m_specialShotCount >= PLAYER_SPECIALSHOTCOUNT_SHOOT)
 	{
 		//引力なら
-		if (m_magnetState == -1)
+		if (m_magnetState == MAGNETSTATE_GRAVITY)
 		{
 			//m_SPChargeEffectBlue->Stop();
 			//音を鳴らす
 			prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);
 			ssSPShot->Init(L"Assets/sound/引力弾発射.wav", SoundType::enSE);
-			ssSPShot->SetVolume(0.8f);
+			ssSPShot->SetVolume(SOUND_SE_SHOOTGRAVITY_VOLUME);
 			ssSPShot->Play(false);
 
 			//発射エフェクト
@@ -807,25 +875,24 @@ void Player::SpecialAttack()
 			}
 
 			//撃ったので必殺技ゲージを0に
-			m_specialAttackGauge = 0;
+			m_specialAttackGauge = PLAYER_SPGAUGE_ZERO;
 			m_specialShotFlag = false;
-			m_specialShotCount = 0;
-			if (m_playerNum == 0)
+			m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
+			if (m_playerNum == NUMBER_PLAYER1)
 			{
-				m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
-				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
-				m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
-				m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 		}
 		else//斥力なら
 		{
-			//m_SPChargeEffectRed->Stop();
 			//弾を1発でも持ってる?
 			if (m_holdDebrisVector.size() != 0)
 			{
@@ -872,28 +939,30 @@ void Player::SpecialAttack()
 
 				//テキスト更新
 				m_bulletNumFont->SetText(std::to_wstring(m_holdDebrisVector.size()));
-				if (m_playerNum == 0)					
-					m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
-				
+				if (m_playerNum == NUMBER_PLAYER1)
+				{
+					m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE);
+				}
 				else
-					m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
-				
+				{
+					m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_ONESPLACE);
+				}
 
 
 				//撃ったので必殺技ゲージを0に
-				m_specialAttackGauge = 0;
+				m_specialAttackGauge = PLAYER_SPGAUGE_ZERO;
 				m_specialShotFlag = false;
-				m_specialShotCount = 0;
-				if (m_playerNum == 0)
+				m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
+				if (m_playerNum == NUMBER_PLAYER1)
 				{
-					m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
-					m_chargeSPFontRender->SetScale({0.7f,0.7f});
+					m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+					m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 					m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 				else
 				{
-					m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
-					m_chargeSPFontRender->SetScale({ 0.7f,0.7f });
+					m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+					m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 					m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 			}
@@ -901,7 +970,7 @@ void Player::SpecialAttack()
 			{
 				//1発も弾持ってないから不発にする。エラー音?ゲージも消費しなくていい
 				m_specialShotFlag = false;
-				m_specialShotCount = 0;
+				m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
 			}
 		}
 	}
@@ -909,7 +978,7 @@ void Player::SpecialAttack()
 
 void Player::ThrowBomb()
 {
-	if (g_pad[m_playerNum]->IsPress(enButtonRB2) && m_attackCount == 0)
+	if (g_pad[m_playerNum]->IsPress(enButtonRB2) && m_attackCount == PLAYER_ATTACKCOUNT_CANATTACK)
 	{
 		//爆弾を一つでも持っているなら
 		if (m_holdBombVector.empty() == false)
@@ -930,13 +999,13 @@ void Player::ThrowBomb()
 			(*debris)->SetPosition(throwPosition);
 
 			//キャラクターのスピードを遅くする。
-			m_characterSpeed = 0.5f;
+			m_characterSpeed = PLAYER_SPEED_WALK;
 
 			//攻撃中のフラグをオン
 			m_isAttacking = true;
 
 			//攻撃の隙の持続時間
-			m_attackCount = 60;
+			m_attackCount = PLAYER_ATTACKCOUNT_AFTERBOMB;
 
 			Vector3 front = g_camera3D[m_playerNum]->GetForward();
 			front.y += 0.5f;
@@ -957,7 +1026,7 @@ void Player::ThrowBomb()
 void Player::HoldDebris()
 {
 	//回転角度を増加させていく。
-	m_holdDebrisRotateDeg += 0.5f;
+	m_holdDebrisRotateDeg += DEBRIS_ROTATEDEG_PER_FRAME;
 	if (m_holdDebrisRotateDeg >= 360.0f)
 	{
 		m_holdDebrisRotateDeg -= 360.0f;
@@ -965,15 +1034,13 @@ void Player::HoldDebris()
 
 	//回転の中心を設定する。
 	Vector3 centerOfRotation = m_position;
-	centerOfRotation.y += 100.0f;
+	centerOfRotation.y += BULLETHOLDER_TO_CENTER_OF_BULLET_ROTATION;
 
 	//回転の中心をプレイヤーより後ろに。
 	Vector3 cameraDir = g_camera3D[m_playerNum]->GetForward();
-	cameraDir.y = 0;
+	cameraDir.y = 0.0f;
 	cameraDir.Normalize();
-	centerOfRotation -= cameraDir * 30.0f;
-	
-	Vector3 toDebris = { 0.0f,50.0f,0.0f };
+	centerOfRotation -= cameraDir * BULLETHOLDER_TO_BEHIND_PLAYER;
 
 	//保持しているガレキが1個以上あれば
 	if (m_holdDebrisVector.empty() == false)
@@ -988,9 +1055,9 @@ void Player::HoldDebris()
 		for (auto debris : m_holdDebrisVector)
 		{
 			//次に発射するガレキのみ自分の前に。
-			if(i == 0)
+			if(i == DEBRIS_NEXTSHOOT_INDEX)
 			{ 
-				debris->SetPosition(m_magPosition + (cameraDir * 100));
+				debris->SetPosition(m_magPosition + (cameraDir * DEBRIS_NEXTSHOOT_DISTANCE));
 			}
 			else
 			{
@@ -1000,12 +1067,12 @@ void Player::HoldDebris()
 				//iの値によって順番に並べる
 				debrisRot.SetRotationDeg(cameraDir, m_holdDebrisRotateDeg + degPerOneDebris * (i-1));
 
-				//toDebris本体に回転を適用すると他の場所にも影響が出るのでコピーしてから回転を適用する。
-				Vector3 tmp = toDebris;
-				debrisRot.Apply(tmp);
+				//コピーしてから回転を適用する。
+				Vector3 toDebris = CENTER_TO_FIRSTDEBRIS;
+				debrisRot.Apply(toDebris);
 
 				//回転の中心点から伸ばす
-				debris->SetPosition(centerOfRotation + tmp);
+				debris->SetPosition(centerOfRotation + toDebris);
 			}
 
 			i++;
@@ -1023,13 +1090,13 @@ void Player::HoldBomb()
 		if (++m_selectBombNo >= m_holdBombVector.size())
 		{
 			//一周回って0になる
-			m_selectBombNo = 0;
+			m_selectBombNo = BOMB_FIRST_OBTAIN_INDEX;
 		}
 	}
 	else if (g_pad[m_playerNum]->IsTrigger(enButtonLeft))
 	{
 		//選択している爆弾の番号がマイナスになっていたら
-		if (--m_selectBombNo < 0)
+		if (--m_selectBombNo < BOMB_FIRST_OBTAIN_INDEX)
 		{
 			//一周回ってコンテナのサイズ-1になる
 			m_selectBombNo = m_holdBombVector.size() - 1;
@@ -1038,15 +1105,13 @@ void Player::HoldBomb()
 
 	//回転の中心を設定する。
 	Vector3 centerOfRotation = m_position;
-	centerOfRotation.y += 100.0f;
+	centerOfRotation.y += BULLETHOLDER_TO_CENTER_OF_BULLET_ROTATION;
 
 	//回転の中心をプレイヤーより後ろに。
 	Vector3 cameraDir = g_camera3D[m_playerNum]->GetForward();
 	cameraDir.y = 0;
 	cameraDir.Normalize();
-	centerOfRotation -= cameraDir * 30.0f;
-
-	Vector3 toDebris = { 0.0f,30.0f,0.0f };
+	centerOfRotation -= cameraDir * BULLETHOLDER_TO_BEHIND_PLAYER;
 
 	//保持している爆弾が1個以上あれば
 	if (m_holdBombVector.empty() == false)
@@ -1067,11 +1132,11 @@ void Player::HoldBomb()
 			debrisRot.SetRotationDeg(cameraDir, degPerOneDebris * (i - m_selectBombNo));
 
 			//toDebris本体に回転を適用すると他の場所にも影響が出るのでコピーしてから回転を適用する。
-			Vector3 tmp = toDebris;
-			debrisRot.Apply(tmp);
+			Vector3 toBomb = CENTER_TO_FIRSTBOMB;
+			debrisRot.Apply(toBomb);
 
 			//回転の中心点から伸ばす
-			debris->SetPosition(centerOfRotation + tmp);
+			debris->SetPosition(centerOfRotation + toBomb);
 
 			i++;
 		}
@@ -1084,10 +1149,10 @@ void Player::MagneticBehavior()
 	//磁力の状態によって動きが分岐。
 	switch (m_magnetState)
 	{
-	case -1://引力
+	case MAGNETSTATE_GRAVITY://引力
 
 		break;
-	case 1: //斥力
+	case MAGNETSTATE_REPULSION: //斥力
 
 		//斥力モードでのみガレキを発射できる
 		Attack();
@@ -1102,34 +1167,34 @@ void Player::MagneticBehavior()
 	if (g_pad[m_playerNum]->IsTrigger(enButtonLB1) && m_isAttacking == false)
 	{
 		//磁力ゲージを300消費。
-		m_magnetCharge -= 300.0f;
-		if (m_magnetCharge < 0)
+		m_magnetCharge -= PLAYER_BURST_COST;
+		if (m_magnetCharge < PLAYER_MAGNETCHARGE_ZERO)
 		{
-			m_magnetCharge = 0;
+			m_magnetCharge = PLAYER_MAGNETCHARGE_ZERO;
 		}
 
 		m_isBurst = true;
-		m_burstCount = 60;
+		m_burstCount = PLAYER_BURSTCOUNT_START;
 
 		//バースト音
 		prefab::CSoundSource* ssBurst = NewGO<prefab::CSoundSource>(0);;
 
 		switch (m_magnetState)
 		{
-		case -1://引力
+		case MAGNETSTATE_GRAVITY://引力
 			//バースト音を再生
 			ssBurst->Init(L"Assets/sound/引力バースト音.wav", SoundType::enSE);
-			ssBurst->SetVolume(1.5);
+			ssBurst->SetVolume(SOUND_SE_BURST_VOLUME);
 			ssBurst->Play(false);		
 			//エフェクトを表示
 			m_burstEffect->Init(u"Assets/effect/引力バースト.efk");
 			m_burstEffect->Play();
 			break;
 
-		case 1://斥力
+		case MAGNETSTATE_REPULSION://斥力
 			//バースト音を再生
 			ssBurst->Init(L"Assets/sound/斥力バースト音.wav", SoundType::enSE);
-			ssBurst->SetVolume(1.5);
+			ssBurst->SetVolume(SOUND_SE_BURST_VOLUME);
 			ssBurst->Play(false);
 			//エフェクトを表示
 			m_burstEffect->Init(u"Assets/effect/斥力バースト.efk");
@@ -1146,7 +1211,7 @@ void Player::MagneticBurst()
 	m_burstEffect->SetPosition(m_position);
 
 	//バースト中は移動速度は0に
-	m_characterSpeed = 0.0f;
+	m_characterSpeed = PLAYER_SPEED_STOP;
 
 	//敵までのベクトル
 	Vector3 toEnemy = m_enemy->m_position - m_position;
@@ -1160,12 +1225,12 @@ void Player::MagneticBurst()
 	//磁力の状態によって動きが分岐。
 	switch (m_magnetState)
 	{
-	case -1://引力
+	case MAGNETSTATE_GRAVITY://引力
 
 		//引っ張るのでマイナスに
 		force *= -10.0f;
 		//近すぎる時は引っ張らない
-		if (toEnemy.Length() > 100.0f && toEnemy.Length() < 750.0f)
+		if (toEnemy.Length() > BURST_RANGE_MIN && toEnemy.Length() < BURST_RANGE_MAX)
 		{
 			m_enemy->ExecuteCharacon(force);
 
@@ -1176,7 +1241,7 @@ void Player::MagneticBurst()
 				//敵の保持する弾が1発以上あるなら
 				if (m_enemy->m_holdDebrisVector.size() != 0)
 				{
-					int i = 0;
+					int enemyHoldDebrisIndex = 0;
 					//持ってるガレキをドロップさせる
 					//全部ではなく3つまでにしてみる。
 
@@ -1188,10 +1253,10 @@ void Player::MagneticBurst()
 						(*iterator)->SetDebrisState(Debris::enDrop);
 
 						//カウントをすすめる
-						i++;
+						enemyHoldDebrisIndex++;
 
 						//3になったら3つ吸ったのでブレイク。
-						if (i == 3)
+						if (enemyHoldDebrisIndex == 3)
 						{
 							break;
 						}
@@ -1209,20 +1274,20 @@ void Player::MagneticBurst()
 
 					//テキスト更新
 					m_enemy->m_bulletNumFont->SetText(std::to_wstring(m_enemy->m_holdDebrisVector.size()));
-					if (m_enemy->m_playerNum == 0)
+					if (m_enemy->m_playerNum == NUMBER_PLAYER1)
 					{
-						if (m_enemy->m_holdDebrisVector.size() >= 10)
-							m_enemy->m_bulletNumFont->SetPosition({ -207.0f, -270.0f });
+						if (m_enemy->m_holdDebrisVector.size() >= SIZE_TENSPLACE)
+							m_enemy->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_TENSPLACE);
 
 						else
-							m_enemy->m_bulletNumFont->SetPosition({ -170.0f, -270.0f });
+							m_enemy->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE);
 					}
 					else
 					{
-						if (m_enemy->m_holdDebrisVector.size() >= 10)
-							m_enemy->m_bulletNumFont->SetPosition({ 23.0f, -270.0f });
+						if (m_enemy->m_holdDebrisVector.size() >= SIZE_TENSPLACE)
+							m_enemy->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_TENSPLACE);
 						else
-							m_enemy->m_bulletNumFont->SetPosition({ 60.0f, -270.0f });
+							m_enemy->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_ONESPLACE);
 					}
 
 					//もう敵の弾を奪ったのでフラグ変更
@@ -1245,7 +1310,7 @@ void Player::MagneticBurst()
 				if (m_isSteal == true)
 				{
 					//リスクのある行動を成功させたので必殺技ゲージをプラス。
-					ChargeSpecialAttackGauge(25);
+					ChargeSpecialAttackGauge(SPGAUGE_BULLETSTEAL_POINT);
 				}
 			}
 		}
@@ -1254,7 +1319,7 @@ void Player::MagneticBurst()
 	case 1: //斥力
 
 		force *= 10.0f;
-		if (toEnemy.Length() < 750.0f)
+		if (toEnemy.Length() < BURST_RANGE_MAX)
 		{
 			m_enemy->ExecuteCharacon(force);
 		}
@@ -1267,28 +1332,28 @@ void Player::MagneticBurst()
 
 	m_burstCount--;
 	//バーストカウントが0になるとバースト終了。
-	if (m_burstCount <= 0)
+	if (m_burstCount <= PLAYER_BURSTCOUNT_END)
 	{
 		m_isBurst = false;
 		//敵の弾を奪ったフラグをリセット。
 		m_isSteal = false;
 
 		//スピードも戻す
-		m_characterSpeed = 6.0f;
+		m_characterSpeed = PLAYER_SPEED_RUN;
 	}
 }
 
 void Player::ChangeMagnetPower()
 {
 	//磁力ゲージの自然減少
-	m_magnetCharge -= 2.0f;
-	if (m_magnetCharge < 0)
+	m_magnetCharge -= PLAYER_MAGNETCHARGE_DECAY_VALUE;
+	if (m_magnetCharge < PLAYER_MAGNETCHARGE_ZERO)
 	{
-		m_magnetCharge = 0;
+		m_magnetCharge = PLAYER_MAGNETCHARGE_ZERO;
 	}
 
 	//磁力ゲージが0以下かつ、バースト中や必殺技発動中でなければ
-	if (m_magnetCharge <= 0 && 
+	if (m_magnetCharge <= PLAYER_MAGNETCHARGE_ZERO &&
 		m_isBurst == false &&
 		m_specialShotFlag == false	
 		)	{
@@ -1299,20 +1364,20 @@ void Player::ChangeMagnetPower()
 		if (m_isAttacking == true)
 		{
 			m_isAttacking = false;
-			m_characterSpeed = 6.0f;
+			m_characterSpeed = PLAYER_SPEED_RUN;
 		}
 
 		//チャージを回復。
-		m_magnetCharge = 1000.0f;
+		m_magnetCharge = PLAYER_MAGNETCHARGE_MAX;
 	
 		//磁力エフェクト変更
-		if (m_magnetState == 1) {
-			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
-			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
-		}
-		else if (m_magnetState == -1) {
+		if (m_magnetState == MAGNETSTATE_GRAVITY) {
 			m_magEffect[0]->Init(u"Assets/effect/引力.efk");
 			m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+		}
+		else if (m_magnetState == MAGNETSTATE_REPULSION) {
+			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
+			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
 		}
 	}
 }
@@ -1362,11 +1427,7 @@ void Player::Camera()
 		qRotX.Apply(checkToCamera);
 		checkToCamera.Normalize();
 		float t = checkToCamera.Dot(Vector3::Up);
-		if (t > 0.9999f || t < -0.9999f)
-		{
-
-		}
-		else
+		if (t < 0.999f && t > -0.999f)
 		{
 			qRotX.Apply(m_toCameraDir);
 		}

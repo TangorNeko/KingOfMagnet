@@ -276,7 +276,7 @@ private:
 	prefab::CSpotLight* m_spotLight = nullptr;					//プレイヤーを後ろから照らすライト
 
 	int m_playerNum = -1;										//プレイヤーの番号 1P(0)、2P(1)
-	int m_magnetState;											//磁力、引力状態(-1)、斥力(1)
+	int m_magnetState = -1;										//磁力、引力状態(-1)、斥力(1)
 	int m_hp = 1000;											//体力
 	float m_magnetCharge = 1000;								//磁力ゲージの現在の量
 
@@ -299,7 +299,7 @@ private:
 	bool m_isLockon = false;									//カメラロックオンしているか。
 
 
-	BackGround* m_stageModel;									//背景のモデル(当たり判定用)
+	BackGround* m_stageModel = nullptr;							//背景のモデル(当たり判定用)
 	TriangleCollider m_triCollider[2];							//単純な三角形の当たり判定(発射先の判定に使う)
 	MyCapsuleCollider m_collider;								//カプセル状の当たり判定(弾の当たり判定に使う)
 	

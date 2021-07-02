@@ -42,7 +42,7 @@ private:
 	DrawScreen m_drawScreen = AllScreen;//描画先
 
 public:
-	float m_charge;//磁力ゲージの溜まり具合
+	float m_magnetCharge;//磁力ゲージの溜まり具合
 	bool m_isRed = false;//磁力ゲージは赤色(斥力)か?
 	float m_spCharge;//必殺技ゲージの溜まり具合
 };
