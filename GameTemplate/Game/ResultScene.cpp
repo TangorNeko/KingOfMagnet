@@ -2,6 +2,7 @@
 #include "ResultScene.h"
 #include "GameScene.h"
 #include "TitleScene.h"
+#include "RoundCounter.h"
 
 namespace
 {
@@ -312,6 +313,9 @@ void ResultScene::Update()
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_RETRY, false);
 				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
+
+				//次の試合のラウンドの計測を開始
+				NewGO<RoundCounter>(0, "roundcounter");
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {

@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include "GameOption.h"
+#include "RoundCounter.h"
 
 namespace
 {
@@ -443,6 +444,8 @@ void TitleScene::CommandSelectMove() {
 				gameScene->SetP1Sensitivity(m_option->GetP1Sensitivity());
 				gameScene->SetP2Sensitivity(m_option->GetP2Sensitivity());
 			}
+			//試合のラウンドの計測を開始
+			NewGO<RoundCounter>(0, "roundcounter");
 			DeleteGO(this);
 			break;
 		case TitleScene::TC_Option:

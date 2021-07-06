@@ -325,6 +325,7 @@
     <ClCompile Include="Repulsion.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="RoundCounter.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="SpriteSupporter.cpp" />
@@ -441,6 +442,7 @@
     <ClInclude Include="Repulsion.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="RoundCounter.h" />
     <ClInclude Include="SkyBoard.h" />
     <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="SpriteSupporter.h" />

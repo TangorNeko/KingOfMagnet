@@ -5,6 +5,8 @@ class CDirectionLight;
 class BackGround;
 class SkyBoard;
 
+class RoundCounter;
+
 class GameScene : public IGameObject
 {
 	~GameScene();
@@ -187,5 +189,7 @@ private:
 
 	prefab::CFontRender* m_drawFontRender = nullptr;			//引き分けのフォント
 	int m_drawFontCount = 300;									//引き分けのフォントを表示する時間
+
+	RoundCounter* m_roundCounter = nullptr;						//プレイヤーの取得ラウンド数の管理クラス
 };
 

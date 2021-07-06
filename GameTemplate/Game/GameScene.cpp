@@ -11,6 +11,8 @@
 #include "ResultScene.h"
 #include <random>
 
+#include "RoundCounter.h"
+
 namespace
 {
 	const Vector3 STAGELIGHT_DIRECTION = { -1.0f,-1.0f,1.0f };
@@ -74,8 +76,8 @@ namespace
 	const float SOUND_BGM_GAME_VOLUME = 0.3f;
 	const float SOUND_SE_STARTCOUNTDOWN_VOLUME = 0.8f;
 	const float SOUND_SE_STARTHORN_VOLUME = 0.8f;
-	const int GAMEENDTIMER_START_TRANSITION = 500;
-	const int GAMEENDTIMER_GOTO_RESULT = 550;
+	const int GAMEENDTIMER_START_TRANSITION = 650;
+	const int GAMEENDTIMER_GOTO_RESULT = 700;
 	const int DRAWTIMER_START_TRANSITION = 45;
 	const int DRAWTIMER_GOTO_REMATCH = 0;
 	const Vector2 FONT_DRAW_POSITION = { -185.0f, 130.0f };
@@ -298,6 +300,8 @@ bool GameScene::Start()
 	m_gameBGM->SetVolume(SOUND_BGM_GAME_VOLUME);
 	m_gameBGM->Play(true);
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
+
+	m_roundCounter = FindGO<RoundCounter>("roundcounter");
 	return true;
 }
 
@@ -360,15 +364,24 @@ void GameScene::Update()
 			{
 				m_player1->m_loserNum = NUMBER_PLAYER1;
 				m_player2->m_loserNum = NUMBER_PLAYER1;
+				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER2);
+				m_roundCounter->Disable();
 			}
 			else if (m_player2->m_Lose == true)
 			{
 				m_player1->m_loserNum = NUMBER_PLAYER2;
 				m_player2->m_loserNum = NUMBER_PLAYER2;
+				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER1);
+				m_roundCounter->Disable();
 			}
 		}
 
 		m_gameEndCount++;
+
+		if (m_gameEndCount == 400)
+		{
+			m_roundCounter->Enable();
+		}
 
 		if (m_gameEndCount == GAMEENDTIMER_START_TRANSITION)
 		{
@@ -377,10 +390,21 @@ void GameScene::Update()
 
 		if (m_gameEndCount > GAMEENDTIMER_GOTO_RESULT)
 		{
-			NewGO<ResultScene>(0, "resultscene");
-			ResultScene* resultscene = FindGO<ResultScene>("resultscene");
-			resultscene->SetLoserNum(m_player1->m_loserNum);
-			DeleteGO(this);
+			
+
+			if (m_roundCounter->GetOverAllWinner() == -1)
+			{
+				NewGO<GameScene>(0, "gamescene");
+				DeleteGO(this);
+			}
+			else
+			{
+				NewGO<ResultScene>(0, "resultscene");
+				ResultScene* resultscene = FindGO<ResultScene>("resultscene");
+				resultscene->SetLoserNum(m_player1->m_loserNum);
+				DeleteGO(m_roundCounter);
+				DeleteGO(this);
+			}
 		}
 	}
 
