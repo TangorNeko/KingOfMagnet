@@ -12,8 +12,8 @@
 
 namespace
 {
-	const float PLAYER_CHARACON_RADIUS = 10.0f;
-	const float PLAYER_CHARACON_HEIGHT = 50.0f;
+	const float PLAYER_COLLIDER_RADIUS = 20.0f;
+	const float PLAYER_COLLIDER_HEIGHT = 100.0f;
 	const Vector4 FONT_SHADOWCOLOR = { 0.0f,0.0f,0.0f,1.0f };
 	const int FONT_SHADOWOFFSET = 3;
 	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_ONESPLACE = { -170.0f, -270.0f };
@@ -116,8 +116,14 @@ namespace
 	const float BURST_RANGE_MAX = 750.0f;
 
 	const int SPGAUGE_BULLETSTEAL_POINT = 25;
-
+	
 	const float PLAYER_MAGNETCHARGE_DECAY_VALUE = 2.0f;
+	
+	const float PLAYER_POSITION_TO_CAMERATARGET = 90.0f;
+	const float PLAYER_CAMERATARGET_TO_CAMERAPOSITION = 125.0f;
+
+	const float PLAYER_AIMABLE_WIDTH = 250.0f;
+	const float PLAYER_AIMABLE_HEIGHT = 250.0f;
 }
 Player::Player()
 {
@@ -224,7 +230,7 @@ bool Player::Start()
 	m_skinModelRender->SetPosition(m_position);
 
 	//キャラコンの初期化
-	m_charaCon.Init(PLAYER_CHARACON_RADIUS, PLAYER_CHARACON_HEIGHT, m_position);
+	m_charaCon.Init(PLAYER_COLLIDER_RADIUS, PLAYER_COLLIDER_HEIGHT, m_position);
 
 	//残弾数表示の初期化
 	m_bulletNumFont = NewGO<prefab::CFontRender>(6);
@@ -1393,7 +1399,7 @@ void Player::Camera()
 
 	//プレイヤーの頭上90を基準として、そこからカメラに伸びるベクトルを回転させる。
 	Vector3 targetPos = m_position;
-	targetPos.y += 90.0f;
+	targetPos.y += PLAYER_POSITION_TO_CAMERATARGET;
 
 	if (m_isLockon)
 	{
@@ -1434,7 +1440,7 @@ void Player::Camera()
 	}
 
 	//本来のカメラ位置
-	m_cameraPos = targetPos + m_toCameraDir * 125.0f;
+	m_cameraPos = targetPos + m_toCameraDir * PLAYER_CAMERATARGET_TO_CAMERAPOSITION;
 
 	//バネカメラ的なもの　カメラのターゲット位置から本来のカメラ位置へのベクトルがステージに衝突しているか判定
 	Vector3 crossPoint;
@@ -1453,9 +1459,7 @@ void Player::Camera()
 	g_camera3D[m_playerNum]->SetTarget(targetPos);
 
 	//ライト
-	Vector3 PlayerWaistPos = m_position;
-	PlayerWaistPos.y += 40;
-	Vector3 Direction = PlayerWaistPos - m_cameraPos;
+	Vector3 Direction = m_magPosition - m_cameraPos;
 	Direction.Normalize();
 	m_spotLight->SetDirection(Direction);
 	m_spotLight->SetPosition(m_cameraPos);
@@ -1472,23 +1476,23 @@ void Player::Collision()
 
 	//四角形の左上
 	Vector3 squarePos1 = m_position;
-	squarePos1.y += 250.0f;
-	squarePos1 += side * 250.0f;
+	squarePos1.y += PLAYER_AIMABLE_HEIGHT;
+	squarePos1 += side * PLAYER_AIMABLE_WIDTH;
 
 	//四角形の左下
 	Vector3 squarePos2 = m_position;
-	squarePos2.y -= 250.0f;
-	squarePos2 += side * 250.0f;
+	squarePos2.y -= PLAYER_AIMABLE_HEIGHT;
+	squarePos2 += side * PLAYER_AIMABLE_WIDTH;
 
 	//四角形の右上
 	Vector3 squarePos3 = m_position;
-	squarePos3.y += 250.0f;
-	squarePos3 -= side * 250.0f;
+	squarePos3.y += PLAYER_AIMABLE_HEIGHT;
+	squarePos3 -= side * PLAYER_AIMABLE_WIDTH;
 
 	//四角形の右下
 	Vector3 squarePos4 = m_position;
-	squarePos4.y -= 250.0f;
-	squarePos4 -= side * 250.0f;
+	squarePos4.y -= PLAYER_AIMABLE_HEIGHT;
+	squarePos4 -= side * PLAYER_AIMABLE_WIDTH;
 
 	//1つ目の三角形の頂点は左上、左下、右上。
 	m_triCollider[0].SetVertex(squarePos1, squarePos2, squarePos3);
@@ -1498,12 +1502,12 @@ void Player::Collision()
 	//カプセルの当たり判定をつくる。
 	Vector3 legPos = m_position;
 	Vector3 headPos = m_position;
-	headPos.y += 100.0f;
+	headPos.y += PLAYER_COLLIDER_HEIGHT;
 
 	//カプセルの始点と終点を更新する。(半径はStart関数で最初だけ決めてもよい)
 	m_collider.SetStartPoint(legPos);
 	m_collider.SetEndPoint(headPos);
-	m_collider.SetRadius(20.0f);
+	m_collider.SetRadius(PLAYER_COLLIDER_RADIUS);
 }
 
 //自分の体力にダメージを与える
