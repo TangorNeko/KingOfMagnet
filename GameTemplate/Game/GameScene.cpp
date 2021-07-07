@@ -281,19 +281,26 @@ bool GameScene::Start()
 	m_finalCountDown->Init("Assets/Image/count3.dds", SPRITE_FINALCOUNTDOWN_WIDTH, SPRITE_FINALCOUNTDOWN_HEGIHT);
 	m_finalCountDown->SetMulColor(SPRITE_FINALCOUNTDOWN_COLOR_TRANSPARENT);
 
+
 	//タイムリミットの一桁目
+	int onesPlace = (int)m_timeLimit % 10;
+	char onesPlacePathName[256];
+	sprintf_s(onesPlacePathName, "Assets/Image/%d.dds", onesPlace);
 	m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
 	m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_onesPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
-	m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+	m_onesPlaceSpriteRender->Init(onesPlacePathName, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//タイムリミットの二桁目
+	int tensPlace = (int)m_timeLimit / 10;
+	char tensPlacePathName[256];
+	sprintf_s(tensPlacePathName, "Assets/Image/%d.dds", tensPlace);
 	m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
 	m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_tensPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
-	m_tensPlaceSpriteRender->Init("Assets/Image/4.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+	m_tensPlaceSpriteRender->Init(tensPlacePathName, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//音を再生
 	m_gameBGM = NewGO<prefab::CSoundSource>(0);
