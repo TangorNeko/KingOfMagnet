@@ -4,11 +4,12 @@
 
 namespace
 {
-	const Vector2 FONT_OPTION_POSITION = { -125.0f,220.0f };
-	const Vector2 FONT_BGMVOLUME_POSITION = { -450.0f,120.0f };
-	const Vector2 FONT_SEVOLUME_POSITION = { -450.0f,20.0f };
-	const Vector2 FONT_P1SENSITIVITY_POSITION = { -450.0f,-80.0f };
-	const Vector2 FONT_P2SENSITIVITY_POSITION = { -450.0f,-180.0f };
+	const Vector2 FONT_OPTION_POSITION = { -125.0f,240.0f };
+	const Vector2 FONT_BGMVOLUME_POSITION = { -450.0f,160.0f };
+	const Vector2 FONT_SEVOLUME_POSITION = { -450.0f,70.0f };
+	const Vector2 FONT_P1SENSITIVITY_POSITION = { -450.0f,-20.0f };
+	const Vector2 FONT_P2SENSITIVITY_POSITION = { -450.0f,-110.0f };
+	const Vector2 FONT_GAMETIMELIMIT_POSITION = { -450.0f,-200.0f };
 	const Vector4 FONT_SHADOWCOLOR_BLACK = { 0,0,0,1 };
 	const float FONT_SHADOWOFFSET = 2.0f;
 	const Vector2 FONT_SCALE_CLOSE = { 0.0f,0.0f };
@@ -29,19 +30,24 @@ namespace
 	const int OPTION_ITEM_SE = 1;
 	const int OPTION_ITEM_P1SENSITIVITY = 2;
 	const int OPTION_ITEM_P2SENSITIVITY = 3;
-	const int OPTION_ITEM_OVERRANGE = 4;
+	const int OPTION_ITEM_GAMETIMELIMIT = 4;
+	const int OPTION_ITEM_OVERRANGE = 5;
 
 	const float SOUND_VOLUME_MIN = 0.0f;
 	const float SOUND_VOLUME_MAX = 1.0f;
 
 	const float CONTROL_SENSITIVITY_MIN = 0.1f;
 	const float CONTROL_SENSITIVITY_MAX = 5.0f;
+	
+	const float GAME_TIMELIMIT_MIN = 30.0f;
+	const float GAME_TIMELIMIT_MAX = 90.0f;
 }
 
-float GameOption::m_BGMVolume = 1.0f;//BGMのボリューム
-float GameOption::m_SEVolume = 1.0f;//効果音のボリューム
-float GameOption::m_1PSensitivity = 2.0f;//プレイヤー1のカメラ感度
-float GameOption::m_2PSensitivity = 2.0f;//プレイヤー2のカメラ感度
+float GameOption::m_BGMVolume = 1.0f;		//BGMのボリューム
+float GameOption::m_SEVolume = 1.0f;		//効果音のボリューム
+float GameOption::m_1PSensitivity = 2.0f;	//プレイヤー1のカメラ感度
+float GameOption::m_2PSensitivity = 2.0f;	//プレイヤー2のカメラ感度
+float GameOption::m_gameTimeLimit = 40.0f;	//ゲームの制限時間
 
 GameOption::~GameOption()
 {
@@ -51,6 +57,7 @@ GameOption::~GameOption()
 	DeleteGO(m_SEVolumeFont);
 	DeleteGO(m_1PSensitivityFont);
 	DeleteGO(m_2PSensitivityFont);
+	DeleteGO(m_gameTimeLimitFont);
 }
 
 bool GameOption::Start()
@@ -104,6 +111,15 @@ bool GameOption::Start()
 	m_2PSensitivityFont->SetShadowFlag(true);
 	m_2PSensitivityFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
 	m_2PSensitivityFont->SetShadowOffset(FONT_SHADOWOFFSET);
+	
+
+	//ゲーム制限時間フォント
+	m_gameTimeLimitFont = NewGO<prefab::CFontRender>(0);
+	m_gameTimeLimitFont->SetScale(FONT_SCALE_CLOSE);
+	m_gameTimeLimitFont->SetPosition(FONT_GAMETIMELIMIT_POSITION);
+	m_gameTimeLimitFont->SetShadowFlag(true);
+	m_gameTimeLimitFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
+	m_gameTimeLimitFont->SetShadowOffset(FONT_SHADOWOFFSET);
 	return true;
 }
 
@@ -118,12 +134,14 @@ void GameOption::Update()
 		m_SEVolumeFont->SetScale(FONT_SCALE_OPEN);
 		m_1PSensitivityFont->SetScale(FONT_SCALE_OPEN);
 		m_2PSensitivityFont->SetScale(FONT_SCALE_OPEN);
+		m_gameTimeLimitFont->SetScale(FONT_SCALE_OPEN);
 
 		//選択したフォント以外を白にするため一旦全部白にしている
 		m_BGMVolumeFont->SetColor(Vector4::White);
 		m_SEVolumeFont->SetColor(Vector4::White);
 		m_1PSensitivityFont->SetColor(Vector4::White);
 		m_2PSensitivityFont->SetColor(Vector4::White);
+		m_gameTimeLimitFont->SetColor(Vector4::White);
 
 		//項目の選択中なら
 		if (m_selectingState == enItem)
@@ -140,7 +158,7 @@ void GameOption::Update()
 			{
 				if (--m_selectingItem == OPTION_ITEM_UNDERRANGE)
 				{
-					m_selectingItem = OPTION_ITEM_P2SENSITIVITY;
+					m_selectingItem = OPTION_ITEM_GAMETIMELIMIT;
 				}
 			}
 
@@ -163,6 +181,10 @@ void GameOption::Update()
 			case OPTION_ITEM_P2SENSITIVITY://2Pカメラ感度
 				m_selectingItemValue = &m_2PSensitivity;
 				m_selectingItemFont = m_2PSensitivityFont;
+				break;
+			case OPTION_ITEM_GAMETIMELIMIT://ゲーム制限時間
+				m_selectingItemValue = &m_gameTimeLimit;
+				m_selectingItemFont = m_gameTimeLimitFont;
 				break;
 			}
 
@@ -233,6 +255,18 @@ void GameOption::Update()
 					*m_selectingItemValue = CONTROL_SENSITIVITY_MAX;
 				}
 			}
+			else if (m_selectingItemValue == &m_gameTimeLimit)
+			{
+				//ゲームの制限時間の範囲制限(30.0f~90.0f)
+				if (*m_selectingItemValue <= GAME_TIMELIMIT_MIN)
+				{
+					*m_selectingItemValue = GAME_TIMELIMIT_MIN;
+				}
+				else if (*m_selectingItemValue >= GAME_TIMELIMIT_MAX)
+				{
+					*m_selectingItemValue = GAME_TIMELIMIT_MAX;
+				}
+			}
 			//選択されている項目を赤色に
 			m_selectingItemFont->SetColor(FONT_COLOR_RED);
 
@@ -269,6 +303,8 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetText(m_buffer);
 		swprintf_s(m_buffer, L"2P SENSITIVITY = %.2f", m_2PSensitivity);
 		m_2PSensitivityFont->SetText(m_buffer);
+		swprintf_s(m_buffer, L"TIMELIMIT      = %.2f", m_gameTimeLimit);
+		m_gameTimeLimitFont->SetText(m_buffer);
 
 	}
 	else//それ以外
@@ -279,6 +315,7 @@ void GameOption::Update()
 		m_SEVolumeFont->SetScale(FONT_SCALE_CLOSE);
 		m_1PSensitivityFont->SetScale(FONT_SCALE_CLOSE);
 		m_2PSensitivityFont->SetScale(FONT_SCALE_CLOSE);
+		m_gameTimeLimitFont->SetScale(FONT_SCALE_CLOSE);
 	}
 }
 

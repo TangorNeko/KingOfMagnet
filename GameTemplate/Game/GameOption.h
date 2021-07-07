@@ -49,6 +49,12 @@ public:
 	float GetP2Sensitivity() { return m_2PSensitivity; }
 
 	/**
+	 * @brief ゲームの制限時間の数値を取得
+	 * @return ゲームの制限時間
+	*/
+	float GetTimeLimit() { return m_gameTimeLimit; }
+
+	/**
 	 * @brief 現在のオプション画面の選択深度を取得
 	 * @return 選択深度
 	*/
@@ -70,13 +76,15 @@ private:
 	static float m_SEVolume;									//効果音のボリューム
 	static float m_1PSensitivity;								//プレイヤー1のカメラ感度
 	static float m_2PSensitivity;								//プレイヤー2のカメラ感度
+	static float m_gameTimeLimit;								//ゲームの制限時間
 	prefab::CFontRender* m_optionFont = nullptr;				//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;				//BGMのボリュームのフォント
 	prefab::CFontRender* m_SEVolumeFont = nullptr;				//効果音のボリュームのフォント
 	prefab::CFontRender* m_1PSensitivityFont = nullptr;			//プレイヤー1のカメラ感度のフォント
 	prefab::CFontRender* m_2PSensitivityFont = nullptr;			//プレイヤー2のカメラ感度のフォント
+	prefab::CFontRender* m_gameTimeLimitFont = nullptr;			//ゲームの制限時間のフォント
 	SelectingState m_selectingState = enItem;					//選択深度
-	int m_selectingItem = 0;									//選択している項目番号(0:BGM,1:SE,2:1Pカメラ感度,3:2Pカメラ感度)
+	int m_selectingItem = 0;									//選択している項目番号(0:BGM,1:SE,2:1Pカメラ感度,3:2Pカメラ感度,4:ゲーム制限時間)
 	float* m_selectingItemValue = nullptr;						//選択している項目の数値を格納するポインタ
 	float m_selectingItemTemporaryValue = 1.0f;					//選択した項目の値を保存しておく(キャンセルした時に戻せるよう)
 	prefab::CFontRender* m_selectingItemFont = nullptr;			//選択している項目のフォントを格納するポインタ

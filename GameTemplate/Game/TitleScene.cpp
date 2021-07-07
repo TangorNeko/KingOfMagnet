@@ -445,6 +445,7 @@ void TitleScene::CommandSelectMove() {
 				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
 				gameScene->SetP1Sensitivity(m_option->GetP1Sensitivity());
 				gameScene->SetP2Sensitivity(m_option->GetP2Sensitivity());
+				gameScene->SetTimeLimit(m_option->GetTimeLimit());
 			}
 			DeleteGO(this);
 			break;

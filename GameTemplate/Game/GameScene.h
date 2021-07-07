@@ -124,6 +124,15 @@ public:
 	}
 
 	/**
+	 * @brief ゲームの制限時間の設定
+	 * @param timeLimit 制限時間
+	*/
+	void SetTimeLimit(float timeLimit)
+	{
+		m_timeLimit = timeLimit;
+	}
+
+	/**
 	 * @brief ゲームシーンのBGMをストップ
 	*/
 	void StopGameBGM()
