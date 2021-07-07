@@ -76,6 +76,7 @@ namespace
 	const float SOUND_BGM_GAME_VOLUME = 0.3f;
 	const float SOUND_SE_STARTCOUNTDOWN_VOLUME = 0.8f;
 	const float SOUND_SE_STARTHORN_VOLUME = 0.8f;
+	const int GAMEENDTIMER_ROUNDCOUNTER_SHOW = 450;
 	const int GAMEENDTIMER_START_TRANSITION = 650;
 	const int GAMEENDTIMER_GOTO_RESULT = 700;
 	const int DRAWTIMER_START_TRANSITION = 45;
@@ -285,14 +286,14 @@ bool GameScene::Start()
 	m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
 	m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_onesPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
-	m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+	m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//タイムリミットの二桁目
 	m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
 	m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_tensPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
-	m_tensPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+	m_tensPlaceSpriteRender->Init("Assets/Image/4.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//音を再生
 	m_gameBGM = NewGO<prefab::CSoundSource>(0);
@@ -302,6 +303,8 @@ bool GameScene::Start()
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
 
 	m_roundCounter = FindGO<RoundCounter>("roundcounter");
+	m_roundCounter->Disable();
+	m_roundCounter->EnableGameRound();
 	return true;
 }
 
@@ -378,9 +381,9 @@ void GameScene::Update()
 
 		m_gameEndCount++;
 
-		if (m_gameEndCount == 400)
+		if (m_gameEndCount == GAMEENDTIMER_ROUNDCOUNTER_SHOW)
 		{
-			m_roundCounter->Enable();
+			m_roundCounter->EnableResultRound();
 		}
 
 		if (m_gameEndCount == GAMEENDTIMER_START_TRANSITION)
@@ -395,6 +398,7 @@ void GameScene::Update()
 			if (m_roundCounter->GetOverAllWinner() == -1)
 			{
 				NewGO<GameScene>(0, "gamescene");
+				m_roundCounter->Disable();
 				DeleteGO(this);
 			}
 			else

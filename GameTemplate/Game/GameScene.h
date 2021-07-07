@@ -153,7 +153,7 @@ private:
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;		//HPのカバーのスプライト
 	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;	//タイマーの表示パネルのスプライト
 
-	float m_timeLimit = 100.0f;									//ゲームの制限時間
+	float m_timeLimit = 40.0f;									//ゲームの制限時間
 	int m_oldTimeLimit = 0;										//前フレームのゲームの制限時間
 	prefab::CSpriteRender* m_onesPlaceSpriteRender = nullptr;	//制限時間の一桁目を表示するスプライト
 	prefab::CSpriteRender* m_tensPlaceSpriteRender = nullptr;	//制限時間の二桁目を表示するスプライト
