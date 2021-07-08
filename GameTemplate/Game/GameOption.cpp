@@ -25,6 +25,7 @@ namespace
 	const int SPRITE_SCALING_DELAY = 1;
 
 	const float OPTION_VALUE_CHANGERATE = 0.05f;
+	const float OPTION_GAMETIME_CHANGERATE = 10.0f;
 	const int OPTION_ITEM_UNDERRANGE = -1;
 	const int OPTION_ITEM_BGM = 0;
 	const int OPTION_ITEM_SE = 1;
@@ -202,14 +203,29 @@ void GameOption::Update()
 		}
 		else if(m_selectingState == enNumeric)//項目の数値を設定するモードなら
 		{
-			//下を押すと数値を減らす
-			if (g_pad[PAD_PLAYER1]->IsPress(enButtonDown) || g_pad[PAD_PLAYER2]->IsPress(enButtonDown))
+			if (m_selectingItemValue == &m_gameTimeLimit)
 			{
-				(*m_selectingItemValue) -= OPTION_VALUE_CHANGERATE;
+				//下を押すと数値を減らす
+				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
+				{
+					(*m_selectingItemValue) -= OPTION_GAMETIME_CHANGERATE;
+				}
+				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
+				{
+					(*m_selectingItemValue) += OPTION_GAMETIME_CHANGERATE;
+				}
 			}
-			else if(g_pad[PAD_PLAYER1]->IsPress(enButtonUp) || g_pad[PAD_PLAYER2]->IsPress(enButtonUp))//上を押すと数値を増やす
+			else
 			{
-				(*m_selectingItemValue) += OPTION_VALUE_CHANGERATE;
+				//下を押すと数値を減らす
+				if (g_pad[PAD_PLAYER1]->IsPress(enButtonDown) || g_pad[PAD_PLAYER2]->IsPress(enButtonDown))
+				{
+					(*m_selectingItemValue) -= OPTION_VALUE_CHANGERATE;
+				}
+				else if (g_pad[PAD_PLAYER1]->IsPress(enButtonUp) || g_pad[PAD_PLAYER2]->IsPress(enButtonUp))//上を押すと数値を増やす
+				{
+					(*m_selectingItemValue) += OPTION_VALUE_CHANGERATE;
+				}
 			}
 
 			//選んでいる値がBGMの音量なら
