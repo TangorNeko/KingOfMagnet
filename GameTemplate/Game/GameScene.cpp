@@ -83,6 +83,8 @@ namespace
 	const int DRAWTIMER_GOTO_REMATCH = 0;
 	const Vector2 FONT_DRAW_POSITION = { -185.0f, 130.0f };
 	const Vector2 FONT_DRAW_SCALE = { 2.0f, 2.0f };
+	const Vector4 FONT_DRAW_SHADOWCOLOR = { 0,0,0,1 };
+	const float FONT_DRAW_SHADOWOFFSET = 2.0f;
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT = { 890.0f,0.0f };
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT_SHORT = { 10.0f,0.0f };
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT = { -890.0f,0.0f };
@@ -480,6 +482,9 @@ void GameScene::WinnerJudge()
 		m_drawFontRender->SetDrawScreen(prefab::CFontRender::DrawScreen::AllScreen);
 		m_drawFontRender->SetPosition(FONT_DRAW_POSITION);
 		m_drawFontRender->SetScale(FONT_DRAW_SCALE);
+		m_drawFontRender->SetShadowFlag(true);
+		m_drawFontRender->SetShadowColor(FONT_DRAW_SHADOWCOLOR);
+		m_drawFontRender->SetShadowOffset(FONT_DRAW_SHADOWOFFSET);
 		m_drawFontRender->SetText(L"DRAW!");
 	}
 }

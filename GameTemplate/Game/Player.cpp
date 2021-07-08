@@ -180,7 +180,10 @@ Player::~Player()
 	DeleteGO(m_SPChargeEffectRed);
 	DeleteGO(m_SPChargeEffectBlue);
 
-	DeleteGO(m_spotLight);
+	if (m_spotLight != nullptr)
+	{
+		DeleteGO(m_spotLight);
+	}
 
 	if (m_chargeSPFontRender != nullptr)
 	{
@@ -1986,9 +1989,11 @@ void Player::FinalHit()//Œˆ’…‚ª‚Â‚¢‚½‚Æ‚«‚ÌƒJƒƒ‰
 		m_HPBarDarkSpriteRender = nullptr;
 		DeleteGO(m_DamageBarSpriteRender);
 		m_DamageBarSpriteRender = nullptr;
-		DeleteGO(m_mobiusGauge);
 		DeleteGO(m_chargeSPFontRender);
 		m_chargeSPFontRender = nullptr;
+		DeleteGO(m_spotLight);
+		m_spotLight = nullptr;
+		DeleteGO(m_mobiusGauge);
 		m_mobiusGauge = nullptr;
 		//’e‚àÁ‚·
 		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool

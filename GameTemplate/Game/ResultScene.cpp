@@ -310,12 +310,13 @@ void ResultScene::Update()
 				resultSelectSE->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
 				resultSelectSE->Play(false);
 
+				//次の試合のラウンドの計測を開始
+				NewGO<RoundCounter>(0, "roundcounter");
+
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_RETRY, false);
 				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
 
-				//次の試合のラウンドの計測を開始
-				NewGO<RoundCounter>(0, "roundcounter");
 				DeleteGO(this);
 			}
 			if (m_RetryOn == false) {
