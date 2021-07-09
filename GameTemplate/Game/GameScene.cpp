@@ -117,6 +117,9 @@ namespace
 	//他でも使いそうなのでどこかに分離?
 	const int NUMBER_MAGNET_STATUS = 2;
 }
+
+float GameScene::m_maxTimeLimit = 0;
+
 GameScene::~GameScene()
 {	
 	DeleteGO(m_stageLight);
@@ -283,6 +286,8 @@ bool GameScene::Start()
 	m_finalCountDown->Init("Assets/Image/count3.dds", SPRITE_FINALCOUNTDOWN_WIDTH, SPRITE_FINALCOUNTDOWN_HEGIHT);
 	m_finalCountDown->SetMulColor(SPRITE_FINALCOUNTDOWN_COLOR_TRANSPARENT);
 
+	//制限時間をセット
+	m_timeLimit = m_maxTimeLimit;
 
 	//タイムリミットの一桁目
 	int onesPlace = (int)m_timeLimit % 10;
@@ -444,7 +449,6 @@ void GameScene::Update()
 			}
 			DeleteGO(m_drawFontRender);
 			DeleteGO(m_onesPlaceSpriteRender);
-			DeleteGO(m_tensPlaceSpriteRender);
 			DeleteGO(m_gameBGM);
 			NewGO<GameScene>(0, "gamescene");
 			DeleteGO(this);
