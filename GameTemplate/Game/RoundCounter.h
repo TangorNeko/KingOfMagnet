@@ -24,8 +24,12 @@ public:
 		m_latestRoundWinner = playerNum;
 	}
 
+	/**
+	 * @brief スプライト非表示
+	*/
 	void Disable()
 	{
+		//全てのスプライトのスケールを0にして非表示
 		for (auto roundSprite : m_gameRoundSprite)
 		{
 			roundSprite[0]->SetScale({ 0.0f,0.0f,0.0f });
@@ -33,18 +37,24 @@ public:
 		}
 	}
 
+	/**
+	 * @brief スプライトをゲーム画面用の位置で表示
+	*/
 	void EnableGameRound();
 
+	/**
+	 * @brief スプライトを結果画面用の位置で表示
+	*/
 	void EnableResultRound();
 
 private:
-	int m_currentRound = 0;					//現在のラウンド数
-	int m_latestRoundWinner = -1;			//一番最近のラウンドの勝者
-	int m_playerTakeRound[2] = { 0,0 };		//各プレイヤーの取得ラウンド
-	bool m_isResult = false;				//勝者表示画面?
-	int m_roundResultCount = 0;				//ラウンドごとの結果が再生されるまでのカウント
-
-	prefab::CSpriteRender* m_gameRoundSprite[2][2] = { {nullptr,nullptr},{nullptr,nullptr} };
-	prefab::CEffect2D* m_roundGetEffect = nullptr; //ラウンド獲得表示のエフェクト
+	int m_currentRound = 0;								//現在のラウンド数
+	int m_latestRoundWinner = -1;						//一番最近のラウンドの勝者
+	int m_playerTakeRound[2] = { 0,0 };					//各プレイヤーの取得ラウンド
+	bool m_isResult = false;							//勝者表示画面?
+	int m_roundResultCount = 0;							//ラウンドごとの結果が再生されるまでのカウント
+	prefab::CSpriteRender* m_gameRoundSprite[2][2] =	//取得ラウンド表示スプライト
+	{ {nullptr,nullptr},{nullptr,nullptr} };
+	prefab::CEffect2D* m_roundGetEffect = nullptr;		//ラウンド獲得表示のエフェクト
 };
 
