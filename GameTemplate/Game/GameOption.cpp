@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameOption.h"
+#include <algorithm>
 
 
 namespace
@@ -46,8 +47,8 @@ namespace
 
 float GameOption::m_BGMVolume = 1.0f;		//BGMのボリューム
 float GameOption::m_SEVolume = 1.0f;		//効果音のボリューム
-float GameOption::m_1PSensitivity = 2.0f;	//プレイヤー1のカメラ感度
-float GameOption::m_2PSensitivity = 2.0f;	//プレイヤー2のカメラ感度
+float GameOption::m_P1Sensitivity = 2.0f;	//プレイヤー1のカメラ感度
+float GameOption::m_P2Sensitivity = 2.0f;	//プレイヤー2のカメラ感度
 float GameOption::m_gameTimeLimit = 40.0f;	//ゲームの制限時間
 
 GameOption::~GameOption()
@@ -121,6 +122,7 @@ bool GameOption::Start()
 	m_gameTimeLimitFont->SetShadowFlag(true);
 	m_gameTimeLimitFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
 	m_gameTimeLimitFont->SetShadowOffset(FONT_SHADOWOFFSET);
+
 	return true;
 }
 
@@ -176,11 +178,11 @@ void GameOption::Update()
 				m_selectingItemFont = m_SEVolumeFont;
 				break;
 			case OPTION_ITEM_P1SENSITIVITY://1Pカメラ感度
-				m_selectingItemValue = &m_1PSensitivity;
+				m_selectingItemValue = &m_P1Sensitivity;
 				m_selectingItemFont = m_1PSensitivityFont;
 				break;
 			case OPTION_ITEM_P2SENSITIVITY://2Pカメラ感度
-				m_selectingItemValue = &m_2PSensitivity;
+				m_selectingItemValue = &m_P2Sensitivity;
 				m_selectingItemFont = m_2PSensitivityFont;
 				break;
 			case OPTION_ITEM_GAMETIMELIMIT://ゲーム制限時間
@@ -259,7 +261,7 @@ void GameOption::Update()
 				//設定値をSEの音量としてセット
 				CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
 			}
-			else if (m_selectingItemValue == &m_1PSensitivity || m_selectingItemValue == &m_2PSensitivity)//選んでいる値がカメラの感度なら
+			else if (m_selectingItemValue == &m_P1Sensitivity || m_selectingItemValue == &m_P2Sensitivity)//選んでいる値がカメラの感度なら
 			{
 				//プレイヤーのカメラ感度の範囲制限(0.1~5.0)
 				if (*m_selectingItemValue <= CONTROL_SENSITIVITY_MIN)
@@ -315,9 +317,9 @@ void GameOption::Update()
 		m_BGMVolumeFont->SetText(m_buffer);
 		swprintf_s(m_buffer, L"SE  VOLUME     = %.2f", m_SEVolume);
 		m_SEVolumeFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"1P SENSITIVITY = %.2f", m_1PSensitivity);
+		swprintf_s(m_buffer, L"1P SENSITIVITY = %.2f", m_P1Sensitivity);
 		m_1PSensitivityFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"2P SENSITIVITY = %.2f", m_2PSensitivity);
+		swprintf_s(m_buffer, L"2P SENSITIVITY = %.2f", m_P2Sensitivity);
 		m_2PSensitivityFont->SetText(m_buffer);
 		swprintf_s(m_buffer, L"TIMELIMIT      = %.2f", m_gameTimeLimit);
 		m_gameTimeLimitFont->SetText(m_buffer);
@@ -359,5 +361,52 @@ void GameOption::Close()
 
 		//選択項目をリセット
 		m_selectingItem = OPTION_ITEM_BGM;
+
+		//書き込み
+		WriteOption();
 	}
+}
+
+bool GameOption::ReadOption()
+{
+	FILE* fp = fopen("gameoption.dat", "rb");
+
+	if (fp == nullptr)
+	{
+		return false;
+	}
+
+	fread(&m_BGMVolume,sizeof(float),1,fp);
+	fread(&m_SEVolume,sizeof(float),1,fp);
+	fread(&m_P1Sensitivity,sizeof(float),1,fp);
+	fread(&m_P2Sensitivity,sizeof(float),1,fp);
+	fread(&m_gameTimeLimit,sizeof(float),1,fp);
+
+	fclose(fp);
+
+	//音量は読み込んだ時にセット
+	CSoundEngine::GetInstance()->SetBGMVolume(m_BGMVolume);
+	CSoundEngine::GetInstance()->SetSEVolume(m_SEVolume);
+
+	return true;
+}
+
+bool GameOption::WriteOption()
+{
+	FILE* fp = fopen("gameoption.dat", "wb");
+
+	if (fp == nullptr)
+	{
+		return false;
+	}
+
+	fwrite(&m_BGMVolume, sizeof(float), 1, fp);
+	fwrite(&m_SEVolume, sizeof(float), 1, fp);
+	fwrite(&m_P1Sensitivity, sizeof(float), 1, fp);
+	fwrite(&m_P2Sensitivity, sizeof(float), 1, fp);
+	fwrite(&m_gameTimeLimit, sizeof(float), 1, fp);
+
+	fclose(fp);
+
+	return true;
 }

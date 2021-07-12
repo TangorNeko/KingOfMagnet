@@ -40,13 +40,13 @@ public:
 	 * @brief プレイヤー1のカメラ感度の数値を取得
 	 * @return プレイヤー1のカメラ感度
 	*/
-	float GetP1Sensitivity() { return m_1PSensitivity; }
+	float GetP1Sensitivity() { return m_P1Sensitivity; }
 
 	/**
 	 * @brief プレイヤー2のカメラ感度の数値を取得
 	 * @return プレイヤー2のカメラ感度
 	*/
-	float GetP2Sensitivity() { return m_2PSensitivity; }
+	float GetP2Sensitivity() { return m_P2Sensitivity; }
 
 	/**
 	 * @brief ゲームの制限時間の数値を取得
@@ -69,13 +69,25 @@ public:
 		return m_optionBackGroundSprite->GetSpriteSupporter().GetSpriteScaleListLen() != 0;
 	}
 
+	/**
+	 * @brief ファイルからオプション読み込み
+	 * @return 成功?
+	*/
+	static bool ReadOption();
+
+	/**
+	 * @brief ファイルにオプション書き込み
+	 * @return 成功?
+	*/
+	bool WriteOption();
+
 private:
 	prefab::CSpriteRender* m_optionBackGroundSprite = nullptr;	//背景スプライト
 	bool m_isOpen = false;										//オプションが開いているか
 	static float m_BGMVolume;									//BGMのボリューム
 	static float m_SEVolume;									//効果音のボリューム
-	static float m_1PSensitivity;								//プレイヤー1のカメラ感度
-	static float m_2PSensitivity;								//プレイヤー2のカメラ感度
+	static float m_P1Sensitivity;								//プレイヤー1のカメラ感度
+	static float m_P2Sensitivity;								//プレイヤー2のカメラ感度
 	static float m_gameTimeLimit;								//ゲームの制限時間
 	prefab::CFontRender* m_optionFont = nullptr;				//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;				//BGMのボリュームのフォント

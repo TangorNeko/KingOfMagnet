@@ -6,6 +6,7 @@
 #include "ResultScene.h"
 #include "Player.h"
 #include "TransitionGenerator.h"
+#include "GameOption.h"
 
 namespace
 {
@@ -63,6 +64,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//モデルデータ、エフェクトデータの事前ロード。
 	PreLoad();
+
+	//ゲーム設定の読み込み
+	GameOption::ReadOption();
 
 	TransitionGenerator* tg = NewGO<TransitionGenerator>(5, "TransitionGenerator");
 
