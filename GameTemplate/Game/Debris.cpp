@@ -290,7 +290,11 @@ void Debris::AsBulletBehave()
 	m_bulletCollider.SetStartPoint(m_oldPosition);
 	m_bulletCollider.SetRadius(DEBRIS_COLLISION_RADIUS);
 
-	QueryGOs<Player>("Player", [this](Player* player)->bool
+	bool isPlayerHit = false;
+	bool isStageHit = false;
+	Player* hitPlayer = nullptr;
+
+	QueryGOs<Player>("Player", [this,&isPlayerHit,&hitPlayer](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
 			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
@@ -330,55 +334,19 @@ void Debris::AsBulletBehave()
 				m_position += m_moveDirection * DEBRIS_SPEED;
 
 				//移動先の当たり判定を更新
-				m_bulletCollider.SetEndPoint(m_position);
+				Vector3 dir = m_position - m_oldPosition;
+				dir.Normalize();
 
-				//当たり判定にヒットしているならダメージ。
+				//現在の座標をカプセルの端とする
+				Vector3 CapsuleEnd = m_position - dir * DEBRIS_COLLISION_RADIUS;
+				m_bulletCollider.SetEndPoint(CapsuleEnd);
+
+				//プレイヤーの当たり判定にヒットしているならヒットフラグ
 				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
-					//ヒット音
-					prefab::CSoundSource* hitSE = NewGO<prefab::CSoundSource>(0);
+					isPlayerHit = true;
 
-					//ガレキの形状でダメージが分岐
-					switch (m_debrisShape)
-					{
-					case enScrap:
-						//音を再生
-						if (player->GetHP() > 0) {
-							hitSE->Init(L"Assets/sound/ダメージ音.wav",SoundType::enSE);
-							hitSE->SetVolume(SOUND_SE_SCRAP_HIT_VOLUME);
-							hitSE->Play(false);
-						}
-						player->Damage(DAMAGE_SCRAP);
-						break;
-					case enSword:
-						//音を再生
-						if (player->GetHP() > 0) {
-							hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
-							hitSE->SetVolume(SOUND_SE_SWORD_HIT_VOLUME);
-							hitSE->Play(false);
-						}
-						player->Damage(DAMAGE_SWORD);
-						break;
-					case enSpecialCharger:
-						//音を再生(仮)
-						if (player->GetHP() > 0) {
-							hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
-							hitSE->SetVolume(SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
-							hitSE->Play(false);
-						}
-						player->Damage(DAMAGE_SPECIALCHARGER);
-						break;
-					}
-
-					player->SetDamageEffectFront(m_moveDirection * -1);
-
-					//当たった所からポップさせる
-					m_debrisState = enPop;
-					m_isOnGround = false;
-
-					//プレイヤーをノックバックさせる。
-					player->SetKnockBackFlag(true);
-					player->SetMoveAmount(m_moveDirection * PLAYER_KNOCKBACK_SPEED);
+					hitPlayer = player;
 				}
 			}
 			return true;
@@ -386,18 +354,98 @@ void Debris::AsBulletBehave()
 
 
 	//ステージとの当たり判定
-	Vector3 crossPoint;
-	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-	if (isHit == true)
+	Vector3 stageCrossPoint;
+	isStageHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, stageCrossPoint);
+
+	//ステージとプレイヤーに同時ヒットしている時
+	if (isPlayerHit == true && isStageHit == true)
 	{
-		Vector3 moveDir = m_position - m_oldPosition;
-		moveDir.Normalize();
+		//高さを除いた距離のみ測定
+		Vector3 toPlayer = hitPlayer->GetPosition() - m_oldPosition;
+		toPlayer.y = 0;
+		Vector3 toStage = stageCrossPoint - m_oldPosition;
+		toStage.y = 0;
 
-		//当たった所より少し手前からポップさせる
-		m_position = crossPoint - (moveDir * DEBRIS_POP_POSITION_SPACE);
-
-		m_debrisState = enPop;
+		//距離が近い方にヒット
+		if (toPlayer.Length() > toStage.Length())
+		{
+			StageHitAsBullet(stageCrossPoint);
+		}
+		else
+		{
+			PlayerHitAsBullet(hitPlayer);
+		}
 	}
+	else if (isStageHit == true)
+	{
+		//ステージにのみヒット
+		StageHitAsBullet(stageCrossPoint);
+	}
+	else if (isPlayerHit == true)
+	{
+		//プレイヤーにのみヒット
+		PlayerHitAsBullet(hitPlayer);
+	}
+}
+
+void Debris::PlayerHitAsBullet(Player* player)
+{
+	//ヒット音
+	prefab::CSoundSource* hitSE = NewGO<prefab::CSoundSource>(0);
+
+	//ガレキの形状でダメージが分岐
+	switch (m_debrisShape)
+	{
+	case enScrap:
+		//音を再生
+		if (player->GetHP() > 0) {
+			hitSE->Init(L"Assets/sound/ダメージ音.wav", SoundType::enSE);
+			hitSE->SetVolume(SOUND_SE_SCRAP_HIT_VOLUME);
+			hitSE->Play(false);
+		}
+		player->Damage(DAMAGE_SCRAP);
+		break;
+	case enSword:
+		//音を再生
+		if (player->GetHP() > 0) {
+			hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
+			hitSE->SetVolume(SOUND_SE_SWORD_HIT_VOLUME);
+			hitSE->Play(false);
+		}
+		player->Damage(DAMAGE_SWORD);
+		break;
+	case enSpecialCharger:
+		//音を再生(仮)
+		if (player->GetHP() > 0) {
+			hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
+			hitSE->SetVolume(SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
+			hitSE->Play(false);
+		}
+		player->Damage(DAMAGE_SPECIALCHARGER);
+		break;
+	}
+
+	//ダメージのエフェクトの正面を設定
+	player->SetDamageEffectFront(m_moveDirection * -1);
+
+	//当たった所からポップさせる
+	m_debrisState = enPop;
+	m_isOnGround = false;
+
+	//プレイヤーをノックバックさせる。
+	player->SetKnockBackFlag(true);
+	player->SetMoveAmount(m_moveDirection * PLAYER_KNOCKBACK_SPEED);
+}
+
+void Debris::StageHitAsBullet(const Vector3& crossPoint)
+{
+	Vector3 moveDir = m_position - m_oldPosition;
+	moveDir.Normalize();
+
+	//当たった所より少し手前からポップさせる
+	m_position = crossPoint - (moveDir * DEBRIS_POP_POSITION_SPACE);
+
+	m_debrisState = enPop;
 }
 
 

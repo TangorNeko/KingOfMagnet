@@ -22,6 +22,18 @@ class Debris : public IGameObject
 	void AsBulletBehave();
 
 	/**
+	 * @brief 弾として発射されたガレキがプレイヤーにヒットした時
+	 * @param player ヒットしたプレイヤー
+	*/
+	void PlayerHitAsBullet(Player* player);
+
+	/**
+	 * @brief 弾として発射されたガレキがステージにヒットした時
+	 * @param crossPoint ヒットした座標
+	*/
+	void StageHitAsBullet(const Vector3& crossPoint);
+
+	/**
 	 * @brief プレイヤーに保持されている時の挙動
 	*/
 	void AsHoldBehave();
@@ -30,6 +42,8 @@ class Debris : public IGameObject
 	 * @brief 何かに当たった後の挙動
 	*/
 	void AsPopBehave();
+
+
 public:
 	//ガレキの状態
 	enum enDebrisState
