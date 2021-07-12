@@ -140,7 +140,7 @@ public:
 		m_gameBGM->Stop();
 	}
 
-	const int MAXBULLETNUM = 30;								//ゲームシーンに存在できる弾数の最大数
+	const int MAXBULLETNUM = 60;								//ゲームシーンに存在できる弾数の最大数
 private:
 	GameState m_gameState = enBirdseye;							//ゲームの状態　見回しからスタート
 

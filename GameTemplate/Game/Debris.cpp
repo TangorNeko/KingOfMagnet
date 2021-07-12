@@ -32,9 +32,9 @@ namespace
 	const float SOUND_SE_SCRAP_HIT_VOLUME = 1.2f;
 	const float SOUND_SE_SWORD_HIT_VOLUME = 1.5f;
 	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.5f;
-	const int DAMAGE_SCRAP = 50;
-	const int DAMAGE_SWORD = 100;
-	const int DAMAGE_SPECIALCHARGER = 20;
+	const int DAMAGE_SCRAP = 80;
+	const int DAMAGE_SWORD = 160;
+	const int DAMAGE_SPECIALCHARGER = 40;
 	const float DEBRIS_POP_POSITION_SPACE = 30.0f;
 	const int SPECIALCHARGER_COUNT_CHARGE = 50;
 
