@@ -47,6 +47,14 @@ void Repulsion::Update()
 		return;
 	}
 
+	if (m_gameScene->GetGameState() == GameScene::GameState::enResult)
+	{
+		for (auto soundSource : m_repulsionStaySE)
+		{
+			soundSource->Stop();
+		}
+	}
+
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{			
 			//恐らくプレイヤーが二人いるから上手く行かない。

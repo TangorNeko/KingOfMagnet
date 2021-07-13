@@ -324,6 +324,10 @@ bool GameScene::Start()
 
 void GameScene::Update()
 {
+	if (m_gameState == enBirdseye)
+	{
+		m_roundCounter->RoundAnnounce();
+	}
 
 	//スタートカウントダウン
 	if (m_gameState == enStartCountDown) {
@@ -490,6 +494,10 @@ void GameScene::WinnerJudge()
 		m_drawFontRender->SetShadowColor(FONT_DRAW_SHADOWCOLOR);
 		m_drawFontRender->SetShadowOffset(FONT_DRAW_SHADOWOFFSET);
 		m_drawFontRender->SetText(L"DRAW!");
+
+		//ボイス再生
+		SoundOneShotPlay(L"Assets/sound/Rakutan.wav", 1.0f);
+		SoundOneShotPlay(L"Assets/sound/Draw.wav", 3.0f);
 	}
 }
 
@@ -519,6 +527,8 @@ void GameScene::StartCountDown() {
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_ASSEMBLE, true);
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
+
+		SoundOneShotPlay(L"Assets/sound/CountDownA.wav",3.0f);
 
 		m_startCount3_Flag = true;
 	}

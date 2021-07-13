@@ -2077,7 +2077,10 @@ void Player::FinalHit()//決着がついたときのカメラ
 				m_resultWinnerSprite->Init("Assets/Image/1P.DDS", 148, 120);
 				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
-				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });				
+				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });	
+
+				//ボイス再生
+				SoundOneShotPlay(L"Assets/sound/Player1Win.wav", 3.0f);
 			}
 			else if (m_loserNum == 0)	//2Pが勝利した場合
 			{
@@ -2085,7 +2088,10 @@ void Player::FinalHit()//決着がついたときのカメラ
 				m_resultWinnerSprite->Init("Assets/Image/2P.DDS", 180, 128);
 				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
-				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });			
+				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });	
+
+				//ボイス再生
+				SoundOneShotPlay(L"Assets/sound/Player2Win.wav", 3.0f);
 			}
 		}
 		else if (m_LoseCameraLoop == 350)

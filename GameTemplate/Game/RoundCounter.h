@@ -47,6 +47,11 @@ public:
 	*/
 	void EnableResultRound();
 
+	/**
+	 * @brief 現在のラウンドの読み上げ
+	*/
+	void RoundAnnounce();
+
 private:
 	int m_currentRound = 0;								//現在のラウンド数
 	int m_latestRoundWinner = -1;						//一番最近のラウンドの勝者
@@ -56,5 +61,6 @@ private:
 	prefab::CSpriteRender* m_gameRoundSprite[2][2] =	//取得ラウンド表示スプライト
 	{ {nullptr,nullptr},{nullptr,nullptr} };
 	prefab::CEffect2D* m_roundGetEffect = nullptr;		//ラウンド獲得表示のエフェクト
+	bool m_roundAlreadyAnnounce = false;
 };
 

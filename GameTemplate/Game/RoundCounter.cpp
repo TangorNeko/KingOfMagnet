@@ -117,6 +117,9 @@ void RoundCounter::Update()
 
 			//Œ‹‰Ê•\Ž¦I—¹
 			m_isResult = false;
+
+			m_currentRound++;
+			m_roundAlreadyAnnounce = false;
 		}
 	}
 }
@@ -172,4 +175,27 @@ void RoundCounter::EnableResultRound()
 	m_gameRoundSprite[NUMBER_PLAYER2][ROUND_TWO]->SetPosition(SPRITE_PLAYER2_ROUND2_RESULT_POSITION);
 
 	m_isResult = true;
+}
+
+void RoundCounter::RoundAnnounce()
+{
+	if (m_roundAlreadyAnnounce == true)
+	{
+		return;
+	}
+
+	switch (m_currentRound)
+	{
+	case 0:
+		SoundOneShotPlay(L"Assets/sound/Round1.wav",3.0f);
+		break;
+	case 1:
+		SoundOneShotPlay(L"Assets/sound/Round2.wav",3.0f);
+		break;
+	case 2:
+		SoundOneShotPlay(L"Assets/sound/RoundFinal.wav",3.0f);
+		break;
+	}
+
+	m_roundAlreadyAnnounce = true;
 }
