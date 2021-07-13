@@ -817,25 +817,25 @@ void Player::SpecialAttack()
 		m_specialShotCount++;
 
 		//発射前にダメージを受けたらキャンセル
-		if (m_HitOn == true) 
-		{
-			//ゲージも0に。
-			m_specialAttackGauge = PLAYER_SPGAUGE_ZERO;
-			m_specialShotFlag = false;
-			m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
-			if (m_playerNum == NUMBER_PLAYER1)
-			{
-				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
-				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
-				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
-			}
-			else
-			{
-				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
-				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
-				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
-			}
-		}
+		//if (m_HitOn == true) 
+		//{
+		//	//ゲージも0に。
+		//	m_specialAttackGauge = PLAYER_SPGAUGE_ZERO;
+		//	m_specialShotFlag = false;
+		//	m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
+		//	if (m_playerNum == NUMBER_PLAYER1)
+		//	{
+		//		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+		//		m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
+		//		m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+		//	}
+		//	else
+		//	{
+		//		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+		//		m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
+		//		m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
+		//	}
+		//}
 	}
 
 	if (m_specialShotCount >= PLAYER_SPECIALSHOTCOUNT_SHOOT)
