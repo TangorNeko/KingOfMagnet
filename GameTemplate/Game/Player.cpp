@@ -115,7 +115,7 @@ namespace
 	const float BURST_RANGE_MIN = 100.0f;
 	const float BURST_RANGE_MAX = 750.0f;
 
-	const int SPGAUGE_BULLETSTEAL_POINT = 25;
+	const int SPGAUGE_BULLETSTEAL_POINT = 40;
 	
 	const float PLAYER_MAGNETCHARGE_DECAY_VALUE = 2.0f;
 	

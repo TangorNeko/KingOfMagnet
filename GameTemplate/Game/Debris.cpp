@@ -37,6 +37,7 @@ namespace
 	const int DAMAGE_SPECIALCHARGER = 40;
 	const float DEBRIS_POP_POSITION_SPACE = 30.0f;
 	const int SPECIALCHARGER_COUNT_CHARGE = 50;
+	const int SPECIALCHARGER_CHARGEVALUE = 2;
 
 	//他のクラスでも使いそうな定数
 	const int PLAYER_HOLD_DEBRIS_SIZE_MAX = 10;
@@ -462,7 +463,7 @@ void Debris::AsHoldBehave()
 
 					//カウントが貯まるとプレイヤーの必殺技ゲージ量を増やす。
 					if (m_specialChargeCount == SPECIALCHARGER_COUNT_CHARGE) {
-						player->ChargeSpecialAttackGauge(1);
+						player->ChargeSpecialAttackGauge(SPECIALCHARGER_CHARGEVALUE);
 						m_specialChargeCount = 0;
 					}
 				}
