@@ -288,3 +288,5 @@ enum SoundType
 			float m_baseVolume = 1.0f;//音のタイプに共通してボリュームに掛け合わせる基礎値
 		};
 	}
+
+	void SoundOneShotPlay(const wchar_t* filePath, float volume = 1.0f);
