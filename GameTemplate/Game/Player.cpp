@@ -664,10 +664,7 @@ void Player::Move()
 		if (m_animStatus == enStatus_Walk) {
 			if (m_footstepsTimer >= FOOTSTEPTIMER_WALK)
 			{
-				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-				ssShoot->Init(L"Assets/sound/足音.wav", SoundType::enSE);
-				ssShoot->SetVolume(SOUND_SE_FOOTSTEP_VOLUME);
-				ssShoot->Play(false);
+				SoundOneShotPlay(L"Assets/sound/足音.wav", SOUND_SE_FOOTSTEP_VOLUME);
 
 				m_footstepsTimer = FOOTSTEPTIMER_RESET;
 			}
@@ -675,10 +672,7 @@ void Player::Move()
 		if (m_animStatus == enStatus_Run) {
 			if (m_footstepsTimer >= FOOTSTEPTIMER_RUN)
 			{
-				prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-				ssShoot->Init(L"Assets/sound/足音.wav", SoundType::enSE);
-				ssShoot->SetVolume(SOUND_SE_FOOTSTEP_VOLUME);
-				ssShoot->Play(false);
+				SoundOneShotPlay(L"Assets/sound/足音.wav", SOUND_SE_FOOTSTEP_VOLUME);
 				
 				m_footstepsTimer = FOOTSTEPTIMER_RESET;
 			}
@@ -689,10 +683,7 @@ void Player::Move()
 
 	if (oldPos.y >= HEIGHT_PLAYER_FALLSOUND_PLAY && m_position.y < HEIGHT_PLAYER_FALLSOUND_PLAY)
 	{
-		prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-		ssShoot->Init(L"Assets/sound/落下音.wav", SoundType::enSE);
-		ssShoot->SetVolume(SOUND_SE_FALL_VOLUME);
-		ssShoot->Play(false);
+		SoundOneShotPlay(L"Assets/sound/落下音.wav", SOUND_SE_FALL_VOLUME);
 	}	
 }
 
@@ -705,10 +696,7 @@ void Player::Attack()
 		if (m_holdDebrisVector.empty() == false)
 		{
 			//音を鳴らす
-			prefab::CSoundSource* ssShoot = NewGO<prefab::CSoundSource>(0);;
-			ssShoot->Init(L"Assets/sound/シュート音.wav", SoundType::enSE);
-			ssShoot->SetVolume(SOUND_SE_DEBRISSHOOT_VOLUME);
-			ssShoot->Play(false);
+			SoundOneShotPlay(L"Assets/sound/シュート音.wav", SOUND_SE_DEBRISSHOOT_VOLUME);
 
 			//一番最初に保持したガレキを発射
 			auto debris = m_holdDebrisVector.front();
@@ -809,9 +797,7 @@ void Player::SpecialAttack()
 		}
 		if (m_specialShotCount == PLAYER_SPECIALSHOTCOUNT_ZERO)
 		{
-			prefab::CSoundSource* ssSPCharge = NewGO<prefab::CSoundSource>(0);
-			ssSPCharge->Init(L"Assets/sound/パワーチャージ.wav", SoundType::enSE);
-			ssSPCharge->Play(false);
+			SoundOneShotPlay(L"Assets/sound/パワーチャージ.wav");
 		}
 
 		m_specialShotCount++;
@@ -843,12 +829,8 @@ void Player::SpecialAttack()
 		//引力なら
 		if (m_magnetState == MAGNETSTATE_GRAVITY)
 		{
-			//m_SPChargeEffectBlue->Stop();
 			//音を鳴らす
-			prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);
-			ssSPShot->Init(L"Assets/sound/引力弾発射.wav", SoundType::enSE);
-			ssSPShot->SetVolume(SOUND_SE_SHOOTGRAVITY_VOLUME);
-			ssSPShot->Play(false);
+			SoundOneShotPlay(L"Assets/sound/引力弾発射.wav", SOUND_SE_SHOOTGRAVITY_VOLUME);
 
 			//発射エフェクト
 			m_SPFireEffect->Init(u"Assets/effect/引力弾発射.efk");
@@ -906,9 +888,7 @@ void Player::SpecialAttack()
 			if (m_holdDebrisVector.size() != 0)
 			{
 				//音を鳴らす
-				prefab::CSoundSource* ssSPShot = NewGO<prefab::CSoundSource>(0);;
-				ssSPShot->Init(L"Assets/sound/気弾1.wav", SoundType::enSE);
-				ssSPShot->Play(false);
+				SoundOneShotPlay(L"Assets/sound/気弾1.wav");
 
 				//発射エフェクト
 				m_SPFireEffect->Init(u"Assets/effect/斥力弾発射.efk");
@@ -993,9 +973,7 @@ void Player::ThrowBomb()
 		if (m_holdBombVector.empty() == false)
 		{
 			//音を鳴らす
-			prefab::CSoundSource* ssThrow = NewGO<prefab::CSoundSource>(0);;
-			ssThrow->Init(L"Assets/sound/投げる音.wav", SoundType::enSE);
-			ssThrow->Play(false);
+			SoundOneShotPlay(L"Assets/sound/投げる音.wav");
 
 			//選択している爆弾を発射
 			auto debris = m_holdBombVector.begin() + m_selectBombNo;
@@ -1185,16 +1163,11 @@ void Player::MagneticBehavior()
 		m_isBurst = true;
 		m_burstCount = PLAYER_BURSTCOUNT_START;
 
-		//バースト音
-		prefab::CSoundSource* ssBurst = NewGO<prefab::CSoundSource>(0);;
-
 		switch (m_magnetState)
 		{
 		case MAGNETSTATE_GRAVITY://引力
 			//バースト音を再生
-			ssBurst->Init(L"Assets/sound/引力バースト音.wav", SoundType::enSE);
-			ssBurst->SetVolume(SOUND_SE_BURST_VOLUME);
-			ssBurst->Play(false);		
+			SoundOneShotPlay(L"Assets/sound/引力バースト音.wav", SOUND_SE_BURST_VOLUME);
 			//エフェクトを表示
 			m_burstEffect->Init(u"Assets/effect/引力バースト.efk");
 			m_burstEffect->Play();
@@ -1202,9 +1175,7 @@ void Player::MagneticBehavior()
 
 		case MAGNETSTATE_REPULSION://斥力
 			//バースト音を再生
-			ssBurst->Init(L"Assets/sound/斥力バースト音.wav", SoundType::enSE);
-			ssBurst->SetVolume(SOUND_SE_BURST_VOLUME);
-			ssBurst->Play(false);
+			SoundOneShotPlay(L"Assets/sound/斥力バースト音.wav", SOUND_SE_BURST_VOLUME);
 			//エフェクトを表示
 			m_burstEffect->Init(u"Assets/effect/斥力バースト.efk");
 			m_burstEffect->Play();
@@ -1582,10 +1553,7 @@ void Player::ChargeSpecialAttackGauge(int charge)
 			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
 			m_SPGaugeMaxEffect->Play();
 			//SE
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/きらーん.wav", SoundType::enSE);
-			ss->SetVolume(0.5f);
-			ss->Play(false);
+			SoundOneShotPlay(L"Assets/sound/きらーん.wav", 0.5f);
 
 			m_chargeSPFontRender->SetText(L"MAX");
 			if (m_playerNum == 0)
@@ -2091,37 +2059,15 @@ void Player::FinalHit()//決着がついたときのカメラ
 		}
 
 		//SE
-		if (m_LoseCameraLoop == 0)
+		if (m_LoseCameraLoop == 0 || m_LoseCameraLoop == 50 || m_LoseCameraLoop == 100)
 		{
 			//音を再生
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/K.O..wav", SoundType::enSE);
-			ss->SetVolume(1.5f);
-			ss->Play(false);
-		}
-		else if (m_LoseCameraLoop == 50)
-		{
-			//音を再生
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/K.O..wav", SoundType::enSE);
-			ss->SetVolume(1.5f);
-			ss->Play(false);
-		}
-		else if (m_LoseCameraLoop == 100)
-		{
-			//音を再生
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/K.O..wav", SoundType::enSE);
-			ss->SetVolume(1.5f);
-			ss->Play(false);
+			SoundOneShotPlay(L"Assets/sound/K.O..wav", 1.5f);
 		}
 		else if (m_LoseCameraLoop == 250)
 		{
 			//ジングルを再生
-			prefab::CSoundSource* ss = NewGO<prefab::CSoundSource>(0);;
-			ss->Init(L"Assets/sound/yattaze!1.wav", SoundType::enSE);
-			ss->SetVolume(1.5f);
-			ss->Play(false);
+			SoundOneShotPlay(L"Assets/sound/yattaze!1.wav", 1.5f);
 		}
 		else if (m_LoseCameraLoop == 300)
 		{

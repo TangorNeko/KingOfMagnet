@@ -182,10 +182,7 @@ void GravityBullet::AsExplodeBehave()
 	DeleteGO(m_skinModelRender);
 
 	//‰¹‚ğ–Â‚ç‚·
-	prefab::CSoundSource* gravitySound = NewGO<prefab::CSoundSource>(0);
-	gravitySound->Init(L"Assets/sound/ˆÃ•–‚–@.wav", SoundType::enSE);
-	gravitySound->SetVolume(SOUND_SE_GRAVITY_VOLUME);
-	gravitySound->Play(false);
+	SoundOneShotPlay(L"Assets/sound/ˆÃ•–‚–@.wav", SOUND_SE_GRAVITY_VOLUME);
 
 	//”š”­‚µ‚½‚Ì‚Åˆø—Í‚ğ”­¶‚³‚¹‚éó‘Ô‚Ö
 	m_gravityBulletState = enGravity;

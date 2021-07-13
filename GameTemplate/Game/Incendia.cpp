@@ -22,10 +22,7 @@ Incendia::~Incendia()
 bool Incendia::Start()
 {
 	//音を再生
-	prefab::CSoundSource* burnSound = NewGO<prefab::CSoundSource>(0);
-	burnSound->Init(L"Assets/sound/炎.wav", SoundType::enSE);
-	burnSound->SetVolume(SOUND_SE_BURN_VOLUME);
-	burnSound->Play(false);
+	SoundOneShotPlay(L"Assets/sound/炎.wav", SOUND_SE_BURN_VOLUME);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);

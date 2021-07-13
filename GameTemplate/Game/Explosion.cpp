@@ -18,10 +18,7 @@ Explosion::~Explosion()
 bool Explosion::Start()
 {
 	//音を再生
-	prefab::CSoundSource* explosionSound = NewGO<prefab::CSoundSource>(0);;
-	explosionSound->Init(L"Assets/sound/爆発音.wav", SoundType::enSE);
-	explosionSound->SetVolume(SOUND_SE_EXPLOSION_VOLUME);
-	explosionSound->Play(false);
+	SoundOneShotPlay(L"Assets/sound/爆発音.wav", SOUND_SE_EXPLOSION_VOLUME);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);

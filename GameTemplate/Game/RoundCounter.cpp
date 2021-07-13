@@ -110,6 +110,8 @@ void RoundCounter::Update()
 			m_roundGetEffect->SetPosition(twinklePos);
 			m_roundGetEffect->Play();
 
+			SoundOneShotPlay(L"Assets/sound/RoundGet.wav");
+
 			//カウントリセット
 			m_roundResultCount = ROUNDRESULTCOUNT_START;
 

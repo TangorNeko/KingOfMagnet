@@ -40,8 +40,8 @@ namespace
 	const int SPRITE_MOVETIMER_END = 120;
 	const Vector3 DIRECTIONLIGHT_RESULT_DIRECTION = { 0.0f,-1.0f,-1.0f };
 	const Vector3 DIRECTIONLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };
-	const float SOUND_SE_RESULT = 1.2f;
-	const float SOUND_BGM_RESULT = 0.2f;
+	const float SOUND_SE_RESULT_VOLUME = 1.2f;
+	const float SOUND_BGM_RESULT_VOLUME = 0.2f;
 
 	const int SPRITEMOVELIST_ZERO = 0;
 
@@ -245,24 +245,18 @@ void ResultScene::Update()
 
 		//SE
 		if (m_moveTimer == SPRITE_MOVETIMER_PLAY_SE1) {
-			prefab::CSoundSource* resultSE = NewGO<prefab::CSoundSource>(0);;
-			resultSE->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
-			resultSE->SetVolume(SOUND_SE_RESULT);
-			resultSE->Play(false);
+			SoundOneShotPlay(L"Assets/sound/リザルトSE1.wav", SOUND_SE_RESULT_VOLUME);
 		}
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_SE2)
 		{
-			prefab::CSoundSource* resultSE = NewGO<prefab::CSoundSource>(0);;
-			resultSE->Init(L"Assets/sound/リザルトSE1.wav", SoundType::enSE);
-			resultSE->SetVolume(SOUND_SE_RESULT);
-			resultSE->Play(false);
+			SoundOneShotPlay(L"Assets/sound/リザルトSE1.wav", SOUND_SE_RESULT_VOLUME);
 		}
 		//BGM
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_BGM)
 		{	
 			m_resultBGM = NewGO<prefab::CSoundSource>(0);;
 			m_resultBGM->Init(L"Assets/sound/リザルト曲.wav", SoundType::enBGM);
-			m_resultBGM->SetVolume(SOUND_BGM_RESULT);
+			m_resultBGM->SetVolume(SOUND_BGM_RESULT_VOLUME);
 			m_resultBGM->Play(true);
 		}
 
@@ -282,9 +276,7 @@ void ResultScene::Update()
 				m_RetryOn = false;
 
 				//SE
-				prefab::CSoundSource* cursorMoveSE = NewGO<prefab::CSoundSource>(0);;
-				cursorMoveSE->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
-				cursorMoveSE->Play(false);
+				SoundOneShotPlay(L"Assets/sound/カーソル移動音.wav");
 			}
 			else
 			{
@@ -294,9 +286,7 @@ void ResultScene::Update()
 				m_RetryOn = true;
 
 				//SE
-				prefab::CSoundSource* cursorMoveSE = NewGO<prefab::CSoundSource>(0);;
-				cursorMoveSE->Init(L"Assets/sound/カーソル移動音.wav", SoundType::enSE);
-				cursorMoveSE->Play(false);
+				SoundOneShotPlay(L"Assets/sound/カーソル移動音.wav");
 			}
 		}
 
@@ -306,9 +296,7 @@ void ResultScene::Update()
 			if (m_RetryOn == true) {
 				DeleteGO(m_resultBGM);
 				//SE
-				prefab::CSoundSource* resultSelectSE = NewGO<prefab::CSoundSource>(0);;
-				resultSelectSE->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
-				resultSelectSE->Play(false);
+				SoundOneShotPlay(L"Assets/sound/リザルト画面決定音.wav");
 
 				//次の試合のラウンドの計測を開始
 				NewGO<RoundCounter>(0, "roundcounter");
@@ -322,9 +310,7 @@ void ResultScene::Update()
 			if (m_RetryOn == false) {
 				DeleteGO(m_resultBGM);
 				//SE
-				prefab::CSoundSource* resultSelectSE = NewGO<prefab::CSoundSource>(0);;
-				resultSelectSE->Init(L"Assets/sound/リザルト画面決定音.wav", SoundType::enSE);
-				resultSelectSE->Play(false);
+				SoundOneShotPlay(L"Assets/sound/リザルト画面決定音.wav");
 
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME_TO_TITLE, false);

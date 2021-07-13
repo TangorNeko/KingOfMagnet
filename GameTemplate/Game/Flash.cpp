@@ -26,14 +26,8 @@ Flash::~Flash()
 bool Flash::Start()
 {
 	//‰¹‚ğÄ¶
-	prefab::CSoundSource* flashSound1 = NewGO<prefab::CSoundSource>(0);;
-	flashSound1->Init(L"Assets/sound/‘MŒõ’e.wav", SoundType::enSE);
-	flashSound1->SetVolume(SOUND_SE_FLASH1_VOLUME);
-	flashSound1->Play(false);
-	prefab::CSoundSource* flashSound2 = NewGO<prefab::CSoundSource>(0);;
-	flashSound2->Init(L"Assets/sound/‘MŒõ’e2.wav", SoundType::enSE);
-	flashSound2->SetVolume(SOUND_SE_FLASH2_VOLUME);
-	flashSound2->Play(false);
+	SoundOneShotPlay(L"Assets/sound/‘MŒõ’e.wav", SOUND_SE_FLASH1_VOLUME);
+	SoundOneShotPlay(L"Assets/sound/‘MŒõ’e2.wav", SOUND_SE_FLASH2_VOLUME);
 
 	//ƒGƒtƒFƒNƒg‚ğÄ¶
 	m_effect = NewGO<prefab::CEffect>(0);

@@ -31,7 +31,7 @@ namespace
 	const float DEBRIS_COLLISION_RADIUS = 60.0f;
 	const float SOUND_SE_SCRAP_HIT_VOLUME = 1.2f;
 	const float SOUND_SE_SWORD_HIT_VOLUME = 1.5f;
-	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.5f;
+	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.2f;
 	const int DAMAGE_SCRAP = 80;
 	const int DAMAGE_SWORD = 160;
 	const int DAMAGE_SPECIALCHARGER = 40;
@@ -400,27 +400,21 @@ void Debris::PlayerHitAsBullet(Player* player)
 	case enScrap:
 		//音を再生
 		if (player->GetHP() > 0) {
-			hitSE->Init(L"Assets/sound/ダメージ音.wav", SoundType::enSE);
-			hitSE->SetVolume(SOUND_SE_SCRAP_HIT_VOLUME);
-			hitSE->Play(false);
+			SoundOneShotPlay(L"Assets/sound/ダメージ音.wav", SOUND_SE_SCRAP_HIT_VOLUME);
 		}
 		player->Damage(DAMAGE_SCRAP);
 		break;
 	case enSword:
 		//音を再生
 		if (player->GetHP() > 0) {
-			hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
-			hitSE->SetVolume(SOUND_SE_SWORD_HIT_VOLUME);
-			hitSE->Play(false);
+			SoundOneShotPlay(L"Assets/sound/剣が当たる.wav", SOUND_SE_SWORD_HIT_VOLUME);
 		}
 		player->Damage(DAMAGE_SWORD);
 		break;
 	case enSpecialCharger:
 		//音を再生(仮)
 		if (player->GetHP() > 0) {
-			hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
-			hitSE->SetVolume(SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
-			hitSE->Play(false);
+			SoundOneShotPlay(L"Assets/sound/ダメージ音.wav", SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
 		}
 		player->Damage(DAMAGE_SPECIALCHARGER);
 		break;

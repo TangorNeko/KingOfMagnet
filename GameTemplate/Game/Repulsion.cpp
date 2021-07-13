@@ -73,10 +73,7 @@ void Repulsion::Update()
 					//プレイヤーが斥力床に入ってきた時の音を鳴らす。
 					if (m_isPlayEnterSE[playerNum] == false)
 					{
-						prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
-						ss1->Init(L"Assets/sound/マジックウェーブ.wav", SoundType::enSE);
-						ss1->SetVolume(SOUND_SE_REPULSION_ENTER_VOLUME);
-						ss1->Play(false);
+						SoundOneShotPlay(L"Assets/sound/マジックウェーブ.wav", SOUND_SE_REPULSION_ENTER_VOLUME);
 						m_isPlayEnterSE[playerNum] = true;
 					}
 
