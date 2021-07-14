@@ -289,4 +289,9 @@ enum SoundType
 		};
 	}
 
+	/*!
+	* @brief	サウンドをワンショット再生
+	* @param screen 再生するwavファイルのパス
+	* @param screen 再生ボリューム
+	*/
 	void SoundOneShotPlay(const wchar_t* filePath, float volume = 1.0f);
