@@ -49,6 +49,8 @@ namespace
 
 	const float GAME_ROUNDTOWIN_MIN = 1.0f;
 	const float GAME_ROUNDTOWIN_MAX = 3.0f;
+
+	const float SOUND_OPTIONDISPLAY_VOLUME = 0.5f;
 }
 
 float GameOption::m_BGMVolume = 1.0f;		//BGMのボリューム
@@ -174,6 +176,8 @@ void GameOption::Update()
 				{
 					m_selectingItem = OPTION_ITEM_BGM;
 				}
+				SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 			}
 			else if(g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと上の項目へ
 			{
@@ -181,6 +185,8 @@ void GameOption::Update()
 				{
 					m_selectingItem = OPTION_ITEM_ROUNDTOWIN;
 				}
+				SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 			}
 
 			//選んでいる項目をポインタにセット
@@ -223,6 +229,8 @@ void GameOption::Update()
 
 				//数値設定前の値を記録
 				m_selectingItemTemporaryValue = *m_selectingItemValue;
+				SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 			}
 		}
 		else if(m_selectingState == enNumeric)//項目の数値を設定するモードなら
@@ -233,10 +241,13 @@ void GameOption::Update()
 				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
 				{
 					(*m_selectingItemValue) -= OPTION_GAMETIME_CHANGERATE;
+					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
 				}
 				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
 				{
 					(*m_selectingItemValue) += OPTION_GAMETIME_CHANGERATE;
+					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 				}
 			}
 			else if (m_selectingItemValue == &m_roundToWin)//勝利に必要なラウンド
@@ -245,10 +256,14 @@ void GameOption::Update()
 				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
 				{
 					(*m_selectingItemValue) -= OPTION_ROUNDTOWIN_CHANGERATE;
+					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 				}
 				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
 				{
 					(*m_selectingItemValue) += OPTION_ROUNDTOWIN_CHANGERATE;
+					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 				}
 			}
 			else
@@ -257,10 +272,14 @@ void GameOption::Update()
 				if (g_pad[PAD_PLAYER1]->IsPress(enButtonDown) || g_pad[PAD_PLAYER2]->IsPress(enButtonDown))
 				{
 					(*m_selectingItemValue) -= OPTION_VALUE_CHANGERATE;
+					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 				}
 				else if (g_pad[PAD_PLAYER1]->IsPress(enButtonUp) || g_pad[PAD_PLAYER2]->IsPress(enButtonUp))//上を押すと数値を増やす
 				{
 					(*m_selectingItemValue) += OPTION_VALUE_CHANGERATE;
+					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 				}
 			}
 
@@ -338,6 +357,8 @@ void GameOption::Update()
 			if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonA) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonA))
 			{
 				m_selectingState = enItem;
+				SoundOneShotPlay(L"Assets/sound/OptionSelect.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 			}
 			else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonB) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonB))//Bボタンを押すと値を変更前に戻して項目選択へ(値のキャンセル)
 			{
@@ -355,6 +376,9 @@ void GameOption::Update()
 					//設定値をSEの音量としてセット
 					CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
 				}
+
+				SoundOneShotPlay(L"Assets/sound/OptionCancel.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 			}
 		}
 
@@ -393,6 +417,9 @@ void GameOption::Open()
 		//背景の拡大率を1倍にするキューをセット
 		m_optionBackGroundSprite->GetSpriteSupporter().SpriteScale(SPRITE_SCALE_OPEN, SPRITE_SCALING_TIME, SPRITE_SCALING_DELAY);
 
+		//開くサウンドを再生
+		SoundOneShotPlay(L"Assets/sound/OptionDisplayOn.wav", SOUND_OPTIONDISPLAY_VOLUME);
+
 		//開いたフラグをオン
 		m_isOpen = true;
 	}
@@ -404,6 +431,9 @@ void GameOption::Close()
 	{
 		//背景の拡大率を0倍にするキューをセット
 		m_optionBackGroundSprite->GetSpriteSupporter().SpriteScale(SPRITE_SCALE_CLOSE, SPRITE_SCALING_TIME, SPRITE_SCALING_DELAY);
+
+		//閉じるサウンドを再生
+		SoundOneShotPlay(L"Assets/sound/OptionDisplayOff.wav", SOUND_OPTIONDISPLAY_VOLUME);
 
 		//開いたフラグをオフ
 		m_isOpen = false;
