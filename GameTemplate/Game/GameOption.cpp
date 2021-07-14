@@ -6,15 +6,16 @@
 namespace
 {
 	const Vector2 FONT_OPTION_POSITION = { -125.0f,240.0f };
-	const Vector2 FONT_BGMVOLUME_POSITION = { -450.0f,160.0f };
-	const Vector2 FONT_SEVOLUME_POSITION = { -450.0f,70.0f };
-	const Vector2 FONT_P1SENSITIVITY_POSITION = { -450.0f,-20.0f };
-	const Vector2 FONT_P2SENSITIVITY_POSITION = { -450.0f,-110.0f };
-	const Vector2 FONT_GAMETIMELIMIT_POSITION = { -450.0f,-200.0f };
+	const Vector2 FONT_BGMVOLUME_POSITION = { -450.0f,170.0f };
+	const Vector2 FONT_SEVOLUME_POSITION = { -450.0f,100.0f };
+	const Vector2 FONT_P1SENSITIVITY_POSITION = { -450.0f,30.0f };
+	const Vector2 FONT_P2SENSITIVITY_POSITION = { -450.0f,-40.0f };
+	const Vector2 FONT_GAMETIMELIMIT_POSITION = { -450.0f,-110.0f };
+	const Vector2 FONT_ROUNDTOWIN_POSITION = { -450.0f,-180.0f };
 	const Vector4 FONT_SHADOWCOLOR_BLACK = { 0,0,0,1 };
 	const float FONT_SHADOWOFFSET = 2.0f;
 	const Vector2 FONT_SCALE_CLOSE = { 0.0f,0.0f };
-	const Vector2 FONT_SCALE_OPEN = { 1.0f,1.0f };
+	const Vector2 FONT_SCALE_OPEN = { 0.8f,0.8f };
 	const Vector4 FONT_COLOR_WHITE = { 1.0f,1.0f,1.0f,1.0f };
 	const Vector4 FONT_COLOR_BLUE = { 0.1f,0.1f,1.0f,1.0f };
 	const Vector4 FONT_COLOR_RED = { 1.0f,0.25f,0.25f,1.0f };
@@ -27,13 +28,15 @@ namespace
 
 	const float OPTION_VALUE_CHANGERATE = 0.05f;
 	const float OPTION_GAMETIME_CHANGERATE = 10.0f;
+	const float OPTION_ROUNDTOWIN_CHANGERATE = 2.0f;
 	const int OPTION_ITEM_UNDERRANGE = -1;
 	const int OPTION_ITEM_BGM = 0;
 	const int OPTION_ITEM_SE = 1;
 	const int OPTION_ITEM_P1SENSITIVITY = 2;
 	const int OPTION_ITEM_P2SENSITIVITY = 3;
 	const int OPTION_ITEM_GAMETIMELIMIT = 4;
-	const int OPTION_ITEM_OVERRANGE = 5;
+	const int OPTION_ITEM_ROUNDTOWIN = 5;
+	const int OPTION_ITEM_OVERRANGE = 6;
 
 	const float SOUND_VOLUME_MIN = 0.0f;
 	const float SOUND_VOLUME_MAX = 1.0f;
@@ -43,6 +46,9 @@ namespace
 	
 	const float GAME_TIMELIMIT_MIN = 30.0f;
 	const float GAME_TIMELIMIT_MAX = 90.0f;
+
+	const float GAME_ROUNDTOWIN_MIN = 1.0f;
+	const float GAME_ROUNDTOWIN_MAX = 3.0f;
 }
 
 float GameOption::m_BGMVolume = 1.0f;		//BGMのボリューム
@@ -50,6 +56,7 @@ float GameOption::m_SEVolume = 1.0f;		//効果音のボリューム
 float GameOption::m_P1Sensitivity = 2.0f;	//プレイヤー1のカメラ感度
 float GameOption::m_P2Sensitivity = 2.0f;	//プレイヤー2のカメラ感度
 float GameOption::m_gameTimeLimit = 40.0f;	//ゲームの制限時間
+float GameOption::m_roundToWin = 1.0f;		//勝利に必要なラウンド数
 
 GameOption::~GameOption()
 {
@@ -60,6 +67,7 @@ GameOption::~GameOption()
 	DeleteGO(m_1PSensitivityFont);
 	DeleteGO(m_2PSensitivityFont);
 	DeleteGO(m_gameTimeLimitFont);
+	DeleteGO(m_roundToWinFont);
 }
 
 bool GameOption::Start()
@@ -122,6 +130,14 @@ bool GameOption::Start()
 	m_gameTimeLimitFont->SetShadowFlag(true);
 	m_gameTimeLimitFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
 	m_gameTimeLimitFont->SetShadowOffset(FONT_SHADOWOFFSET);
+	
+	//勝利に必要なラウンド数フォント
+	m_roundToWinFont = NewGO<prefab::CFontRender>(0);
+	m_roundToWinFont->SetScale(FONT_SCALE_CLOSE);
+	m_roundToWinFont->SetPosition(FONT_ROUNDTOWIN_POSITION);
+	m_roundToWinFont->SetShadowFlag(true);
+	m_roundToWinFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
+	m_roundToWinFont->SetShadowOffset(FONT_SHADOWOFFSET);
 
 	return true;
 }
@@ -138,6 +154,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetScale(FONT_SCALE_OPEN);
 		m_2PSensitivityFont->SetScale(FONT_SCALE_OPEN);
 		m_gameTimeLimitFont->SetScale(FONT_SCALE_OPEN);
+		m_roundToWinFont->SetScale(FONT_SCALE_OPEN);
 
 		//選択したフォント以外を白にするため一旦全部白にしている
 		m_BGMVolumeFont->SetColor(Vector4::White);
@@ -145,6 +162,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetColor(Vector4::White);
 		m_2PSensitivityFont->SetColor(Vector4::White);
 		m_gameTimeLimitFont->SetColor(Vector4::White);
+		m_roundToWinFont->SetColor(Vector4::White);
 
 		//項目の選択中なら
 		if (m_selectingState == enItem)
@@ -161,7 +179,7 @@ void GameOption::Update()
 			{
 				if (--m_selectingItem == OPTION_ITEM_UNDERRANGE)
 				{
-					m_selectingItem = OPTION_ITEM_GAMETIMELIMIT;
+					m_selectingItem = OPTION_ITEM_ROUNDTOWIN;
 				}
 			}
 
@@ -189,6 +207,10 @@ void GameOption::Update()
 				m_selectingItemValue = &m_gameTimeLimit;
 				m_selectingItemFont = m_gameTimeLimitFont;
 				break;
+			case OPTION_ITEM_ROUNDTOWIN://勝利に必要なラウンド
+				m_selectingItemValue = &m_roundToWin;
+				m_selectingItemFont = m_roundToWinFont;
+				break;
 			}
 
 			//選択されている項目を青色に
@@ -205,7 +227,7 @@ void GameOption::Update()
 		}
 		else if(m_selectingState == enNumeric)//項目の数値を設定するモードなら
 		{
-			if (m_selectingItemValue == &m_gameTimeLimit)
+			if (m_selectingItemValue == &m_gameTimeLimit)//時間制限
 			{
 				//下を押すと数値を減らす
 				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
@@ -215,6 +237,18 @@ void GameOption::Update()
 				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
 				{
 					(*m_selectingItemValue) += OPTION_GAMETIME_CHANGERATE;
+				}
+			}
+			else if (m_selectingItemValue == &m_roundToWin)//勝利に必要なラウンド
+			{
+				//下を押すと数値を減らす
+				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
+				{
+					(*m_selectingItemValue) -= OPTION_ROUNDTOWIN_CHANGERATE;
+				}
+				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
+				{
+					(*m_selectingItemValue) += OPTION_ROUNDTOWIN_CHANGERATE;
 				}
 			}
 			else
@@ -285,6 +319,18 @@ void GameOption::Update()
 					*m_selectingItemValue = GAME_TIMELIMIT_MAX;
 				}
 			}
+			else if (m_selectingItemValue == &m_roundToWin)
+			{
+				//最大ラウンド数の範囲制限(1.0f~3.0f)
+				if (*m_selectingItemValue <= GAME_ROUNDTOWIN_MIN)
+				{
+					*m_selectingItemValue = GAME_ROUNDTOWIN_MIN;
+				}
+				else if (*m_selectingItemValue >= GAME_ROUNDTOWIN_MAX)
+				{
+					*m_selectingItemValue = GAME_ROUNDTOWIN_MAX;
+				}
+			}
 			//選択されている項目を赤色に
 			m_selectingItemFont->SetColor(FONT_COLOR_RED);
 
@@ -323,6 +369,8 @@ void GameOption::Update()
 		m_2PSensitivityFont->SetText(m_buffer);
 		swprintf_s(m_buffer, L"TIMELIMIT      = %.2f", m_gameTimeLimit);
 		m_gameTimeLimitFont->SetText(m_buffer);
+		swprintf_s(m_buffer, L"ROUNDTOWIN     = %.0f", m_roundToWin);
+		m_roundToWinFont->SetText(m_buffer);
 
 	}
 	else//それ以外
@@ -334,6 +382,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetScale(FONT_SCALE_CLOSE);
 		m_2PSensitivityFont->SetScale(FONT_SCALE_CLOSE);
 		m_gameTimeLimitFont->SetScale(FONT_SCALE_CLOSE);
+		m_roundToWinFont->SetScale(FONT_SCALE_CLOSE);
 	}
 }
 
@@ -381,6 +430,7 @@ bool GameOption::ReadOption()
 	fread(&m_P1Sensitivity,sizeof(float),1,fp);
 	fread(&m_P2Sensitivity,sizeof(float),1,fp);
 	fread(&m_gameTimeLimit,sizeof(float),1,fp);
+	fread(&m_roundToWin,sizeof(float),1,fp);
 
 	fclose(fp);
 
@@ -405,6 +455,7 @@ bool GameOption::WriteOption()
 	fwrite(&m_P1Sensitivity, sizeof(float), 1, fp);
 	fwrite(&m_P2Sensitivity, sizeof(float), 1, fp);
 	fwrite(&m_gameTimeLimit, sizeof(float), 1, fp);
+	fwrite(&m_roundToWin, sizeof(float), 1, fp);
 
 	fclose(fp);
 

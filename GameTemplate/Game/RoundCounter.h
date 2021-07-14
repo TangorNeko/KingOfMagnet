@@ -10,6 +10,17 @@ private:
 public:
 
 	/**
+	 * @brief 最大ラウンドをセット
+	 * @param round 最大ラウンド
+	*/
+	void SetMaxRound(int round)
+	{
+		m_maxRound = round;
+		//最大ラウンド数から表示するスプライトの数を計算
+		m_roundToWin = (m_maxRound / 2) + 1;
+	}
+
+	/**
 	 * @brief 2ラウンド先取して勝利したプレイヤーを取得
 	 * @return 勝者プレイヤー番号　まだ決まっていない場合は-1
 	*/
@@ -25,27 +36,19 @@ public:
 	}
 
 	/**
-	 * @brief スプライト非表示
-	*/
-	void Disable()
-	{
-		//全てのスプライトのスケールを0にして非表示
-		for (auto roundSprite : m_gameRoundSprite)
-		{
-			roundSprite[0]->SetScale({ 0.0f,0.0f,0.0f });
-			roundSprite[1]->SetScale({ 0.0f,0.0f,0.0f });
-		}
-	}
-
-	/**
 	 * @brief スプライトをゲーム画面用の位置で表示
 	*/
-	void EnableGameRound();
+	void MoveToGamePosition();
+
+	/**
+	* @brief スプライトを結果画面の位置に移動
+	*/
+	void MoveToResultPosition();
 
 	/**
 	 * @brief スプライトを結果画面用の位置で表示
 	*/
-	void EnableResultRound();
+	void StartResultMove();
 
 	/**
 	 * @brief 現在のラウンドの読み上げ
@@ -53,14 +56,17 @@ public:
 	void RoundAnnounce();
 
 private:
-	int m_currentRound = 0;								//現在のラウンド数
-	int m_latestRoundWinner = -1;						//一番最近のラウンドの勝者
-	int m_playerTakeRound[2] = { 0,0 };					//各プレイヤーの取得ラウンド
-	bool m_isResult = false;							//勝者表示画面?
-	int m_roundResultCount = 0;							//ラウンドごとの結果が再生されるまでのカウント
-	prefab::CSpriteRender* m_gameRoundSprite[2][2] =	//取得ラウンド表示スプライト
-	{ {nullptr,nullptr},{nullptr,nullptr} };
-	prefab::CEffect2D* m_roundGetEffect = nullptr;		//ラウンド獲得表示のエフェクト
-	bool m_roundAlreadyAnnounce = false;
+	static int m_maxRound;									//最大ラウンド数(偶数)
+	static int m_roundToWin;									//勝利に必要なラウンド
+	int m_currentRound = 0;									//現在のラウンド数
+	int m_latestRoundWinner = -1;							//一番最近のラウンドの勝者
+	int m_playerTakeRound[2] = { 0,0 };						//各プレイヤーの取得ラウンド
+	bool m_isResult = false;								//勝者表示画面?
+	int m_roundResultCount = 0;								//ラウンドごとの結果が再生されるまでのカウント
+	prefab::CEffect2D* m_roundGetEffect = nullptr;			//ラウンド獲得表示のエフェクト
+	bool m_roundAlreadyAnnounce = false;					//そのラウンドのアナウンスをもうしたか?
+	std::vector<prefab::CSpriteRender*> m_player1Sprites;	//プレイヤー1のスプライトのリスト
+	std::vector<prefab::CSpriteRender*> m_player2Sprites;	//プレイヤー2のスプライトのリスト
+
 };
 

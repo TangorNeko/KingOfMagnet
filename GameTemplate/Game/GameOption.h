@@ -55,6 +55,12 @@ public:
 	float GetTimeLimit() { return m_gameTimeLimit; }
 
 	/**
+	 * @brief 勝利に必要なラウンド数を取得
+	 * @return 勝利に必要なラウンド数
+	*/
+	int GetRoundToWin() { return static_cast<int>(m_roundToWin); }
+
+	/**
 	 * @brief 現在のオプション画面の選択深度を取得
 	 * @return 選択深度
 	*/
@@ -89,14 +95,16 @@ private:
 	static float m_P1Sensitivity;								//プレイヤー1のカメラ感度
 	static float m_P2Sensitivity;								//プレイヤー2のカメラ感度
 	static float m_gameTimeLimit;								//ゲームの制限時間
+	static float m_roundToWin;									//勝利に必要なラウンド数
 	prefab::CFontRender* m_optionFont = nullptr;				//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;				//BGMのボリュームのフォント
 	prefab::CFontRender* m_SEVolumeFont = nullptr;				//効果音のボリュームのフォント
 	prefab::CFontRender* m_1PSensitivityFont = nullptr;			//プレイヤー1のカメラ感度のフォント
 	prefab::CFontRender* m_2PSensitivityFont = nullptr;			//プレイヤー2のカメラ感度のフォント
 	prefab::CFontRender* m_gameTimeLimitFont = nullptr;			//ゲームの制限時間のフォント
+	prefab::CFontRender* m_roundToWinFont = nullptr;			//勝利に必要なラウンド数のフォント
 	SelectingState m_selectingState = enItem;					//選択深度
-	int m_selectingItem = 0;									//選択している項目番号(0:BGM,1:SE,2:1Pカメラ感度,3:2Pカメラ感度,4:ゲーム制限時間)
+	int m_selectingItem = 0;									//選択している項目番号(0:BGM,1:SE,2:1Pカメラ感度,3:2Pカメラ感度,4:ゲーム制限時間,5:勝利に必要なラウンド数)
 	float* m_selectingItemValue = nullptr;						//選択している項目の数値を格納するポインタ
 	float m_selectingItemTemporaryValue = 1.0f;					//選択した項目の値を保存しておく(キャンセルした時に戻せるよう)
 	prefab::CFontRender* m_selectingItemFont = nullptr;			//選択している項目のフォントを格納するポインタ

@@ -429,10 +429,12 @@ void TitleScene::CommandSelectMove() {
 			//開始
 			//BGMを消す
 			DeleteGO(m_titleBGM);
-			//試合のラウンドの計測を開始
-			NewGO<RoundCounter>(0, "roundcounter");
 			//switch文の中で宣言するためのスコープ
 			{
+				//試合のラウンドの計測を開始
+				RoundCounter* roundCounter = NewGO<RoundCounter>(0, "roundcounter");
+				roundCounter->SetMaxRound(m_option->GetRoundToWin());
+
 				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
 				gameScene->SetP1Sensitivity(m_option->GetP1Sensitivity());
 				gameScene->SetP2Sensitivity(m_option->GetP2Sensitivity());

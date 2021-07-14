@@ -317,8 +317,7 @@ bool GameScene::Start()
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
 
 	m_roundCounter = FindGO<RoundCounter>("roundcounter");
-	m_roundCounter->Disable();
-	m_roundCounter->EnableGameRound();
+	m_roundCounter->MoveToGamePosition();
 	return true;
 }
 
@@ -368,6 +367,7 @@ void GameScene::Update()
 
 	if (m_gameState == enResult)
 	{	
+		//ƒQ[ƒ€‚ªŒˆ’…‚µ‚½Å‰‚ÌƒtƒŒ[ƒ€
 		if (m_isGameEndFirstFrame == true)
 		{
 			DeleteGO(m_delimitLineSpriteRender);
@@ -386,22 +386,22 @@ void GameScene::Update()
 				m_player1->m_loserNum = NUMBER_PLAYER1;
 				m_player2->m_loserNum = NUMBER_PLAYER1;
 				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER2);
-				m_roundCounter->Disable();
 			}
 			else if (m_player2->m_Lose == true)
 			{
 				m_player1->m_loserNum = NUMBER_PLAYER2;
 				m_player2->m_loserNum = NUMBER_PLAYER2;
 				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER1);
-				m_roundCounter->Disable();
 			}
+
+			m_roundCounter->MoveToResultPosition();
 		}
 
 		m_gameEndCount++;
 
 		if (m_gameEndCount == GAMEENDTIMER_ROUNDCOUNTER_SHOW)
 		{
-			m_roundCounter->EnableResultRound();
+			m_roundCounter->StartResultMove();
 		}
 
 		if (m_gameEndCount == GAMEENDTIMER_START_TRANSITION)
@@ -416,7 +416,6 @@ void GameScene::Update()
 			if (m_roundCounter->GetOverAllWinner() == -1)
 			{
 				NewGO<GameScene>(0, "gamescene");
-				m_roundCounter->Disable();
 				DeleteGO(this);
 			}
 			else
