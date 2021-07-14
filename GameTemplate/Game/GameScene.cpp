@@ -527,7 +527,7 @@ void GameScene::StartCountDown() {
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
 
-		SoundOneShotPlay(L"Assets/sound/CountDownA.wav",3.0f);
+		SoundOneShotPlay(L"Assets/sound/CountDown3.wav",3.0f);
 
 		m_startCount3_Flag = true;
 	}
@@ -553,6 +553,8 @@ void GameScene::StartCountDown() {
 		m_startCountDown_2_Left->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_2_Left->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
 
+		SoundOneShotPlay(L"Assets/sound/CountDown2.wav", 3.0f);
+
 		m_startCount2_Flag = true;
 	}
 	if (m_startCount == 1 && m_startCount1_Flag == false) {
@@ -560,6 +562,8 @@ void GameScene::StartCountDown() {
 		m_startCountDown_1->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_ASSEMBLE, true);
 		m_startCountDown_1->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_1->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
+
+		SoundOneShotPlay(L"Assets/sound/CountDown1.wav", 3.0f);
 
 		m_startCount1_Flag = true;
 	}
@@ -590,6 +594,7 @@ void GameScene::StartCountDown() {
 		{
 			ssCount->Init(L"Assets/sound/エアーホーン.wav", SoundType::enSE);
 			ssCount->SetVolume(SOUND_SE_STARTHORN_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/CountDown0.wav", 3.0f);
 
 			//ゲームスタートカウント
 			m_startSprite = NewGO<prefab::CSpriteRender>(5);

@@ -171,7 +171,7 @@ private:
 	int m_gameEndCount = 0;										//ゲームの終了が確定してからの経過時間
 
 	float m_measureSecond = 0.0f;								//ゲームスタートのカウント時に1秒を測る用
-	int m_startCount = 4;										//ゲームスタートまでのカウント
+	int m_startCount = 5;										//ゲームスタートまでのカウント
 	prefab::CSpriteRender* m_startSprite = nullptr;				//ゲームスタートのスプライト
 	bool m_playCountSEFlag = false;								//カウントダウンの音を鳴らす?
 	bool m_isGameEndFirstFrame = true;							//ゲームが終了した直後のフレームか?
