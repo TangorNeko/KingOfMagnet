@@ -80,8 +80,8 @@ bool Bomb::Start()
 
 void Bomb::Update()
 {
-	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}

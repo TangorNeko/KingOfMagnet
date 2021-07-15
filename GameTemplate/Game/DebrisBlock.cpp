@@ -41,8 +41,8 @@ bool DebrisBlock::Start()
 
 void DebrisBlock::Update()
 {
-	//ゲームがポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}
