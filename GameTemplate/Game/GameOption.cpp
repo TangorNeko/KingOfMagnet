@@ -53,12 +53,13 @@ namespace
 	const float SOUND_OPTIONDISPLAY_VOLUME = 0.5f;
 }
 
-float GameOption::m_BGMVolume = 1.0f;		//BGMのボリューム
-float GameOption::m_SEVolume = 1.0f;		//効果音のボリューム
-float GameOption::m_P1Sensitivity = 2.0f;	//プレイヤー1のカメラ感度
-float GameOption::m_P2Sensitivity = 2.0f;	//プレイヤー2のカメラ感度
-float GameOption::m_gameTimeLimit = 40.0f;	//ゲームの制限時間
-float GameOption::m_roundToWin = 1.0f;		//勝利に必要なラウンド数
+bool GameOption::m_isInited = false;							//初期化されたか
+OptionValue GameOption::m_BGMVolume;							//BGMのボリューム					
+OptionValue GameOption::m_SEVolume;							//効果音のボリューム							
+OptionValue GameOption::m_P1Sensitivity;						//プレイヤー1のカメラ感度							
+OptionValue GameOption::m_P2Sensitivity;						//プレイヤー2のカメラ感度							
+OptionValue GameOption::m_gameTimeLimit;						//ゲームの制限時間								
+OptionValue GameOption::m_roundToWin;							//勝利に必要なラウンド数
 
 GameOption::~GameOption()
 {
@@ -190,7 +191,6 @@ void GameOption::Update()
 			}
 
 			//選んでいる項目をポインタにセット
-			//NOTE:switch文の多用を避けたくてポインタにセットしたが、設定項目によって数値の幅が違う以上微妙かも...
 			switch (m_selectingItem)
 			{
 			case OPTION_ITEM_BGM://BGMボリューム
@@ -228,127 +228,54 @@ void GameOption::Update()
 				m_selectingState = enNumeric;
 
 				//数値設定前の値を記録
-				m_selectingItemTemporaryValue = *m_selectingItemValue;
+				m_selectingItemTemporaryValue = m_selectingItemValue->GetValue();
 				SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
 
 			}
 		}
 		else if(m_selectingState == enNumeric)//項目の数値を設定するモードなら
 		{
-			if (m_selectingItemValue == &m_gameTimeLimit)//時間制限
+			//設定項目の増減モードで分岐
+			switch (m_selectingItemValue->GetValueChangeMode())
 			{
-				//下を押すと数値を減らす
+			case OptionValue::enTrigger:
 				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
 				{
-					(*m_selectingItemValue) -= OPTION_GAMETIME_CHANGERATE;
+					m_selectingItemValue->DecreaseValue();//値の減少
 					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
 				}
 				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
 				{
-					(*m_selectingItemValue) += OPTION_GAMETIME_CHANGERATE;
+					m_selectingItemValue->IncreaseValue();//値の増加
 					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
 
 				}
-			}
-			else if (m_selectingItemValue == &m_roundToWin)//勝利に必要なラウンド
-			{
-				//下を押すと数値を減らす
-				if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown))
-				{
-					(*m_selectingItemValue) -= OPTION_ROUNDTOWIN_CHANGERATE;
-					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
-
-				}
-				else if (g_pad[PAD_PLAYER1]->IsTrigger(enButtonUp) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonUp))//上を押すと数値を増やす
-				{
-					(*m_selectingItemValue) += OPTION_ROUNDTOWIN_CHANGERATE;
-					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
-
-				}
-			}
-			else
-			{
-				//下を押すと数値を減らす
+				break;
+			case OptionValue::enPress:
 				if (g_pad[PAD_PLAYER1]->IsPress(enButtonDown) || g_pad[PAD_PLAYER2]->IsPress(enButtonDown))
 				{
-					(*m_selectingItemValue) -= OPTION_VALUE_CHANGERATE;
+					m_selectingItemValue->DecreaseValue();//値の減少
 					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
-
 				}
 				else if (g_pad[PAD_PLAYER1]->IsPress(enButtonUp) || g_pad[PAD_PLAYER2]->IsPress(enButtonUp))//上を押すと数値を増やす
 				{
-					(*m_selectingItemValue) += OPTION_VALUE_CHANGERATE;
+					m_selectingItemValue->IncreaseValue();//値の増加
 					SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
 
 				}
 			}
+			
 
 			//選んでいる値がBGMの音量なら
 			if (m_selectingItemValue == &m_BGMVolume)
 			{
-				//BGMの音量の範囲制限(0.0~1.0)
-				if (*m_selectingItemValue <= SOUND_VOLUME_MIN)
-				{
-					*m_selectingItemValue = SOUND_VOLUME_MIN;
-				}
-				else if (*m_selectingItemValue >= SOUND_VOLUME_MAX)
-				{
-					*m_selectingItemValue = SOUND_VOLUME_MAX;
-				}
-
 				//設定値をBGMの音量としてセット
-				CSoundEngine::GetInstance()->SetBGMVolume(*m_selectingItemValue);
+				CSoundEngine::GetInstance()->SetBGMVolume(m_selectingItemValue->GetValue());
 			}
 			else if (m_selectingItemValue == &m_SEVolume)//選んでいる値がSEの音量なら
 			{
-				//SEの音量の範囲制限(0.0~1.0)
-				if (*m_selectingItemValue <= SOUND_VOLUME_MIN)
-				{
-					*m_selectingItemValue = SOUND_VOLUME_MIN;
-				}
-				else if (*m_selectingItemValue >= SOUND_VOLUME_MAX)
-				{
-					*m_selectingItemValue = SOUND_VOLUME_MAX;
-				}
-
 				//設定値をSEの音量としてセット
-				CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
-			}
-			else if (m_selectingItemValue == &m_P1Sensitivity || m_selectingItemValue == &m_P2Sensitivity)//選んでいる値がカメラの感度なら
-			{
-				//プレイヤーのカメラ感度の範囲制限(0.1~5.0)
-				if (*m_selectingItemValue <= CONTROL_SENSITIVITY_MIN)
-				{
-					*m_selectingItemValue = CONTROL_SENSITIVITY_MIN;
-				}
-				else if (*m_selectingItemValue >= CONTROL_SENSITIVITY_MAX)
-				{
-					*m_selectingItemValue = CONTROL_SENSITIVITY_MAX;
-				}
-			}
-			else if (m_selectingItemValue == &m_gameTimeLimit)
-			{
-				//ゲームの制限時間の範囲制限(30.0f~90.0f)
-				if (*m_selectingItemValue <= GAME_TIMELIMIT_MIN)
-				{
-					*m_selectingItemValue = GAME_TIMELIMIT_MIN;
-				}
-				else if (*m_selectingItemValue >= GAME_TIMELIMIT_MAX)
-				{
-					*m_selectingItemValue = GAME_TIMELIMIT_MAX;
-				}
-			}
-			else if (m_selectingItemValue == &m_roundToWin)
-			{
-				//最大ラウンド数の範囲制限(1.0f~3.0f)
-				if (*m_selectingItemValue <= GAME_ROUNDTOWIN_MIN)
-				{
-					*m_selectingItemValue = GAME_ROUNDTOWIN_MIN;
-				}
-				else if (*m_selectingItemValue >= GAME_ROUNDTOWIN_MAX)
-				{
-					*m_selectingItemValue = GAME_ROUNDTOWIN_MAX;
-				}
+				CSoundEngine::GetInstance()->SetSEVolume(m_selectingItemValue->GetValue());
 			}
 			//選択されている項目を赤色に
 			m_selectingItemFont->SetColor(FONT_COLOR_RED);
@@ -364,17 +291,17 @@ void GameOption::Update()
 			{
 				m_selectingState = enItem;
 
-				*m_selectingItemValue = m_selectingItemTemporaryValue;
+				m_selectingItemValue->SetValue(m_selectingItemTemporaryValue);
 
 				if (m_selectingItemValue == &m_BGMVolume)
 				{
 					//設定値をBGMの音量としてセット
-					CSoundEngine::GetInstance()->SetBGMVolume(*m_selectingItemValue);
+					CSoundEngine::GetInstance()->SetBGMVolume(m_selectingItemValue->GetValue());
 				}
 				else if (m_selectingItemValue == &m_SEVolume)//選んでいる値がSEの音量なら
 				{
 					//設定値をSEの音量としてセット
-					CSoundEngine::GetInstance()->SetSEVolume(*m_selectingItemValue);
+					CSoundEngine::GetInstance()->SetSEVolume(m_selectingItemValue->GetValue());
 				}
 
 				SoundOneShotPlay(L"Assets/sound/OptionCancel.wav", SOUND_OPTIONDISPLAY_VOLUME);
@@ -383,17 +310,17 @@ void GameOption::Update()
 		}
 
 		//変更された数値を元にフォントの描画文字列を変更
-		swprintf_s(m_buffer, L"BGM VOLUME     = %.2f", m_BGMVolume);
+		swprintf_s(m_buffer, L"BGM VOLUME     = %.2f", m_BGMVolume.GetValue());
 		m_BGMVolumeFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"SE  VOLUME     = %.2f", m_SEVolume);
+		swprintf_s(m_buffer, L"SE  VOLUME     = %.2f", m_SEVolume.GetValue());
 		m_SEVolumeFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"1P SENSITIVITY = %.2f", m_P1Sensitivity);
+		swprintf_s(m_buffer, L"1P SENSITIVITY = %.2f", m_P1Sensitivity.GetValue());
 		m_1PSensitivityFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"2P SENSITIVITY = %.2f", m_P2Sensitivity);
+		swprintf_s(m_buffer, L"2P SENSITIVITY = %.2f", m_P2Sensitivity.GetValue());
 		m_2PSensitivityFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"TIMELIMIT      = %.2f", m_gameTimeLimit);
+		swprintf_s(m_buffer, L"TIMELIMIT      = %.2f", m_gameTimeLimit.GetValue());
 		m_gameTimeLimitFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"ROUNDTOWIN     = %.0f", m_roundToWin);
+		swprintf_s(m_buffer, L"ROUNDTOWIN     = %.0f", m_roundToWin.GetValue());
 		m_roundToWinFont->SetText(m_buffer);
 
 	}
@@ -448,6 +375,9 @@ void GameOption::Close()
 
 bool GameOption::ReadOption()
 {
+	//オープンに失敗した時用に初期化
+	Init();
+
 	FILE* fp = fopen("gameoption.dat", "rb");
 
 	if (fp == nullptr)
@@ -455,18 +385,28 @@ bool GameOption::ReadOption()
 		return false;
 	}
 
-	fread(&m_BGMVolume,sizeof(float),1,fp);
-	fread(&m_SEVolume,sizeof(float),1,fp);
-	fread(&m_P1Sensitivity,sizeof(float),1,fp);
-	fread(&m_P2Sensitivity,sizeof(float),1,fp);
-	fread(&m_gameTimeLimit,sizeof(float),1,fp);
-	fread(&m_roundToWin,sizeof(float),1,fp);
+	//直接OptionValueに格納できなかったので(参照を返す形にすればいけそうだけど...)ローカル変数に一旦格納
+	float BGMVolume,SEVolume, P1Sensitivity, P2Sensitivity, gameTimeLimit, roundToWin;
+	fread(&BGMVolume,sizeof(float),1,fp);
+	fread(&SEVolume,sizeof(float),1,fp);
+	fread(&P1Sensitivity,sizeof(float),1,fp);
+	fread(&P2Sensitivity,sizeof(float),1,fp);
+	fread(&gameTimeLimit,sizeof(float),1,fp);
+	fread(&roundToWin,sizeof(float),1,fp);
 
 	fclose(fp);
 
+	//読み込んだ各値をセット
+	m_BGMVolume.SetValue(BGMVolume);
+	m_SEVolume.SetValue(SEVolume);
+	m_P1Sensitivity.SetValue(P1Sensitivity);
+	m_P2Sensitivity.SetValue(P2Sensitivity);
+	m_gameTimeLimit.SetValue(gameTimeLimit);
+	m_roundToWin.SetValue(roundToWin);
+
 	//音量は読み込んだ時にセット
-	CSoundEngine::GetInstance()->SetBGMVolume(m_BGMVolume);
-	CSoundEngine::GetInstance()->SetSEVolume(m_SEVolume);
+	CSoundEngine::GetInstance()->SetBGMVolume(m_BGMVolume.GetValue());
+	CSoundEngine::GetInstance()->SetSEVolume(m_SEVolume.GetValue());
 
 	return true;
 }
@@ -480,14 +420,54 @@ bool GameOption::WriteOption()
 		return false;
 	}
 
-	fwrite(&m_BGMVolume, sizeof(float), 1, fp);
-	fwrite(&m_SEVolume, sizeof(float), 1, fp);
-	fwrite(&m_P1Sensitivity, sizeof(float), 1, fp);
-	fwrite(&m_P2Sensitivity, sizeof(float), 1, fp);
-	fwrite(&m_gameTimeLimit, sizeof(float), 1, fp);
-	fwrite(&m_roundToWin, sizeof(float), 1, fp);
+	//OptionValueから直接書き込めなかったので一旦ローカル変数に格納
+	float BGMVolume, SEVolume, P1Sensitivity, P2Sensitivity, gameTimeLimit, roundToWin;
+
+	BGMVolume = m_BGMVolume.GetValue();
+	SEVolume = m_SEVolume.GetValue();
+	P1Sensitivity = m_P1Sensitivity.GetValue();
+	P2Sensitivity = m_P2Sensitivity.GetValue();
+	gameTimeLimit = m_gameTimeLimit.GetValue();
+	roundToWin = m_roundToWin.GetValue();
+
+	//書き込み
+	fwrite(&BGMVolume, sizeof(float), 1, fp);
+	fwrite(&SEVolume, sizeof(float), 1, fp);
+	fwrite(&P1Sensitivity, sizeof(float), 1, fp);
+	fwrite(&P2Sensitivity, sizeof(float), 1, fp);
+	fwrite(&gameTimeLimit, sizeof(float), 1, fp);
+	fwrite(&roundToWin, sizeof(float), 1, fp);
 
 	fclose(fp);
 
 	return true;
+}
+
+void GameOption::Init()
+{
+	if (m_isInited == true)
+	{
+		return;
+	}
+
+	//BGM
+	m_BGMVolume.Init(OPTION_VALUE_CHANGERATE, SOUND_VOLUME_MIN, SOUND_VOLUME_MAX, OptionValue::enPress);
+	m_BGMVolume.SetValue(1.0f);
+	//SE
+	m_SEVolume.Init(OPTION_VALUE_CHANGERATE, SOUND_VOLUME_MIN, SOUND_VOLUME_MAX, OptionValue::enPress);
+	m_SEVolume.SetValue(1.0f);
+	//プレイヤー1のカメラ感度
+	m_P1Sensitivity.Init(OPTION_VALUE_CHANGERATE, CONTROL_SENSITIVITY_MIN, CONTROL_SENSITIVITY_MAX, OptionValue::enPress);
+	m_P1Sensitivity.SetValue(2.0f);
+	//プレイヤー2のカメラ感度
+	m_P2Sensitivity.Init(OPTION_VALUE_CHANGERATE, CONTROL_SENSITIVITY_MIN, CONTROL_SENSITIVITY_MAX, OptionValue::enPress);
+	m_P2Sensitivity.SetValue(2.0f);
+	//ゲームの制限時間
+	m_gameTimeLimit.Init(OPTION_GAMETIME_CHANGERATE, GAME_TIMELIMIT_MIN, GAME_TIMELIMIT_MAX, OptionValue::enTrigger);
+	m_gameTimeLimit.SetValue(40.0f);
+	//勝利に必要なラウンド数
+	m_roundToWin.Init(OPTION_ROUNDTOWIN_CHANGERATE, GAME_ROUNDTOWIN_MIN, GAME_ROUNDTOWIN_MAX, OptionValue::enTrigger);
+	m_roundToWin.SetValue(1.0f);
+
+	m_isInited = true;
 }

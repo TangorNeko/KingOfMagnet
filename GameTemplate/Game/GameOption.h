@@ -1,4 +1,5 @@
 #pragma once
+#include "OptionValue.h"
 
 class GameOption : public IGameObject
 {
@@ -28,37 +29,37 @@ public:
 	 * @brief BGM全体のボリュームを取得
 	 * @return BGM全体のボリューム
 	*/
-	float GetBGMVolume() { return m_BGMVolume; }
+	float GetBGMVolume() { return m_BGMVolume.GetValue(); }
 
 	/**
 	 * @brief SE全体のボリュームを取得
 	 * @return SE全体のボリューム
 	*/
-	float GetSEVolume() { return m_SEVolume; }
+	float GetSEVolume() { return m_SEVolume.GetValue(); }
 
 	/**
 	 * @brief プレイヤー1のカメラ感度の数値を取得
 	 * @return プレイヤー1のカメラ感度
 	*/
-	float GetP1Sensitivity() { return m_P1Sensitivity; }
+	float GetP1Sensitivity() { return m_P1Sensitivity.GetValue(); }
 
 	/**
 	 * @brief プレイヤー2のカメラ感度の数値を取得
 	 * @return プレイヤー2のカメラ感度
 	*/
-	float GetP2Sensitivity() { return m_P2Sensitivity; }
+	float GetP2Sensitivity() { return m_P2Sensitivity.GetValue(); }
 
 	/**
 	 * @brief ゲームの制限時間の数値を取得
 	 * @return ゲームの制限時間
 	*/
-	float GetTimeLimit() { return m_gameTimeLimit; }
+	float GetTimeLimit() { return m_gameTimeLimit.GetValue(); }
 
 	/**
 	 * @brief 勝利に必要なラウンド数を取得
 	 * @return 勝利に必要なラウンド数
 	*/
-	int GetRoundToWin() { return static_cast<int>(m_roundToWin); }
+	int GetRoundToWin() { return static_cast<int>(m_roundToWin.GetValue()); }
 
 	/**
 	 * @brief 現在のオプション画面の選択深度を取得
@@ -87,15 +88,20 @@ public:
 	*/
 	bool WriteOption();
 
+	/**
+	 * @brief 設定の初期化
+	*/
+	static void Init();
+
 private:
 	prefab::CSpriteRender* m_optionBackGroundSprite = nullptr;	//背景スプライト
-	bool m_isOpen = false;										//オプションが開いているか
-	static float m_BGMVolume;									//BGMのボリューム
-	static float m_SEVolume;									//効果音のボリューム
-	static float m_P1Sensitivity;								//プレイヤー1のカメラ感度
-	static float m_P2Sensitivity;								//プレイヤー2のカメラ感度
-	static float m_gameTimeLimit;								//ゲームの制限時間
-	static float m_roundToWin;									//勝利に必要なラウンド数
+	bool m_isOpen = false;										//オプションが開いているか								
+	static OptionValue m_BGMVolume;							//BGMのボリューム					
+	static OptionValue m_SEVolume;								//効果音のボリューム							
+	static OptionValue m_P1Sensitivity;						//プレイヤー1のカメラ感度							
+	static OptionValue m_P2Sensitivity;						//プレイヤー2のカメラ感度							
+	static OptionValue m_gameTimeLimit;						//ゲームの制限時間								
+	static OptionValue m_roundToWin;							//勝利に必要なラウンド数
 	prefab::CFontRender* m_optionFont = nullptr;				//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;				//BGMのボリュームのフォント
 	prefab::CFontRender* m_SEVolumeFont = nullptr;				//効果音のボリュームのフォント
@@ -105,9 +111,10 @@ private:
 	prefab::CFontRender* m_roundToWinFont = nullptr;			//勝利に必要なラウンド数のフォント
 	SelectingState m_selectingState = enItem;					//選択深度
 	int m_selectingItem = 0;									//選択している項目番号(0:BGM,1:SE,2:1Pカメラ感度,3:2Pカメラ感度,4:ゲーム制限時間,5:勝利に必要なラウンド数)
-	float* m_selectingItemValue = nullptr;						//選択している項目の数値を格納するポインタ
+	OptionValue* m_selectingItemValue = nullptr;				//選択している項目を格納するポインタ
 	float m_selectingItemTemporaryValue = 1.0f;					//選択した項目の値を保存しておく(キャンセルした時に戻せるよう)
 	prefab::CFontRender* m_selectingItemFont = nullptr;			//選択している項目のフォントを格納するポインタ
 	wchar_t m_buffer[256] = L"";								//フォントのSetTextに渡す時の変換用バッファ
+	static bool m_isInited;										//初期化されたか
 };
 
