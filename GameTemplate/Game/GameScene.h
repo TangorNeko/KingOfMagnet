@@ -140,9 +140,23 @@ public:
 		m_gameBGM->Stop();
 	}
 
+	/**
+	 * @brief スキップ用フォントを削除する
+	*/
+	void DeleteSkipFont()
+	{
+		if (m_skipFontRender != nullptr)
+		{
+			DeleteGO(m_skipFontRender);
+			m_skipFontRender = nullptr;
+		}
+	}
+
 	const int MAXBULLETNUM = 60;								//ゲームシーンに存在できる弾数の最大数
 private:
 	GameState m_gameState = enBirdseye;							//ゲームの状態　見回しからスタート
+
+	prefab::CFontRender* m_skipFontRender = nullptr;			//見回しカメラのスキップができる事を教えるフォント
 
 	Player* m_player1 = nullptr;								//プレイヤー1
 	static float m_P1Sensitivity;								//プレイヤー1のカメラ感度

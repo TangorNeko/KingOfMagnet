@@ -1889,6 +1889,7 @@ void Player::OpeningCamera()
 	if (g_pad[m_playerNum]->IsTrigger(enButtonA))//オープニングカメラスキップ
 	{
 		m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
+		m_gameScene->DeleteSkipFont();
 	}
 	
 	if (m_openingCameraCount < 250)//250フレーム経てば
@@ -1915,6 +1916,7 @@ void Player::OpeningCamera()
 		if (targetVec.Length() < 250)//カメラが近づけばオープニングカメラ終了
 		{
 			m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
+			m_gameScene->DeleteSkipFont();
 		}
 		targetVec.Normalize();
 		m_sequenceCameraPos += targetVec*m_openingCameraGainSpeed;

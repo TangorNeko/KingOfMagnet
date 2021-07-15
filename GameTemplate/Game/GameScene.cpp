@@ -81,10 +81,12 @@ namespace
 	const int GAMEENDTIMER_GOTO_RESULT = 700;
 	const int DRAWTIMER_START_TRANSITION = 45;
 	const int DRAWTIMER_GOTO_REMATCH = 0;
+	const Vector2 FONT_SKIP_POSITION = { 270.0f,-320.0f };
+	const Vector2 FONT_SKIP_SCALE = { 0.6f,0.6f };
 	const Vector2 FONT_DRAW_POSITION = { -185.0f, 130.0f };
 	const Vector2 FONT_DRAW_SCALE = { 2.0f, 2.0f };
-	const Vector4 FONT_DRAW_SHADOWCOLOR = { 0,0,0,1 };
-	const float FONT_DRAW_SHADOWOFFSET = 2.0f;
+	const Vector4 FONT_SHADOWCOLOR = { 0,0,0,1 };
+	const float FONT_SHADOWOFFSET = 2.0f;
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT = { 890.0f,0.0f };
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT_SHORT = { 10.0f,0.0f };
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT = { -890.0f,0.0f };
@@ -230,6 +232,16 @@ bool GameScene::Start()
 	m_TimerBaseSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
 	m_TimerBaseSpriteRender->SetPosition(SPRITE_TIMERBASE_POSITION);
 	m_TimerBaseSpriteRender->Init("Assets/Image/Timer_Base.dds", SPRITE_TIMERBASE_WIDTH, SPRITE_TIMERBASE_HEIGHT);
+
+	//スキップフォント
+	m_skipFontRender = NewGO<prefab::CFontRender>(4);
+	m_skipFontRender->SetDrawScreen(prefab::CFontRender::DrawScreen::AllScreen);
+	m_skipFontRender->SetPosition(FONT_SKIP_POSITION);
+	m_skipFontRender->SetScale(FONT_SKIP_SCALE);
+	m_skipFontRender->SetShadowFlag(true);
+	m_skipFontRender->SetShadowColor(FONT_SHADOWCOLOR);
+	m_skipFontRender->SetShadowOffset(FONT_SHADOWOFFSET);
+	m_skipFontRender->SetText(L"PRESS A TO SKIP");
 
 	//カウント3
 	m_startCountDown_3_Top = NewGO<prefab::CSpriteRender>(3);
@@ -492,8 +504,8 @@ void GameScene::WinnerJudge()
 		m_drawFontRender->SetPosition(FONT_DRAW_POSITION);
 		m_drawFontRender->SetScale(FONT_DRAW_SCALE);
 		m_drawFontRender->SetShadowFlag(true);
-		m_drawFontRender->SetShadowColor(FONT_DRAW_SHADOWCOLOR);
-		m_drawFontRender->SetShadowOffset(FONT_DRAW_SHADOWOFFSET);
+		m_drawFontRender->SetShadowColor(FONT_SHADOWCOLOR);
+		m_drawFontRender->SetShadowOffset(FONT_SHADOWOFFSET);
 		m_drawFontRender->SetText(L"DRAW!");
 
 		//ボイス再生
