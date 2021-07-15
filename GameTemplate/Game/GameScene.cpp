@@ -119,6 +119,8 @@ namespace
 }
 
 float GameScene::m_maxTimeLimit = 0;
+float GameScene::m_P1Sensitivity;
+float GameScene::m_P2Sensitivity;
 
 GameScene::~GameScene()
 {	

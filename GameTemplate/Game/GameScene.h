@@ -145,9 +145,9 @@ private:
 	GameState m_gameState = enBirdseye;							//ゲームの状態　見回しからスタート
 
 	Player* m_player1 = nullptr;								//プレイヤー1
-	float m_P1Sensitivity = 1.0f;								//プレイヤー1のカメラ感度
+	static float m_P1Sensitivity;								//プレイヤー1のカメラ感度
 	Player* m_player2 = nullptr;								//プレイヤー2
-	float m_P2Sensitivity = 1.0f;								//プレイヤー2のカメラ感度
+	static float m_P2Sensitivity;								//プレイヤー2のカメラ感度
 
 	BackGround* m_backGround = nullptr;							//ステージのモデル
 	SkyBoard* m_sky = nullptr;									//空の板ポリ
