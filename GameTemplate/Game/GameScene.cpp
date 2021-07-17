@@ -311,6 +311,7 @@ bool GameScene::Start()
 	m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
 	m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_onesPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
+	m_onesPlaceSpriteRender->SetUseSpriteSupporter(false);
 	m_onesPlaceSpriteRender->Init(onesPlacePathName, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//タイムリミットの二桁目
@@ -321,6 +322,7 @@ bool GameScene::Start()
 	m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
 	m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_tensPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
+	m_tensPlaceSpriteRender->SetUseSpriteSupporter(false);
 	m_tensPlaceSpriteRender->Init(tensPlacePathName, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//音を再生
@@ -651,6 +653,31 @@ void GameScene::TimeLimitChangesSprits(int num, TimeLimitSpriteDigit numPlace)
 	//タイムリミットが前フレームと異なるとき(一秒経ったとき)
 	if ((int)m_timeLimit != m_oldTimeLimit)
 	{
+		switch(numPlace)
+		{
+		case enOnesPlaceOfDoubleDigit:
+			DeleteGO(m_onesPlaceSpriteRender);
+			m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+			m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
+			m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+			m_onesPlaceSpriteRender->SetUseSpriteSupporter(false);
+			break;
+		case enTenthPlaceOfDoubleDigit:
+			DeleteGO(m_tensPlaceSpriteRender);
+			m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+			m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
+			m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+			m_tensPlaceSpriteRender->SetUseSpriteSupporter(false);
+			break;
+		case enOnesPlaceOfSingleDigit:
+			DeleteGO(m_onesPlaceSpriteRender);
+			m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+			m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT);
+			m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+			m_onesPlaceSpriteRender->SetUseSpriteSupporter(false);
+			break;
+		}
+
 		//numが0～9のどの数字かによって、Initするスプライトを変える。
 		switch (num)
 		{

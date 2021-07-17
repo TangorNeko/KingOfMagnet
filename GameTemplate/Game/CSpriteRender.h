@@ -147,6 +147,12 @@ namespace prefab
 		 * @return スプライトサポーター
 		*/
 		SpriteSupporter& GetSpriteSupporter() { return m_spriteSupporter; }
+
+		
+		void SetUseSpriteSupporter(bool flag)
+		{
+			useSpriteSupporter = flag;
+		}
 	private:
 		SpriteSupporter m_spriteSupporter;		//スプライトサポーター本体
 		Sprite m_sprite;//スプライト
@@ -157,6 +163,7 @@ namespace prefab
 		DrawScreen m_drawScreen = AllScreen;//スプライトの描画先画面
 		SpriteMode m_spriteMode = Normal;//スプライトのモード
 		bool m_isPostRender = true;//スプライトをモデルの描画が終わってから描画するか?
+		bool useSpriteSupporter = true;
 	};
 }
 

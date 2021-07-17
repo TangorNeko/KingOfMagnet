@@ -44,14 +44,20 @@ namespace prefab
 		//スプライトの初期化
 		m_sprite.Init(initData);
 
-		//スプライトサポーターに自分の存在を伝える
-		m_spriteSupporter.SpriteRenderSetting(this);
+		if (useSpriteSupporter == true)
+		{
+			//スプライトサポーターに自分の存在を伝える
+			m_spriteSupporter.SpriteRenderSetting(this);
+		}
 	}
 
 	void CSpriteRender::Update()
 	{
-		//スプライトサポーターの更新
-		m_spriteSupporter.SpriteSupporter_Update();
+		if (useSpriteSupporter == true)
+		{
+			//スプライトサポーターの更新
+			m_spriteSupporter.SpriteSupporter_Update();
+		}
 	}
 
 	void CSpriteRender::Render(RenderContext& rc, Camera* camera)
