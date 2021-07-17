@@ -1876,7 +1876,7 @@ void Player::KnockBack() {
 
 	m_isknockBackCount++;
 
-	if (m_isknockBackCount >= 7) {
+	if (m_isknockBackCount >= 4) {
 		m_moveAmount = { 0.0f,0.0f,0.0f };
 		m_isknockBackCount = 0;
 		m_isKnockBack = false;

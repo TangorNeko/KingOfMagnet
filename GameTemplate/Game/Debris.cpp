@@ -207,21 +207,24 @@ void Debris::AsDropBehave()
 					//プレイヤーの保持するガレキコンテナに格納
 					player->m_holdDebrisVector.push_back(this);
 					//テキスト更新
-					player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
-					if (player->GetPlayerNum() == NUMBER_PLAYER1)
+					if (player->m_bulletNumFont != nullptr)
 					{
-						if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT);
+						player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
+						if (player->GetPlayerNum() == NUMBER_PLAYER1)
+						{
+							if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT);
 
+							else
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_SINGLEDIGIT);
+						}
 						else
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_SINGLEDIGIT);
-					}
-					else
-					{
-						if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_DOUBLEDIGIT);
-						else
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_SINGLEDIGIT);
+						{
+							if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_DOUBLEDIGIT);
+							else
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_SINGLEDIGIT);
+						}
 					}
 				}
 			}
