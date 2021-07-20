@@ -314,7 +314,6 @@ private:
 	EnStatus m_animStatus = enStatus_Idle;						//現在のアニメーションの状態
 	bool m_SpecialAttackOn = false;								//アニメーション用フラグ
 	bool m_HitOn = false;										//被弾したかどうか
-	int m_Hitcount = 30;										//被弾したときに流れるアニメーションのフレーム数
 
 	//必殺技関連
 	int m_specialShotFlag = false;								//必殺技を発射中?

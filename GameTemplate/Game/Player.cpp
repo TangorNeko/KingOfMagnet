@@ -23,9 +23,14 @@ namespace
 	const Vector2 FONT_BULLETMAX_POSITION_PLAYER1 = { -130.0f, -283.0f };
 	const Vector2 FONT_BULLETMAX_POSITION_PLAYER2 = { 100.0f, -283.0f };
 	const Vector2 FONT_BULLETMAX_SCALE = { 0.7f,0.7f };
-	const Vector2 FONT_SPGAUGE_POSITION_PLAYER1 = { -553.0f, -225.0f };
-	const Vector2 FONT_SPGAUGE_POSITION_PLAYER2 = { 498.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER1_SINGLEDIGIT = { -553.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER1_DOUBLEDIGIT = { -565.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER1_MAX = { -585.0f, -215.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER2_SINGLEDIGIT = { 498.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER2_DOUBLEDIGIT = { 485.0f, -225.0f };
+	const Vector2 FONT_SPGAUGE_POSITION_PLAYER2_MAX = { 465.0f, -215.0f };
 	const Vector2 FONT_SPGAUGE_SCALE = { 0.7f,0.7f };
+	const Vector2 FONT_SPGAUGE_SCALE_MAX = { 1.0f,1.0f };
 	const Vector4 FONT_SPGAUGE_COLOR = { 1.0f,1.0f, 0.0f,1.0f };
 
 	const int SPRITE_SIGHT_WIDTH = 32;
@@ -68,6 +73,9 @@ namespace
 	const float PLAYER_SPEED_WALK = 0.5f;
 	const float PLAYER_SPEED_STOP = 0.0f;
 
+	const int PLAYER_HP_DEAD = 0;
+	const int PLAYER_HP_DANGER = 200;
+
 	const float PLAYER_TO_MAGPOSITION = 50.0f;
 
 	const float HEIGHT_PLAYER_FALL = -750.0f;
@@ -88,6 +96,7 @@ namespace
 
 	const int SIZE_TENSPLACE = 10;
 
+	const int PLAYER_SPGAUGE_TENSPLACE = 10;
 	const int PLAYER_SPGAUGE_MAX = 100;
 	const int PLAYER_SPGAUGE_ZERO = 0;
 	const int PLAYER_SPECIALSHOTCOUNT_ZERO = 0;
@@ -116,7 +125,10 @@ namespace
 	const float BURST_RANGE_MAX = 750.0f;
 
 	const int SPGAUGE_BULLETSTEAL_POINT = 40;
-	
+	const int SPGAUGE_RECEIVEDAMAGE_POINT = 10;
+	const int SPGAUGE_APPLYDAMAGE_POINT = 5;
+	const float SOUND_SE_SPGAUGEMAX_VOLUME = 0.5f;
+
 	const float PLAYER_MAGNETCHARGE_DECAY_VALUE = 2.0f;
 	
 	const float PLAYER_POSITION_TO_CAMERATARGET = 90.0f;
@@ -124,6 +136,16 @@ namespace
 
 	const float PLAYER_AIMABLE_WIDTH = 250.0f;
 	const float PLAYER_AIMABLE_HEIGHT = 250.0f;
+
+	const float HITRAY_MAX_LENGTH = 10000.0f;
+
+	const float ANIMATION_SPEED_NORMAL = 1.0f;
+	const float ANIMATION_SPEED_DOUBLE = 2.0f;
+	const float ANIMATION_SPEED_QUADRUPLE = 4.0f;
+	const float ANIMATION_SPEED_FINISH = 0.1f;
+
+	const int KNOCKBACKCOUNT_START = 0;
+	const int KNOCKBACKCOUNT_END = 4;
 }
 Player::Player()
 {
@@ -275,11 +297,11 @@ bool Player::Start()
 	m_chargeSPFontRender->SetShadowOffset(FONT_SHADOWOFFSET);
 	if (m_playerNum == NUMBER_PLAYER1)
 	{
-		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1_SINGLEDIGIT);
 	}
 	else
 	{
-		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2_SINGLEDIGIT);
 	}
 	m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 	m_chargeSPFontRender->SetColor(FONT_SPGAUGE_COLOR);
@@ -801,27 +823,6 @@ void Player::SpecialAttack()
 		}
 
 		m_specialShotCount++;
-
-		//発射前にダメージを受けたらキャンセル
-		//if (m_HitOn == true) 
-		//{
-		//	//ゲージも0に。
-		//	m_specialAttackGauge = PLAYER_SPGAUGE_ZERO;
-		//	m_specialShotFlag = false;
-		//	m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
-		//	if (m_playerNum == NUMBER_PLAYER1)
-		//	{
-		//		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
-		//		m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
-		//		m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
-		//	}
-		//	else
-		//	{
-		//		m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
-		//		m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
-		//		m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
-		//	}
-		//}
 	}
 
 	if (m_specialShotCount >= PLAYER_SPECIALSHOTCOUNT_SHOOT)
@@ -871,13 +872,13 @@ void Player::SpecialAttack()
 			m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
 			if (m_playerNum == NUMBER_PLAYER1)
 			{
-				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1_SINGLEDIGIT);
 				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
 			else
 			{
-				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2_SINGLEDIGIT);
 				m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 				m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 			}
@@ -944,13 +945,13 @@ void Player::SpecialAttack()
 				m_specialShotCount = PLAYER_SPECIALSHOTCOUNT_ZERO;
 				if (m_playerNum == NUMBER_PLAYER1)
 				{
-					m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1);
+					m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1_SINGLEDIGIT);
 					m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 					m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
 				else
 				{
-					m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2);
+					m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2_SINGLEDIGIT);
 					m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE);
 					m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 				}
@@ -1489,13 +1490,12 @@ void Player::Damage(int damage)
 {	
 	m_hp -= damage;
 	m_HitOn = true;//アニメーションフラグ
-	m_Hitcount = 30;//
-	ChargeSpecialAttackGauge(10);
-	m_enemy->ChargeSpecialAttackGauge(5);
+	ChargeSpecialAttackGauge(SPGAUGE_RECEIVEDAMAGE_POINT);
+	m_enemy->ChargeSpecialAttackGauge(SPGAUGE_APPLYDAMAGE_POINT);
 
-	if (m_hp <= 0)
+	if (m_hp <= PLAYER_HP_DEAD)
 	{
-		m_hp = 0;
+		m_hp = PLAYER_HP_DEAD;
 
 		Lose();
 
@@ -1511,13 +1511,13 @@ void Player::Damage(int damage)
 	damagedisplay->SetDamage(damage);
 
 	//HP200以下で赤くなる
-	if (m_hp <= 200 && m_hpBarRedFlag == false) {
-		m_HPBarSpriteRender->Init("Assets/Image/HP_Bar_Red.dds", 308, 32);
+	if (m_hp <= PLAYER_HP_DANGER && m_hpBarRedFlag == false) {
+		m_HPBarSpriteRender->Init("Assets/Image/HP_Bar_Red.dds", SPRITE_HPBAR_WIDTH, SPRITE_HPBAR_HEIGHT);
 		m_hpBarRedFlag = true;
 	}
 
 	//ダメージエフェクト
-	m_hitEffect->SetPosition({ m_position.x, m_position.y + 50, m_position.z });
+	m_hitEffect->SetPosition(m_magPosition);
 
 	//カメラの前方向
 	m_damageEffectFront.y = 0.0f;
@@ -1543,47 +1543,47 @@ void Player::ChargeSpecialAttackGauge(int charge)
 
 	m_specialAttackGauge += charge;
 	
-	if (m_specialAttackGauge >= 100)
+	if (m_specialAttackGauge >= PLAYER_SPGAUGE_MAX)
 	{
-		m_specialAttackGauge = 100;
+		m_specialAttackGauge = PLAYER_SPGAUGE_MAX;
 
-		if (m_oldSpecialAttackGauge < 100)
+		if (m_oldSpecialAttackGauge < PLAYER_SPGAUGE_MAX)
 		{
 			//エフェクト
-			m_SPGaugeMaxEffect->SetPosition({ m_position.x,m_position.y + 50.0f, m_position.z });
+			m_SPGaugeMaxEffect->SetPosition(m_magPosition);
 			m_SPGaugeMaxEffect->Play();
 			//SE
-			SoundOneShotPlay(L"Assets/sound/きらーん.wav", 0.5f);
+			SoundOneShotPlay(L"Assets/sound/きらーん.wav", SOUND_SE_SPGAUGEMAX_VOLUME);
 
 			m_chargeSPFontRender->SetText(L"MAX");
-			if (m_playerNum == 0)
+			if (m_playerNum == NUMBER_PLAYER1)
 			{
-				m_chargeSPFontRender->SetPosition({ -585.0f, -215.0f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1_MAX);
 			}
 			else
 			{
-				m_chargeSPFontRender->SetPosition({ 465.0f, -215.0f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2_MAX);
 			}
-			m_chargeSPFontRender->SetScale({1.0f,1.0f});
+			m_chargeSPFontRender->SetScale(FONT_SPGAUGE_SCALE_MAX);
 		}
 	}
 	else
 	{
 		m_chargeSPFontRender->SetText(std::to_wstring(m_specialAttackGauge) + L"%");
 
-		if (m_playerNum == 0)
+		if (m_playerNum == NUMBER_PLAYER1)
 		{
-			if (m_specialAttackGauge < 10)
-				m_chargeSPFontRender->SetPosition({ -553.0f, -225.0f });
+			if (m_specialAttackGauge < PLAYER_SPGAUGE_TENSPLACE)
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1_SINGLEDIGIT);
 			else
-				m_chargeSPFontRender->SetPosition({ -565.0f, -225.0f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER1_DOUBLEDIGIT);
 		}
 		else
 		{
-			if (m_specialAttackGauge < 10)
-				m_chargeSPFontRender->SetPosition({ 498.0f, -225.0f });
+			if (m_specialAttackGauge < PLAYER_SPGAUGE_TENSPLACE)
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2_SINGLEDIGIT);
 			else											 
-				m_chargeSPFontRender->SetPosition({ 485.0f, -225.0f });
+				m_chargeSPFontRender->SetPosition(FONT_SPGAUGE_POSITION_PLAYER2_DOUBLEDIGIT);
 		}
 	}
 
@@ -1593,13 +1593,13 @@ void Player::ChargeSpecialAttackGauge(int charge)
 //勝利した時
 void Player::Win()
 {	
+	//空中で勝利した時用に、現在位置から下方向に向かってレイを飛ばす。
 	Vector3 crossPoint;
 	bool hitflag = false;
 
-	Vector3 linestart = m_position;
+	Vector3 linestart = m_magPosition;
 	Vector3 lineend = m_position;
-	linestart.y += 50.0f;
-	lineend.y -= 1000.0f;
+	lineend.y -= HITRAY_MAX_LENGTH;
 
 	hitflag = m_stageModel->isLineHitModel(linestart, lineend, crossPoint);
 
@@ -1626,10 +1626,9 @@ void Player::Lose()
 	Vector3 crossPoint;
 	bool hitflag = false;
 
-	Vector3 linestart = m_position;
+	Vector3 linestart = m_magPosition;
 	Vector3 lineend = m_position;
-	linestart.y += 50.0f;
-	lineend.y -= 1000.0f;
+	lineend.y -= HITRAY_MAX_LENGTH;
 
 	hitflag = m_stageModel->isLineHitModel(linestart, lineend, crossPoint);
 
@@ -1654,7 +1653,7 @@ void Player::Lose()
 //攻撃状態に切り替えできたら切り替える。
 void Player::TryChangeStatusAttack()
 {
-	if (m_magnetState == 1 && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
+	if (m_magnetState == MAGNETSTATE_REPULSION && m_holdDebrisVector.empty() == false && g_pad[m_playerNum]->IsPress(enButtonRB1)) {
 		m_animStatus = enStatus_Attack;		
 	}
 }
@@ -1689,7 +1688,7 @@ void Player::TryChangeStatusRun()
 //歩き状態に切り替えできたら切り替える。
 void Player::TryChangeStatusWalk()
 {
-	if (m_moveAmount.LengthSq() <= 5.0f && m_moveAmount.LengthSq() > 0.0f) {
+	if (m_moveAmount.LengthSq() <= 5.0f && m_moveAmount.LengthSq() > 0.001f) {
 		m_animStatus = enStatus_Walk;
 	}
 }
@@ -1797,19 +1796,19 @@ void Player::UpdateState()
 
 void Player::AnimationSelect()
 {	
-	m_skinModelRender->SetAnimationSpeed(1.0f);
+	m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_NORMAL);
 	switch (m_animStatus)
 	{
 	case enStatus_Attack:
-		m_skinModelRender->SetAnimationSpeed(4.0f);
+		m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_QUADRUPLE);
 		m_skinModelRender->PlayAnimation(enAnimationClip_Attack);
 		break;
 	case enStatus_SpecialAttack:
-		m_skinModelRender->SetAnimationSpeed(2.0f);
+		m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_DOUBLE);
 		m_skinModelRender->PlayAnimation(enAnimationClip_SpecialAttack);
 		break;
 	case enStatus_Burst:
-		m_skinModelRender->SetAnimationSpeed(4.0f);
+		m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_QUADRUPLE);
 		m_skinModelRender->PlayAnimation(enAnimationClip_Burst);
 		break;
 	case enStatus_Run:
@@ -1841,8 +1840,8 @@ bool Player::GetShootPoint(Vector3& crossPoint)
 	Vector3 testRayDir = g_camera3D[m_playerNum]->GetForward();
 	//レイの始点はプレイヤーの頭上(カメラのTargetは頭上にある)
 	Vector3 testRayStart = g_camera3D[m_playerNum]->GetTarget();
-	//レイの始点と向きから求めたレイの終点(10000以上の距離狙うことはないと思うので距離は10000に設定)
-	Vector3 testRayEnd = testRayStart + testRayDir * 10000.0f;
+	//レイの始点と向きから求めたレイの終点
+	Vector3 testRayEnd = testRayStart + testRayDir * HITRAY_MAX_LENGTH;
 
 	//交差したかフラグ。
 	bool hitFlag = false;
@@ -1868,7 +1867,7 @@ bool Player::GetShootPoint(Vector3& crossPoint)
 }
 void Player::KnockBack() {
 	//ノックバックする向きを設定
-	if (m_isknockBackCount == 0) {
+	if (m_isknockBackCount == KNOCKBACKCOUNT_START) {
 		m_moveAmount.y = 0.0f;
 	}
 	m_position = m_charaCon.Execute(m_moveAmount, 1.0f);
@@ -1876,9 +1875,9 @@ void Player::KnockBack() {
 
 	m_isknockBackCount++;
 
-	if (m_isknockBackCount >= 4) {
-		m_moveAmount = { 0.0f,0.0f,0.0f };
-		m_isknockBackCount = 0;
+	if (m_isknockBackCount >= KNOCKBACKCOUNT_END) {
+		m_moveAmount = Vector3::Zero;
+		m_isknockBackCount = KNOCKBACKCOUNT_START;
 		m_isKnockBack = false;
 	}	
 }
@@ -2017,8 +2016,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 		switch (m_LastCameraStatus)
 		{
 		case 0://右からのカメラ
-			m_skinModelRender->SetAnimationSpeed(0.1f);//アニメーションを遅くする
-			m_enemy->m_skinModelRender->SetAnimationSpeed(0.1f);
+			m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_FINISH);//アニメーションを遅くする
+			m_enemy->m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_FINISH);
 			m_sequenceCameraPos += LastRight * 200;//右
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
@@ -2031,8 +2030,8 @@ void Player::FinalHit()//決着がついたときのカメラ
 			g_camera3D[0]->SetTarget(targetPos);
 			break;
 		case 3://自分を写しながら敵を向いたカメラ
-			m_skinModelRender->SetAnimationSpeed(1.0f);//アニメーションスピードをもとに戻す
-			m_enemy->m_skinModelRender->SetAnimationSpeed(1.0f);
+			m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_NORMAL);//アニメーションスピードをもとに戻す
+			m_enemy->m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_NORMAL);
 			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
 			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFrontDir * 200) - m_position;
 			m_winnerVec.Normalize();
@@ -2079,7 +2078,6 @@ void Player::FinalHit()//決着がついたときのカメラ
 				m_resultWinnerSprite->Init("Assets/Image/1P.DDS", 148, 120);
 				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
-				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });	
 
 				//ボイス再生
 				SoundOneShotPlay(L"Assets/sound/Player1Win.wav", 3.0f);
@@ -2090,7 +2088,6 @@ void Player::FinalHit()//決着がついたときのカメラ
 				m_resultWinnerSprite->Init("Assets/Image/2P.DDS", 180, 128);
 				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
 				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
-				m_resultWinnerSprite->SetScale({ 1.0f, 1.0f, 1.0f });	
 
 				//ボイス再生
 				SoundOneShotPlay(L"Assets/sound/Player2Win.wav", 3.0f);
@@ -2101,8 +2098,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 			m_resultWinSprite = NewGO<prefab::CSpriteRender>(5);
 			m_resultWinSprite->Init("Assets/Image/Win.DDS", 300, 128);
 			m_resultWinSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-			m_resultWinSprite->SetPosition({ 150.0f, -120.0f, 0.0f });
-			m_resultWinSprite->SetScale({ 1.0f, 1.0f, 1.0f });		
+			m_resultWinSprite->SetPosition({ 150.0f, -120.0f, 0.0f });	
 		}
 
 		g_camera3D[0]->SetPosition(m_sequenceCameraPos);
