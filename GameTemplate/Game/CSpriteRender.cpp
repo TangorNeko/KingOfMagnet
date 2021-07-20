@@ -44,7 +44,7 @@ namespace prefab
 		//スプライトの初期化
 		m_sprite.Init(initData);
 
-		if (useSpriteSupporter == true)
+		if (m_useSpriteSupporterFlag == true)
 		{
 			//スプライトサポーターに自分の存在を伝える
 			m_spriteSupporter.SpriteRenderSetting(this);
@@ -53,7 +53,7 @@ namespace prefab
 
 	void CSpriteRender::Update()
 	{
-		if (useSpriteSupporter == true)
+		if (m_useSpriteSupporterFlag == true)
 		{
 			//スプライトサポーターの更新
 			m_spriteSupporter.SpriteSupporter_Update();
