@@ -41,10 +41,18 @@ bool Repulsion::Start()
 }
 void Repulsion::Update()
 {	
-	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
+	}
+
+	if (m_gameScene->GetGameState() == GameScene::GameState::enResult)
+	{
+		for (auto soundSource : m_repulsionStaySE)
+		{
+			soundSource->Stop();
+		}
 	}
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
@@ -52,43 +60,44 @@ void Repulsion::Update()
 			//恐らくプレイヤーが二人いるから上手く行かない。
 			//音を2プレイヤー分用意する。
 
+			int playerNum = player->GetPlayerNum();
+
 				//斥力床の中心とプレイヤーとの距離
-				Vector3 diff = player->m_position - m_position;
+				Vector3 diff = player->GetPosition() - m_position;
 				//立方体の範囲に入れば斥力を与える
 				if (fabsf(diff.x) < REPULSION_AREA_LENGTH && fabsf(diff.z) < REPULSION_AREA_LENGTH)
 				{
 					if (diff.y < REPULSION_RANGE)//床との距離が近ければ上昇
 					{
 						Vector3 repulsionValue = REPULSION_SPEED;
-						player->m_charaCon.Execute(repulsionValue, 1.0f);
-						player->m_fallLoop = 0;
+						player->ExecuteCharacon(repulsionValue);
+
+						//落下の加速をリセット
+						player->ResetFall();
 					}
 
 					//SE
 
 					//プレイヤーが斥力床に入ってきた時の音を鳴らす。
-					if (m_isPlayEnterSE[player->m_playerNum] == false)
+					if (m_isPlayEnterSE[playerNum] == false)
 					{
-						prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
-						ss1->Init(L"Assets/sound/マジックウェーブ.wav", SoundType::enSE);
-						ss1->SetVolume(SOUND_SE_REPULSION_ENTER_VOLUME);
-						ss1->Play(false);
-						m_isPlayEnterSE[player->m_playerNum] = true;
+						SoundOneShotPlay(L"Assets/sound/マジックウェーブ.wav", SOUND_SE_REPULSION_ENTER_VOLUME);
+						m_isPlayEnterSE[playerNum] = true;
 					}
 
 					//プレイヤーが斥力床に乗っている時の音を鳴らす。
-					if (m_isPlayStaySE[player->m_playerNum] == false) {												
+					if (m_isPlayStaySE[playerNum] == false) {
 						
-						m_repulsionStaySE[player->m_playerNum]->SetVolume(SOUND_SE_REPULSION_STAY_VOLUME);
-						m_repulsionStaySE[player->m_playerNum]->Play(true);	
-						m_isPlayStaySE[player->m_playerNum] = true;
+						m_repulsionStaySE[playerNum]->SetVolume(SOUND_SE_REPULSION_STAY_VOLUME);
+						m_repulsionStaySE[playerNum]->Play(true);
+						m_isPlayStaySE[playerNum] = true;
 					}
 					//StaySEがまだ鳴っているのならば、音量を1.5fになるまで少しずつ増加させる。
-					m_staySEVolume[player->m_playerNum] += SOUND_SE_INCREASE_VALUE;
-					if (m_staySEVolume[player->m_playerNum] >= SOUND_SE_REPULSION_STAY_VOLUME) {
-						m_staySEVolume[player->m_playerNum] = SOUND_SE_REPULSION_STAY_VOLUME;
+					m_staySEVolume[playerNum] += SOUND_SE_INCREASE_VALUE;
+					if (m_staySEVolume[playerNum] >= SOUND_SE_REPULSION_STAY_VOLUME) {
+						m_staySEVolume[playerNum] = SOUND_SE_REPULSION_STAY_VOLUME;
 					}
-					m_repulsionStaySE[player->m_playerNum]->SetVolume(m_staySEVolume[player->m_playerNum]);
+					m_repulsionStaySE[playerNum]->SetVolume(m_staySEVolume[playerNum]);
 
 				}
 
@@ -96,22 +105,22 @@ void Repulsion::Update()
 				else if (fabsf(diff.x) >= REPULSION_AREA_LENGTH || fabsf(diff.z) >= REPULSION_AREA_LENGTH)
 				{
 					//EnterSEのFlagをリセット
-					if (m_isPlayEnterSE[player->m_playerNum] == true)
+					if (m_isPlayEnterSE[playerNum] == true)
 					{
-						m_isPlayEnterSE[player->m_playerNum] = false;
+						m_isPlayEnterSE[playerNum] = false;
 					}
 
 					//StaySEを少しずつフェードアウトさせる。
-					if (m_isPlayStaySE[player->m_playerNum] == true)
+					if (m_isPlayStaySE[playerNum] == true)
 					{
-						m_staySEVolume[player->m_playerNum] -= SOUND_SE_DECAY_VALUE;
-						m_repulsionStaySE[player->m_playerNum]->SetVolume(m_staySEVolume[player->m_playerNum]);
+						m_staySEVolume[playerNum] -= SOUND_SE_DECAY_VALUE;
+						m_repulsionStaySE[playerNum]->SetVolume(m_staySEVolume[playerNum]);
 						//音が完全に消えたら、StaySEの再生を停止
-						if (m_staySEVolume[player->m_playerNum] <= 0.0f)
+						if (m_staySEVolume[playerNum] <= 0.0f)
 						{
-							m_staySEVolume[player->m_playerNum] = 0.0f;
-							m_repulsionStaySE[player->m_playerNum]->Stop();
-							m_isPlayStaySE[player->m_playerNum] = false;
+							m_staySEVolume[playerNum] = 0.0f;
+							m_repulsionStaySE[playerNum]->Stop();
+							m_isPlayStaySE[playerNum] = false;
 						}
 					}
 				}

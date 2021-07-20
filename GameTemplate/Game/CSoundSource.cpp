@@ -305,3 +305,13 @@
 			}
 		}
 	}
+
+	void SoundOneShotPlay(const wchar_t* filePath, float volume)
+	{
+		prefab::CSoundSource* soundSource = NewGO<prefab::CSoundSource>(0);
+		
+		//ワンショット再生するのにSEじゃない事がある気はあんまりしないのでSE固定
+		soundSource->Init(filePath,enSE);
+		soundSource->SetVolume(volume);
+		soundSource->Play(false);
+	}

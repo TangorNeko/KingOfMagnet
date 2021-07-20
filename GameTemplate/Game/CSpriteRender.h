@@ -147,16 +147,26 @@ namespace prefab
 		 * @return スプライトサポーター
 		*/
 		SpriteSupporter& GetSpriteSupporter() { return m_spriteSupporter; }
+
+		/**
+		 * @brief スプライトサポーターを使用するかのフラグをセット
+		 * @param flag フラグ
+		*/
+		void SetUseSpriteSupporterFlag(bool flag)
+		{
+			m_useSpriteSupporterFlag = flag;
+		}
 	private:
 		SpriteSupporter m_spriteSupporter;		//スプライトサポーター本体
-		Sprite m_sprite;//スプライト
-		Vector3 m_position;//スプライトの座標
-		Quaternion m_qRot;//スプライトの回転
-		Vector3 m_scale;//スプライトの拡大率
-		Vector2 m_pivot;//スプライトのピボット
-		DrawScreen m_drawScreen = AllScreen;//スプライトの描画先画面
-		SpriteMode m_spriteMode = Normal;//スプライトのモード
-		bool m_isPostRender = true;//スプライトをモデルの描画が終わってから描画するか?
+		Sprite m_sprite;						//スプライト
+		Vector3 m_position;						//スプライトの座標
+		Quaternion m_qRot;						//スプライトの回転
+		Vector3 m_scale;						//スプライトの拡大率
+		Vector2 m_pivot;						//スプライトのピボット
+		DrawScreen m_drawScreen = AllScreen;	//スプライトの描画先画面
+		SpriteMode m_spriteMode = Normal;		//スプライトのモード
+		bool m_isPostRender = true;				//スプライトをモデルの描画が終わってから描画するか?
+		bool m_useSpriteSupporterFlag = true;	//スプライトサポーターを使用する?
 	};
 }
 

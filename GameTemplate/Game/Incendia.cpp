@@ -22,10 +22,7 @@ Incendia::~Incendia()
 bool Incendia::Start()
 {
 	//音を再生
-	prefab::CSoundSource* burnSound = NewGO<prefab::CSoundSource>(0);
-	burnSound->Init(L"Assets/sound/炎.wav", SoundType::enSE);
-	burnSound->SetVolume(SOUND_SE_BURN_VOLUME);
-	burnSound->Play(false);
+	SoundOneShotPlay(L"Assets/sound/炎.wav", SOUND_SE_BURN_VOLUME);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
@@ -40,8 +37,8 @@ bool Incendia::Start()
 }
 void Incendia::Update()
 {
-	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}
@@ -52,24 +49,23 @@ void Incendia::Update()
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				//ダメージを食らう間隔をカウント
-				if (m_damageCountdown[player->m_playerNum] > DAMAGE_COUNT_DAMAGE)
+				if (m_damageCountdown[player->GetPlayerNum()] > DAMAGE_COUNT_DAMAGE)
 				{
-					m_damageCountdown[player->m_playerNum]--;
+					m_damageCountdown[player->GetPlayerNum()]--;
 				}
 
 				//プレイヤーが近ければ
-				Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
+				Vector3 diff = m_position - player->GetPosition();		//diffはdifference(差)
 				float dis = diff.Length();		//disはdistance(距離)
 				dis = fabsf(dis);
 				if (dis <= BURN_RANGE)
 				{
 					//少しずつダメージを受ける。		
-					if (m_damageCountdown[player->m_playerNum] <= DAMAGE_COUNT_DAMAGE)
+					if (m_damageCountdown[player->GetPlayerNum()] <= DAMAGE_COUNT_DAMAGE)
 					{
 						player->Damage(BURN_DAMAGE);
-						player->m_TakeAttackNum++;//攻撃を受けた回数
 						//次に炎上ダメージを受けるまでの間隔を設定
-						m_damageCountdown[player->m_playerNum] = DAMAGE_COUNT_RESET;
+						m_damageCountdown[player->GetPlayerNum()] = DAMAGE_COUNT_RESET;
 					}
 				}
 				return true;

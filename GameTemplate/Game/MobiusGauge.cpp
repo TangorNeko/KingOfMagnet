@@ -118,7 +118,7 @@ void MobiusGauge::Update()
 
 
     //ゲージをMaxから減らしていく形にする
-    float count = 720 - m_charge / 1000 * 720;
+    float count = 720 - m_magnetCharge / 1000 * 720;
 
 
     //右側のゲージ

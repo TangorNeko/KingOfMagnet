@@ -5,6 +5,8 @@ class CDirectionLight;
 class BackGround;
 class SkyBoard;
 
+class RoundCounter;
+
 class GameScene : public IGameObject
 {
 	~GameScene();
@@ -122,6 +124,15 @@ public:
 	}
 
 	/**
+	 * @brief ゲームの制限時間の設定
+	 * @param timeLimit 制限時間
+	*/
+	void SetTimeLimit(float timeLimit)
+	{
+		m_maxTimeLimit = timeLimit;
+	}
+
+	/**
 	 * @brief ゲームシーンのBGMをストップ
 	*/
 	void StopGameBGM()
@@ -129,14 +140,28 @@ public:
 		m_gameBGM->Stop();
 	}
 
-	const int MAXBULLETNUM = 30;								//ゲームシーンに存在できる弾数の最大数
+	/**
+	 * @brief スキップ用フォントを削除する
+	*/
+	void DeleteSkipFont()
+	{
+		if (m_skipFontRender != nullptr)
+		{
+			DeleteGO(m_skipFontRender);
+			m_skipFontRender = nullptr;
+		}
+	}
+
+	const int MAXBULLETNUM = 60;								//ゲームシーンに存在できる弾数の最大数
 private:
 	GameState m_gameState = enBirdseye;							//ゲームの状態　見回しからスタート
 
+	prefab::CFontRender* m_skipFontRender = nullptr;			//見回しカメラのスキップができる事を教えるフォント
+
 	Player* m_player1 = nullptr;								//プレイヤー1
-	float m_P1Sensitivity = 1.0f;								//プレイヤー1のカメラ感度
+	static float m_P1Sensitivity;								//プレイヤー1のカメラ感度
 	Player* m_player2 = nullptr;								//プレイヤー2
-	float m_P2Sensitivity = 1.0f;								//プレイヤー2のカメラ感度
+	static float m_P2Sensitivity;								//プレイヤー2のカメラ感度
 
 	BackGround* m_backGround = nullptr;							//ステージのモデル
 	SkyBoard* m_sky = nullptr;									//空の板ポリ
@@ -151,7 +176,8 @@ private:
 	prefab::CSpriteRender* m_HPCoverSpriteRender = nullptr;		//HPのカバーのスプライト
 	prefab::CSpriteRender* m_TimerBaseSpriteRender = nullptr;	//タイマーの表示パネルのスプライト
 
-	float m_timeLimit = 100.0f;									//ゲームの制限時間
+	static float m_maxTimeLimit;								//ゲームの最大制限時間
+	float m_timeLimit = 40.0f;									//ゲームの現在の制限時間
 	int m_oldTimeLimit = 0;										//前フレームのゲームの制限時間
 	prefab::CSpriteRender* m_onesPlaceSpriteRender = nullptr;	//制限時間の一桁目を表示するスプライト
 	prefab::CSpriteRender* m_tensPlaceSpriteRender = nullptr;	//制限時間の二桁目を表示するスプライト
@@ -159,7 +185,7 @@ private:
 	int m_gameEndCount = 0;										//ゲームの終了が確定してからの経過時間
 
 	float m_measureSecond = 0.0f;								//ゲームスタートのカウント時に1秒を測る用
-	int m_startCount = 4;										//ゲームスタートまでのカウント
+	int m_startCount = 5;										//ゲームスタートまでのカウント
 	prefab::CSpriteRender* m_startSprite = nullptr;				//ゲームスタートのスプライト
 	bool m_playCountSEFlag = false;								//カウントダウンの音を鳴らす?
 	bool m_isGameEndFirstFrame = true;							//ゲームが終了した直後のフレームか?
@@ -187,5 +213,7 @@ private:
 
 	prefab::CFontRender* m_drawFontRender = nullptr;			//引き分けのフォント
 	int m_drawFontCount = 300;									//引き分けのフォントを表示する時間
+
+	RoundCounter* m_roundCounter = nullptr;						//プレイヤーの取得ラウンド数の管理クラス
 };
 

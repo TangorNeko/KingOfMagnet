@@ -31,12 +31,13 @@ namespace
 	const float DEBRIS_COLLISION_RADIUS = 60.0f;
 	const float SOUND_SE_SCRAP_HIT_VOLUME = 1.2f;
 	const float SOUND_SE_SWORD_HIT_VOLUME = 1.5f;
-	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.5f;
-	const int DAMAGE_SCRAP = 50;
-	const int DAMAGE_SWORD = 100;
-	const int DAMAGE_SPECIALCHARGER = 20;
+	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.2f;
+	const int DAMAGE_SCRAP = 80;
+	const int DAMAGE_SWORD = 120;
+	const int DAMAGE_SPECIALCHARGER = 40;
 	const float DEBRIS_POP_POSITION_SPACE = 30.0f;
 	const int SPECIALCHARGER_COUNT_CHARGE = 50;
+	const int SPECIALCHARGER_CHARGEVALUE = 2;
 
 	//他のクラスでも使いそうな定数
 	const int PLAYER_HOLD_DEBRIS_SIZE_MAX = 10;
@@ -107,8 +108,8 @@ bool Debris::Start()
 
 void Debris::Update()
 {
-	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}
@@ -154,12 +155,12 @@ void Debris::AsDropBehave()
 {
 	QueryGOs<Player>("Player", [this](Player* player)->bool {
 
-		Vector3 toPlayer = player->m_position - m_position;
+		Vector3 toPlayer = player->GetPosition() - m_position;
 			//引力の時のみ
-			if (player->m_magPower == MAGNETSTATE_GRAVITY)
+			if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 			{
 				//バーストしてたら引っ張ってくる
-				if (player->m_isBurst == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+				if (player->IsBurst() == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 				{
 					m_isOnGround = false;
 
@@ -206,30 +207,33 @@ void Debris::AsDropBehave()
 					//プレイヤーの保持するガレキコンテナに格納
 					player->m_holdDebrisVector.push_back(this);
 					//テキスト更新
-					player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
-					if (player->m_playerNum == NUMBER_PLAYER1)
+					if (player->m_bulletNumFont != nullptr)
 					{
-						if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT);
+						player->m_bulletNumFont->SetText(std::to_wstring(player->m_holdDebrisVector.size()));
+						if (player->GetPlayerNum() == NUMBER_PLAYER1)
+						{
+							if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT);
 
+							else
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_SINGLEDIGIT);
+						}
 						else
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER1_SINGLEDIGIT);
-					}
-					else
-					{
-						if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_DOUBLEDIGIT);
-						else
-							player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_SINGLEDIGIT);
+						{
+							if (player->m_holdDebrisVector.size() >= FONT_BULLETNUM_DOUBLEDIGIT_BORDER)
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_DOUBLEDIGIT);
+							else
+								player->m_bulletNumFont->SetPosition(FONT_BULLETNUM_POSITION_PLAYER2_SINGLEDIGIT);
+						}
 					}
 				}
 			}
 
 			//斥力の時
-			else if (player->m_magPower == MAGNETSTATE_REPULSION)
+			else if (player->GetMagnetState() == MAGNETSTATE_REPULSION)
 			{
 				//バーストしてたら弾き飛ばす
-				if (player->m_isBurst == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+				if (player->IsBurst() == true && BIRST_AFFECT_RANGE_MIN < toPlayer.Length() && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 				{
 					//弾き飛ばすのでプレイヤーへの向きとは反対側
 					Vector3 moveDir = toPlayer * -1;
@@ -290,21 +294,25 @@ void Debris::AsBulletBehave()
 	m_bulletCollider.SetStartPoint(m_oldPosition);
 	m_bulletCollider.SetRadius(DEBRIS_COLLISION_RADIUS);
 
-	QueryGOs<Player>("Player", [this](Player* player)->bool
+	bool isPlayerHit = false;
+	bool isStageHit = false;
+	Player* hitPlayer = nullptr;
+
+	QueryGOs<Player>("Player", [this,&isPlayerHit,&hitPlayer](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
+			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//敵プレイヤーが磁力バーストしている時
-				if (player->m_isBurst == true)
+				if (player->IsBurst() == true)
 				{
-					Vector3 toPlayer = player->m_magPosition - m_position;
+					Vector3 toPlayer = player->GetMagPosition() - m_position;
 
 					//敵との距離が500未満なら
 					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 					{
 						//引力なら
-						if (player->m_magPower == MAGNETSTATE_GRAVITY)
+						if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 						{
 							//プレイヤーに向かうベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();
@@ -330,57 +338,19 @@ void Debris::AsBulletBehave()
 				m_position += m_moveDirection * DEBRIS_SPEED;
 
 				//移動先の当たり判定を更新
-				m_bulletCollider.SetEndPoint(m_position);
+				Vector3 dir = m_position - m_oldPosition;
+				dir.Normalize();
 
-				//当たり判定にヒットしているならダメージ。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				//現在の座標をカプセルの端とする
+				Vector3 CapsuleEnd = m_position - dir * DEBRIS_COLLISION_RADIUS;
+				m_bulletCollider.SetEndPoint(CapsuleEnd);
+
+				//プレイヤーの当たり判定にヒットしているならヒットフラグ
+				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
-					//ヒット音
-					prefab::CSoundSource* hitSE = NewGO<prefab::CSoundSource>(0);
+					isPlayerHit = true;
 
-					//ガレキの形状でダメージが分岐
-					switch (m_debrisShape)
-					{
-					case enScrap:
-						//音を再生
-						if (player->m_hp > 0) {
-							hitSE->Init(L"Assets/sound/ダメージ音.wav",SoundType::enSE);
-							hitSE->SetVolume(SOUND_SE_SCRAP_HIT_VOLUME);
-							hitSE->Play(false);
-						}
-						player->m_TakeAttackNum++;//攻撃を受けた回数
-						player->Damage(DAMAGE_SCRAP);
-						break;
-					case enSword:
-						//音を再生
-						if (player->m_hp > 0) {
-							hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
-							hitSE->SetVolume(SOUND_SE_SWORD_HIT_VOLUME);
-							hitSE->Play(false);
-						}
-						player->m_TakeAttackNum++;//攻撃を受けた回数
-						player->Damage(DAMAGE_SWORD);
-						break;
-					case enSpecialCharger:
-						//音を再生(仮)
-						if (player->m_hp > 0) {
-							hitSE->Init(L"Assets/sound/剣が当たる.wav", SoundType::enSE);
-							hitSE->SetVolume(SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
-							hitSE->Play(false);
-						}
-						player->m_TakeAttackNum++;//攻撃を受けた回数
-						player->Damage(DAMAGE_SPECIALCHARGER);
-						break;
-					}
-					player->m_damegeEffectFront = m_moveDirection * -1;
-
-					//当たった所からポップさせる
-					m_debrisState = enPop;
-					m_isOnGround = false;
-
-					//プレイヤーをノックバックさせる。
-					player->m_isKnockBack = true;
-					player->m_moveSpeed = m_moveDirection * PLAYER_KNOCKBACK_SPEED;
+					hitPlayer = player;
 				}
 			}
 			return true;
@@ -388,18 +358,92 @@ void Debris::AsBulletBehave()
 
 
 	//ステージとの当たり判定
-	Vector3 crossPoint;
-	bool isHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, crossPoint);
-	if (isHit == true)
+	Vector3 stageCrossPoint;
+	isStageHit = m_stageModel->isLineHitModel(m_oldPosition, m_position, stageCrossPoint);
+
+	//ステージとプレイヤーに同時ヒットしている時
+	if (isPlayerHit == true && isStageHit == true)
 	{
-		Vector3 moveDir = m_position - m_oldPosition;
-		moveDir.Normalize();
+		//高さを除いた距離のみ測定
+		Vector3 toPlayer = hitPlayer->GetPosition() - m_oldPosition;
+		toPlayer.y = 0;
+		Vector3 toStage = stageCrossPoint - m_oldPosition;
+		toStage.y = 0;
 
-		//当たった所より少し手前からポップさせる
-		m_position = crossPoint - (moveDir * DEBRIS_POP_POSITION_SPACE);
-
-		m_debrisState = enPop;
+		//距離が近い方にヒット
+		if (toPlayer.Length() > toStage.Length())
+		{
+			StageHitAsBullet(stageCrossPoint);
+		}
+		else
+		{
+			PlayerHitAsBullet(hitPlayer);
+		}
 	}
+	else if (isStageHit == true)
+	{
+		//ステージにのみヒット
+		StageHitAsBullet(stageCrossPoint);
+	}
+	else if (isPlayerHit == true)
+	{
+		//プレイヤーにのみヒット
+		PlayerHitAsBullet(hitPlayer);
+	}
+}
+
+void Debris::PlayerHitAsBullet(Player* player)
+{
+	//ヒット音
+	prefab::CSoundSource* hitSE = NewGO<prefab::CSoundSource>(0);
+
+	//ガレキの形状でダメージが分岐
+	switch (m_debrisShape)
+	{
+	case enScrap:
+		//音を再生
+		if (player->GetHP() > 0) {
+			SoundOneShotPlay(L"Assets/sound/ダメージ音.wav", SOUND_SE_SCRAP_HIT_VOLUME);
+		}
+		player->Damage(DAMAGE_SCRAP);
+		break;
+	case enSword:
+		//音を再生
+		if (player->GetHP() > 0) {
+			SoundOneShotPlay(L"Assets/sound/剣が当たる.wav", SOUND_SE_SWORD_HIT_VOLUME);
+		}
+		player->Damage(DAMAGE_SWORD);
+		break;
+	case enSpecialCharger:
+		//音を再生(仮)
+		if (player->GetHP() > 0) {
+			SoundOneShotPlay(L"Assets/sound/ダメージ音.wav", SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
+		}
+		player->Damage(DAMAGE_SPECIALCHARGER);
+		break;
+	}
+
+	//ダメージのエフェクトの正面を設定
+	player->SetDamageEffectFront(m_moveDirection * -1);
+
+	//当たった所からポップさせる
+	m_debrisState = enPop;
+	m_isOnGround = false;
+
+	//プレイヤーをノックバックさせる。
+	player->SetKnockBackFlag(true);
+	player->SetMoveAmount(m_moveDirection * PLAYER_KNOCKBACK_SPEED);
+}
+
+void Debris::StageHitAsBullet(const Vector3& crossPoint)
+{
+	Vector3 moveDir = m_position - m_oldPosition;
+	moveDir.Normalize();
+
+	//当たった所より少し手前からポップさせる
+	m_position = crossPoint - (moveDir * DEBRIS_POP_POSITION_SPACE);
+
+	m_debrisState = enPop;
 }
 
 
@@ -410,13 +454,13 @@ void Debris::AsHoldBehave()
 		{
 			//スペシャルチャージャーを持っていると、ゲージが少しずつ溜まる。
 			if (m_debrisShape == enSpecialCharger) {
-				if (player->m_playerNum == m_parent->m_playerNum) {
+				if (player->GetPlayerNum() == m_parent->GetPlayerNum()) {
 
 					m_specialChargeCount++;
 
 					//カウントが貯まるとプレイヤーの必殺技ゲージ量を増やす。
 					if (m_specialChargeCount == SPECIALCHARGER_COUNT_CHARGE) {
-						player->ChargeSpecialAttackGauge(1);
+						player->ChargeSpecialAttackGauge(SPECIALCHARGER_CHARGEVALUE);
 						m_specialChargeCount = 0;
 					}
 				}
@@ -428,7 +472,7 @@ void Debris::AsHoldBehave()
 	//ガレキの回転クォータニオン
 	Quaternion DebrisRot;
 	//キャラの向きを取得
-	Vector3 CharacterDirection = m_parent->m_toCameraDir * -1;
+	Vector3 CharacterDirection = m_parent->GetCameraFront();
 	//上下方向の向きは無視する。
 	CharacterDirection.y = 0.0f;
 	CharacterDirection.Normalize();

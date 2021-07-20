@@ -41,8 +41,8 @@ bool DebrisBlock::Start()
 
 void DebrisBlock::Update()
 {
-	//ゲームがポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}
@@ -56,10 +56,10 @@ void DebrisBlock::Update()
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
-			Vector3 toPlayer = player->m_position - m_position;
+			Vector3 toPlayer = player->GetPosition() - m_position;
 
 			//引力バーストしているプレイヤーが距離500以内に近づき、タイマーが上がっていて、ゲームに存在できる最大数未満であれば新しくガレキを生成
-			if (player->m_magPower == MAGNETSTATE_GRAVITY && player->m_isBurst == true && m_factoryTimer == FACTORY_TIMER_CAN_CREATE && toPlayer.Length() < FACTORY_MAX_CREATE_DISTANCE)
+			if (player->GetMagnetState() == MAGNETSTATE_GRAVITY && player->IsBurst() == true && m_factoryTimer == FACTORY_TIMER_CAN_CREATE && toPlayer.Length() < FACTORY_MAX_CREATE_DISTANCE)
 			{
 				for (int i = 0; i < FACTORY_BULLET_CREATE_NUM; i++)//弾を生成する数
 				{

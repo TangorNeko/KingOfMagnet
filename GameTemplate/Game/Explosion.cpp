@@ -18,10 +18,7 @@ Explosion::~Explosion()
 bool Explosion::Start()
 {
 	//音を再生
-	prefab::CSoundSource* explosionSound = NewGO<prefab::CSoundSource>(0);;
-	explosionSound->Init(L"Assets/sound/爆発音.wav", SoundType::enSE);
-	explosionSound->SetVolume(SOUND_SE_EXPLOSION_VOLUME);
-	explosionSound->Play(false);
+	SoundOneShotPlay(L"Assets/sound/爆発音.wav", SOUND_SE_EXPLOSION_VOLUME);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
@@ -39,13 +36,12 @@ void Explosion::Update()
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				//プレイヤーが近ければ
-				Vector3 diff = m_position - player->m_position;		//diffはdifference(差)
+				Vector3 diff = m_position - player->GetPosition();		//diffはdifference(差)
 				float dis = diff.Length();		//disはdistance(距離)
 				dis = fabsf(dis);
 				if (dis <= EXPLOSION_RANGE)
 				{
 					player->Damage(EXPLOSION_RANGE - dis);
-					player->m_TakeAttackNum++;//攻撃を受けた回数
 				}
 				return true;
 			});

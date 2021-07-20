@@ -320,11 +320,13 @@
     <ClCompile Include="MapChip2D.cpp" />
     <ClCompile Include="MobiusGauge.cpp" />
     <ClCompile Include="MyCapsuleCollider.cpp" />
+    <ClCompile Include="OptionValue.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostEffectManager.cpp" />
     <ClCompile Include="Repulsion.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="RoundCounter.cpp" />
     <ClCompile Include="SkyBoard.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="SpriteSupporter.cpp" />
@@ -436,11 +438,13 @@
     <ClInclude Include="MobiusGauge.h" />
     <ClInclude Include="MyCapsuleCollider.h" />
     <ClInclude Include="NameKey.h" />
+    <ClInclude Include="OptionValue.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PostEffectManager.h" />
     <ClInclude Include="Repulsion.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="RoundCounter.h" />
     <ClInclude Include="SkyBoard.h" />
     <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="SpriteSupporter.h" />

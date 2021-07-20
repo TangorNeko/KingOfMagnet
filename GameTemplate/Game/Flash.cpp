@@ -26,14 +26,8 @@ Flash::~Flash()
 bool Flash::Start()
 {
 	//‰¹‚ğÄ¶
-	prefab::CSoundSource* flashSound1 = NewGO<prefab::CSoundSource>(0);;
-	flashSound1->Init(L"Assets/sound/‘MŒõ’e.wav", SoundType::enSE);
-	flashSound1->SetVolume(SOUND_SE_FLASH1_VOLUME);
-	flashSound1->Play(false);
-	prefab::CSoundSource* flashSound2 = NewGO<prefab::CSoundSource>(0);;
-	flashSound2->Init(L"Assets/sound/‘MŒõ’e2.wav", SoundType::enSE);
-	flashSound2->SetVolume(SOUND_SE_FLASH2_VOLUME);
-	flashSound2->Play(false);
+	SoundOneShotPlay(L"Assets/sound/‘MŒõ’e.wav", SOUND_SE_FLASH1_VOLUME);
+	SoundOneShotPlay(L"Assets/sound/‘MŒõ’e2.wav", SOUND_SE_FLASH2_VOLUME);
 
 	//ƒGƒtƒFƒNƒg‚ğÄ¶
 	m_effect = NewGO<prefab::CEffect>(0);
@@ -44,17 +38,17 @@ bool Flash::Start()
 
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
-			Vector3 angle = m_position - player->m_position;
+			Vector3 angle = m_position - player->GetPosition();
 			angle.Normalize();
 
-			float n = player->m_front.Dot(angle);
+			float n = player->GetCameraFront().Dot(angle);
 
-			if (m_parentNum != player->m_playerNum &&
+			if (m_parentNum != player->GetPlayerNum() &&
 				n > FLASH_AFFECT_ANGLE)
 			{
 				m_flashFlag = true;
 				m_spriteRender = NewGO<prefab::CSpriteRender>(0);
-				m_spriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(player->m_playerNum));
+				m_spriteRender->SetDrawScreen(static_cast<prefab::CSpriteRender::DrawScreen>(player->GetPlayerNum()));
 				m_spriteRender->SetPosition(CENTER_OF_SCREEN);
 				m_spriteRender->Init("Assets/Image/White.dds", SPRITE_FLASH_WIDTH, SPRITE_FLASH_HEIGHT);
 			}

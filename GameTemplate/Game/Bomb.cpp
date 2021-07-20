@@ -80,8 +80,8 @@ bool Bomb::Start()
 
 void Bomb::Update()
 {
-	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}
@@ -127,13 +127,13 @@ void Bomb::AsDropBehave()
 {
 	QueryGOs<Player>("Player", [this](Player* player)->bool {
 
-		Vector3 toPlayer = player->m_position - m_position;
+		Vector3 toPlayer = player->GetPosition() - m_position;
 
 		//引力の時のみ
-		if (player->m_magPower == MAGNETSTATE_GRAVITY)
+		if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 		{
 			//バーストしてたら引っ張ってくる
-			if (player->m_isBurst == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+			if (player->IsBurst() == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 			{
 				m_isOnGround = false;
 
@@ -185,10 +185,10 @@ void Bomb::AsDropBehave()
 		}
 
 		//斥力の時
-		else if (player->m_magPower == MAGNETSTATE_REPULSION)
+		else if (player->GetMagnetState() == MAGNETSTATE_REPULSION)
 		{
 			//バーストしてたら弾き飛ばす
-			if (player->m_isBurst == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+			if (player->IsBurst() == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 			{
 				//弾き飛ばすのでプレイヤーへの向きとは反対側
 				Vector3 moveDir = toPlayer * -1;
@@ -251,18 +251,18 @@ void Bomb::AsBulletBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
+			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//敵プレイヤーが磁力バーストしている時
-				if (player->m_isBurst == true)
+				if (player->IsBurst() == true)
 				{
-					Vector3 toPlayer = player->m_magPosition - m_position;
+					Vector3 toPlayer = player->GetMagPosition() - m_position;
 
 					//敵との距離が500未満なら
 					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
 					{						
 						//引力なら
-						if (player->m_magPower == MAGNETSTATE_GRAVITY)
+						if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 						{
 							//プレイヤーに向かうベクトルと現在の移動方向の平均が新しい移動方向になる
 							toPlayer.Normalize();
@@ -293,7 +293,7 @@ void Bomb::AsBulletBehave()
 				m_bulletCollider.SetEndPoint(m_position);
 
 				//当たり判定にヒットしているなら起爆。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
 					//当たった所からポップさせる
 					m_bombState = enPop;
@@ -328,7 +328,7 @@ void Bomb::AsHoldBehave()
 	//爆弾の回転クォータニオン
 	Quaternion DebrisRot;
 	//キャラの向きを取得
-	Vector3 CharacterDirection = m_parent->m_toCameraDir * -1.0f;
+	Vector3 CharacterDirection = m_parent->GetCameraFront();
 	//上下方向の向きは無視する。
 	CharacterDirection.y = 0.0f;
 	CharacterDirection.Normalize();
@@ -377,7 +377,7 @@ void Bomb::AsPopBehave()
 			if (m_explosionCount >= BOMB_EXPLOSION_COUNT_EXPLOSION) {
 				Flash* flash = NewGO<Flash>(0);
 				flash->SetPosition(crossPoint);
-				flash->SetParentNum(m_parent->m_playerNum);
+				flash->SetParentNum(m_parent->GetPlayerNum());
 				DeleteGO(this);
 			}
 			break;

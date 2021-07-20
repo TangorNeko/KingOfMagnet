@@ -11,6 +11,8 @@
 #include "ResultScene.h"
 #include <random>
 
+#include "RoundCounter.h"
+
 namespace
 {
 	const Vector3 STAGELIGHT_DIRECTION = { -1.0f,-1.0f,1.0f };
@@ -74,12 +76,17 @@ namespace
 	const float SOUND_BGM_GAME_VOLUME = 0.3f;
 	const float SOUND_SE_STARTCOUNTDOWN_VOLUME = 0.8f;
 	const float SOUND_SE_STARTHORN_VOLUME = 0.8f;
-	const int GAMEENDTIMER_START_TRANSITION = 500;
-	const int GAMEENDTIMER_GOTO_RESULT = 550;
+	const int GAMEENDTIMER_ROUNDCOUNTER_SHOW = 450;
+	const int GAMEENDTIMER_START_TRANSITION = 650;
+	const int GAMEENDTIMER_GOTO_RESULT = 700;
 	const int DRAWTIMER_START_TRANSITION = 45;
 	const int DRAWTIMER_GOTO_REMATCH = 0;
+	const Vector2 FONT_SKIP_POSITION = { 270.0f,-320.0f };
+	const Vector2 FONT_SKIP_SCALE = { 0.6f,0.6f };
 	const Vector2 FONT_DRAW_POSITION = { -185.0f, 130.0f };
 	const Vector2 FONT_DRAW_SCALE = { 2.0f, 2.0f };
+	const Vector4 FONT_SHADOWCOLOR = { 0,0,0,1 };
+	const float FONT_SHADOWOFFSET = 2.0f;
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT = { 890.0f,0.0f };
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT_SHORT = { 10.0f,0.0f };
 	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT = { -890.0f,0.0f };
@@ -112,6 +119,11 @@ namespace
 	//他でも使いそうなのでどこかに分離?
 	const int NUMBER_MAGNET_STATUS = 2;
 }
+
+float GameScene::m_maxTimeLimit = 0;
+float GameScene::m_P1Sensitivity;
+float GameScene::m_P2Sensitivity;
+
 GameScene::~GameScene()
 {	
 	DeleteGO(m_stageLight);
@@ -152,8 +164,8 @@ bool GameScene::Start()
 	m_stageLight->SetColor(STAGELIGHT_COLOR);
 
 	m_player1 = NewGO<Player>(0, "Player");
-	m_player1->m_position = PLAYER1_STARTPOSITION;
-	m_player1->m_playerNum = NUMBER_PLAYER1;
+	m_player1->SetPosition(PLAYER1_STARTPOSITION);
+	m_player1->SetPlayerNum(NUMBER_PLAYER1);
 
 	std::random_device device;
 	std::mt19937_64 rnd(device());
@@ -162,37 +174,37 @@ bool GameScene::Start()
 	int mag = rnd() % NUMBER_MAGNET_STATUS;
 	if (mag)
 	{
-		m_player1->m_magPower = MAGNETSTATE_REPULSION;
+		m_player1->SetMagnetState(MAGNETSTATE_REPULSION);
 	}
 	else
 	{
-		m_player1->m_magPower = MAGNETSTATE_GRAVITY;
+		m_player1->SetMagnetState(MAGNETSTATE_GRAVITY);
 	}
-	m_player1->m_toCameraDir = STARTDIRECTION_PLAYER1_TOCAMERA;
-	m_player1->m_characterDirection = STARTDIRECTION_PLAYER1_MODEL;
-	m_player1->m_sensitivity = m_P1Sensitivity;
+	m_player1->SetToCameraDirection(STARTDIRECTION_PLAYER1_TOCAMERA);
+	m_player1->SetCameraFront(STARTDIRECTION_PLAYER1_MODEL);
+	m_player1->SetSensitivity(m_P1Sensitivity);
 
 	m_player2 = NewGO<Player>(0, "Player");
-	m_player2->m_position = PLAYER2_STARTPOSITION;
-	m_player2->m_playerNum = NUMBER_PLAYER2;
+	m_player2->SetPosition(PLAYER2_STARTPOSITION);
+	m_player2->SetPlayerNum(NUMBER_PLAYER2);
 
 	//プレイヤー2の磁力の状態をランダムに決定
 	mag = rnd() % NUMBER_MAGNET_STATUS;
 	if (mag)
 	{
-		m_player2->m_magPower = MAGNETSTATE_REPULSION;
+		m_player2->SetMagnetState(MAGNETSTATE_REPULSION);
 	}
 	else
 	{
-		m_player2->m_magPower = MAGNETSTATE_GRAVITY;
+		m_player2->SetMagnetState(MAGNETSTATE_GRAVITY);
 	}
-	m_player2->m_toCameraDir = STARTDIRECTION_PLAYER2_TOCAMERA;
-	m_player2->m_characterDirection = STARTDIRECTION_PLAYER2_MODEL;
-	m_player2->m_sensitivity = m_P2Sensitivity;
+	m_player2->SetToCameraDirection(STARTDIRECTION_PLAYER2_TOCAMERA);
+	m_player2->SetCameraFront(STARTDIRECTION_PLAYER2_MODEL);
+	m_player2->SetSensitivity(m_P2Sensitivity);
 
 	//各プレイヤーに敵を渡す
-	m_player2->m_enemy = m_player1;
-	m_player1->m_enemy = m_player2;
+	m_player2->SetEnemy(m_player1);
+	m_player1->SetEnemy(m_player2);
 	
 	//ステージの作成
 	m_backGround = NewGO<BackGround>(0, "background");
@@ -220,6 +232,16 @@ bool GameScene::Start()
 	m_TimerBaseSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
 	m_TimerBaseSpriteRender->SetPosition(SPRITE_TIMERBASE_POSITION);
 	m_TimerBaseSpriteRender->Init("Assets/Image/Timer_Base.dds", SPRITE_TIMERBASE_WIDTH, SPRITE_TIMERBASE_HEIGHT);
+
+	//スキップフォント
+	m_skipFontRender = NewGO<prefab::CFontRender>(4);
+	m_skipFontRender->SetDrawScreen(prefab::CFontRender::DrawScreen::AllScreen);
+	m_skipFontRender->SetPosition(FONT_SKIP_POSITION);
+	m_skipFontRender->SetScale(FONT_SKIP_SCALE);
+	m_skipFontRender->SetShadowFlag(true);
+	m_skipFontRender->SetShadowColor(FONT_SHADOWCOLOR);
+	m_skipFontRender->SetShadowOffset(FONT_SHADOWOFFSET);
+	m_skipFontRender->SetText(L"PRESS A TO SKIP");
 
 	//カウント3
 	m_startCountDown_3_Top = NewGO<prefab::CSpriteRender>(3);
@@ -278,19 +300,30 @@ bool GameScene::Start()
 	m_finalCountDown->Init("Assets/Image/count3.dds", SPRITE_FINALCOUNTDOWN_WIDTH, SPRITE_FINALCOUNTDOWN_HEGIHT);
 	m_finalCountDown->SetMulColor(SPRITE_FINALCOUNTDOWN_COLOR_TRANSPARENT);
 
+	//制限時間をセット
+	m_timeLimit = m_maxTimeLimit;
+
 	//タイムリミットの一桁目
+	int onesPlace = (int)m_timeLimit % 10;
+	char onesPlacePathName[256];
+	sprintf_s(onesPlacePathName, "Assets/Image/%d.dds", onesPlace);
 	m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
 	m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_onesPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
-	m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+	m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+	m_onesPlaceSpriteRender->Init(onesPlacePathName, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//タイムリミットの二桁目
+	int tensPlace = (int)m_timeLimit / 10;
+	char tensPlacePathName[256];
+	sprintf_s(tensPlacePathName, "Assets/Image/%d.dds", tensPlace);
 	m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
 	m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
 	m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
 	m_tensPlaceSpriteRender->SetDrawScreen(prefab::CSpriteRender::DrawScreen::AllScreen);
-	m_tensPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+	m_tensPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+	m_tensPlaceSpriteRender->Init(tensPlacePathName, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
 
 	//音を再生
 	m_gameBGM = NewGO<prefab::CSoundSource>(0);
@@ -298,11 +331,18 @@ bool GameScene::Start()
 	m_gameBGM->SetVolume(SOUND_BGM_GAME_VOLUME);
 	m_gameBGM->Play(true);
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
+
+	m_roundCounter = FindGO<RoundCounter>("roundcounter");
+	m_roundCounter->MoveToGamePosition();
 	return true;
 }
 
 void GameScene::Update()
 {
+	if (m_gameState == enBirdseye)
+	{
+		m_roundCounter->RoundAnnounce();
+	}
 
 	//スタートカウントダウン
 	if (m_gameState == enStartCountDown) {
@@ -343,6 +383,7 @@ void GameScene::Update()
 
 	if (m_gameState == enResult)
 	{	
+		//ゲームが決着した最初のフレーム
 		if (m_isGameEndFirstFrame == true)
 		{
 			DeleteGO(m_delimitLineSpriteRender);
@@ -360,15 +401,24 @@ void GameScene::Update()
 			{
 				m_player1->m_loserNum = NUMBER_PLAYER1;
 				m_player2->m_loserNum = NUMBER_PLAYER1;
+				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER2);
 			}
 			else if (m_player2->m_Lose == true)
 			{
 				m_player1->m_loserNum = NUMBER_PLAYER2;
 				m_player2->m_loserNum = NUMBER_PLAYER2;
+				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER1);
 			}
+
+			m_roundCounter->MoveToResultPosition();
 		}
 
 		m_gameEndCount++;
+
+		if (m_gameEndCount == GAMEENDTIMER_ROUNDCOUNTER_SHOW)
+		{
+			m_roundCounter->StartResultMove();
+		}
 
 		if (m_gameEndCount == GAMEENDTIMER_START_TRANSITION)
 		{
@@ -377,10 +427,21 @@ void GameScene::Update()
 
 		if (m_gameEndCount > GAMEENDTIMER_GOTO_RESULT)
 		{
-			NewGO<ResultScene>(0, "resultscene");
-			ResultScene* resultscene = FindGO<ResultScene>("resultscene");
-			resultscene->SetLoserNum(m_player1->m_loserNum);
-			DeleteGO(this);
+			
+
+			if (m_roundCounter->GetOverAllWinner() == -1)
+			{
+				NewGO<GameScene>(0, "gamescene");
+				DeleteGO(this);
+			}
+			else
+			{
+				NewGO<ResultScene>(0, "resultscene");
+				ResultScene* resultscene = FindGO<ResultScene>("resultscene");
+				resultscene->SetLoserNum(m_player1->m_loserNum);
+				DeleteGO(m_roundCounter);
+				DeleteGO(this);
+			}
 		}
 	}
 
@@ -407,7 +468,6 @@ void GameScene::Update()
 			}
 			DeleteGO(m_drawFontRender);
 			DeleteGO(m_onesPlaceSpriteRender);
-			DeleteGO(m_tensPlaceSpriteRender);
 			DeleteGO(m_gameBGM);
 			NewGO<GameScene>(0, "gamescene");
 			DeleteGO(this);
@@ -417,7 +477,7 @@ void GameScene::Update()
 
 void GameScene::WinnerJudge()
 {
-	if (m_player1->m_hp > m_player2->m_hp)
+	if (m_player1->GetHP() > m_player2->GetHP())
 	{
 		//1Pの勝ち
 		m_player1->Win();
@@ -427,7 +487,7 @@ void GameScene::WinnerJudge()
 		m_gameState = enResult;
 
 	}
-	else if(m_player1->m_hp < m_player2->m_hp)
+	else if(m_player1->GetHP() < m_player2->GetHP())
 	{
 		//2Pの勝ち
 		m_player1->Lose();
@@ -445,7 +505,14 @@ void GameScene::WinnerJudge()
 		m_drawFontRender->SetDrawScreen(prefab::CFontRender::DrawScreen::AllScreen);
 		m_drawFontRender->SetPosition(FONT_DRAW_POSITION);
 		m_drawFontRender->SetScale(FONT_DRAW_SCALE);
+		m_drawFontRender->SetShadowFlag(true);
+		m_drawFontRender->SetShadowColor(FONT_SHADOWCOLOR);
+		m_drawFontRender->SetShadowOffset(FONT_SHADOWOFFSET);
 		m_drawFontRender->SetText(L"DRAW!");
+
+		//ボイス再生
+		SoundOneShotPlay(L"Assets/sound/Rakutan.wav", 1.0f);
+		SoundOneShotPlay(L"Assets/sound/Draw.wav", 3.0f);
 	}
 }
 
@@ -476,6 +543,8 @@ void GameScene::StartCountDown() {
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_3_Right->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
 
+		SoundOneShotPlay(L"Assets/sound/CountDown3.wav",3.0f);
+
 		m_startCount3_Flag = true;
 	}
 	if (m_startCount == 2 && m_startCount2_Flag == false) {
@@ -500,6 +569,8 @@ void GameScene::StartCountDown() {
 		m_startCountDown_2_Left->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_2_Left->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
 
+		SoundOneShotPlay(L"Assets/sound/CountDown2.wav", 3.0f);
+
 		m_startCount2_Flag = true;
 	}
 	if (m_startCount == 1 && m_startCount1_Flag == false) {
@@ -507,6 +578,8 @@ void GameScene::StartCountDown() {
 		m_startCountDown_1->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_ASSEMBLE, true);
 		m_startCountDown_1->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM_SHORT, SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY, true);
 		m_startCountDown_1->GetSpriteSupporter().SpriteMove(SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM, SPRITE_STARTCOUNTDOWN_MOVETIME_FAST, SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE, true);
+
+		SoundOneShotPlay(L"Assets/sound/CountDown1.wav", 3.0f);
 
 		m_startCount1_Flag = true;
 	}
@@ -537,6 +610,7 @@ void GameScene::StartCountDown() {
 		{
 			ssCount->Init(L"Assets/sound/エアーホーン.wav", SoundType::enSE);
 			ssCount->SetVolume(SOUND_SE_STARTHORN_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/CountDown0.wav", 3.0f);
 
 			//ゲームスタートカウント
 			m_startSprite = NewGO<prefab::CSpriteRender>(5);
@@ -579,6 +653,31 @@ void GameScene::TimeLimitChangesSprits(int num, TimeLimitSpriteDigit numPlace)
 	//タイムリミットが前フレームと異なるとき(一秒経ったとき)
 	if ((int)m_timeLimit != m_oldTimeLimit)
 	{
+		switch(numPlace)
+		{
+		case enOnesPlaceOfDoubleDigit:
+			DeleteGO(m_onesPlaceSpriteRender);
+			m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+			m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
+			m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+			m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+			break;
+		case enTenthPlaceOfDoubleDigit:
+			DeleteGO(m_tensPlaceSpriteRender);
+			m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+			m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
+			m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+			m_tensPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+			break;
+		case enOnesPlaceOfSingleDigit:
+			DeleteGO(m_onesPlaceSpriteRender);
+			m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+			m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT);
+			m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+			m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+			break;
+		}
+
 		//numが0～9のどの数字かによって、Initするスプライトを変える。
 		switch (num)
 		{

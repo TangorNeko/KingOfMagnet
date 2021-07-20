@@ -288,3 +288,10 @@ enum SoundType
 			float m_baseVolume = 1.0f;//音のタイプに共通してボリュームに掛け合わせる基礎値
 		};
 	}
+
+	/*!
+	* @brief	サウンドをワンショット再生
+	* @param screen 再生するwavファイルのパス
+	* @param screen 再生ボリューム
+	*/
+	void SoundOneShotPlay(const wchar_t* filePath, float volume = 1.0f);

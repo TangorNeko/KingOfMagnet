@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include "GameOption.h"
+#include "RoundCounter.h"
 
 namespace
 {
@@ -190,10 +191,7 @@ void TitleScene::Update()
 			m_commandTimer = COMMANDTIMER_COMMANDSTART;
 
 			//SE
-			prefab::CSoundSource* ss2 = NewGO<prefab::CSoundSource>(0);
-			ss2->Init(L"Assets/sound/タイトル画面SE1.wav", SoundType::enSE);
-			ss2->SetVolume(SOUND_SE_SCROLL_VOLUME);
-			ss2->Play(false);
+			SoundOneShotPlay(L"Assets/sound/タイトル画面SE1.wav", SOUND_SE_SCROLL_VOLUME);
 		}
 		//コマンド移動 下
 		if ((g_pad[PAD_PLAYER1]->IsPress(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown)) && m_selectMoveFlag == false) {
@@ -202,10 +200,7 @@ void TitleScene::Update()
 			m_commandTimer = COMMANDTIMER_COMMANDSTART;
 
 			//SE
-			prefab::CSoundSource* ss3 = NewGO<prefab::CSoundSource>(0);
-			ss3->Init(L"Assets/sound/タイトル画面SE1.wav", SoundType::enSE);
-			ss3->SetVolume(SOUND_SE_SCROLL_VOLUME);
-			ss3->Play(false);
+			SoundOneShotPlay(L"Assets/sound/タイトル画面SE1.wav", SOUND_SE_SCROLL_VOLUME);
 		}
 
 		if (m_selectMoveFlag == true) {
@@ -419,10 +414,7 @@ void TitleScene::CommandSelectMove() {
 	if (m_commandTimer == COMMANDTIMER_PLAY_SELECT_SE)
 	{
 		//SE
-		prefab::CSoundSource* ss1 = NewGO<prefab::CSoundSource>(0);
-		ss1->Init(L"Assets/sound/ガキーン!.wav", SoundType::enSE);
-		ss1->SetVolume(SOUND_SE_SELECT_VOLUME);
-		ss1->Play(false);
+		SoundOneShotPlay(L"Assets/sound/ガキーン!.wav", SOUND_SE_SELECT_VOLUME);
 	}
 	
 	if (m_commandTimer == COMMANDTIMER_START_TRANSITION && m_titleCommand == TitleScene::TC_Start)
@@ -439,9 +431,14 @@ void TitleScene::CommandSelectMove() {
 			DeleteGO(m_titleBGM);
 			//switch文の中で宣言するためのスコープ
 			{
+				//試合のラウンドの計測を開始
+				RoundCounter* roundCounter = NewGO<RoundCounter>(0, "roundcounter");
+				roundCounter->SetMaxRound(m_option->GetRoundToWin());
+
 				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
 				gameScene->SetP1Sensitivity(m_option->GetP1Sensitivity());
 				gameScene->SetP2Sensitivity(m_option->GetP2Sensitivity());
+				gameScene->SetTimeLimit(m_option->GetTimeLimit());
 			}
 			DeleteGO(this);
 			break;

@@ -68,8 +68,8 @@ bool GravityBullet::Start()
 
 void GravityBullet::Update()
 {
-	//ポーズ中ならスキップ。
-	if (m_gameScene->GetGameState() == GameScene::GameState::enPause)
+	//ポーズ中かリザルトシーンならスキップ。
+	if (m_gameScene->GetGameState() == GameScene::GameState::enPause || m_gameScene->GetGameState() == GameScene::GameState::enResult)
 	{
 		return;
 	}
@@ -111,10 +111,10 @@ void GravityBullet::AsBulletBehave()
 	QueryGOs<Player>("Player", [this](Player* player)->bool
 		{
 			//発射したプレイヤーと違う時
-			if (player->m_playerNum != m_parent->m_playerNum)
+			if (player->GetPlayerNum() != m_parent->GetPlayerNum())
 			{
 				//当たり判定にヒットしているなら爆発。
-				if (player->m_collider.isHitCapsule(m_bulletCollider))
+				if (player->IsBulletHitCollider(m_bulletCollider))
 				{
 					m_gravityBulletState = enExplode;
 				}
@@ -182,10 +182,7 @@ void GravityBullet::AsExplodeBehave()
 	DeleteGO(m_skinModelRender);
 
 	//音を鳴らす
-	prefab::CSoundSource* gravitySound = NewGO<prefab::CSoundSource>(0);
-	gravitySound->Init(L"Assets/sound/暗黒魔法.wav", SoundType::enSE);
-	gravitySound->SetVolume(SOUND_SE_GRAVITY_VOLUME);
-	gravitySound->Play(false);
+	SoundOneShotPlay(L"Assets/sound/暗黒魔法.wav", SOUND_SE_GRAVITY_VOLUME);
 
 	//爆発したので引力を発生させる状態へ
 	m_gravityBulletState = enGravity;
@@ -209,7 +206,7 @@ void GravityBullet::AsGravityBehave()
 	m_gravityTimeCount++;
 
 	//カウンターが180以上か、プレイヤーから攻撃指示が出たらフィニッシュ状態へ移行。
-	if (m_gravityTimeCount >= GRAVITYATTACKCOUNT_ATTACK || m_parent->m_isGravityBulletAttack == true)
+	if (m_gravityTimeCount >= GRAVITYATTACKCOUNT_ATTACK || m_parent->GetGravityAttackFlag() == true)
 	{
 		m_gravityBulletState = enFinish;
 	}
@@ -218,7 +215,7 @@ void GravityBullet::AsGravityBehave()
 	{
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
-				Vector3 diff = m_position - player->m_position;
+				Vector3 diff = m_position - player->GetPosition();
 				if (diff.Length() > GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MIN &&	//近すぎてもダメ
 					diff.Length() < GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX && player != m_parent)
 				{
@@ -232,7 +229,7 @@ void GravityBullet::AsGravityBehave()
 
 					//敵プレイヤーのキャラコンに実行させる
 					//正直このやり方も良いといえるのか分からない。
-					player->m_charaCon.Execute(toGravity, 1.0f);
+					player->ExecuteCharacon(toGravity);
 				}
 				return true;
 			});
