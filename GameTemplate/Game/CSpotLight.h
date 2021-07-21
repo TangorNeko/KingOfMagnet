@@ -4,19 +4,19 @@ namespace prefab
 {
 	struct SpotLigData //スポットライトのデータ
 	{
-		Vector3 ligPos;		//ライトの座標
-		float pad;			//パディング
-		Vector3 ligColor;	//ライトの色
-		float ligRange;		//ライトの影響範囲
-		Vector3 ligDir;		//ライトの向き
-		float ligAngle;		//ライトの影響角度(ラジアン単位)
+		Vector3 ligPos = { 0.0f,0.0f,0.0f };	//ライトの座標
+		float pad = 0.0f;						//パディング
+		Vector3 ligColor = { 1.0f,1.0f,1.0f };	//ライトの色
+		float ligRange = 0.0f;					//ライトの影響範囲
+		Vector3 ligDir = { 1.0f,0.0f,0.0f };	//ライトの向き
+		float ligAngle = 0.0f;					//ライトの影響角度(ラジアン単位)
 	};
 
 	class CSpotLight : public IGameObject
 	{
-		~CSpotLight();
-		bool Start();
-		void Update();
+		~CSpotLight()override;
+		bool Start()override;
+		void Update()override;
 
 	public:
 		/**
@@ -29,31 +29,31 @@ namespace prefab
 		 * @brief スポットライトのデータのサイズを取得
 		 * @return スポットライトのデータのサイズ
 		*/
-		int GetLigDataSize() { return sizeof(SpotLigData); }
+		int GetLigDataSize() const { return sizeof(SpotLigData); }
 
 		/**
 		 * @brief スポットライトの座標を設定
 		 * @param pos スポットライトの座標
 		*/
-		void SetPosition(Vector3 pos) { m_spotLigData.ligPos = pos; }
+		void SetPosition(const Vector3& pos) { m_spotLigData.ligPos = pos; }
 
 		/**
 		 * @brief スポットライトの座標を取得
 		 * @return スポットライトの座標
 		*/
-		Vector3 GetPosition() { return m_spotLigData.ligPos; }
+		const Vector3& GetPosition() const { return m_spotLigData.ligPos; }
 
 		/**
 		 * @brief スポットライトの色を設定
 		 * @param color スポットライトの色
 		*/
-		void SetColor(Vector3 color) { m_spotLigData.ligColor = color; }
+		void SetColor(const Vector3& color) { m_spotLigData.ligColor = color; }
 
 		/**
 		 * @brief スポットライトの色を取得
 		 * @return スポットライトの色
 		*/
-		Vector3 GetColor() { return m_spotLigData.ligColor; }
+		const Vector3& GetColor() const { return m_spotLigData.ligColor; }
 
 		/**
 		 * @brief スポットライトの影響範囲を設定
@@ -65,19 +65,19 @@ namespace prefab
 		 * @brief スポットライトの影響範囲を取得
 		 * @return スポットライトの影響範囲
 		*/
-		float GetRange() { return m_spotLigData.ligRange; }
+		float GetRange() const { return m_spotLigData.ligRange; }
 
 		/**
 		 * @brief スポットライトの向きを設定
 		 * @param dir スポットライトの向き
 		*/
-		void SetDirection(Vector3 dir) { m_spotLigData.ligDir = dir; }
+		void SetDirection(const Vector3& dir) { m_spotLigData.ligDir = dir; }
 
 		/**
 		 * @brief スポットライトの向きを取得
 		 * @return スポットライトの向き
 		*/
-		Vector3 GetDirection() { return m_spotLigData.ligDir; }
+		const Vector3& GetDirection() const { return m_spotLigData.ligDir; }
 
 		/**
 		 * @brief スポットライトの影響角度を設定(ラジアン単位)
@@ -89,7 +89,7 @@ namespace prefab
 		 * @brief スポットライトの影響角度を取得(ラジアン単位)
 		 * @return スポットライトの影響角度
 		*/
-		float GetAngle() { return m_spotLigData.ligAngle; }
+		float GetAngle() const { return m_spotLigData.ligAngle; }
 
 		/**
 		 * @brief スポットライトの影響角度を設定(デグリー単位)
@@ -101,11 +101,11 @@ namespace prefab
 		 * @brief スポットライトの影響角度を取得(デグリー単位)
 		 * @return スポットライトの影響角度
 		*/
-		float GetAngleDeg() { return Math::RadToDeg(m_spotLigData.ligAngle); }
+		float GetAngleDeg() const { return Math::RadToDeg(m_spotLigData.ligAngle); }
 
 	private:
 		SpotLigData m_spotLigData;	//スポットライトのデータ
-		int m_spotLigTag;			//スポットライトのタグ(何番目に作られたライト?)
+		int m_spotLigTag = 0;			//スポットライトのタグ(何番目に作られたライト?)
 	};
 }
 

@@ -32,35 +32,36 @@ private:
 	struct LigDatas
 	{
 		prefab::DirLigData directionLightArray[DIRECTIONLIGHT_NUMBER_MAX];	//ディレクションライトのデータの配列
-		prefab::PointLigData pointLightArray[POINTLIGHT_NUMBER_MAX];			//ポイントライトのデータの配列
+		prefab::PointLigData pointLightArray[POINTLIGHT_NUMBER_MAX];		//ポイントライトのデータの配列
 		prefab::SpotLigData spotLightArray[SPOTLIGHT_NUMBER_MAX];			//スポットライトのデータの配列
-		Vector3 eyePos;													//カメラの位置
-		int directionLightNum = 0;										//ディレクションライトの数
-		int pointLightNum = 0;											//ポイントライトの数
-		int spotLightNum = 0;											//スポットライトの数
+		Vector3 eyePos = Vector3::Zero;										//カメラの位置
+		int directionLightNum = 0;											//ディレクションライトの数
+		int pointLightNum = 0;												//ポイントライトの数
+		int spotLightNum = 0;												//スポットライトの数
 	};
 
 	struct LigCameraDatas
 	{
-		Matrix lightCameraProjectionMatrix; //ライトビュープロジェクション行列
-		Vector3 lightCameraPosition;//ライトカメラの位置
-		float pad;
-		Vector3 lightCameraDirection;//ライトカメラの向き
+		Matrix lightCameraProjectionMatrix;				//ライトビュープロジェクション行列
+		Vector3 lightCameraPosition = Vector3::Zero;	//ライトカメラの位置
+		float pad = 0;									//パディング
+		Vector3 lightCameraDirection = Vector3::Zero;	//ライトカメラの向き
 	};
-	LigDatas m_ligData;				//ライトのデータ
-	int m_size = sizeof(m_ligData);	//ライトのデータのサイズ
 
-	LigCameraDatas m_ligCameraData;
-	int m_ligCameraDataSize = sizeof(m_ligCameraData);
+	LigDatas m_ligData;									//ライトのデータ
+	int m_size = sizeof(m_ligData);						//ライトのデータのサイズ
+
+	LigCameraDatas m_ligCameraData;						//ライト視点のカメラのデータ
+	int m_ligCameraDataSize = sizeof(m_ligCameraData);	//ライト視点のカメラのデータのサイズ
 	
-	int m_dirLigNum = 0;				//次に作られるディレクションライトに付与するタグ番号(≒これまでに何個ディレクションライトが作られたか)
-	int m_pointLigNum = 0;				//次に作られるポイントライトに付与するタグ番号(≒これまでに何個ポイントライトが作られたか)
-	int m_spotLigNum = 0;				//次に作られるスポットライトに付与するタグ番号(≒これまでに何個スポットライトが作られたか)
-	std::map<int, int> m_dirLigMap;		//ディレクションライトのタグから現在のディレクションライトの位置を返してくれるMap
-	std::map<int, int> m_pointLigMap;	//ポイントライトのタグから現在のポイントライトの位置を返してくれるMap
-	std::map<int, int> m_spotLigMap;	//スポットライトのタグから現在のスポットライトの位置を返してくれるMap
+	int m_dirLigNum = 0;								//次に作られるディレクションライトに付与するタグ番号(≒これまでに何個ディレクションライトが作られたか)
+	int m_pointLigNum = 0;								//次に作られるポイントライトに付与するタグ番号(≒これまでに何個ポイントライトが作られたか)
+	int m_spotLigNum = 0;								//次に作られるスポットライトに付与するタグ番号(≒これまでに何個スポットライトが作られたか)
+	std::map<int, int> m_dirLigMap;						//ディレクションライトのタグから現在のディレクションライトの位置を返してくれるMap
+	std::map<int, int> m_pointLigMap;					//ポイントライトのタグから現在のポイントライトの位置を返してくれるMap
+	std::map<int, int> m_spotLigMap;					//スポットライトのタグから現在のスポットライトの位置を返してくれるMap
 
-	Camera m_lightCamera;//シャドウマップ用のライトの位置のカメラ。とりあえずテスト。
+	Camera m_lightCamera;								//シャドウマップ用のライトの位置のカメラ。
 public:
 
 	/**
@@ -98,7 +99,7 @@ public:
 	 * @brief ライトのデータの塊のサイズを取得する(定数バッファに渡す用)
 	 * @return 全ライトのデータのサイズ
 	*/
-	int GetLigDataSize() { return m_size; }
+	int GetLigDataSize() const { return m_size; }
 
 	/**
 	 * @brief カメラのポジションを更新する
@@ -116,7 +117,7 @@ public:
 	 * @brief 影の描画に使用するライトカメラのデータの塊のサイズを取得する(定数バッファに渡す用)
 	 * @return ライトカメラのデータのサイズ
 	*/
-	int GetLigCameraDataSize() { return m_ligCameraDataSize; }
+	int GetLigCameraDataSize() const { return m_ligCameraDataSize; }
 
 	/**
 	 * @brief 影の描画に使用するライトカメラを取得
@@ -133,8 +134,11 @@ public:
 	*/
 	void SetLightCameraPosition(const Vector3& pos)
 	{
+		//座標をセット
 		m_lightCamera.SetPosition(pos);
 		m_lightCamera.Update();
+
+		//ライトカメラのデータを更新後のものに設定
 		m_ligCameraData.lightCameraPosition = pos;
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 
@@ -148,8 +152,11 @@ public:
 	*/
 	void SetLightCameraTarget(const Vector3& targetPos)
 	{
+		//ターゲットの座標をセット
 		m_lightCamera.SetTarget(targetPos);
 		m_lightCamera.Update();
+		
+		//ライトカメラのデータを更新後のものに設定
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 
 		m_ligCameraData.lightCameraDirection = m_lightCamera.GetTarget() - m_lightCamera.GetPosition();
@@ -162,8 +169,11 @@ public:
 	*/
 	void SetLightCameraUp(const Vector3& up)
 	{
+		//上方向のベクトルをセット
 		m_lightCamera.SetUp(up);
 		m_lightCamera.Update();
+		
+		//ライトカメラのデータを更新後のものに設定
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
@@ -173,8 +183,11 @@ public:
 	*/
 	void SetLightCameraUpdateProjMatrixFunc(Camera::EnUpdateProjMatrixFunc func)
 	{
+		//射影行列の更新方法をセット
 		m_lightCamera.SetUpdateProjMatrixFunc(func);
 		m_lightCamera.Update();
+
+		//ライトカメラのデータを更新後のものに設定
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
@@ -184,8 +197,11 @@ public:
 	*/
 	void SetLightCameraWidth(const float& width)
 	{
+		//横幅をセット
 		m_lightCamera.SetWidth(width);
 		m_lightCamera.Update();
+
+		//ライトカメラのデータを更新後のものに設定
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 
@@ -195,8 +211,11 @@ public:
 	*/
 	void SetLightCameraHeight(const float& height)
 	{
+		//高さをセット
 		m_lightCamera.SetHeight(height);
 		m_lightCamera.Update();
+
+		//ライトカメラのデータを更新後のものに設定
 		m_ligCameraData.lightCameraProjectionMatrix = m_lightCamera.GetViewProjectionMatrix();
 	}
 

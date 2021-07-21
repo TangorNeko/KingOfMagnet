@@ -4,17 +4,17 @@ namespace prefab
 {
 	struct PointLigData
 	{
-		Vector3 ligPos;		//ライトの座標
-		float pad;			//パディング
-		Vector3 ligColor;	//ライトの色
-		float ligRange;		//ライトの影響範囲
+		Vector3 ligPos = { 0.0f,0.0f,0.0f };	//ライトの座標
+		float pad = 0.0f;						//パディング
+		Vector3 ligColor = { 1.0f,1.0f,1.0f };	//ライトの色
+		float ligRange = 0.0f;					//ライトの影響範囲
 	};
 
 	class CPointLight : public IGameObject
 	{
-		~CPointLight();
-		bool Start();
-		void Update();
+		~CPointLight()override;
+		bool Start()override;
+		void Update()override;
 
 	public:
 		/**
@@ -27,31 +27,31 @@ namespace prefab
 		 * @brief ポイントライトのデータのサイズを取得
 		 * @return ポイントライトのデータのサイズ
 		*/
-		int GetLigDataSize() { return sizeof(PointLigData); }
+		int GetLigDataSize() const { return sizeof(PointLigData); }
 
 		/**
 		 * @brief ポイントライトの座標を設定
 		 * @param pos ポイントライトの座標
 		*/
-		void SetPosition(Vector3 pos) { m_pointLigData.ligPos = pos; }
+		void SetPosition(const Vector3& pos) { m_pointLigData.ligPos = pos; }
 
 		/**
 		 * @brief ポイントライトの座標を取得
 		 * @return ポイントライトの座標 
 		*/
-		Vector3 GetPosition() { return m_pointLigData.ligPos; }
+		const Vector3& GetPosition() const { return m_pointLigData.ligPos; }
 
 		/**
 		 * @brief ポイントライトの色を設定
 		 * @param color ポイントライトの色
 		*/
-		void SetColor(Vector3 color) { m_pointLigData.ligColor = color; }
+		void SetColor(const Vector3& color) { m_pointLigData.ligColor = color; }
 
 		/**
 		 * @brief ポイントライトの色を取得
 		 * @return ポイントライトの色
 		*/
-		Vector3 GetColor() { return m_pointLigData.ligColor; }
+		const Vector3& GetColor() const { return m_pointLigData.ligColor; }
 
 		/**
 		 * @brief ポイントライトの影響範囲を設定
@@ -63,10 +63,10 @@ namespace prefab
 		 * @brief ポイントライトの影響範囲を取得
 		 * @return ポイントライトの影響範囲
 		*/
-		float GetRange() { return m_pointLigData.ligRange; }
+		float GetRange() const { return m_pointLigData.ligRange; }
 
 	private:
 		PointLigData m_pointLigData;	//ポイントライトのデータ
-		int m_pointLigTag;				//ポイントライトのタグ(何番目に作られたライト?)
+		int m_pointLigTag = 0;				//ポイントライトのタグ(何番目に作られたライト?)
 	};
 }
