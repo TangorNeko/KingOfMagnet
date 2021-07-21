@@ -78,25 +78,25 @@ namespace prefab
 		}
 	}
 
-	void CSpriteRender::SetPosition(Vector3 pos)
+	void CSpriteRender::SetPosition(const Vector3& pos)
 	{
 		m_position = pos;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);
 	}
 
-	void CSpriteRender::SetRotation(Quaternion qRot)
+	void CSpriteRender::SetRotation(const Quaternion& qRot)
 	{
 		m_qRot = qRot;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);
 	}
 
-	void CSpriteRender::SetScale(Vector3 scale)
+	void CSpriteRender::SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);
 	}
 
-	void CSpriteRender::SetPivot(Vector2 pivot)
+	void CSpriteRender::SetPivot(const Vector2& pivot)
 	{
 		m_pivot = pivot;
 		m_sprite.Update(m_position, m_qRot, m_scale, m_pivot);

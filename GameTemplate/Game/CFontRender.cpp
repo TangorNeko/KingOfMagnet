@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "CFontRender.h"
 
-namespace
-{
-	const float SPLITSCREEN_ASPECT_ADJUSTMENT_VALUE = 2.0f;
-}
-
 namespace prefab
 {
 	void CFontRender::PostRender(RenderContext& rc, Camera* camera)
@@ -21,7 +16,7 @@ namespace prefab
 			else
 			{
 				//2âÊñ ï™äÑÇÃéûÇÕècí∑Ç…í◊ÇÍÇÈÇÃÇ≈â°Ç…2î{êLÇŒÇ∑ÅB
-				m_font.Draw(m_text.c_str(), m_position, m_color, m_rotation, { m_scale.x * SPLITSCREEN_ASPECT_ADJUSTMENT_VALUE,m_scale.y}, m_pivot);
+				m_font.Draw(m_text.c_str(), m_position, m_color, m_rotation, { m_scale.x * 2.0f,m_scale.y}, m_pivot);
 			}
 			m_font.End(rc);
 		}

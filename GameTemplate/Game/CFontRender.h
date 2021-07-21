@@ -85,7 +85,7 @@ namespace prefab
 		 * @brief フォントのアウトラインの色をセット
 		 * @param color アウトラインの色
 		*/
-		void SetShadowColor(Vector4 color)
+		void SetShadowColor(const Vector4& color)
 		{
 			m_shadowColor = color;
 			m_font.SetShadowParam(m_drawShadowFlag, m_shadowOffset, m_shadowColor);

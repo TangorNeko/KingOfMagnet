@@ -19,8 +19,6 @@ namespace prefab
 		*/
 		void UpdateModel();
 	public:
-		CSkinModelRender() :m_position(Vector3::Zero), m_qRot(g_quatIdentity), m_scale(Vector3::One) {}
-
 		/**
 		 * @brief モデルの描画
 		 * @param rc レンダーコンテキスト
@@ -132,7 +130,7 @@ namespace prefab
 		 * @brief モデルの座標を取得
 		 * @return 座標
 		*/
-		Vector3 GetPosition()
+		const Vector3& GetPosition() const
 		{
 			return m_position;
 		}
@@ -141,7 +139,7 @@ namespace prefab
 		 * @brief モデルの回転を取得
 		 * @return 回転
 		*/
-		Quaternion GetRotation()
+		const Quaternion& GetRotation() const
 		{
 			return m_qRot;
 		}
@@ -150,7 +148,7 @@ namespace prefab
 		 * @brief モデルの拡大率を取得
 		 * @return 拡大率
 		*/
-		Vector3 GetScale()
+		const Vector3& GetScale() const
 		{
 			return m_scale;
 		}
@@ -181,9 +179,9 @@ namespace prefab
 	private:
 		Skeleton m_skeleton;						//スケルトン
 		Model m_model[eModel_Num];					//モデル
-		Vector3 m_position;							//座標
-		Quaternion m_qRot;							//回転
-		Vector3 m_scale;							//拡大率
+		Vector3 m_position = Vector3::Zero;			//座標
+		Quaternion m_qRot = Quaternion::Identity;	//回転
+		Vector3 m_scale = Vector3::One;				//拡大率
 		AnimationClip* m_animationClips = nullptr;	//アニメーションクリップ
 		int m_animationClipNum = 0;					//アニメーションクリップの数
 		Animation m_animation;						//アニメーション。

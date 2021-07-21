@@ -69,11 +69,19 @@ public:
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト/param>
 	void Draw(RenderContext& renderContext);
+	/**
+	 * @brief 乗算カラーを設定
+	 * @param mulColor 乗算カラー
+	*/
 	void SetMulColor(const Vector4& mulColor)
 	{
 		m_constantBufferCPU.mulColor = mulColor;
 	}
-	Vector4 GetMulColor()
+	/**
+	 * @brief 乗算カラーを取得
+	 * @return 乗算カラー
+	*/
+	const Vector4& GetMulColor()const
 	{
 		return m_constantBufferCPU.mulColor;
 	}

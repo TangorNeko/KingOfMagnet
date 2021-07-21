@@ -20,9 +20,6 @@ namespace prefab
 			Normal,		//通常
 			Transition,	//トランジション用
 		};
-
-		CSpriteRender() :m_position(Vector3::Zero), m_qRot(Quaternion::Identity), m_scale(Vector3::One), m_pivot({ 0.5f,0.5f }) {}
-
 	private:
 		void Update()override;
 	public:
@@ -53,25 +50,25 @@ namespace prefab
 		 * @brief スプライトの座標を設定
 		 * @param pos スプライトの座標
 		*/
-		void SetPosition(Vector3 pos);
+		void SetPosition(const Vector3& pos);
 
 		/**
 		 * @brief スプライトの回転を設定
 		 * @param qRot スプライトの回転
 		*/
-		void SetRotation(Quaternion qRot);
+		void SetRotation(const Quaternion& qRot);
 
 		/**
 		 * @brief スプライトの拡大率を設定
 		 * @param 拡大率
 		*/
-		void SetScale(Vector3 scale);
+		void SetScale(const Vector3& scale);
 
 		/**
 		 * @brief スプライトのピボットを設定
 		 * @param ピボット
 		*/
-		void SetPivot(Vector2 pivot);
+		void SetPivot(const Vector2& pivot);
 
 		/**
 		 * @brief スプライトを描画する画面を設定
@@ -110,25 +107,25 @@ namespace prefab
 		 * @brief スプライトの座標を取得
 		 * @return 座標
 		*/
-		Vector3 GetPosition() { return m_position; }
+		const Vector3& GetPosition() const { return m_position; }
 
 		/**
 		 * @brief スプライトの回転を取得
 		 * @return 回転
 		*/
-		Quaternion GetRotation() { return m_qRot; }
+		const Quaternion& GetRotation() const { return m_qRot; }
 
 		/**
 		 * @brief スプライトの拡大率を取得
 		 * @return 拡大率
 		*/
-		Vector3 GetScale() { return m_scale; }
+		const Vector3& GetScale() const { return m_scale; }
 
 		/**
 		 * @brief スプライトのピボットを取得
 		 * @return ピボット
 		*/
-		Vector2 GetPivot() { return m_pivot; }
+		const Vector2& GetPivot() const { return m_pivot; }
 
 		/**
 		 * @brief スプライトの描画先画面を取得
@@ -140,7 +137,7 @@ namespace prefab
 		 * @brief スプライトの乗算カラーを取得
 		 * @return 乗算カラー
 		*/
-		Vector4 GetMulColor() { return m_sprite.GetMulColor(); }
+		const Vector4& GetMulColor() const { return m_sprite.GetMulColor(); }
 
 		/**
 		 * @brief スプライトサポーターを取得
@@ -157,16 +154,16 @@ namespace prefab
 			m_useSpriteSupporterFlag = flag;
 		}
 	private:
-		SpriteSupporter m_spriteSupporter;		//スプライトサポーター本体
-		Sprite m_sprite;						//スプライト
-		Vector3 m_position;						//スプライトの座標
-		Quaternion m_qRot;						//スプライトの回転
-		Vector3 m_scale;						//スプライトの拡大率
-		Vector2 m_pivot;						//スプライトのピボット
-		DrawScreen m_drawScreen = AllScreen;	//スプライトの描画先画面
-		SpriteMode m_spriteMode = Normal;		//スプライトのモード
-		bool m_isPostRender = true;				//スプライトをモデルの描画が終わってから描画するか?
-		bool m_useSpriteSupporterFlag = true;	//スプライトサポーターを使用する?
+		SpriteSupporter m_spriteSupporter;			//スプライトサポーター本体
+		Sprite m_sprite;							//スプライト
+		Vector3 m_position = Vector3::Zero;			//スプライトの座標
+		Quaternion m_qRot = Quaternion::Identity;	//スプライトの回転
+		Vector3 m_scale = Vector3::One;				//スプライトの拡大率
+		Vector2 m_pivot = { 0.5f,0.5f };			//スプライトのピボット
+		DrawScreen m_drawScreen = AllScreen;		//スプライトの描画先画面
+		SpriteMode m_spriteMode = Normal;			//スプライトのモード
+		bool m_isPostRender = true;					//スプライトをモデルの描画が終わってから描画するか?
+		bool m_useSpriteSupporterFlag = true;		//スプライトサポーターを使用する?
 	};
 }
 
