@@ -7,7 +7,7 @@ class GameScene;
 
 class Debris : public IGameObject
 {
-	~Debris();
+	~Debris() override;
 	bool Start() override;
 	void Update() override;
 
@@ -116,8 +116,8 @@ public:
 	void SetOnGroundFlag(bool flag) { m_isOnGround = flag; }
 private:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;	//ガレキのモデル
-	Vector3 m_position;										//座標
-	Vector3 m_oldPosition;									//前フレームの座標
+	Vector3 m_position = Vector3::Zero;						//座標
+	Vector3 m_oldPosition = Vector3::Zero;					//前フレームの座標
 	Vector3 m_moveDirection = { 1.0f,0.0f,0.0f };			//移動する方向
 	enDebrisState m_debrisState = enDrop;					//ガレキの状態
 	enDebrisShape m_debrisShape = enScrap;					//ガレキの形状

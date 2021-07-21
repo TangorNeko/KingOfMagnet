@@ -9,39 +9,39 @@
 
 namespace
 {
-	const float DEBRIS_SPEED = 50.0f;
-	const int SCRAP_SHAPE_LOTTERY_MOD_VALUE = 3;
-	const int SCRAP_SHAPE_LOTTERY_PIPE = 0;
-	const int SCRAP_SHAPE_LOTTERY_GEAR = 1;
-	const int SCRAP_SHAPE_LOTTERY_SCREW = 2;
-	const Vector3 MODEL_SCRAP_SCALE = { 1.0f,1.0f,1.0f };
-	const Vector3 MODEL_SWORD_SCALE = { 0.5f,0.5f,0.5f };
-	const Vector3 MODEL_SPECIALCHARGER_SCALE = { 0.1f, 0.1f, 0.1f };
-	const float DEBRIS_DESTROY_HEIGHT = -1000.0f;
-	const float DEBRIS_BIRST_MOVE_SPEED_X = 30.0f;
-	const float DEBRIS_BIRST_MOVE_SPEED_Y = 10.0f;
-	const float DEBRIS_BIRST_MOVE_SPEED_Z = 30.0f;
-	const float DEBRIS_OBTAINABLE_RANGE = 100.0f;
-	const float DEBRIS_GROUND_GRAVITY_SPEED = 10.0f;
-	const int FONT_BULLETNUM_DOUBLEDIGIT_BORDER = 10;
-	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT = { -207.0f, -270.0f };
-	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_SINGLEDIGIT = { -170.0f, -270.0f };
-	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_DOUBLEDIGIT = { 23.0f, -270.0f };
-	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_SINGLEDIGIT = { 60.0f, -270.0f };
-	const float DEBRIS_COLLISION_RADIUS = 60.0f;
-	const float SOUND_SE_SCRAP_HIT_VOLUME = 1.2f;
-	const float SOUND_SE_SWORD_HIT_VOLUME = 1.5f;
-	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.2f;
-	const int DAMAGE_SCRAP = 80;
-	const int DAMAGE_SWORD = 120;
-	const int DAMAGE_SPECIALCHARGER = 40;
-	const float DEBRIS_POP_POSITION_SPACE = 30.0f;
-	const int SPECIALCHARGER_COUNT_CHARGE = 50;
-	const int SPECIALCHARGER_CHARGEVALUE = 2;
+	const float DEBRIS_SPEED = 50.0f;													//ガレキの弾速
+	const int SCRAP_SHAPE_LOTTERY_MOD_VALUE = 3;										//通常弾の形をランダムに決めるための余剰演算値
+	const int SCRAP_SHAPE_LOTTERY_PIPE = 0;												//通常弾の形状:パイプ
+	const int SCRAP_SHAPE_LOTTERY_GEAR = 1;												//通常弾の形状:歯車
+	const int SCRAP_SHAPE_LOTTERY_SCREW = 2;											//通常弾の形状:ネジ
+	const Vector3 MODEL_SCRAP_SCALE = { 1.0f,1.0f,1.0f };								//通常弾の拡大率
+	const Vector3 MODEL_SWORD_SCALE = { 0.5f,0.5f,0.5f };								//剣の拡大率
+	const Vector3 MODEL_SPECIALCHARGER_SCALE = { 0.1f, 0.1f, 0.1f };					//スペシャルチャージャーの拡大率
+	const float DEBRIS_DESTROY_HEIGHT = -1000.0f;										//ガレキが消滅する高さ
+	const float DEBRIS_BIRST_MOVE_SPEED_X = 30.0f;										//バースト時の移動速度_X
+	const float DEBRIS_BIRST_MOVE_SPEED_Y = 10.0f;										//バースト時の移動速度_Y
+	const float DEBRIS_BIRST_MOVE_SPEED_Z = 30.0f;										//バースト時の移動速度_Z
+	const float DEBRIS_OBTAINABLE_RANGE = 100.0f;										//プレイヤーに拾われる距離
+	const float DEBRIS_GROUND_GRAVITY_SPEED = 10.0f;									//落ちている時の重力
+	const int FONT_BULLETNUM_DOUBLEDIGIT_BORDER = 10;									//弾の所持数の2桁の境界
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_DOUBLEDIGIT = { -207.0f, -270.0f };	//プレイヤー1の弾所持数が2桁だった時のフォントの座標
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER1_SINGLEDIGIT = { -170.0f, -270.0f };	//プレイヤー1の弾所持数が1桁だった時のフォントの座標
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_DOUBLEDIGIT = { 23.0f, -270.0f };		//プレイヤー2の弾所持数が2桁だった時のフォントの座標
+	const Vector2 FONT_BULLETNUM_POSITION_PLAYER2_SINGLEDIGIT = { 60.0f, -270.0f };		//プレイヤー2の弾所持数が1桁だった時のフォントの座標
+	const float DEBRIS_COLLISION_RADIUS = 60.0f;										//ガレキの当たり判定の半径
+	const float SOUND_SE_SCRAP_HIT_VOLUME = 1.2f;										//通常弾が当たった時の効果音のボリューム
+	const float SOUND_SE_SWORD_HIT_VOLUME = 1.5f;										//剣が当たった時の効果音のボリューム
+	const float SOUND_SE_SPECIALCHARGER_HIT_VOLUME = 1.2f;								//スペシャルチャージャーが当たった時の効果音のボリューム
+	const int DAMAGE_SCRAP = 80;														//通常弾のダメージ
+	const int DAMAGE_SWORD = 120;														//剣のダメージ
+	const int DAMAGE_SPECIALCHARGER = 40;												//スペシャルチャージャーのダメージ
+	const float DEBRIS_POP_POSITION_SPACE = 30.0f;										//ステージに当たった時壁に埋まらないようにするためずらす距離
+	const int SPECIALCHARGER_COUNT_CHARGE = 50;											//スペシャルチャージャーがプレイヤーの必殺技ゲージをチャージする間隔
+	const int SPECIALCHARGER_CHARGEVALUE = 2;											//スペシャルチャージャーがプレイヤーの必殺技ゲージをチャージする値
 
 	//他のクラスでも使いそうな定数
-	const int PLAYER_HOLD_DEBRIS_SIZE_MAX = 10;
-	const float PLAYER_KNOCKBACK_SPEED = 10.0f;
+	const int PLAYER_HOLD_DEBRIS_SIZE_MAX = 10;											//プレイヤーが持てるガレキの最大数
+	const float PLAYER_KNOCKBACK_SPEED = 10.0f;											//プレイヤーのノックバック速度
 }
 Debris::~Debris()
 {
