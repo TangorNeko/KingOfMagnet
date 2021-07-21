@@ -293,6 +293,10 @@
     <ClCompile Include="OptionValue.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="OpeningCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="FinalHit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -867,6 +871,10 @@
     <ClInclude Include="OptionValue.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="OpeningCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="FinalHit.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">

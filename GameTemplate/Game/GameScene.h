@@ -6,6 +6,8 @@ class BackGround;
 class SkyBoard;
 
 class RoundCounter;
+class OpeningCamera;
+class FinalHit;
 
 class GameScene : public IGameObject
 {
@@ -150,7 +152,13 @@ public:
 			DeleteGO(m_skipFontRender);
 			m_skipFontRender = nullptr;
 		}
-	}
+	}		
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	Player* GetPlayer1() { return m_player1; }
+	Player* GetPlayer2() { return m_player2; }
 
 	const int MAXBULLETNUM = 60;								//ゲームシーンに存在できる弾数の最大数
 private:
@@ -214,6 +222,11 @@ private:
 	prefab::CFontRender* m_drawFontRender = nullptr;			//引き分けのフォント
 	int m_drawFontCount = 300;									//引き分けのフォントを表示する時間
 
-	RoundCounter* m_roundCounter = nullptr;						//プレイヤーの取得ラウンド数の管理クラス
+	RoundCounter* m_roundCounter = nullptr;						//プレイヤーの取得ラウンド数の管理クラス	
+	OpeningCamera* openingCameraPlayer1 = nullptr;				// 1P側のオープニングカメラ	
+	OpeningCamera* openingCameraPlayer2 = nullptr;				// 1P側のオープニングカメラ	
+	int m_openingCameraCount=0;									//オープニングのループカウント	
+	bool m_isOpeningCameraOn = true;							// オープニングカメラが動いていればtrue	
+	FinalHit* m_finalHit = nullptr;								// ファイナルヒットカメラ
 };
 

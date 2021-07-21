@@ -216,6 +216,17 @@ public://リファクタリング中に作られた関数
 		m_moveAmount = moveAmount;
 	}
 
+
+	/**
+	 * @brief スキンモデルレンダー
+	 * @return スキンモデルレンダーを返す
+	*/
+	prefab::CSkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
+
+	const Vector3& GetLastFrontDir()const  {return m_LastFrontDir;}
+
+	bool GetIsLose() { return m_Lose; }
+	
 public:
 	//アニメーションの数
 	enum {
@@ -254,18 +265,6 @@ public:
 
 	std::vector<Bomb*> m_holdBombVector;//保持している爆弾が格納されるコンテナ
 	int m_selectBombNo = 0;//選択している爆弾の番号
-
-	//ファイナルヒット関連
-	bool m_Lose = false;//負けたかどうか
-	bool m_WinAnimOn = false;//勝者アニメーションを開始する
-	int m_LoseCameraLoop = 0;//ファイナルヒットカメラのループカウント
-	bool m_FirstTime = true;//最初の一度だけ
-	int m_loserNum = 0;//敗者のプレイヤー番号
-	int m_LastCameraStatus = 0;//状態遷移番号
-	float m_coef = 0.0f;//ベクターに掛ける値(coefficient)
-	Vector3 m_LastFrontDir;//キャラが最後に向いた向き
-	Vector3 m_winnerVec;//敗者から勝者に向かうベクトル
-	Vector3 m_winnerWaistPos;//勝者の腰の位置
 
 	prefab::CFontRender* m_bulletNumFont = nullptr;//残弾数
 	prefab::CFontRender* m_bulletMaxFont = nullptr;//残弾数
@@ -354,16 +353,17 @@ private:
 
 	GameScene* m_gameScene = nullptr;							//ゲームシーン
 	Player* m_enemy = nullptr;									//敵プレイヤー
-
-
-
-
 	//後から分離したい
-	Vector3 m_sequenceCameraPos;//シーケンスカメラの座標
-	Vector3 m_targetPos = { 0.0f,0.0f,0.0f }; //  **定数化**
-	float m_openingCameraGainSpeed = 10;//カメラとターゲットとの接近速度	
-	float m_openingCameraRotationRad = 0.0f;//オープニングカメラの回転角度
-	int m_openingCameraCount = 0;//オープニングカメラが始まってからの経過フレーム
+	//Vector3 m_sequenceCameraPos;								//シーケンスカメラの座標
+	//Vector3 m_targetPos = { 0.0f,0.0f,0.0f };					//  **定数化**
+	//float m_openingCameraGainSpeed = 10;						//カメラとターゲットとの接近速度	
+	//float m_openingCameraRotationRad = 0.0f;					//オープニングカメラの回転角度
+	//int m_openingCameraCount = 0;								//オープニングカメラが始まってからの経過フレーム
+
+	//ファイナルヒット関連
+	bool m_Lose = false;										//自分が負けたかどうか
+	bool m_FirstTime = true;									//一度だけループさせるためのフラグ	
+	Vector3 m_LastFrontDir;										//キャラが最後に向いた向き			
 };
 
 

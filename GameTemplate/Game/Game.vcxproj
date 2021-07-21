@@ -310,6 +310,7 @@
     <ClCompile Include="CEffect.cpp" />
     <ClCompile Include="EffectEngine.cpp" />
     <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="FinalHit.cpp" />
     <ClCompile Include="Flash.cpp" />
     <ClCompile Include="GameOption.cpp" />
     <ClCompile Include="GravityBullet.cpp" />
@@ -320,6 +321,7 @@
     <ClCompile Include="MapChip2D.cpp" />
     <ClCompile Include="MobiusGauge.cpp" />
     <ClCompile Include="MyCapsuleCollider.cpp" />
+    <ClCompile Include="OpeningCamera.cpp" />
     <ClCompile Include="OptionValue.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostEffectManager.cpp" />
@@ -428,6 +430,7 @@
     <ClInclude Include="CEffect.h" />
     <ClInclude Include="EffectEngine.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="FinalHit.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="GameOption.h" />
     <ClInclude Include="GravityBullet.h" />
@@ -438,6 +441,7 @@
     <ClInclude Include="MobiusGauge.h" />
     <ClInclude Include="MyCapsuleCollider.h" />
     <ClInclude Include="NameKey.h" />
+    <ClInclude Include="OpeningCamera.h" />
     <ClInclude Include="OptionValue.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PostEffectManager.h" />

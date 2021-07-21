@@ -12,6 +12,8 @@
 #include <random>
 
 #include "RoundCounter.h"
+#include "OpeningCamera.h"
+#include "FinalHit.h"
 
 namespace
 {
@@ -341,11 +343,28 @@ void GameScene::Update()
 {
 	if (m_gameState == enBirdseye)
 	{
+		if (openingCameraPlayer1 == nullptr) 
+		{
+			openingCameraPlayer1 = NewGO<OpeningCamera>(0);
+			openingCameraPlayer2 = NewGO<OpeningCamera>(0);
+			openingCameraPlayer1->SetPlayerNum(0);
+			openingCameraPlayer2->SetPlayerNum(1);
+			openingCameraPlayer1->SetCameraFront(g_camera3D[0]->GetForward());
+			openingCameraPlayer2->SetCameraFront(g_camera3D[1]->GetForward());
+			openingCameraPlayer1->SetPlayerPos(m_player1->GetPosition());
+			openingCameraPlayer2->SetPlayerPos(m_player2->GetPosition());
+		}
 		m_roundCounter->RoundAnnounce();
 	}
 
 	//スタートカウントダウン
 	if (m_gameState == enStartCountDown) {
+		if (m_isOpeningCameraOn == true)
+		{
+			DeleteGO(openingCameraPlayer1);
+			DeleteGO(openingCameraPlayer2);
+			m_isOpeningCameraOn = false;
+		}
 		StartCountDown();
 		return;
 	}
@@ -382,10 +401,22 @@ void GameScene::Update()
 	}
 
 	if (m_gameState == enResult)
-	{	
+	{
 		//ゲームが決着した最初のフレーム
 		if (m_isGameEndFirstFrame == true)
 		{
+			m_finalHit = NewGO<FinalHit>(0);
+			//弾も消す
+			QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
+				{
+					DeleteGO(bomb);
+					return true;
+				});
+			QueryGOs<Debris>("debris", [](Debris* debris)->bool
+				{
+					DeleteGO(debris);
+					return true;
+				});
 			DeleteGO(m_delimitLineSpriteRender);
 			DeleteGO(m_HPCoverSpriteRender);
 			DeleteGO(m_TimerBaseSpriteRender);
@@ -397,16 +428,14 @@ void GameScene::Update()
 
 			m_isGameEndFirstFrame = false;
 
-			if (m_player1->m_Lose == true)
+			if (m_player1->GetIsLose() == true)
 			{
-				m_player1->m_loserNum = NUMBER_PLAYER1;
-				m_player2->m_loserNum = NUMBER_PLAYER1;
+				m_finalHit->SetLoserNum(NUMBER_PLAYER1);
 				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER2);
 			}
-			else if (m_player2->m_Lose == true)
+			else if (m_player2->GetIsLose() == true)
 			{
-				m_player1->m_loserNum = NUMBER_PLAYER2;
-				m_player2->m_loserNum = NUMBER_PLAYER2;
+				m_finalHit->SetLoserNum(NUMBER_PLAYER2);
 				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER1);
 			}
 
@@ -432,14 +461,16 @@ void GameScene::Update()
 			if (m_roundCounter->GetOverAllWinner() == -1)
 			{
 				NewGO<GameScene>(0, "gamescene");
+				DeleteGO(m_finalHit);
 				DeleteGO(this);
 			}
 			else
 			{
 				NewGO<ResultScene>(0, "resultscene");
 				ResultScene* resultscene = FindGO<ResultScene>("resultscene");
-				resultscene->SetLoserNum(m_player1->m_loserNum);
+				resultscene->SetLoserNum(m_finalHit->GetLoserNum());
 				DeleteGO(m_roundCounter);
+				DeleteGO(m_finalHit);
 				DeleteGO(this);
 			}
 		}
@@ -861,5 +892,4 @@ void GameScene::FinalCount() {
 		m_finalCountDown->GetSpriteSupporter().SpriteColor(SPRITE_FINALCOUNTDOWN_COLOR_TRANSPARENT, SPRITE_FINALCOUNTDOWN_TRANSPARENT_TIME, SPRITE_FINALCOUNTDOWN_TRANSPARENT_DELAY);
 		m_finalCount1_Flag = true;
 	}
-
 }
