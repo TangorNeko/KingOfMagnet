@@ -609,17 +609,17 @@ void Player::DisplayStatus()
 	//メビウスゲージの色を磁力から決定
 	if (m_magnetState == MAGNETSTATE_REPULSION)
 	{
-		m_mobiusGauge->m_isRed = true;
+		m_mobiusGauge->SetGaugeRedFlag(true);
 	}
 	else
 	{
-		m_mobiusGauge->m_isRed = false;
+		m_mobiusGauge->SetGaugeRedFlag(false);
 	}
 
 	//メビウスゲージに現在の必殺技のチャージ量を渡す
-	m_mobiusGauge->m_magnetCharge = m_magnetCharge;
+	m_mobiusGauge->SetMagnetCharge(m_magnetCharge);
 
-	m_mobiusGauge->m_spCharge = m_specialAttackGauge;
+	m_mobiusGauge->SetSPCharge(m_specialAttackGauge);
 }
 
 //移動
