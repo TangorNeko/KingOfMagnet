@@ -10,7 +10,7 @@ namespace prefab
 	{
 	public:
 		CEffect();
-		~CEffect();
+		~CEffect()override;
 
 		/**
 		 * @brief エフェクトの初期化
@@ -105,10 +105,10 @@ namespace prefab
 			EffectEngine::GetInstance()->LoadEffect(filePath);
 		}
 	private:
-		Effekseer::EffectRef m_effect;	//エフェクト
-		int	m_handle = -1;				//再生中のエフェクトのハンドル。
-		Vector3 m_position;				//座標。
-		Quaternion m_rotation;;			//回転。
-		Vector3 m_scale = g_vec3One;	//拡大率。
+		Effekseer::EffectRef m_effect;					//エフェクト
+		int	m_handle = -1;								//再生中のエフェクトのハンドル。
+		Vector3 m_position = Vector3::Zero;				//座標。
+		Quaternion m_rotation = Quaternion::Identity;	//回転。
+		Vector3 m_scale = g_vec3One;					//拡大率。
 	};
 }
