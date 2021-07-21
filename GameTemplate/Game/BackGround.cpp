@@ -5,15 +5,13 @@
 
 namespace
 {
-	const Vector3 SPOTLIGHT_NORTH_POSITION = { 0.0f,0.0f,270.0f };
-	const Vector3 SPOTLIGHT_SOUTH_POSITION = { 0.0f,0.0f,-270.0f };
-	const Vector3 SPOTLIGHT_DIRECTION = { 0.0f,-1.0f,0.0f };
-	const Vector3 SPOTLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };
-	const float SPOTLIGHT_RANGE = 1000.0f;
-	const float SPOTLIGHT_ANGLE = 90.0f;
-	const float RESPAWNPOINT_INIT_DISTANCE = 0.0f;
-	const int STRCMP_NO_DIFFERENCE = 0;
-
+	const Vector3 SPOTLIGHT_NORTH_POSITION = { 0.0f,0.0f,270.0f };	//ステージ北側のスポットライトの座標
+	const Vector3 SPOTLIGHT_SOUTH_POSITION = { 0.0f,0.0f,-270.0f };	//ステージ南側のスポットライトの座標
+	const Vector3 SPOTLIGHT_DIRECTION = { 0.0f,-1.0f,0.0f };		//スポットライトの向き
+	const Vector3 SPOTLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };		//スポットライトの色　白色
+	const float SPOTLIGHT_RANGE = 1000.0f;							//スポットライトの影響範囲
+	const float SPOTLIGHT_ANGLE = 90.0f;							//スポットライトの影響角度
+	const float RESPAWNPOINT_INIT_DISTANCE = 0.0f;					//スポーン地点選定の初期距離						
 }
 
 BackGround::~BackGround()
@@ -52,14 +50,14 @@ bool BackGround::Start()
 	
 	//リスポーン地点の読み込み
 	m_level.Init("Assets/modelData/Level_00.tkl", [&](prefab::LevelObjectData& objData) {
-		if (strcmp(objData.name, "RespawnPoint") == STRCMP_NO_DIFFERENCE) {//リスポーン地点
+		if (strcmp(objData.name, "RespawnPoint") == 0) {//リスポーン地点
 
 			//リスポーン地点の候補に追加していく。
 			m_respawnPoints.push_back(objData.position);
 			
 			return true;
 		}
-		if (strcmp(objData.name, "DebrisBlock") == STRCMP_NO_DIFFERENCE) {//ガレキブロック
+		if (strcmp(objData.name, "DebrisBlock") == 0) {//ガレキブロック
 
 			//ガレキブロックを作成
 			DebrisBlock* debrisBlock = NewGO<DebrisBlock>(0, "debrisblock");
@@ -67,7 +65,7 @@ bool BackGround::Start()
 
 			return true;
 		}
-		if (strcmp(objData.name, "Repulsion") == STRCMP_NO_DIFFERENCE) {//斥力床
+		if (strcmp(objData.name, "Repulsion") == 0) {//斥力床
 
 			//斥力床を作成
 			Repulsion* repulsion = NewGO<Repulsion>(0, "repulsion");
@@ -92,7 +90,7 @@ bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector
 	return m_skinModelRender->isLineHitModel(start, end, crossPoint);
 }
 
-Vector3 BackGround::GetRespawnPoint(const Vector3& enemyPos) const
+Vector3 BackGround::CalcRespawnPoint(const Vector3& enemyPos) const
 {
 	//リスポーン地点
 	Vector3 respawnpoint;

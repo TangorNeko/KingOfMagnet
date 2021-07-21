@@ -3,7 +3,7 @@
 class Repulsion;
 class BackGround : public IGameObject
 {
-	~BackGround();
+	~BackGround() override;
 	bool Start() override;
 	void Update()override;
 public:
@@ -21,7 +21,7 @@ public:
 	 * @param enemyPos 敵の座標
 	 * @return リスポーン地点の中で受け取った敵の座標から一番遠いものの座標
 	*/
-	Vector3 GetRespawnPoint(const Vector3& enemyPos) const;
+	Vector3 CalcRespawnPoint(const Vector3& enemyPos) const;
 private:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;	//ステージのモデル
 	Vector3 m_position = { 0.0f,0.0f,0.0f };				//ステージのモデルの座標

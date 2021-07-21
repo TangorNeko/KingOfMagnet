@@ -669,7 +669,7 @@ void Player::Move()
 		Damage(DAMAGE_FALL);
 
 		//敵から最も遠いリスポーン地点に移動する。
-		Vector3 respawnPoint = m_stageModel->GetRespawnPoint(m_enemy->m_position);
+		Vector3 respawnPoint = m_stageModel->CalcRespawnPoint(m_enemy->m_position);
 		m_position = respawnPoint;
 		m_charaCon.SetPosition(m_position);
 		m_skinModelRender->SetPosition(m_position);
@@ -1609,7 +1609,7 @@ void Player::Win()
 	}
 	else
 	{
-		m_position = m_stageModel->GetRespawnPoint(m_enemy->m_position);
+		m_position = m_stageModel->CalcRespawnPoint(m_enemy->m_position);
 	}
 
 	m_skinModelRender->SetPosition(m_position);
@@ -1640,7 +1640,7 @@ void Player::Lose()
 	else
 	{
 		//ヒットしないということは穴の上なのでリスポーン位置にプレイヤーの位置を移動。
-		m_position = m_stageModel->GetRespawnPoint(m_enemy->m_position);
+		m_position = m_stageModel->CalcRespawnPoint(m_enemy->m_position);
 	}
 
 	m_skinModelRender->SetPosition(m_position);
