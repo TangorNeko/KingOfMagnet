@@ -9,18 +9,18 @@
 
 namespace
 {
-	const int FACTORY_TIMER_CAN_CREATE = 0;
-	const int FACTORY_TIMER_AFTER_CREATE = 90;
-	const float FACTORY_MAX_CREATE_DISTANCE = 500.0f;
-	const int FACTORY_BULLET_CREATE_NUM = 5;
-	const int BULLET_LOTTERY_MOD_VALUE = 100;
-	const int BULLET_LOTTERY_DEBRIS = 85;
-	const int DEBRIS_SHAPE_LOTTRY_MOD_VALUE = 100;
-	const int DEBRIS_SHAPE_LOTTRY_SCRAP = 75;
-	const int DEBRIS_SHAPE_LOTTRY_SWORD = 90;
-	const int BOMG_SHAPE_LOTTERY_MOD_VALUE = 100;
-	const int BOMG_SHAPE_LOTTERY_GRENADE = 33;
-	const int BOMG_SHAPE_LOTTERY_FLASHGRENADE = 66;
+	const int FACTORY_TIMER_CAN_CREATE = 0;				//生成タイマー:生成可能
+	const int FACTORY_TIMER_AFTER_CREATE = 90;			//生成タイマー:生成直後
+	const float FACTORY_MAX_CREATE_DISTANCE = 500.0f;	//近くでプレイヤーが引力バーストしていた時弾を生成する最大距離
+	const int FACTORY_BULLET_CREATE_NUM = 5;			//一回の生成で作られる弾数
+	const int BULLET_LOTTERY_MOD_VALUE = 100;			//ガレキを生成するか爆弾を生成するかのランダム抽選のための余剰演算値
+	const int BULLET_LOTTERY_DEBRIS = 85;				//ガレキを生成するか爆弾を生成するかのランダム抽選のガレキ側のしきい値
+	const int DEBRIS_SHAPE_LOTTRY_MOD_VALUE = 100;		//ガレキの中で何の種類の弾を生成するかのランダム抽選のための余剰演算値
+	const int DEBRIS_SHAPE_LOTTRY_SCRAP = 75;			//ガレキの中で通常弾を生成する時のしきい値
+	const int DEBRIS_SHAPE_LOTTRY_SWORD = 90;			//ガレキの中で剣を生成する時のしきい値
+	const int BOMG_SHAPE_LOTTERY_MOD_VALUE = 100;		//爆弾の中でどの種類の爆弾を生成するかのランダム抽選のための余剰演算値
+	const int BOMG_SHAPE_LOTTERY_GRENADE = 33;			//爆弾の中でグレネードを生成する時のしきい値
+	const int BOMG_SHAPE_LOTTERY_FLASHGRENADE = 66;		//爆弾の中で閃光弾を生成する時のしきい値
 }
 DebrisBlock::~DebrisBlock()
 {

@@ -4,7 +4,7 @@ class GameScene;
 
 class DebrisBlock : public IGameObject
 {
-	~DebrisBlock();
+	~DebrisBlock() override;
 	bool Start() override;
 	void Update() override;
 
