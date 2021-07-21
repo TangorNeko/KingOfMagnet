@@ -7,7 +7,7 @@ class GameScene;
 
 class Bomb : public IGameObject
 {
-	~Bomb();
+	~Bomb() override;
 	bool Start() override;
 	void Update() override;
 
@@ -84,8 +84,8 @@ public:
 	
 private:
 	prefab::CSkinModelRender* m_skinModelRender = nullptr;	//爆弾のモデル
-	Vector3 m_position;										//座標
-	Vector3 m_oldPosition;									//前フレームの座標
+	Vector3 m_position = Vector3::Zero;						//座標
+	Vector3 m_oldPosition = Vector3::Zero;					//前フレームの座標
 	Vector3 m_moveDirection = { 1.0f,0.0f,0.0f };			//移動する方向
 	enBombState m_bombState = enDrop;						//爆弾の状態
 	enBombShape m_bombShape = enGrenade;					//爆弾の種類

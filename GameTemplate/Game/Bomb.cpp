@@ -11,24 +11,24 @@
 
 namespace
 {
-	const float BOMB_SPEED = 20.0f;
-	const Vector3 BOMB_GRENADE_SCALE = { 0.5f,0.5f,0.5f };
-	const Vector3 BOMB_FLASHGRENADE_SCALE = { 0.35f, 0.35f, 0.35f };
-	const Vector3 BOMB_INCENDIARY_SCALE = { 0.25f, 0.25f, 0.25f };
-	const float BOMB_DESTROY_HEIGHT = -1000.0f;
-	const float BOMB_BIRST_MOVE_SPEED_X = 30.0f;
-	const float BOMB_BIRST_MOVE_SPEED_Y = 10.0f;
-	const float BOMB_BIRST_MOVE_SPEED_Z = 30.0f;
-	const float BOMB_OBTAINABLE_RANGE = 100.0f;
-	const float BOMB_GROUND_GRAVITY_SPEED = 10.0f;
-	const float BOMB_COLLISION_RADIUS = 60.0f;
-	const float BOMB_FALLING_DIRECTION_MINUS_VALUE = 0.035f;
-	const float BOMB_POP_POSITION_SPACE = 30.0f;
-	const int BOMB_EXPLOSION_COUNT_EXPLOSION = 20;
+	const float BOMB_SPEED = 20.0f;										//爆弾の速度
+	const Vector3 BOMB_GRENADE_SCALE = { 0.5f,0.5f,0.5f };				//グレネードのモデルの拡大率
+	const Vector3 BOMB_FLASHGRENADE_SCALE = { 0.35f, 0.35f, 0.35f };	//閃光弾のモデルの拡大率
+	const Vector3 BOMB_INCENDIARY_SCALE = { 0.25f, 0.25f, 0.25f };		//焼夷弾のモデルの拡大率
+	const float BOMB_DESTROY_HEIGHT = -1000.0f;							//爆弾が消滅する高さ
+	const float BOMB_BIRST_MOVE_SPEED_X = 30.0f;						//バースト時の移動速度_X
+	const float BOMB_BIRST_MOVE_SPEED_Y = 10.0f;						//バースト時の移動速度_Y
+	const float BOMB_BIRST_MOVE_SPEED_Z = 30.0f;						//バースト時の移動速度_Z
+	const float BOMB_OBTAINABLE_RANGE = 100.0f;							//プレイヤーに拾われる距離
+	const float BOMB_GROUND_GRAVITY_SPEED = 10.0f;						//落ちている時の重力
+	const float BOMB_COLLISION_RADIUS = 60.0f;							//爆弾の当たり判定の半径
+	const float BOMB_FALLING_DIRECTION_MINUS_VALUE = 0.035f;			//放物線を描くためYの速度にマイナスしていく値
+	const float BOMB_POP_POSITION_SPACE = 30.0f;						//ステージに当たった時壁に当たらないようにするためずらす距離
+	const int BOMB_EXPLOSION_COUNT_EXPLOSION = 20;						//爆弾が爆発するカウント
 
 
 	//他のクラスでも使いそうな定数
-	const int PLAYER_HOLD_BOMB_SIZE_MAX = 3;
+	const int PLAYER_HOLD_BOMB_SIZE_MAX = 3;							//プレイヤーが持てる爆弾の最大数
 }
 Bomb::~Bomb()
 {
