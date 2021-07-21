@@ -5,16 +5,16 @@
 
 namespace
 {
-	const int DAMAGEDISPLAY_DELETE_TIME = 50;
-	const Vector4 FONT_DAMAGE_COLOR = { 1.0f,0.1f,0.1f,1.0f };
-	const Vector4 FONT_SHADOW_COLOR = { 0.0f,0.0f,0.0f,1.0f };
-	const float FONT_SHADOW_OFFSET = 2.0f;
-	const float DAMAGEPOSITION_Y_SPACER = 100.0f;
-	const int DAMAGEPOSITION_MOD_VALUE = 50;
-	const int DAMAGEDIRECTION_MODE_VALUE = 2;
-	const float FONT_DAMAGE_X_PIVOT = -40.0f;
-	const int MOVESPEED_ADJUST_VALUE = 10;
-	const int FALLSPEED_ADJUST_VALUE = 50;
+	const int DAMAGEDISPLAY_DELETE_TIME = 50;					//消去までのフレーム数
+	const Vector4 FONT_DAMAGE_COLOR = { 1.0f,0.1f,0.1f,1.0f };	//ダメージフォントの色
+	const Vector4 FONT_SHADOW_COLOR = { 0.0f,0.0f,0.0f,1.0f };	//ダメージフォントの影の色
+	const float FONT_SHADOW_OFFSET = 2.0f;						//ダメージフォントの影の太さ
+	const float DAMAGEPOSITION_Y_SPACER = 100.0f;				//ダメージが発生したプレイヤーの座標よりも上から表示するための距離
+	const int DAMAGEPOSITION_MOD_VALUE = 50;					//0~49のランダムな値を得るための余剰演算値
+	const int DAMAGEDIRECTION_MOD_VALUE = 2;					//ダメージ表示が飛ぶ方向が左右どちらかをランダムに決めるための余剰演算値
+	const float FONT_DAMAGE_X_PIVOT = -40.0f;					//ダメージフォントのピボット
+	const int MOVESPEED_ADJUST_VALUE = 10;						//ダメージ量に比例して横移動の速度を上げるために割る値
+	const int FALLSPEED_ADJUST_VALUE = 50;						//ダメージ量に比例して縦移動の速度を上げるために割る値
 }
 
 DamageDisplay::~DamageDisplay()
@@ -47,7 +47,7 @@ bool DamageDisplay::Start()
 	m_damagePosition.x += rnd() % DAMAGEPOSITION_MOD_VALUE;
 	
 	//フォントが右に移動するか左に移動するかランダムに決定。
-	m_isxSpeedPositive = rnd() % DAMAGEDIRECTION_MODE_VALUE;
+	m_isxSpeedPositive = rnd() % DAMAGEDIRECTION_MOD_VALUE;
 	return true;
 }
 void DamageDisplay::Update()
