@@ -44,7 +44,7 @@ public:
 	 * @brief 引力弾の座標を取得
 	 * @return 座標
 	*/
-	Vector3 GetPosition() { return m_position; }
+	const Vector3& GetPosition() const { return m_position; }
 
 	/**
 	 * @brief 引力弾の移動方向を設定
@@ -75,7 +75,7 @@ private:
 	prefab::CEffect* m_inflateEffect = nullptr;				//膨張エフェクト
 	prefab::CEffect* m_wearingEffect = nullptr;				//発射時に弾が纏うエフェクト
 	Vector3 m_position = { 0.0f,0.0f,0.0f };				//座標
-	Vector3 m_oldPosition;									//前フレームの座標
+	Vector3 m_oldPosition = { 0.0f,0.0f,0.0f };				//前フレームの座標
 	Vector3 m_moveDirection = { 0.0f,0.0f,0.0f };			//移動する方向
 	float angle = 0.0f;										//モデルの角度
 	enGravityBulletState m_gravityBulletState = enBullet;	//引力弾の状態

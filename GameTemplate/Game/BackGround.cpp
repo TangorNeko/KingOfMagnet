@@ -87,12 +87,12 @@ void BackGround::Update()
 	m_skinModelRender->SetPosition(m_position);
 }
 
-bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector3& crossPoint)
+bool BackGround::isLineHitModel(const Vector3& start, const Vector3& end, Vector3& crossPoint) const
 {
 	return m_skinModelRender->isLineHitModel(start, end, crossPoint);
 }
 
-Vector3 BackGround::GetRespawnPoint(const Vector3& enemyPos)
+Vector3 BackGround::GetRespawnPoint(const Vector3& enemyPos) const
 {
 	//リスポーン地点
 	Vector3 respawnpoint;

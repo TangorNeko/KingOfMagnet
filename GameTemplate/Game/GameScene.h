@@ -75,7 +75,7 @@ public:
 	 * @brief ƒQ[ƒ€‚Ìó‘Ô‚ğæ“¾
 	 * @return ƒQ[ƒ€‚Ìó‘Ô
 	*/
-	GameState GetGameState()
+	GameState GetGameState() const
 	{
 		return m_gameState;
 	}
@@ -100,7 +100,7 @@ public:
 	 * @brief Œ»İ‚ÌƒQ[ƒ€ƒV[ƒ“‚É‘¶İ‚·‚é’e”‚ğæ“¾
 	 * @return ƒQ[ƒ€ƒV[ƒ“‚É‘¶İ‚·‚é’e”
 	*/
-	int GetBulletNum()
+	int GetBulletNum() const
 	{
 		return m_bulletNum;
 	}

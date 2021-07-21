@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "GameOption.h"
-#include <algorithm>
 
 
 namespace

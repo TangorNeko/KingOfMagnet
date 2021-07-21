@@ -58,7 +58,7 @@ public:
 	 * @brief ”š’e‚ÌÀ•W‚ğæ“¾
 	 * @return 
 	*/
-	Vector3 GetPosition() { return m_position; }
+	const Vector3& GetPosition() const { return m_position; }
 
 	/**
 	 * @brief ”š’e‚Ìó‘Ô‚ğİ’è

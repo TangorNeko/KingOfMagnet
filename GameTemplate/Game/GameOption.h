@@ -29,49 +29,49 @@ public:
 	 * @brief BGM全体のボリュームを取得
 	 * @return BGM全体のボリューム
 	*/
-	float GetBGMVolume() { return m_BGMVolume.GetValue(); }
+	float GetBGMVolume() const { return m_BGMVolume.GetValue(); }
 
 	/**
 	 * @brief SE全体のボリュームを取得
 	 * @return SE全体のボリューム
 	*/
-	float GetSEVolume() { return m_SEVolume.GetValue(); }
+	float GetSEVolume() const { return m_SEVolume.GetValue(); }
 
 	/**
 	 * @brief プレイヤー1のカメラ感度の数値を取得
 	 * @return プレイヤー1のカメラ感度
 	*/
-	float GetP1Sensitivity() { return m_P1Sensitivity.GetValue(); }
+	float GetP1Sensitivity() const { return m_P1Sensitivity.GetValue(); }
 
 	/**
 	 * @brief プレイヤー2のカメラ感度の数値を取得
 	 * @return プレイヤー2のカメラ感度
 	*/
-	float GetP2Sensitivity() { return m_P2Sensitivity.GetValue(); }
+	float GetP2Sensitivity() const { return m_P2Sensitivity.GetValue(); }
 
 	/**
 	 * @brief ゲームの制限時間の数値を取得
 	 * @return ゲームの制限時間
 	*/
-	float GetTimeLimit() { return m_gameTimeLimit.GetValue(); }
+	float GetTimeLimit() const { return m_gameTimeLimit.GetValue(); }
 
 	/**
 	 * @brief 勝利に必要なラウンド数を取得
 	 * @return 勝利に必要なラウンド数
 	*/
-	int GetRoundToWin() { return static_cast<int>(m_roundToWin.GetValue()); }
+	int GetRoundToWin() const { return static_cast<int>(m_roundToWin.GetValue()); }
 
 	/**
 	 * @brief 現在のオプション画面の選択深度を取得
 	 * @return 選択深度
 	*/
-	SelectingState GetSelectingState() { return m_selectingState; }
+	SelectingState GetSelectingState() const { return m_selectingState; }
 
 	/**
 	 * @brief 背景スプライトがまだ拡大もしくは縮小中か?
 	 * @return 拡大もしくは縮小中ならtrue
 	*/
-	bool isQueuing()
+	bool isQueuing() const
 	{
 		return m_optionBackGroundSprite->GetSpriteSupporter().GetSpriteScaleListLen() != 0;
 	}
@@ -96,11 +96,11 @@ public:
 private:
 	prefab::CSpriteRender* m_optionBackGroundSprite = nullptr;	//背景スプライト
 	bool m_isOpen = false;										//オプションが開いているか								
-	static OptionValue m_BGMVolume;							//BGMのボリューム					
+	static OptionValue m_BGMVolume;								//BGMのボリューム					
 	static OptionValue m_SEVolume;								//効果音のボリューム							
-	static OptionValue m_P1Sensitivity;						//プレイヤー1のカメラ感度							
-	static OptionValue m_P2Sensitivity;						//プレイヤー2のカメラ感度							
-	static OptionValue m_gameTimeLimit;						//ゲームの制限時間								
+	static OptionValue m_P1Sensitivity;							//プレイヤー1のカメラ感度							
+	static OptionValue m_P2Sensitivity;							//プレイヤー2のカメラ感度							
+	static OptionValue m_gameTimeLimit;							//ゲームの制限時間								
 	static OptionValue m_roundToWin;							//勝利に必要なラウンド数
 	prefab::CFontRender* m_optionFont = nullptr;				//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;				//BGMのボリュームのフォント

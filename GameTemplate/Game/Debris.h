@@ -73,7 +73,7 @@ public:
 	 * @brief ガレキの座標を取得
 	 * @return 座標
 	*/
-	Vector3 GetPosition() { return m_position; }
+	const Vector3& GetPosition() const { return m_position; }
 
 	/**
 	 * @brief ガレキの状態を設定
@@ -103,7 +103,7 @@ public:
 	 * @brief ガレキの移動方向を設定
 	 * @param direction 移動方向 
 	*/
-	void SetMoveDirection(const Vector3 direction) 
+	void SetMoveDirection(const Vector3& direction) 
 	{
 		m_moveDirection = direction;
 		m_moveDirection.Normalize();
