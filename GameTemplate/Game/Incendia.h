@@ -4,9 +4,9 @@ class GameScene;
 
 class Incendia :public IGameObject
 {
-	~Incendia();
-	bool Start();
-	void Update();
+	~Incendia() override;
+	bool Start() override;
+	void Update() override;
 	
 public:
 

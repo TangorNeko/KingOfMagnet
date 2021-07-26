@@ -5,13 +5,12 @@
 #include "GameScene.h"
 
 namespace
-{
-	const float SOUND_SE_BURN_VOLUME = 1.0f;
-	const Vector3 EFFECT_BURN_SCALE = { 25.0f, 15.0f, 25.0f };
-	const float BURN_RANGE = 250.0f;
-	const int BURN_DAMAGE = 30;
-	const int DAMAGE_COUNT_DAMAGE = 0;
-	const int DAMAGE_COUNT_RESET = 30;
+{				
+	const Vector3 EFFECT_BURN_SCALE = { 25.0f, 15.0f, 25.0f };	//炎上エフェクトの拡大率
+	const float BURN_RANGE = 250.0f;							//炎上の範囲
+	const int BURN_DAMAGE = 30;									//炎上のダメージ
+	const int DAMAGE_COUNT_DAMAGE = 0;							//ダメージカウントタイマー　ダメージ
+	const int DAMAGE_COUNT_RESET = 30;							//ダメージカウントタイマー　ダメージ直後
 }
 
 Incendia::~Incendia()
@@ -22,7 +21,7 @@ Incendia::~Incendia()
 bool Incendia::Start()
 {
 	//音を再生
-	SoundOneShotPlay(L"Assets/sound/炎.wav", SOUND_SE_BURN_VOLUME);
+	SoundOneShotPlay(L"Assets/sound/炎.wav");
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
