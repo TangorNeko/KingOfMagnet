@@ -15,105 +15,128 @@
 
 namespace
 {
-	const Vector3 STAGELIGHT_DIRECTION = { -1.0f,-1.0f,1.0f };
-	const Vector3 STAGELIGHT_COLOR = { 0.8f,0.8f,0.8f };
-	const Vector3 PLAYER1_STARTPOSITION = { 760.0f,0.0f,400.0f };
-	const Vector3 PLAYER2_STARTPOSITION = { -760.0f,0.0f,-400.0f };
-	const Vector3 STARTDIRECTION_PLAYER1_TOCAMERA = { 1.0f,0.0f,0.0f };
-	const Vector3 STARTDIRECTION_PLAYER2_TOCAMERA = { -1.0f,0.0f,0.0f };
-	const Vector3 STARTDIRECTION_PLAYER1_MODEL = { -1.0f,0.0f,0.0f };
-	const Vector3 STARTDIRECTION_PLAYER2_MODEL = { 1.0f,0.0f,0.0f };
-	const Vector3 SPRITE_DELIMITLINE_POSITION = { 0.0f,0.0f,0.0f };
-	const int SPRITE_DELIMITELINE_WIDTH = 40;
-	const int SPRITE_DELIMITELINE_HEIGHT = 720;
-	const Vector3 SPRITE_HPCOVER_POSITION = { 0.0f,304.0f,0.0f };
-	const int SPRITE_HPCOVER_WIDTH = 1280;
-	const int SPRITE_HPCOVER_HEIGHT = 112;
-	const Vector3 SPRITE_TIMERBASE_POSITION = { 0.0f,300.0f,0.0f };
-	const int SPRITE_TIMERBASE_WIDTH = 272;
-	const int SPRITE_TIMERBASE_HEIGHT = 120;
-	const Vector3 SPRITE_STARTCOUNTDOWN_3_TOP_STARTPOSITION = { -900.0f,100.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_3_MIDDLE_STARTPOSITION = { 900.0f,0.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_3_BOTTOM_STARTPOSITION = { -900.0f,-100.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_3_RIGHT_STARTPOSITION = { 50.0f,-600.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_2_TOP_STARTPOSITION = { 900.0f,100.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_2_MIDDLE_STARTPOSITION = { -900.0f,0.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_2_BOTTOM_STARTPOSITION = { 900.0f,-100.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_2_RIGHT_STARTPOSITION = { 50.0f,-550.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_2_LEFT_STARTPOSITION = { -50.0f,550.0f,0.0f };
-	const Vector3 SPRITE_STARTCOUNTDOWN_1_STARTPOSITION = { 0.0f,600.0f,0.0f };
-	const int SPRITE_STARTCOUNTDOWN_HORIZONTALBAR_WIDTH = 100;
-	const int SPRITE_STARTCOUNTDOWN_HORIZONTALBAR_HEIGHT = 24;
-	const int SPRITE_STARTCOUNTDOWN_3_VERTICALBAR_WIDTH = 24;
-	const int SPRITE_STARTCOUNTDOWN_3_VERTICALBAR_HEIGHT = 200;
-	const int SPRITE_STARTCOUNTDOWN_2_VERTICALBAR_WIDTH = 24;
-	const int SPRITE_STARTCOUNTDOWN_2_VERTICALBAR_HEIGHT = 100;
-	const int SPRITE_STARTCOUNTDOWN_1_VERTICALBAR_WIDTH = 36;
-	const int SPRITE_STARTCOUNTDOWN_1_VERTICALBAR_HEIGHT = 200;
-	const Vector3 SPRITE_FINALCOUNTDOWN_POSITION = { 0.0f,0.0f,0.0f };
-	const int SPRITE_FINALCOUNTDOWN_WIDTH = 300;
-	const int SPRITE_FINALCOUNTDOWN_HEGIHT = 300;
-	const Vector3 SPRITE_FINALCOUNTDOWN_SCALE_START = { 3.0f,3.0f,3.0f };
-	const float SPRITE_FINALCOUNTDOWN_SCALE_SHRINK = 1.0f;
-	const float SPRITE_FINALCOUNTDOWN_SCALE_DISPLAY = 0.8f;
-	const float SPRITE_FINALCOUNTDOWN_SCALE_DISAPPEAR = 0.0f;
-	const int SPRITE_FINALCOUNTDOWN_SCALETIME_SHRINK = 6;
-	const int SPRITE_FINALCOUNTDOWN_SCALETIME_DISPLAY = 24;
-	const int SPRITE_FINALCOUNTDOWN_SCALETIME_DISAPPEAR = 6;
-	const int SPRITE_FINALCOUNTDOWN_SCALEDELAY_SHRINK = 0;
-	const int SPRITE_FINALCOUNTDOWN_SCALEDELAY_DISPLAY = 6;
-	const int SPRITE_FINALCOUNTDOWN_SCALEDELAY_DISAPPEAR = 30;
-	const Vector4 SPRITE_FINALCOUNTDOWN_COLOR_TRANSPARENT = { 1.0f,1.0f,1.0f,0.0f };
-	const Vector4 SPRITE_FINALCOUNTDOWN_COLOR_SEMITRANSPARENT = { 1.0f,1.0f,1.0f,0.5f };
-	const int SPRITE_FINALCOUNTDOWN_TRANSPARENT_TIME = 6;
-	const int SPRITE_FINALCOUNTDOWN_TRANSPARENT_DELAY = 30;
-	const Vector3 SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT = { 0.0f, 315.0f, 0.0f };
-	const Vector3 SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT = { 27.0f, 315.0f, 0.0f };
-	const Vector3 SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT = { -27.0f, 315.0f, 0.0f };
-	const Vector3 SPRITE_TIMELIMIT_SCALE = { 0.25f,0.25f,1.0f };
-	const int SPRITE_TIMELIMIT_WIDTH = 500;
-	const int SPRITE_TIMELIMIT_HEIGHT = 500;
-	const float SOUND_BGM_GAME_VOLUME = 0.3f;
-	const float SOUND_SE_STARTCOUNTDOWN_VOLUME = 0.8f;
-	const float SOUND_SE_STARTHORN_VOLUME = 0.8f;
-	const int GAMEENDTIMER_ROUNDCOUNTER_SHOW = 450;
-	const int GAMEENDTIMER_START_TRANSITION = 650;
-	const int GAMEENDTIMER_GOTO_RESULT = 700;
-	const int DRAWTIMER_START_TRANSITION = 45;
-	const int DRAWTIMER_GOTO_REMATCH = 0;
-	const Vector2 FONT_SKIP_POSITION = { 270.0f,-320.0f };
-	const Vector2 FONT_SKIP_SCALE = { 0.6f,0.6f };
-	const Vector2 FONT_DRAW_POSITION = { -185.0f, 130.0f };
-	const Vector2 FONT_DRAW_SCALE = { 2.0f, 2.0f };
-	const Vector4 FONT_SHADOWCOLOR = { 0,0,0,1 };
-	const float FONT_SHADOWOFFSET = 2.0f;
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT = { 890.0f,0.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT_SHORT = { 10.0f,0.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT = { -890.0f,0.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT_SHORT = { -10.0f,0.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP = { 0.0f,590.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP_SHORT = { 0.0f,10.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM = { 0.0f,-590.0f };
-	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM_SHORT = { 0.0f,-10.0f };
-	const int SPRITE_STARTCOUNTDOWN_MOVETIME_FAST = 12;
-	const int SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW = 48;
-	const int SPRITE_STARTCOUNTDOWN_MOVEDELAY_ASSEMBLE = 0;
-	const int SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY = 12;
-	const int SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE = 60;
-	const Vector3 SPRITE_START_POSITION = { 0.0f, 0.0f, 0.0f };
-	const Vector3 SPRITE_START_SCALE = { 1.5f, 1.5f, 1.5f };
-	const int SPRITE_START_WIDTH = 324;
-	const int SPRITE_START_HEIGHT = 64;
-	const int NUMBER_TIMELIMIT_SPRITE_0 = 0;
-	const int NUMBER_TIMELIMIT_SPRITE_1 = 1;
-	const int NUMBER_TIMELIMIT_SPRITE_2 = 2;
-	const int NUMBER_TIMELIMIT_SPRITE_3 = 3;
-	const int NUMBER_TIMELIMIT_SPRITE_4 = 4;
-	const int NUMBER_TIMELIMIT_SPRITE_5 = 5;
-	const int NUMBER_TIMELIMIT_SPRITE_6 = 6;
-	const int NUMBER_TIMELIMIT_SPRITE_7 = 7;
-	const int NUMBER_TIMELIMIT_SPRITE_8 = 8;
-	const int NUMBER_TIMELIMIT_SPRITE_9 = 9;
+	const Vector3 STAGELIGHT_DIRECTION = { -1.0f,-1.0f,1.0f };				//ステージにあるスポットライトの向き
+	const Vector3 STAGELIGHT_COLOR = { 0.8f,0.8f,0.8f };					//スポットライトの色
+	const Vector3 PLAYER1_STARTPOSITION = { 760.0f,0.0f,400.0f };			//プレイヤー1のスタート座標
+	const Vector3 PLAYER2_STARTPOSITION = { -760.0f,0.0f,-400.0f };			//プレイヤー2のスタート座標
+	const Vector3 STARTDIRECTION_PLAYER1_TOCAMERA = { 1.0f,0.0f,0.0f };		//プレイヤー1のスタート時のカメラへの向き
+	const Vector3 STARTDIRECTION_PLAYER2_TOCAMERA = { -1.0f,0.0f,0.0f };	//プレイヤー2のスタート時のカメラへの向き
+	const Vector3 STARTDIRECTION_PLAYER1_MODEL = { -1.0f,0.0f,0.0f };		//プレイヤー1のスタート時のモデルの向き
+	const Vector3 STARTDIRECTION_PLAYER2_MODEL = { 1.0f,0.0f,0.0f };		//プレイヤー2のスタート時のモデルの向き
+	const Vector3 SPRITE_DELIMITLINE_POSITION = { 0.0f,0.0f,0.0f };			//画面分割線スプライトの座標
+	const int SPRITE_DELIMITELINE_WIDTH = 40;								//画面分割線スプライトの幅
+	const int SPRITE_DELIMITELINE_HEIGHT = 720;								//画面分割線スプライトの高さ
+	const Vector3 SPRITE_HPCOVER_POSITION = { 0.0f,304.0f,0.0f };			//HPバーのカバーの座標
+	const int SPRITE_HPCOVER_WIDTH = 1280;									//HPバーのカバーの幅
+	const int SPRITE_HPCOVER_HEIGHT = 112;									//HPバーのカバーの高さ
+	const Vector3 SPRITE_TIMERBASE_POSITION = { 0.0f,300.0f,0.0f };			//タイマースプライトの座標
+	const int SPRITE_TIMERBASE_WIDTH = 272;									//タイマースプライトの幅
+	const int SPRITE_TIMERBASE_HEIGHT = 120;								//タイマースプライトの高さ
+	const Vector3 SPRITE_STARTCOUNTDOWN_3_TOP_STARTPOSITION
+				= { -900.0f,100.0f,0.0f };									//カウントダウン3の上の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_3_MIDDLE_STARTPOSITION
+				= { 900.0f,0.0f,0.0f };										//真ん中の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_3_BOTTOM_STARTPOSITION
+				= { -900.0f,-100.0f,0.0f };									//下の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_3_RIGHT_STARTPOSITION
+				= { 50.0f,-600.0f,0.0f };									//右の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_2_TOP_STARTPOSITION
+				= { 900.0f,100.0f,0.0f };									//カウントダウン2の上の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_2_MIDDLE_STARTPOSITION
+				= { -900.0f,0.0f,0.0f };									//真ん中の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_2_BOTTOM_STARTPOSITION
+				= { 900.0f,-100.0f,0.0f };									//下の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_2_RIGHT_STARTPOSITION
+				= { 50.0f,-550.0f,0.0f };									//右の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_2_LEFT_STARTPOSITION
+				= { -50.0f,550.0f,0.0f };									//左の棒の初期座標
+	const Vector3 SPRITE_STARTCOUNTDOWN_1_STARTPOSITION
+				= { 0.0f,600.0f,0.0f };										//カウントダウン1の棒の初期座標
+	const int SPRITE_STARTCOUNTDOWN_HORIZONTALBAR_WIDTH = 100;				//カウントダウンの横棒の幅
+	const int SPRITE_STARTCOUNTDOWN_HORIZONTALBAR_HEIGHT = 24;				//カウントダウンの横棒の高さ
+	const int SPRITE_STARTCOUNTDOWN_3_VERTICALBAR_WIDTH = 24;				//カウントダウン3の縦棒の幅
+	const int SPRITE_STARTCOUNTDOWN_3_VERTICALBAR_HEIGHT = 200;				//カウントダウン3の縦棒の高さ
+	const int SPRITE_STARTCOUNTDOWN_2_VERTICALBAR_WIDTH = 24;				//カウントダウン2の縦棒の幅
+	const int SPRITE_STARTCOUNTDOWN_2_VERTICALBAR_HEIGHT = 100;				//カウントダウン2の縦棒の高さ
+	const int SPRITE_STARTCOUNTDOWN_1_VERTICALBAR_WIDTH = 36;				//カウントダウン1の縦棒の幅
+	const int SPRITE_STARTCOUNTDOWN_1_VERTICALBAR_HEIGHT = 200;				//カウントダウン1の縦棒の高さ
+	const Vector3 SPRITE_FINALCOUNTDOWN_POSITION = { 0.0f,0.0f,0.0f };		//終了カウントダウンのスプライトの座標
+	const int SPRITE_FINALCOUNTDOWN_WIDTH = 300;							//終了カウントダウンのスプライトの幅
+	const int SPRITE_FINALCOUNTDOWN_HEGIHT = 300;							//終了カウントダウンのスプライトの高さ
+	const Vector3 SPRITE_FINALCOUNTDOWN_SCALE_START = { 3.0f,3.0f,3.0f };	//終了カウントダウンのスプライトの初期拡大率
+	const float SPRITE_FINALCOUNTDOWN_SCALE_SHRINK = 1.0f;					//終了カウントダウンの収縮した時の拡大率
+	const float SPRITE_FINALCOUNTDOWN_SCALE_DISPLAY = 0.8f;					//終了カウントダウンの表示時の拡大率
+	const float SPRITE_FINALCOUNTDOWN_SCALE_DISAPPEAR = 0.0f;				//終了カウントダウンの消滅時の拡大率
+	const int SPRITE_FINALCOUNTDOWN_SCALETIME_SHRINK = 6;					//終了カウントダウンの収縮の時間
+	const int SPRITE_FINALCOUNTDOWN_SCALETIME_DISPLAY = 24;					//終了カウントダウンの表示の時間
+	const int SPRITE_FINALCOUNTDOWN_SCALETIME_DISAPPEAR = 6;				//終了カウントダウンの消滅の時間
+	const int SPRITE_FINALCOUNTDOWN_SCALEDELAY_SHRINK = 0;					//終了カウントダウンの収縮のディレイ
+	const int SPRITE_FINALCOUNTDOWN_SCALEDELAY_DISPLAY = 6;					//終了カウントダウンの表示のディレイ
+	const int SPRITE_FINALCOUNTDOWN_SCALEDELAY_DISAPPEAR = 30;				//終了カウントダウンの消滅のディレイ
+	const Vector4 SPRITE_FINALCOUNTDOWN_COLOR_TRANSPARENT
+				= { 1.0f,1.0f,1.0f,0.0f };									//終了カウントダウンスプライトの乗算カラー　透明
+	const Vector4 SPRITE_FINALCOUNTDOWN_COLOR_SEMITRANSPARENT
+				= { 1.0f,1.0f,1.0f,0.5f };									//終了カウントダウンスプライトの乗算カラー　半透明
+	const int SPRITE_FINALCOUNTDOWN_TRANSPARENT_TIME = 6;					//終了カウントダウンスプライトを透明にする時間
+	const int SPRITE_FINALCOUNTDOWN_TRANSPARENT_DELAY = 30;					//終了カウントダウンスプライトを透明にするディレイ
+	const Vector3 SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT
+				= { 0.0f, 315.0f, 0.0f };									//制限時間スプライト1桁時の1の位の座標
+	const Vector3 SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT
+				= { 27.0f, 315.0f, 0.0f };									//制限時間スプライト2桁時の1の位の座標
+	const Vector3 SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT
+				= { -27.0f, 315.0f, 0.0f };									//制限時間スプライト2桁時の10の位の座標
+	const Vector3 SPRITE_TIMELIMIT_SCALE = { 0.25f,0.25f,1.0f };			//制限時間スプライトの拡大率
+	const int SPRITE_TIMELIMIT_WIDTH = 500;									//制限時間スプライトの幅
+	const int SPRITE_TIMELIMIT_HEIGHT = 500;								//制限時間スプライトの高さ
+	const float SOUND_BGM_GAME_VOLUME = 0.3f;								//ゲームBGMの音量
+	const float SOUND_SE_STARTCOUNTDOWN_VOLUME = 0.8f;						//カウントダウンSEのボリューム
+	const float SOUND_SE_STARTHORN_VOLUME = 0.8f;							//スタートのホーンSEのボリューム
+	const int GAMEENDTIMER_ROUNDCOUNTER_SHOW = 450;							//ゲーム終了時　ラウンド取得表示のタイマー
+	const int GAMEENDTIMER_START_TRANSITION = 650;							//ゲーム終了時　トランジションスタートのタイマー
+	const int GAMEENDTIMER_GOTO_RESULT = 700;								//ゲーム終了時　リザルトシーンに移行するタイマー
+	const int DRAWTIMER_START_TRANSITION = 45;								//引き分け時　　トランジションスタートのタイマー
+	const int DRAWTIMER_GOTO_REMATCH = 0;									//引き分け時　　次の試合へ移行するタイマー
+	const Vector2 FONT_SKIP_POSITION = { 270.0f,-320.0f };					//オープニングカメラのスキップフォントの座標
+	const Vector2 FONT_SKIP_SCALE = { 0.6f,0.6f };							//オープニングカメラのスキップフォントの拡大率
+	const Vector2 FONT_DRAW_POSITION = { -185.0f, 130.0f };					//引き分けフォントの座標
+	const Vector2 FONT_DRAW_SCALE = { 2.0f, 2.0f };							//引き分けフォントの拡大率
+	const Vector4 FONT_SHADOWCOLOR = { 0,0,0,1 };							//フォントの影の色
+	const float FONT_SHADOWOFFSET = 2.0f;									//フォントの影の太さ
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT
+				= { 890.0f,0.0f };											//スタートカウントダウン　右移動の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_RIGHT_SHORT
+				= { 10.0f,0.0f };											//スタートカウントダウン　右移動(小)の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT
+				= { -890.0f,0.0f };											//スタートカウントダウン　左移動の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_LEFT_SHORT
+				= { -10.0f,0.0f };											//スタートカウントダウン　左移動(小)の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP
+				= { 0.0f,590.0f };											//スタートカウントダウン　上移動の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_TOP_SHORT
+				= { 0.0f,10.0f };											//スタートカウントダウン　上移動(小)の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM
+				= { 0.0f,-590.0f };											//スタートカウントダウン　下移動の移動量
+	const Vector2 SPRITE_STARTCOUNTDOWN_MOVEMENT_TO_BOTTOM_SHORT
+				= { 0.0f,-10.0f };											//スタートカウントダウン　下移動(小)の移動量
+	const int SPRITE_STARTCOUNTDOWN_MOVETIME_FAST = 12;						//スタートカウントダウン　速い移動の移動時間
+	const int SPRITE_STARTCOUNTDOWN_MOVETIME_SLOW = 48;						//スタートカウントダウン　遅い移動の移動時間
+	const int SPRITE_STARTCOUNTDOWN_MOVEDELAY_ASSEMBLE = 0;					//スタートカウントダウン　組み立て開始のディレイ	
+	const int SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISPLAY = 12;					//スタートカウントダウン　表示のディレイ
+	const int SPRITE_STARTCOUNTDOWN_MOVEDELAY_DISASSEMBLE = 60;				//スタートカウントダウン　分解のディレイ
+	const Vector3 SPRITE_START_POSITION = { 0.0f, 0.0f, 0.0f };				//スタートスプライトの座標
+	const Vector3 SPRITE_START_SCALE = { 1.5f, 1.5f, 1.5f };				//スタートスプライトの拡大率
+	const int SPRITE_START_WIDTH = 324;										//スタートスプライトの幅
+	const int SPRITE_START_HEIGHT = 64;										//スタートスプライトの高さ
+	const int NUMBER_TIMELIMIT_SPRITE_0 = 0;								//制限時間スプライトの数字 0
+	const int NUMBER_TIMELIMIT_SPRITE_1 = 1;								//制限時間スプライトの数字 1
+	const int NUMBER_TIMELIMIT_SPRITE_2 = 2;								//制限時間スプライトの数字 2
+	const int NUMBER_TIMELIMIT_SPRITE_3 = 3;								//制限時間スプライトの数字 3
+	const int NUMBER_TIMELIMIT_SPRITE_4 = 4;								//制限時間スプライトの数字 4
+	const int NUMBER_TIMELIMIT_SPRITE_5 = 5;								//制限時間スプライトの数字 5
+	const int NUMBER_TIMELIMIT_SPRITE_6 = 6;								//制限時間スプライトの数字 6
+	const int NUMBER_TIMELIMIT_SPRITE_7 = 7;								//制限時間スプライトの数字 7
+	const int NUMBER_TIMELIMIT_SPRITE_8 = 8;								//制限時間スプライトの数字 8
+	const int NUMBER_TIMELIMIT_SPRITE_9 = 9;								//制限時間スプライトの数字 9
 
 
 	//他でも使いそうなのでどこかに分離?
