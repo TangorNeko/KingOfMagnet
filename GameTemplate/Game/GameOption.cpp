@@ -38,15 +38,19 @@ namespace
 	const int OPTION_ITEM_ROUNDTOWIN = 5;
 	const int OPTION_ITEM_OVERRANGE = 6;
 
+	const float SOUND_VOLUME_DEFAULT = 1.0f;
 	const float SOUND_VOLUME_MIN = 0.0f;
 	const float SOUND_VOLUME_MAX = 1.0f;
 
+	const float CONTROL_SENSITIVITY_DEFAULT = 2.0f;
 	const float CONTROL_SENSITIVITY_MIN = 0.1f;
 	const float CONTROL_SENSITIVITY_MAX = 5.0f;
 	
+	const float GAME_TIMELIMIT_DEFAULT = 40.0f;
 	const float GAME_TIMELIMIT_MIN = 30.0f;
 	const float GAME_TIMELIMIT_MAX = 90.0f;
 
+	const float GAME_ROUNDTOWIN_DEFAULT = 3.0f;
 	const float GAME_ROUNDTOWIN_MIN = 1.0f;
 	const float GAME_ROUNDTOWIN_MAX = 3.0f;
 
@@ -452,22 +456,22 @@ void GameOption::Init()
 
 	//BGM
 	m_BGMVolume.Init(OPTION_VALUE_CHANGERATE, SOUND_VOLUME_MIN, SOUND_VOLUME_MAX, OptionValue::enPress);
-	m_BGMVolume.SetValue(1.0f);
+	m_BGMVolume.SetValue(SOUND_VOLUME_DEFAULT);
 	//SE
 	m_SEVolume.Init(OPTION_VALUE_CHANGERATE, SOUND_VOLUME_MIN, SOUND_VOLUME_MAX, OptionValue::enPress);
-	m_SEVolume.SetValue(1.0f);
+	m_SEVolume.SetValue(SOUND_VOLUME_DEFAULT);
 	//プレイヤー1のカメラ感度
 	m_P1Sensitivity.Init(OPTION_VALUE_CHANGERATE, CONTROL_SENSITIVITY_MIN, CONTROL_SENSITIVITY_MAX, OptionValue::enPress);
-	m_P1Sensitivity.SetValue(2.0f);
+	m_P1Sensitivity.SetValue(CONTROL_SENSITIVITY_DEFAULT);
 	//プレイヤー2のカメラ感度
 	m_P2Sensitivity.Init(OPTION_VALUE_CHANGERATE, CONTROL_SENSITIVITY_MIN, CONTROL_SENSITIVITY_MAX, OptionValue::enPress);
-	m_P2Sensitivity.SetValue(2.0f);
+	m_P2Sensitivity.SetValue(CONTROL_SENSITIVITY_DEFAULT);
 	//ゲームの制限時間
 	m_gameTimeLimit.Init(OPTION_GAMETIME_CHANGERATE, GAME_TIMELIMIT_MIN, GAME_TIMELIMIT_MAX, OptionValue::enTrigger);
-	m_gameTimeLimit.SetValue(40.0f);
+	m_gameTimeLimit.SetValue(GAME_TIMELIMIT_DEFAULT);
 	//勝利に必要なラウンド数
 	m_roundToWin.Init(OPTION_ROUNDTOWIN_CHANGERATE, GAME_ROUNDTOWIN_MIN, GAME_ROUNDTOWIN_MAX, OptionValue::enTrigger);
-	m_roundToWin.SetValue(1.0f);
+	m_roundToWin.SetValue(GAME_ROUNDTOWIN_DEFAULT);
 
 	m_isInited = true;
 }
