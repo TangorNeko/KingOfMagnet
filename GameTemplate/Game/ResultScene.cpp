@@ -6,105 +6,110 @@
 
 namespace
 {
-	const Vector3 RESULT_CAMERA_POSITION = { 0.0f,90.0f,250.0f };
-	const Vector3 RESULT_CAMERA_TARGET = { 0.0f,90.0f,0.0f };
-	const Vector3 MODEL_WINNER_POSITION = { 60.0f,25.0f,100.0f };
-	const Vector3 MODEL_LOSER_POSITION = { -50.0f,40.0f,100.0f };
-	const Vector3 SPRITE_WINNER_POSITION = { -200.0f,280.0f,0.0f };
-	const Vector3 SPRITE_LOSER_POSITION = { 350.0f,220.0f,0.0f };
-	const Vector3 SPRITE_COMMAND_POSITION = { 0.0f,-278.0f,0.0f };
-	const Vector4 SPRITE_COLOR_TRANSPARENT = { 1.0f,1.0f,1.0f,0.0f };
-	const Vector4 SPRITE_COLOR_BLACK = { 0.0f,0.0f,0.0f,1.0f };
-	const Vector3 SPRITE_COVER_UPPER_STARTPOSITION = { 0.0f,400.0f,0.0f };
-	const Vector3 SPRITE_COVER_LOWER_STARTPOSITION = { 0.0f,-400.0f,0.0f };
-	const int SPRITE_BACKGROUND_WIDTH = 1280;
-	const int SPRITE_BACKGROUND_HEIGHT = 720;
-	const int SPRITE_COVER_UPPER_WIDTH = 1280;
-	const int SPRITE_COVER_UPPER_HEIGHT = 720;
-	const int SPRITE_RESULT_WINDOW_WIDTH = 1280;
-	const int SPRITE_RESULT_WINDOW_HEIGHT = 720;
-	const int SPRITE_LOSE_WIDTH = 372;
-	const int SPRITE_LOSE_HEIGHT = 132;
-	const int SPRITE_WIN_WIDTH = 300;
-	const int SPRITE_WIN_HEIGHT = 112;
-	const int SPRITE_COMMAND_WIDTH = 400;
-	const int SPRITE_COMMAND_HEIGHT = 76;
-	const int SPRITE_COVER_LOWER_WIDTH = 1280;
-	const int SPRITE_COVER_LOWER_HEIGHT = 720;
-	const float SPRITE_COVER_MOVE_AMOUNT = 400.0f;
-	const int SPRITE_MOVETIMER_START = 0;
-	const int SPRITE_MOVETIMER_DISPLAY_AND_SHAKE = 60;
-	const int SPRITE_MOVETIMER_PLAY_SE1 = 25;
-	const int SPRITE_MOVETIMER_PLAY_SE2 = 55;
-	const int SPRITE_MOVETIMER_PLAY_BGM = 80;
-	const int SPRITE_MOVETIMER_END = 120;
-	const Vector3 DIRECTIONLIGHT_RESULT_DIRECTION = { 0.0f,-1.0f,-1.0f };
-	const Vector3 DIRECTIONLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };
-	const float SOUND_SE_RESULT_VOLUME = 1.2f;
-	const float SOUND_BGM_RESULT_VOLUME = 0.2f;
+	const Vector3 RESULT_CAMERA_POSITION = { 0.0f,90.0f,250.0f };			//リザルト画面のカメラ座標
+	const Vector3 RESULT_CAMERA_TARGET = { 0.0f,90.0f,0.0f };				//リザルト画面のカメラ注視点
+	const Vector3 MODEL_WINNER_POSITION = { 60.0f,25.0f,100.0f };			//勝者の座標
+	const Vector3 MODEL_LOSER_POSITION = { -50.0f,40.0f,100.0f };			//敗者の座標
+	const Vector3 SPRITE_WINNER_POSITION = { -200.0f,280.0f,0.0f };			//WINNスプライトの座標
+	const Vector3 SPRITE_LOSER_POSITION = { 350.0f,220.0f,0.0f };			//LOSEスプライトの座標
+	const Vector3 SPRITE_COMMAND_POSITION = { 0.0f,-278.0f,0.0f };			//コマンドスプライトの座標
+	const Vector4 SPRITE_COLOR_TRANSPARENT = { 1.0f,1.0f,1.0f,0.0f };		//乗算カラー　透明
+	const Vector4 SPRITE_COLOR_BLACK = { 0.0f,0.0f,0.0f,1.0f };				//乗算カラー　黒
+	const Vector3 SPRITE_COVER_UPPER_STARTPOSITION = { 0.0f,400.0f,0.0f };	//上側のカバースプライトの初期座標
+	const Vector3 SPRITE_COVER_LOWER_STARTPOSITION = { 0.0f,-400.0f,0.0f };	//下側のカバースプライトの初期座標
+	const int SPRITE_BACKGROUND_WIDTH = 1280;								//背景スプライトの幅
+	const int SPRITE_BACKGROUND_HEIGHT = 720;								//背景スプライトの高さ
+	const int SPRITE_COVER_UPPER_WIDTH = 1280;								//上側のカバースプライトの幅
+	const int SPRITE_COVER_UPPER_HEIGHT = 720;								//上側のカバースプライトの高さ
+	const int SPRITE_RESULT_WINDOW_WIDTH = 1280;							//リザルト窓スプライトの幅
+	const int SPRITE_RESULT_WINDOW_HEIGHT = 720;							//リザルト窓スプライトの高さ
+	const int SPRITE_LOSE_WIDTH = 372;										//LOSEスプライトの幅
+	const int SPRITE_LOSE_HEIGHT = 132;										//LOSEスプライトの高さ
+	const int SPRITE_WIN_WIDTH = 300;										//WINスプライトの幅
+	const int SPRITE_WIN_HEIGHT = 112;										//WINスプライトの高さ
+	const int SPRITE_COMMAND_WIDTH = 400;									//コマンドスプライトの幅
+	const int SPRITE_COMMAND_HEIGHT = 76;									//コマンドスプライトの高さ
+	const int SPRITE_COVER_LOWER_WIDTH = 1280;								//下側のカバースプライトの幅
+	const int SPRITE_COVER_LOWER_HEIGHT = 720;								//下側のカバースプライトの高さ
+	const float SPRITE_COVER_MOVE_AMOUNT = 400.0f;							//スプライトカバーの移動量
+	const int SPRITE_MOVETIMER_START = 0;									//スプライトの移動タイマー　スタート
+	const int SPRITE_MOVETIMER_DISPLAY_AND_SHAKE = 60;						//スプライトの移動タイマー　結果表示
+	const int SPRITE_MOVETIMER_PLAY_SE1 = 25;								//スプライトの移動タイマー　SE1を鳴らす
+	const int SPRITE_MOVETIMER_PLAY_SE2 = 55;								//スプライトの移動タイマー　SE2を鳴らす
+	const int SPRITE_MOVETIMER_PLAY_BGM = 80;								//スプライトの移動タイマー　BGMを鳴らす
+	const int SPRITE_MOVETIMER_END = 120;									//スプライトの移動タイマー　移動終了
+	const Vector3 DIRECTIONLIGHT_RESULT_DIRECTION = { 0.0f,-1.0f,-1.0f };	//リザルトシーンのライトの向き
+	const Vector3 DIRECTIONLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };			//リザルトシーンのライトの色
+	const float SOUND_SE_RESULT_VOLUME = 1.2f;								//リザルトSEのボリューム
+	const float SOUND_BGM_RESULT_VOLUME = 0.2f;								//リザルトBGMのボリューム
 
-	const int SPRITEMOVELIST_ZERO = 0;
+	const int SPRITEMOVELIST_ZERO = 0;										//スプライトの移動リストに何も登録されていない
 
-	const Vector2 SPRITE_UP_CLOSE_MOVEMENT = { 0.0f,-SPRITE_COVER_MOVE_AMOUNT - 20.0f };
-	const Vector2 SPRITE_UP_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,40.0f };
-	const Vector2 SPRITE_UP_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,-20.0f };
+	const Vector2 SPRITE_UP_CLOSE_MOVEMENT
+				= { 0.0f,-SPRITE_COVER_MOVE_AMOUNT - 20.0f };				//上側のカバースプライトが閉じる時の移動量
+	const Vector2 SPRITE_UP_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,40.0f };		//上側のカバースプライトがバウンドして少し開く時の移動量
+	const Vector2 SPRITE_UP_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,-20.0f };	//上側のカバースプライトがバウンドして完全に閉じる時の移動量
 
-	const Vector2 SPRITE_DOWN_CLOSE_MOVEMENT = { 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f };
-	const Vector2 SPRITE_DOWN_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,-40.0f };
-	const Vector2 SPRITE_DOWN_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,20.0f };
+	const Vector2 SPRITE_DOWN_CLOSE_MOVEMENT
+				= { 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f };				//下側のカバースプライトが閉じる時の移動量
+	const Vector2 SPRITE_DOWN_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,-40.0f };	//下側のカバースプライトがバウンドして少し開く時の移動量
+	const Vector2 SPRITE_DOWN_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,20.0f };	//下側のカバースプライトがバウンドして完全に閉じる時の移動量
 	
-	const Vector2 SPRITE_COMMAND_CLOSE_MOVEMENT = { 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f };
-	const Vector2 SPRITE_COMMAND_CLOSE_REBOUND_DOWN_MOVEMENT = { 0.0f,-40.0f };
-	const Vector2 SPRITE_COMMAND_CLOSE_REBOUND_UP_MOVEMENT = { 0.0f,20.0f };
+	const Vector2 SPRITE_COMMAND_CLOSE_MOVEMENT
+				= { 0.0f,SPRITE_COVER_MOVE_AMOUNT + 20.0f };				//コマンドスプライトが閉じる時の移動量
+	const Vector2 SPRITE_COMMAND_CLOSE_REBOUND_DOWN_MOVEMENT
+				= { 0.0f,-40.0f };											//コマンドスプライトがバウンドして少し開く時の移動量
+	const Vector2 SPRITE_COMMAND_CLOSE_REBOUND_UP_MOVEMENT
+				= { 0.0f,20.0f};											//コマンドスプライトがバウンドして完全に閉じる時の移動量
 
-	const int SPRITE_CLOSE_MOVETIME = 30;
-	const int SPRITE_CLOSE_REBOUND_MOVETIME = 12;
+	const int SPRITE_CLOSE_MOVETIME = 30;									//カバースプライトが閉じる時の移動時間
+	const int SPRITE_CLOSE_REBOUND_MOVETIME = 12;							//カバースプライトがバウンドする時の移動時間
 
-	const int SPRITE_CLOSE_MOVEDELAY = 0;
-	const int SPRITE_CLOSE_REBOUND_UP_MOVEDELAY = 30;
-	const int SPRITE_CLOSE_REBOUND_DOWN_MOVEDELAY = 42;
+	const int SPRITE_CLOSE_MOVEDELAY = 0;									//カバースプライトが閉じる時のディレイ
+	const int SPRITE_CLOSE_REBOUND_UP_MOVEDELAY = 30;						//カバースプライトがバウンドして少し開く時のディレイ
+	const int SPRITE_CLOSE_REBOUND_DOWN_MOVEDELAY = 42;						//カバースプライトがバウンドして完全に閉じる時のディレイ
 
-	const int SPRITE_MOVEDELAY_ZERO = 0;
-	const int SPRITE_APPEAR_TIME = 12;
+	const int SPRITE_MOVEDELAY_ZERO = 0;									//移動ディレイなし
+	const int SPRITE_APPEAR_TIME = 12;										//スプライトが透明状態から完全に表示されるまでの時間
 
-	const Vector2 SPRITE_LOSE_SHAKE_MOVEMENT = { 20.0f,0.0f };
-	const int SPRITE_LOSE_SHAKE_MOVETIME = 24;
+	const Vector2 SPRITE_LOSE_SHAKE_MOVEMENT = { 20.0f,0.0f };				//LOSEスプライトのシェイクの移動量
+	const int SPRITE_LOSE_SHAKE_MOVETIME = 24;								//LOSEスプライトのシェイクの移動時間
 
-	const Vector3 SPRITE_WIN_HORIZONTAL_SCALE_MIDDLE = { 1.2f,0.8f,1.0f };
-	const Vector3 SPRITE_WIN_HORIZONTAL_SCALE_HEAVY = { 1.5f,0.5f,1.0f };
-	const Vector3 SPRITE_WIN_VERTICAL_SCALE_LIGHT = { 0.9f,1.1f,1.0f };
-	const Vector3 SPRITE_WIN_VERTICAL_SCALE_MIDDLE = { 0.8f,1.2f,1.0f };
-	const Vector3 SPRITE_WIN_VERTICAL_SCALE_HEAVY = { 0.6f,1.4f,1.0f };
-	const Vector3 SPRITE_WIN_SCALE_DEFAULT = { 1.0f,1.0f,1.0f };
+	const Vector3 SPRITE_WIN_HORIZONTAL_SCALE_MIDDLE = { 1.2f,0.8f,1.0f };	//WINスプライトが横に伸ばされた時の拡大率
+	const Vector3 SPRITE_WIN_HORIZONTAL_SCALE_HEAVY = { 1.5f,0.5f,1.0f };	//WINスプライトが横に大きく伸ばされた時の拡大率
+	const Vector3 SPRITE_WIN_VERTICAL_SCALE_LIGHT = { 0.9f,1.1f,1.0f };		//WINスプライトが縦に小さく伸ばされた時の拡大率
+	const Vector3 SPRITE_WIN_VERTICAL_SCALE_MIDDLE = { 0.8f,1.2f,1.0f };	//WINスプライトが縦に伸ばされた時の拡大率
+	const Vector3 SPRITE_WIN_VERTICAL_SCALE_HEAVY = { 0.6f,1.4f,1.0f };		//WINスプライトが縦に大きく伸ばされた時の拡大率
+	const Vector3 SPRITE_WIN_SCALE_DEFAULT = { 1.0f,1.0f,1.0f };			//WINスプライトのデフォルト拡大率
 
-	const int SPRITE_WIN_MOVETIME_FAST = 6;
-	const int SPRITE_WIN_MOVETIME_LATE = 12;
-	const int SPRITE_WIN_MOVETIME_WAIT = 90;
+	const int SPRITE_WIN_MOVETIME_FAST = 6;									//WINスプライトがすばやく動く時の移動時間
+	const int SPRITE_WIN_MOVETIME_LATE = 12;								//WINスプライトがゆっくり動く時の移動時間
+	const int SPRITE_WIN_MOVETIME_WAIT = 90;								//WINスプライトの待機時間
 
-	const int SPRITE_WIN_MOVEDELAY_START = 0;
-	const int SPRITE_WIN_MOVEDELAY_VERTICAL_MIDDLE = 12;
-	const int SPRITE_WIN_MOVEDELAY_HORIZONTAL_HEAVY = 12;
-	const int SPRITE_WIN_MOVEDELAY_VERTICAL_HEAVY = 18;
-	const int SPRITE_WIN_MOVEDELAY_HORIZONTAL_MIDDLE = 30;
-	const int SPRITE_WIN_MOVEDELAY_VERTICAL_LIGHT = 36;
-	const int SPRITE_WIN_MOVEDELAY_TO_DEFAULT = 42;
+	const int SPRITE_WIN_MOVEDELAY_START = 0;								//WINスプライトのスタートディレイ
+	const int SPRITE_WIN_MOVEDELAY_VERTICAL_MIDDLE = 12;					//WINスプライトが縦に伸ばされるディレイ
+	const int SPRITE_WIN_MOVEDELAY_HORIZONTAL_HEAVY = 12;					//WINスプライトが横に大きく伸ばされるディレイ
+	const int SPRITE_WIN_MOVEDELAY_VERTICAL_HEAVY = 18;						//WINスプライトが縦に大きく伸ばされるディレイ
+	const int SPRITE_WIN_MOVEDELAY_HORIZONTAL_MIDDLE = 30;					//WINスプライトが横に伸ばされるディレイ
+	const int SPRITE_WIN_MOVEDELAY_VERTICAL_LIGHT = 36;						//WINスプライトが縦に小さく伸ばされるディレイ
+	const int SPRITE_WIN_MOVEDELAY_TO_DEFAULT = 42;							//WINスプライトの大きさが元に戻るディレイ
 
 
-	const Vector2 SPRITE_WIN_FALL_MOVEMENT_LIGHT = { 0.0f,-10.0f };
-	const Vector2 SPRITE_WIN_FALL_MOVEMENT_HEAVY = { 0.0f,-60.0f };
-	const Vector2 SPRITE_WIN_RISE_MOVEMENT_LIGHT = { 0.0f,20.0f };
-	const Vector2 SPRITE_WIN_RISE_MOVEMENT_HEAVY = { 0.0f,60.0f };
-	const Vector2 SPRITE_WIN_WAIT_MOVEMENT = { 0.0f,0.0f };
+	const Vector2 SPRITE_WIN_FALL_MOVEMENT_LIGHT = { 0.0f,-10.0f };			//WINスプライトが少し落下する移動量
+	const Vector2 SPRITE_WIN_FALL_MOVEMENT_HEAVY = { 0.0f,-60.0f };			//WINスプライトが大きく落下する移動量
+	const Vector2 SPRITE_WIN_RISE_MOVEMENT_LIGHT = { 0.0f,20.0f };			//WINスプライトが少し上昇する移動量
+	const Vector2 SPRITE_WIN_RISE_MOVEMENT_HEAVY = { 0.0f,60.0f };			//WINスプライトが大きく上昇する移動量
+	const Vector2 SPRITE_WIN_WAIT_MOVEMENT = { 0.0f,0.0f };					//WINスプライトが待機する時の移動量
 
-	const Vector2 SPRITE_COMMAND_UP_MOVEMENT = { 0.0f,5.0f };
-	const Vector2 SPRITE_COMMAND_DOWN_MOVEMENT = { 0.0f,-5.0f };
-	const int SPRITE_COMMAND_UP_MOVETIME = 6;
-	const int SPRITE_COMMAND_DOWN_MOVETIME = 6;
-	const int SPRITE_COMMAND_UP_MOVEDELAY = 0;
-	const int SPRITE_COMMAND_DOWN_MOVEDELAY = 6;
+	const Vector2 SPRITE_COMMAND_UP_MOVEMENT = { 0.0f,5.0f };				//コマンドスプライトが上に移動する時の移動量
+	const Vector2 SPRITE_COMMAND_DOWN_MOVEMENT = { 0.0f,-5.0f };			//コマンドスプライトが下に移動する時の移動量
+	const int SPRITE_COMMAND_UP_MOVETIME = 6;								//コマンドスプライトが上に移動する時の移動時間
+	const int SPRITE_COMMAND_DOWN_MOVETIME = 6;								//コマンドスプライトが下に移動する時の移動時間
+	const int SPRITE_COMMAND_UP_MOVEDELAY = 0;								//コマンドスプライトが上に移動する時のディレイ
+	const int SPRITE_COMMAND_DOWN_MOVEDELAY = 6;							//コマンドスプライトが下に移動する時のディレイ
 
-	const int TRANSITION_TIME_TO_TITLE = 15;
-	const int TRANSITION_TIME_RETRY = 2;
+	const int TRANSITION_TIME_TO_TITLE = 15;								//タイトルへ移行する時のトランジション時間
+	const int TRANSITION_TIME_RETRY = 2;									//リトライ時のトランジション時間
 }
 
 ResultScene::~ResultScene()

@@ -1,9 +1,9 @@
 #pragma once
 class ResultScene:public IGameObject
 {
-	bool Start();
-	void Update();
-	~ResultScene();
+	bool Start() override;
+	void Update() override;
+	~ResultScene() override;
 
 public:
 
