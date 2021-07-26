@@ -451,12 +451,12 @@ void GameScene::Update()
 
 			m_isGameEndFirstFrame = false;
 
-			if (m_player1->GetIsLose() == true)
+			if (m_player1->IsLose() == true)
 			{
 				m_finalHit->SetLoserNum(NUMBER_PLAYER1);
 				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER2);
 			}
-			else if (m_player2->GetIsLose() == true)
+			else if (m_player2->IsLose() == true)
 			{
 				m_finalHit->SetLoserNum(NUMBER_PLAYER2);
 				m_roundCounter->SubmitRoundWinner(NUMBER_PLAYER1);

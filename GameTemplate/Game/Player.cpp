@@ -146,9 +146,7 @@ namespace
 	const int KNOCKBACKCOUNT_START = 0;
 	const int KNOCKBACKCOUNT_END = 4;
 }
-Player::Player()
-{
-}
+
 Player::~Player()
 {
 	DeleteGO(m_skinModelRender);
@@ -1741,6 +1739,7 @@ void Player::UpdateState()
 		break;
 	case enStatus_Burst:
 		TryChangeStatusIdle();
+		TryChangeStatusFall();
 		TryChangeStatusBurst();
 		break;
 	case enStatus_Run:
@@ -1864,17 +1863,17 @@ bool Player::GetShootPoint(Vector3& crossPoint)
 }
 void Player::KnockBack() {
 	//ノックバックする向きを設定
-	if (m_isknockBackCount == KNOCKBACKCOUNT_START) {
+	if (m_knockBackCount == KNOCKBACKCOUNT_START) {
 		m_moveAmount.y = 0.0f;
 	}
 	m_position = m_charaCon.Execute(m_moveAmount, 1.0f);
 	m_skinModelRender->SetPosition(m_position);
 
-	m_isknockBackCount++;
+	m_knockBackCount++;
 
-	if (m_isknockBackCount >= KNOCKBACKCOUNT_END) {
+	if (m_knockBackCount >= KNOCKBACKCOUNT_END) {
 		m_moveAmount = Vector3::Zero;
-		m_isknockBackCount = KNOCKBACKCOUNT_START;
+		m_knockBackCount = KNOCKBACKCOUNT_START;
 		m_isKnockBack = false;
 	}	
 }

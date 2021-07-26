@@ -11,88 +11,142 @@ class GameScene;
 class Player : public IGameObject
 {
 public:
-	Player();
-	~Player();
+	~Player() override;
 private:
 	bool Start() override;
 	void Update() override;
 
-
-	//開始前カメラ移動
+	/**
+	 * @brief 開始前カメラ移動
+	*/
 	void OpeningCamera();
 
-	//体力、メビウスゲージの表示
+	/**
+	 * @brief 体力、メビウスゲージの表示
+	*/
 	void DisplayStatus();
 
-	//移動
+	/**
+	 * @brief 移動
+	*/
 	void Move();
 
-	//攻撃
+	/**
+	 * @brief 攻撃
+	*/
 	void Attack();
 
-	//必殺技
+	/**
+	 * @brief 必殺技
+	*/
 	void SpecialAttack();
 
-	//爆弾を投げる
+	/**
+	 * @brief 爆弾を投げる
+	*/
 	void ThrowBomb();
 
-	//保持しているガレキを浮遊させる。
+	/**
+	 * @brief 保持しているガレキを浮遊させる。
+	*/
 	void HoldDebris();
 
-	//保持している爆弾を浮遊させる。
+	/**
+	 * @brief 保持している爆弾を浮遊させる。
+	*/
 	void HoldBomb();
 
-	//磁力バーストを使用していない時の通常の動き
+	/**
+	 * @brief 磁力バーストを使用していない時の磁力による動き
+	*/
 	void MagneticBehavior();
 
-	//磁力バースト
+	/**
+	 * @brief 磁力バースト
+	*/
 	void MagneticBurst();
 
-	//磁力の変化
+	/**
+	 * @brief 磁力の変化
+	*/
 	void ChangeMagnetPower();
 
-	//カメラの移動
+	/**
+	 * @brief カメラの移動
+	*/
 	void Camera();
 
-	//当たり判定
+	/**
+	 * @brief 当たり判定
+	*/
 	void Collision();
 
-	//攻撃状態に切り替えできたら切り替える。
+	/**
+	 * @brief 攻撃状態に切り替えできたら切り替える。
+	*/
 	void TryChangeStatusAttack();
 
-	//特殊攻撃状態に切り替える
+	/**
+	 * @brief 特殊攻撃状態に切り替える
+	*/
 	void TryChangeStatusSpecialAttack();
 
-	//バースト状態に切り替える
+	/**
+	 * @brief バースト状態に切り替える
+	*/
 	void TryChangeStatusBurst();
 
-	//走り状態に切り替えできたら切り替える。
+	/**
+	 * @brief 走り状態に切り替えできたら切り替える。
+	*/
 	void TryChangeStatusRun();
 
-	//歩き状態に切り替えできたら切り替える。
+	/**
+	 * @brief 歩き状態に切り替えできたら切り替える。
+	*/
 	void TryChangeStatusWalk();
 
-	//落下状態に切り替える
+	/**
+	 * @brief 落下状態に切り替える
+	*/
 	void TryChangeStatusFall();
 
-	//待機状態に切り替えできたら切り替える。
+	/**
+	 * @brief 待機状態に切り替えできたら切り替える。
+	*/
 	void TryChangeStatusIdle();
 
-	//被弾状態に切り替える
+	/**
+	 * @brief 被弾状態に切り替える
+	*/
 	void TryChangeStatusHit();
 
-	//アニメーションの状態更新
+	/**
+	 * @brief アニメーションの状態更新
+	*/
 	void UpdateState();
 
-	//アニメーションを再生
+	/**
+	 * @brief アニメーションを再生
+	*/
 	void AnimationSelect();
 
-	//発射先の計算。
+	/**
+	 * @brief 発射先の計算。
+	 * @param crossPoint 求めた発射先(参照受け取り)
+	 * @return 発射先が求まったか
+	*/
 	bool GetShootPoint(Vector3& crossPoint);
 
-	//ファイナルカメラ
+	/**
+	 * @brief ファイナルカメラ
+	*/
 	void FinalHit();
 
+	/**
+	 * @brief ノックバックをする。
+	*/
+	void KnockBack();
 public:
 
 	//自分の体力にダメージを与える
@@ -107,115 +161,194 @@ public:
 	//必殺技ゲージをチャージする。
 	void ChargeSpecialAttackGauge(int charge);
 
-	//ノックバックをする。
-	void KnockBack();
-
-public://リファクタリング中に作られた関数
+	/**
+	 * @brief ダメージエフェクトの正面をセットする
+	 * @param front 正面の向き
+	*/
 	void SetDamageEffectFront(const Vector3& front)
 	{
 		m_damageEffectFront = front;
 	}
 
+	/**
+	 * @brief ノックバックフラグをセット
+	 * @param flag フラグ
+	*/
 	void SetKnockBackFlag(bool flag)
 	{
 		m_isKnockBack = flag;
 	}
 
+	/**
+	 * @brief 引力弾の攻撃フラグを取得する
+	 * @return 攻撃フラグ
+	*/
 	bool GetGravityAttackFlag()
 	{
 		return m_isGravityBulletAttack;
 	}
 
+	/**
+	 * @brief 敵プレイヤーをセットする
+	 * @param enemy 敵プレイヤー
+	*/
 	void SetEnemy(Player* enemy)
 	{
 		m_enemy = enemy;
 	}
 
+	/**
+	 * @brief 磁力が出る地点を取得する
+	 * @return 磁力が出る座標
+	*/
 	const Vector3& GetMagPosition()
 	{
 		return m_magPosition;
 	}
 
+	/**
+	 * @brief プレイヤー番号を取得
+	 * @return プレイヤー番号
+	*/
 	int GetPlayerNum()
 	{
 		return m_playerNum;
 	}
 
+	/**
+	 * @brief プレイヤー番号をセットする
+	 * @param playerNum プレイヤー番号
+	*/
 	void SetPlayerNum(int playerNum)
 	{
 		m_playerNum = playerNum;
 	}
 
+	/**
+	 * @brief 磁力の状態を取得する
+	 * @return -1:引力　1:斥力
+	*/
 	int GetMagnetState()
 	{
 		return m_magnetState;
 	}
 
+	/**
+	 * @brief 磁力の状態をセットする
+	 * @param magPower -1:引力 1:斥力
+	*/
 	void SetMagnetState(int magPower)
 	{
 		m_magnetState = magPower;
 	}
 
+	/**
+	 * @brief バースト中かを取得する
+	 * @return バースト中?
+	*/
 	bool IsBurst()
 	{
 		return m_isBurst;
 	}
 
+	/**
+	 * @brief 現在の体力を取得する
+	 * @return 現在の体力
+	*/
 	int GetHP()
 	{
 		return m_hp;
 	}
 
+	/**
+	 * @brief 弾が自分の当たり判定に当たっているかを取得する
+	 * @param bulletCollider 弾のカプセルコライダー
+	 * @return 当たったか?
+	*/
 	bool IsBulletHitCollider(const MyCapsuleCollider& bulletCollider)
 	{
 		return m_collider.isHitCapsule(bulletCollider);
 	}
 
+	/**
+	 * @brief キャラコンを実行させる
+	 * @param moveSpeed 移動速度
+	*/
 	void ExecuteCharacon(Vector3 moveSpeed)
 	{
 		m_charaCon.Execute(moveSpeed, 1.0f);
 	}
 
+	/**
+	 * @brief 重力加速をリセット
+	*/
 	void ResetFall()
 	{
 		m_fallLoop = 0;
 	}
 
+	/**
+	 * @brief カメラ感度をセット
+	 * @param sensitivity 
+	*/
 	void SetSensitivity(float sensitivity)
 	{
 		m_sensitivity = sensitivity;
 	}
 
+	/**
+	 * @brief カメラの正面をセット
+	 * @param front カメラの正面
+	*/
 	void SetCameraFront(const Vector3& front)
 	{
 		m_cameraFront = front;
 	}
 
+	/**
+	 * @brief カメラの正面を取得
+	 * @return 
+	*/
 	const Vector3& GetCameraFront()
 	{
 		return m_cameraFront;
 	}
 
+	/**
+	 * @brief カメラへの向きをセット
+	 * @param direction カメラへの向き
+	*/
 	void SetToCameraDirection(const Vector3& direction)
 	{
 		m_toCameraDir = direction;
 	}
 
+	/**
+	 * @brief プレイヤーの座標をセット
+	 * @param position プレイヤーの座標
+	*/
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;
 	}
 
+	/**
+	 * @brief プレイヤーの座標を取得
+	 * @return プレイヤーの座標
+	*/
 	const Vector3& GetPosition()
 	{
 		return m_position;
 	}
 
+	/**
+	 * @brief プレイヤーの移動量をセット
+	 * @param moveAmount 移動量
+	*/
 	void SetMoveAmount(const Vector3& moveAmount)
 	{
 		m_moveAmount = moveAmount;
 	}
-
 
 	/**
 	 * @brief スキンモデルレンダー
@@ -223,9 +356,17 @@ public://リファクタリング中に作られた関数
 	*/
 	prefab::CSkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
 
+	/**
+	 * @brief キャラが最後に向いた向きを取得
+	 * @return キャラが最後に向いた向き
+	*/
 	const Vector3& GetLastFrontDir()const  {return m_LastFrontDir;}
 
-	bool GetIsLose() { return m_Lose; }
+	/**
+	 * @brief 負けたかどうかを取得
+	 * @return 負けた?
+	*/
+	bool IsLose() { return m_Lose; }
 	
 public:
 	//アニメーションの数
@@ -323,7 +464,7 @@ private:
 
 	//ノックバック関連
 	bool m_isKnockBack = false;									//ノックバック状態?
-	int m_isknockBackCount = 0;									//ノックバックし始めてからの経過フレーム
+	int m_knockBackCount = 0;									//ノックバックし始めてからの経過フレーム
 
 	//体力等の情報表示
 	prefab::CSpriteRender* m_HPBarSpriteRender = nullptr;		//HPバーのスプライト
@@ -353,12 +494,6 @@ private:
 
 	GameScene* m_gameScene = nullptr;							//ゲームシーン
 	Player* m_enemy = nullptr;									//敵プレイヤー
-	//後から分離したい
-	//Vector3 m_sequenceCameraPos;								//シーケンスカメラの座標
-	//Vector3 m_targetPos = { 0.0f,0.0f,0.0f };					//  **定数化**
-	//float m_openingCameraGainSpeed = 10;						//カメラとターゲットとの接近速度	
-	//float m_openingCameraRotationRad = 0.0f;					//オープニングカメラの回転角度
-	//int m_openingCameraCount = 0;								//オープニングカメラが始まってからの経過フレーム
 
 	//ファイナルヒット関連
 	bool m_Lose = false;										//自分が負けたかどうか
