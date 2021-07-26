@@ -5,7 +5,7 @@ class TitleScene:public IGameObject
 {
 	bool Start() override;
 	void Update() override;
-	~TitleScene();
+	~TitleScene() override;
 
 	/**
 	 * @brief 選択しているコマンドに応じてメニューバーを移動させる

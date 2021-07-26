@@ -6,74 +6,74 @@
 
 namespace
 {
-	const Vector3 MODEL_TITLEBACKGROUND_POSITION = { 60.0f,-300.0f,-75.0f };
-	const Vector3 MODEL_TITLEBACKGROUND_SCALE = { 1.2f,1.2f ,1.2f };
-	const float MODEL_TITLEBACKGROUND_ROTATIONRATE = -0.2f;
+	const Vector3 MODEL_TITLEBACKGROUND_POSITION = { 60.0f,-300.0f,-75.0f };				//背景の筒モデルの座標
+	const Vector3 MODEL_TITLEBACKGROUND_SCALE = { 1.2f,1.2f ,1.2f };						//背景の筒モデルの拡大率
+	const float MODEL_TITLEBACKGROUND_ROTATIONRATE = -0.2f;									//背景の筒モデルの回転量
 
-	const float POINTLIGHT_TITLEBACKGROUND_RANGE = 1500.0f;
-	const Vector3 POINTLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };
+	const float POINTLIGHT_TITLEBACKGROUND_RANGE = 1500.0f;									//背景の筒モデルを照らすポイントライトの影響範囲
+	const Vector3 POINTLIGHT_COLOR_WHITE = { 1.0f,1.0f,1.0f };								//背景の筒モデルを照らすポイントライトの色
 
-	const Vector3 SPRITE_MONITOR_POSITION = { -265.0f,-20.0f,0.0f };
-	const int SPRITE_MONITOR_WIDTH = 752;
-	const int SPRITE_MONITOR_HEIGHT = 620;
+	const Vector3 SPRITE_MONITOR_POSITION = { -265.0f,-20.0f,0.0f };						//モニタースプライトの座標
+	const int SPRITE_MONITOR_WIDTH = 752;													//モニタースプライトの幅
+	const int SPRITE_MONITOR_HEIGHT = 620;													//モニタースプライトの高さ
 
-	const Vector3 SPRITE_MONITORLINE_POSITION = { -290.0f,-21.0f,0.0f };
-	const int SPRITE_MONITORLINE_WIDTH = 704;
-	const int SPRITE_MONITORLINE_HEIGHT = 560;
+	const Vector3 SPRITE_MONITORLINE_POSITION = { -290.0f,-21.0f,0.0f };					//モニターラインスプライトの座標
+	const int SPRITE_MONITORLINE_WIDTH = 704;												//モニターラインスプライトの幅
+	const int SPRITE_MONITORLINE_HEIGHT = 560;												//モニターラインスプライトの高さ
 
-	const Vector3 SPRITE_TITLELOGO_POSITION = { -320.0f,10.0f,0.0f };
-	const int SPRITE_TITLELOGO_WIDTH = 660;
-	const int SPRITE_TITLELOGO_HEIGHT = 495;
+	const Vector3 SPRITE_TITLELOGO_POSITION = { -320.0f,10.0f,0.0f };						//タイトルロゴの座標
+	const int SPRITE_TITLELOGO_WIDTH = 660;													//タイトルロゴの幅
+	const int SPRITE_TITLELOGO_HEIGHT = 495;												//タイトルロゴの高さ
 
-	const int SPRITE_MENUBAR_WIDTH = 500;
-	const int SPRITE_MENUBAR_HEIGHT = 188;
-	const Vector3 SPRITE_MENUBAR_SCALE_MOVINGTOBACK = { 0.5f,0.5f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SCALE_NOTSELECTED = { 0.7f,0.7f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SCALE_SELECTED = { 1.0f,1.0f,1.0f };
-	const Vector3 SPRITE_MENUBAR_POSITION_TOP = { 440.0f,200.0f,0.0f };
-	const Vector3 SPRITE_MENUBAR_POSITION_CENTER = { 320.0f,0.0f,0.0f };
-	const Vector3 SPRITE_MENUBAR_POSITION_BOTTOM = { 440.0f,-200.0f,0.0f };
-	const Vector3 SPRITE_MENUBAR_POSITION_CENTER_BACK = { 500.0f,0.0f,0.0f };
+	const int SPRITE_MENUBAR_WIDTH = 500;													//メニューバースプライトの幅
+	const int SPRITE_MENUBAR_HEIGHT = 188;													//メニューバースプライトの高さ
+	const Vector3 SPRITE_MENUBAR_SCALE_MOVINGTOBACK = { 0.5f,0.5f,1.0f };					//メニューバーが後ろに移動する時の拡大率
+	const Vector3 SPRITE_MENUBAR_SCALE_NOTSELECTED = { 0.7f,0.7f,1.0f };					//メニューバーが選択されていない時の拡大率
+	const Vector3 SPRITE_MENUBAR_SCALE_SELECTED = { 1.0f,1.0f,1.0f };						//メニューバーが選択されている時の拡大率
+	const Vector3 SPRITE_MENUBAR_POSITION_TOP = { 440.0f,200.0f,0.0f };						//メニューバーが上にある時の座標
+	const Vector3 SPRITE_MENUBAR_POSITION_CENTER = { 320.0f,0.0f,0.0f };					//メニューバーが真ん中にある時の座標
+	const Vector3 SPRITE_MENUBAR_POSITION_BOTTOM = { 440.0f,-200.0f,0.0f };					//メニューバーが下にある時の座標
+	const Vector3 SPRITE_MENUBAR_POSITION_CENTER_BACK = { 500.0f,0.0f,0.0f };				//メニューバーが後ろを通る時の真ん中の座標
 
-	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_MOVEMENT1 = { 50.0f,0.0f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_MOVEMENT2 = { -125.0f,0.0f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_MOVEMENT3 = { 20.0f,0.0f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_REVERSEMOVEMENT1 = { -50.0f,0.0f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_REVERSEMOVEMENT2 = { 125.0f,0.0f,1.0f };
-	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_REVERSEMOVEMENT3 = { -20.0f,0.0f,1.0f };
-	const int SPRITE_MENUBAR_SELECTANIMATION_MOVETIME1 = 12;
-	const int SPRITE_MENUBAR_SELECTANIMATION_MOVETIME2 = 12;
-	const int SPRITE_MENUBAR_SELECTANIMATION_MOVETIME3 = 6;
-	const int SPRITE_MENUBAR_SELECTANIMATION_MOVEDELAY1 = 0;
-	const int SPRITE_MENUBAR_SELECTANIMATION_MOVEDELAY2 = 6;
-	const int SPRITE_MENUBAR_SELECTANIMATION_MOVEDELAY3 = 8;
-	const int SPRITE_MENUBAR_MOVINGFRONT_MOVETIME = 24;
-	const int SPRITE_MENUBAR_MOVINGTOBACK_MOVETIME = 12;
-	const int SPRITE_MENUBAR_MOVINGTOFRONT_MOVETIME = 12;
-	const int SPRITE_MENUBAR_MOVINGTOFRONT_MOVEDELAY = 1;
-	const int SPRITE_MENUBAR_MOVING_DELAY = 0;
+	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_MOVEMENT1 = { 50.0f,0.0f,1.0f };			//項目選択時のアニメーション1の移動量
+	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_MOVEMENT2 = { -125.0f,0.0f,1.0f };			//項目選択時のアニメーション2の移動量
+	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_MOVEMENT3 = { 20.0f,0.0f,1.0f };			//項目選択時のアニメーション3の移動量
+	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_REVERSEMOVEMENT1 = { -50.0f,0.0f,1.0f };	//項目キャンセル時のアニメーション1の移動量
+	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_REVERSEMOVEMENT2 = { 125.0f,0.0f,1.0f };	//項目キャンセル時のアニメーション2の移動量
+	const Vector3 SPRITE_MENUBAR_SELECTANIMATION_REVERSEMOVEMENT3 = { -20.0f,0.0f,1.0f };	//項目キャンセル時のアニメーション3の移動量
+	const int SPRITE_MENUBAR_SELECTANIMATION_MOVETIME1 = 12;								//項目選択時のアニメーション1の移動時間
+	const int SPRITE_MENUBAR_SELECTANIMATION_MOVETIME2 = 12;								//項目選択時のアニメーション2の移動時間
+	const int SPRITE_MENUBAR_SELECTANIMATION_MOVETIME3 = 6;									//項目選択時のアニメーション3の移動時間
+	const int SPRITE_MENUBAR_SELECTANIMATION_MOVEDELAY1 = 0;								//項目選択時のアニメーション1の移動ディレイ
+	const int SPRITE_MENUBAR_SELECTANIMATION_MOVEDELAY2 = 6;								//項目選択時のアニメーション2の移動ディレイ
+	const int SPRITE_MENUBAR_SELECTANIMATION_MOVEDELAY3 = 8;								//項目選択時のアニメーション3の移動ディレイ
+	const int SPRITE_MENUBAR_MOVINGFRONT_MOVETIME = 24;										//メニューバーが前面を移動する時の移動時間
+	const int SPRITE_MENUBAR_MOVINGTOBACK_MOVETIME = 12;									//メニューバーが後ろを通る時の移動時間
+	const int SPRITE_MENUBAR_MOVINGTOFRONT_MOVETIME = 12;									//メニューバーが後ろから出てくる時の移動時間
+	const int SPRITE_MENUBAR_MOVINGTOFRONT_MOVEDELAY = 1;									//メニューバーが後ろが出てくる時の移動ディレイ
+	const int SPRITE_MENUBAR_MOVING_DELAY = 0;												//メニューバーが移動する時の移動ディレイ
 
-	const Vector4 SPRITE_MENUBAR_COLOR_WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
-	const Vector4 SPRITE_MENUBAR_COLOR_SEMITRANSPARENT = { 1.0f, 1.0f, 1.0f, 0.7f };
-	const Vector4 SPRITE_MENUBAR_COLOR_TRANSPARENT = { 1.0f, 1.0f, 1.0f, 0.0f };
+	const Vector4 SPRITE_MENUBAR_COLOR_WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };					//メニューバーの乗算カラー　白
+	const Vector4 SPRITE_MENUBAR_COLOR_SEMITRANSPARENT = { 1.0f, 1.0f, 1.0f, 0.7f };		//メニューバーの乗算カラー　半透明
+	const Vector4 SPRITE_MENUBAR_COLOR_TRANSPARENT = { 1.0f, 1.0f, 1.0f, 0.0f };			//メニューバーの乗算カラー　透明
 
-	const Vector3 SPRITE_ARROW_POSITION = { 600.0f,0.0f,0.0f };
-	const int SPRITE_ARROW_WIDTH = 48;
-	const int SPRITE_ARROW_HEIGHT = 88;
+	const Vector3 SPRITE_ARROW_POSITION = { 600.0f,0.0f,0.0f };								//選択矢印スプライトの座標
+	const int SPRITE_ARROW_WIDTH = 48;														//選択矢印スプライトの幅
+	const int SPRITE_ARROW_HEIGHT = 88;														//選択矢印スプライトの高さ
 
-	const Vector3 CAMERA_TITLE_POSITION = { 0.0f,50.0f,200.0f };
-	const Vector3 CAMERA_TITLE_TARGETPOSITION = { 0.0f,50.0f,0.0f };
+	const Vector3 CAMERA_TITLE_POSITION = { 0.0f,50.0f,200.0f };							//タイトルのカメラの座標
+	const Vector3 CAMERA_TITLE_TARGETPOSITION = { 0.0f,50.0f,0.0f };						//タイトルのカメラの注視点
 
-	const float SOUND_BGM_TITLE_VOLUME = 0.2f;
-	const float SOUND_SE_SCROLL_VOLUME = 0.8f;
-	const float SOUND_SE_SELECT_VOLUME = 1.2f;
+	const float SOUND_BGM_TITLE_VOLUME = 0.2f;												//タイトルBGMのボリューム
+	const float SOUND_SE_SCROLL_VOLUME = 0.8f;												//項目移動時のSEのボリューム
+	const float SOUND_SE_SELECT_VOLUME = 1.2f;												//項目選択時のSEのボリューム
 
-	const int COMMANDTIMER_COMMANDSTART = 0;
-	const int COMMANDTIMER_SPRITEMOVE_BACKTOFRONT = 12;
-	const int COMMANDTIMER_PLAY_SELECT_SE = 20;
-	const int COMMANDTIME_SPRITEMOVE_FINISH = 30;
-	const int COMMANDTIMER_START_TRANSITION = 40;
-	const int COMMANDTIMER_EXECUTE_COMMAND = 60;
+	const int COMMANDTIMER_COMMANDSTART = 0;												//コマンドタイマー　スタート
+	const int COMMANDTIMER_SPRITEMOVE_BACKTOFRONT = 12;										//コマンドタイマー　後ろを通ったスプライトが出てくる
+	const int COMMANDTIMER_PLAY_SELECT_SE = 20;												//コマンドタイマー　選択SEを流す
+	const int COMMANDTIME_SPRITEMOVE_FINISH = 30;											//コマンドタイマー　スプライトの移動完了
+	const int COMMANDTIMER_START_TRANSITION = 40;											//コマンドタイマー　トランジション開始
+	const int COMMANDTIMER_EXECUTE_COMMAND = 60;											//コマンドタイマー　選択項目に応じた処理を実行
 }
 
 TitleScene::~TitleScene() 
