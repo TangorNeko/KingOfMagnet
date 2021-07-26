@@ -3,25 +3,25 @@
 
 namespace
 {
-	const Vector3 EFFECT_TWINKLE_SCALE = { 30.0f,30.0f,30.0f };
-	const int SPRITE_ROUND_WIDTH = 64;
-	const int SPRITE_ROUND_HEIGHT = 64;
-	const Vector3 SPRITE_PLAYER1_ROUND1_GAME_POSITION = { -140.0f,260.0f,0.0f };
-	const Vector3 SPRITE_PLAYER2_ROUND1_GAME_POSITION = { 140.0f,260.0f,0.0f };
-	const Vector3 SPRITE_PLAYER1_ROUND1_RESULT_POSITION = { -690.0f, -300.0f, 0.0f };
-	const Vector3 SPRITE_PLAYER2_ROUND1_RESULT_POSITION = { 690.0f,-300.0f,0.0f };
-	const Vector3 SPRITE_PLAYER1_SIDE_TO_CENTER = { 200.0f,0.0f,0.0f };
-	const Vector3 SPRITE_PLAYER2_SIDE_TO_CENTER = { -200.0f,0.0f,0.0f };
-	const Vector3 SPRITE_PLAYER1_OFFSET = { -50.0f,0.0f,0.0f };
-	const Vector3 SPRITE_PLAYER2_OFFSET = { 50.0f,0.0f,0.0f };
-	const int SPRITE_RESULT_MOVETIME = 25;
-	const int SPRITE_RESULT_MOVEDELAY = 0;
-	const int ROUNDRESULTCOUNT_START = 0;
-	const int ROUNDRESULTCOUNT_SPRITEMOVE = 20;
-	const int ROUNDRESULTCOUNT_UPDATEROUND = 100;
+	const Vector3 EFFECT_TWINKLE_SCALE = { 30.0f,30.0f,30.0f };							//ラウンド取得エフェクトの拡大率
+	const int SPRITE_ROUND_WIDTH = 64;													//ラウンドランプスプライトの幅
+	const int SPRITE_ROUND_HEIGHT = 64;													//ラウンドランプスプライトの高さ
+	const Vector3 SPRITE_PLAYER1_ROUND1_GAME_POSITION = { -140.0f,260.0f,0.0f };		//プレイヤー1のゲーム中のラウンド1スプライトの座標
+	const Vector3 SPRITE_PLAYER2_ROUND1_GAME_POSITION = { 140.0f,260.0f,0.0f };			//プレイヤー2のゲーム中のラウンド1スプライトの座標
+	const Vector3 SPRITE_PLAYER1_ROUND1_RESULT_POSITION = { -690.0f, -300.0f, 0.0f };	//プレイヤー1の結果画面のラウンド1スプライトの座標
+	const Vector3 SPRITE_PLAYER2_ROUND1_RESULT_POSITION = { 690.0f,-300.0f,0.0f };		//プレイヤー2の結果画面のラウンド1スプライトの座標
+	const Vector3 SPRITE_PLAYER1_SIDE_TO_CENTER = { 200.0f,0.0f,0.0f };					//プレイヤー1の結果画面のラウンドスプライトがスライドしてくる時の移動量
+	const Vector3 SPRITE_PLAYER2_SIDE_TO_CENTER = { -200.0f,0.0f,0.0f };				//プレイヤー2の結果画面のラウンドスプライトがスライドしてくる時の移動量
+	const Vector3 SPRITE_PLAYER1_OFFSET = { -50.0f,0.0f,0.0f };							//プレイヤー1の隣のラウンドスプライトとの空間
+	const Vector3 SPRITE_PLAYER2_OFFSET = { 50.0f,0.0f,0.0f };							//プレイヤー2の隣のラウンドスプライトとの空間
+	const int SPRITE_RESULT_MOVETIME = 25;												//結果画面のラウンドスプライトの移動時間
+	const int SPRITE_RESULT_MOVEDELAY = 0;												//結果画面のラウンドスプライトの移動ディレイ
+	const int ROUNDRESULTCOUNT_START = 0;												//結果画面のラウンドスプライトの移動タイマー　スタート
+	const int ROUNDRESULTCOUNT_SPRITEMOVE = 20;											//結果画面のラウンドスプライトの移動タイマー　移動開始
+	const int ROUNDRESULTCOUNT_UPDATEROUND = 100;										//結果画面のラウンドスプライトの移動タイマー　ラウンド取得表示
 
 	//共通になりそう
-	const float SOUND_SE_VOICE_VOLUME = 3.0f;
+	const float SOUND_SE_VOICE_VOLUME = 3.0f;											//ボイスSEのボリューム
 }
 
 int RoundCounter::m_maxRound = 1;

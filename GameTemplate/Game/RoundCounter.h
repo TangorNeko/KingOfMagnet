@@ -2,9 +2,7 @@
 
 class RoundCounter : public IGameObject
 {
-public:
-	~RoundCounter();
-private:
+	~RoundCounter() override;
 	bool Start() override;
 	void Update() override;
 public:
@@ -57,7 +55,7 @@ public:
 
 private:
 	static int m_maxRound;									//最大ラウンド数(偶数)
-	static int m_roundToWin;									//勝利に必要なラウンド
+	static int m_roundToWin;								//勝利に必要なラウンド
 	int m_currentRound = 0;									//現在のラウンド数
 	int m_latestRoundWinner = -1;							//一番最近のラウンドの勝者
 	int m_playerTakeRound[2] = { 0,0 };						//各プレイヤーの取得ラウンド
