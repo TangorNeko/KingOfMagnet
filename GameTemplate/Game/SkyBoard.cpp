@@ -3,9 +3,9 @@
 
 namespace
 {
-	const float SKY_TEXTURE_SIZE = 2824.0f;
-	const Vector3 POSITION_SKY = { 0.0f,10000.0f,0.0f };
-	const float SKY_SCROLL_VALUE = 0.1f;
+	const float SKY_TEXTURE_SIZE = 2824.0f;					//空のテクスチャサイズ
+	const Vector3 POSITION_SKY = { 0.0f,10000.0f,0.0f };	//空の板ポリの座標
+	const float SKY_SCROLL_VALUE = 0.1f;					//空のテクスチャのUVスクロール量
 }
 
 bool SkyBoard::Start()
