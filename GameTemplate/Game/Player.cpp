@@ -141,8 +141,7 @@ namespace
 
 	const float ANIMATION_SPEED_NORMAL = 1.0f;
 	const float ANIMATION_SPEED_DOUBLE = 2.0f;
-	const float ANIMATION_SPEED_QUADRUPLE = 4.0f;
-	const float ANIMATION_SPEED_FINISH = 0.1f;
+	const float ANIMATION_SPEED_QUADRUPLE = 4.0f;	
 
 	const int KNOCKBACKCOUNT_START = 0;
 	const int KNOCKBACKCOUNT_END = 4;
@@ -211,9 +210,6 @@ Player::~Player()
 	{
 		DeleteGO(m_chargeSPFontRender);
 	}
-
-	DeleteGO(m_resultWinnerSprite);
-	DeleteGO(m_resultWinSprite);
 }
 
 bool Player::Start()
@@ -420,6 +416,7 @@ void Player::Update()
 	//オープニングカメラ。
 	if (m_gameScene->GetGameState() == GameScene::GameState::enBirdseye)
 	{
+
 		OpeningCamera();
 	}
 	//スタートダウンカウントダウン中
@@ -1881,53 +1878,11 @@ void Player::KnockBack() {
 		m_isKnockBack = false;
 	}	
 }
+//////////////////////////////////////////////////////////////////////////
 void Player::OpeningCamera()
 {
-	m_openingCameraCount++;
-
-	if (g_pad[m_playerNum]->IsTrigger(enButtonA))//オープニングカメラスキップ
-	{
-		m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
-		m_gameScene->DeleteSkipFont();
-	}
-	
-	if (m_openingCameraCount < 250)//250フレーム経てば
-	{
-		Vector3 toPos = m_position;
-		toPos.y = 400;
-		//toPosを回す。
-		Quaternion qRotY;
-		//Y軸回りに回転するクォータニオンをつくる
-		m_openingCameraRotationRad += 0.01;
-		qRotY.SetRotation(Vector3::AxisY, m_openingCameraRotationRad);
-		//クォータニオンを使ってtoPosを回す
-		qRotY.Apply(toPos);
-		m_sequenceCameraPos = toPos;
-		g_camera3D[m_playerNum]->SetTarget(m_targetPos);
-	}
-	else//キャラに向かってカメラを移動させる
-	{
-		Vector3 PlayerPos = m_position;
-		PlayerPos.y = m_position.y + 90.0f;//プレイヤーの頭の位置
-		
-		
-		Vector3 targetVec = PlayerPos - m_sequenceCameraPos;
-		if (targetVec.Length() < 250)//カメラが近づけばオープニングカメラ終了
-		{
-			m_gameScene->SetGameState(GameScene::GameState::enStartCountDown);
-			m_gameScene->DeleteSkipFont();
-		}
-		targetVec.Normalize();
-		m_sequenceCameraPos += targetVec*m_openingCameraGainSpeed;
-		m_openingCameraGainSpeed += 0.1;
-		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
-	}
-	g_camera3D[m_playerNum]->SetPosition(m_sequenceCameraPos);
-
 	//キャラを初期方向に向かせる
-
 	//キャラの前方向はm_cameraFront;
-
 	float dot = m_cameraFront.Dot(Vector3::AxisZ);//内積
 	float angle = acosf(dot);//アークコサイン
 	if (m_cameraFront.x < 0) {
@@ -1939,11 +1894,7 @@ void Player::OpeningCamera()
 
 void Player::FinalHit()//決着がついたときのカメラ
 {	
-	m_gameScene->StopGameBGM();
-	
 	if (m_FirstTime == true) {//一回だけ流れるループ
-		//画面分割を終了
-		GameObjectManager::GetInstance()->Set2ScreenMode(false);
 		//画面に出ているやつを消す
 		//HPバー、画面分割線、メビウスゲージを消す
 		DeleteGO(m_bulletNumFont);
@@ -1964,155 +1915,7 @@ void Player::FinalHit()//決着がついたときのカメラ
 		m_spotLight = nullptr;
 		DeleteGO(m_mobiusGauge);
 		m_mobiusGauge = nullptr;
-		//弾も消す
-		QueryGOs<Bomb>("bomb", [](Bomb* bomb)->bool
-			{
-				DeleteGO(bomb);
-				return true;
-			});
-		QueryGOs<Debris>("debris", [](Debris* debris)->bool
-			{
-				DeleteGO(debris);
-				return true;
-			});
-		m_FirstTime = false;
-	}
-	
-	if (m_playerNum == m_loserNum)//敗者を写す
-	{		
-		m_skinModelRender->PlayAnimation(enAnimationClip_Death);//アニメーション再生
 		
-		Vector3 winnerFrontPos;//勝者の位置から少し前に伸びるベクトル		
-		Vector3 winnerHeadPos = m_enemy->m_position;
-		winnerHeadPos.y += 50;//勝者の頭の位置
-		Vector3 LastRight = Cross(g_vec3AxisY, m_LastFrontDir);//最後に向いていた向きの右ベクトル
-		Vector3 targetPos = m_position;//ターゲットポジション
-		m_sequenceCameraPos = targetPos;//カメラのポジション
-		targetPos.y += 20;//少し上に設定する
-		targetPos += m_LastFrontDir * -30;//キャラの少し後ろに伸ばす	
-		m_sequenceCameraPos.y += 100;//キャラより少し上くらい
-		//ループの値に合わせてステータスを変える
-		if (m_LoseCameraLoop == 0)
-		{
-			m_LastCameraStatus = 0;
-		}
-		if(m_LoseCameraLoop == 50)
-		{
-			m_LastCameraStatus = 1;
-		}
-		if (m_LoseCameraLoop == 100)
-		{
-			m_LastCameraStatus = 2;
-		}
-		if (m_LoseCameraLoop == 150)
-		{
-			m_LastCameraStatus = 3;
-		}
-		if (m_LoseCameraLoop == 200)
-		{
-			m_LastCameraStatus = 4;
-		}		
-		
-		switch (m_LastCameraStatus)
-		{
-		case 0://右からのカメラ
-			m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_FINISH);//アニメーションを遅くする
-			m_enemy->m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_FINISH);
-			m_sequenceCameraPos += LastRight * 200;//右
-			g_camera3D[0]->SetTarget(targetPos);
-			break;
-		case 1://左からのカメラ
-			m_sequenceCameraPos += LastRight * -200;//左
-			g_camera3D[0]->SetTarget(targetPos);
-			break;
-		case 2://前からのカメラ
-			m_sequenceCameraPos += m_LastFrontDir * 200;//正面
-			g_camera3D[0]->SetTarget(targetPos);
-			break;
-		case 3://自分を写しながら敵を向いたカメラ
-			m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_NORMAL);//アニメーションスピードをもとに戻す
-			m_enemy->m_skinModelRender->SetAnimationSpeed(ANIMATION_SPEED_NORMAL);
-			//敵のちょっと前と自分を結んだ線を正規化して後ろに少し伸ばす
-			m_winnerVec=(winnerHeadPos + m_enemy->m_LastFrontDir * 200) - m_position;
-			m_winnerVec.Normalize();
-			m_sequenceCameraPos += m_winnerVec*-200;//後ろ
-			m_winnerWaistPos = m_enemy->m_position;//敵の腰の位置
-			m_winnerWaistPos.y += 20;
-			g_camera3D[0]->SetTarget(m_winnerWaistPos);
-			break;
-		case 4://敵の前まで移動する
-			//カメラを敵の前まで移動させる				
-			winnerFrontPos = (m_enemy->m_position + m_enemy->m_LastFrontDir * 150 ) - (m_position + m_winnerVec * -200);//	
-			if (m_coef < 1.0f)//ベクトルに掛ける値
-				m_coef += 0.01f;
-			if (m_coef > 0.5f)//カメラが半分の距離まで行くとアニメーションを再生する
-			{
-				m_enemy->m_WinAnimOn = true;
-			}
-			m_sequenceCameraPos += (winnerFrontPos * (pow(m_coef,1.5)) );//指数関数的にカメラが近づく
-
-			m_sequenceCameraPos += m_winnerVec * -200;//case3のときのカメラの位置と合わせるため
-			
-			g_camera3D[0]->SetTarget(m_winnerWaistPos);
-			break;
-		default:
-			break;
-		}
-
-		//SE
-		if (m_LoseCameraLoop == 0 || m_LoseCameraLoop == 50 || m_LoseCameraLoop == 100)
-		{
-			//音を再生
-			SoundOneShotPlay(L"Assets/sound/K.O..wav", 1.5f);
-		}
-		else if (m_LoseCameraLoop == 250)
-		{
-			//ジングルを再生
-			SoundOneShotPlay(L"Assets/sound/yattaze!1.wav", 1.5f);
-		}
-		else if (m_LoseCameraLoop == 300)
-		{
-			if (m_loserNum == 1)	//1Pが勝利した場合
-			{
-				m_resultWinnerSprite = NewGO<prefab::CSpriteRender>(5);
-				m_resultWinnerSprite->Init("Assets/Image/1P.DDS", 148, 120);
-				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
-
-				//ボイス再生
-				SoundOneShotPlay(L"Assets/sound/Player1Win.wav", 3.0f);
-			}
-			else if (m_loserNum == 0)	//2Pが勝利した場合
-			{
-				m_resultWinnerSprite = NewGO<prefab::CSpriteRender>(5);
-				m_resultWinnerSprite->Init("Assets/Image/2P.DDS", 180, 128);
-				m_resultWinnerSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-				m_resultWinnerSprite->SetPosition({ -120.0f, -120.0f, 0.0f });
-
-				//ボイス再生
-				SoundOneShotPlay(L"Assets/sound/Player2Win.wav", 3.0f);
-			}
-		}
-		else if (m_LoseCameraLoop == 350)
-		{
-			m_resultWinSprite = NewGO<prefab::CSpriteRender>(5);
-			m_resultWinSprite->Init("Assets/Image/Win.DDS", 300, 128);
-			m_resultWinSprite->SetDrawScreen((prefab::CSpriteRender::DrawScreen)2);
-			m_resultWinSprite->SetPosition({ 150.0f, -120.0f, 0.0f });	
-		}
-
-		g_camera3D[0]->SetPosition(m_sequenceCameraPos);
-		m_LoseCameraLoop++;
-	}
-	else//勝者のとき
-	{
-		if (m_WinAnimOn==true)//カメラが半分の距離まで行くとアニメーションを再生する
-		{			
-			m_skinModelRender->PlayAnimation(enAnimationClip_Winner);
-		}
-		else
-		{
-			m_skinModelRender->PlayAnimation(enAnimationClip_Idle);
-		}
+		m_FirstTime = false;//ループを繰り返さない
 	}
 }
