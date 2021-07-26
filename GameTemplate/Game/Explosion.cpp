@@ -5,9 +5,9 @@
 
 namespace
 {
-	const float SOUND_SE_EXPLOSION_VOLUME = 1.1f;
-	const Vector3 EFFECT_EXPLOSION_SCALE = { 35.0f,35.0f,35.0f };
-	const float EXPLOSION_RANGE = 300.0f;
+	const float SOUND_SE_EXPLOSION_VOLUME = 1.1f;					//爆発サウンドの音量
+	const Vector3 EFFECT_EXPLOSION_SCALE = { 35.0f,35.0f,35.0f };	//爆発エフェクトの拡大率
+	const float EXPLOSION_RANGE = 300.0f;							//爆発の影響範囲
 }
 
 Explosion::~Explosion()
