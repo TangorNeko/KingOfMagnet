@@ -4,9 +4,9 @@ class GameScene;
 
 class Flash:public IGameObject
 {
-	~Flash();
-	bool Start();
-	void Update();
+	~Flash() override;
+	bool Start() override;
+	void Update() override;
 
 public:
 
@@ -25,10 +25,10 @@ public:
 private:
 	prefab::CSpriteRender* m_spriteRender = nullptr;	//フラッシュのスプライト
 	float m_Alpha = 1.0f;								//フラッシュのスプライトの透過率
-	int m_parentNum;									//フラッシュを使用したプレイヤーのプレイヤー番号
+	int m_parentNum = -1;								//フラッシュを使用したプレイヤーのプレイヤー番号
 	bool m_flashFlag = false;							//フラッシュは発動した?
 	prefab::CEffect* m_effect = nullptr;				//フラッシュ爆発のエフェクト
-	Vector3 m_position = {0.0f,0.0f,0.0f};				//爆発の座標
+	Vector3 m_position = Vector3::Zero;					//爆発の座標
 	bool m_deleteFlag = false;							//削除するか?(爆発は終わったか?)
 	GameScene* m_gameScene = nullptr;					//ゲームシーン
 };

@@ -6,15 +6,15 @@
 
 namespace
 {
-	const Vector3 CENTER_OF_SCREEN = { 0.0f,0.0f,0.0f };
-	const float SOUND_SE_FLASH1_VOLUME = 0.3f;
-	const float SOUND_SE_FLASH2_VOLUME = 0.4f;
-	const Vector3 EFFECT_FLASH_SCALE = { 25.0f,25.0f,25.0f };
-	const float FLASH_AFFECT_ANGLE = 0.2f;
-	const int SPRITE_FLASH_WIDTH = 640;
-	const int SPRITE_FLASH_HEIGHT = 720;
-	const Vector3 SPRITE_COLOR_WHITE = { 1.0f,1.0f,1.0f };
-	const float FLASH_DECAY_VALUE = 0.002f;
+	const Vector3 CENTER_OF_SCREEN = { 0.0f,0.0f,0.0f };		//画面の中心
+	const float SOUND_SE_FLASH1_VOLUME = 0.3f;					//フラッシュの効果音1のボリューム
+	const float SOUND_SE_FLASH2_VOLUME = 0.4f;					//フラッシュの効果音2のボリューム
+	const Vector3 EFFECT_FLASH_SCALE = { 25.0f,25.0f,25.0f };	//フラッシュのエフェクトの拡大率
+	const float FLASH_AFFECT_ANGLE = 0.2f;						//フラッシュの影響角度
+	const int SPRITE_FLASH_WIDTH = 640;							//フラッシュの画像の幅
+	const int SPRITE_FLASH_HEIGHT = 720;						//フラッシュの画像の高さ
+	const Vector3 SPRITE_COLOR_WHITE = { 1.0f,1.0f,1.0f };		//乗算カラー　白
+	const float FLASH_DECAY_VALUE = 0.002f;						//フラッシュの減衰量
 }
 
 Flash::~Flash()
