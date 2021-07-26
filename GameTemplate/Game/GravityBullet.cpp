@@ -8,21 +8,21 @@
 
 namespace
 {
-	const Vector3 MODEL_GRAVITY_SCALE = { 0.05f,0.05f,0.05f, };
-	const float MODEL_GRAVITY_ROTATE_ANGLE = 0.2f;
-	const float SOUND_SE_GRAVITY_VOLUME = 1.5f;
-	const Vector3 EFFECT_GRAVITY_SCALE = { 25.0f,25.0f,25.0f };
-	const float GRAVITYBULLET_COLLISION_RADIUS = 30.0f;
-	const float GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MIN = 60.0f;
-	const float GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX = 400.0f;
-	const float GRAVITYBULLET_FLOAT_DEBRIS_SPEED = 11.0f;
-	const float GRAVITYBULLET_SPEED = 30.0f;
-	const float GRAVITYBULLET_BACUUMSPEED = 6.5f;
-	const int GRAVITYATTACKCOUNT_ATTACK = 180;
-	const int GRAVITYATTACKCOUNT_BACUUM = 30;
-	const int EFFECT_GRAVITY1_INTERVAL = 30;
-	const int EFFECT_GRAVITY2_INTERVAL = 60;
-	const int EFFECT_GRAVITY_PLAY = 0;
+	const Vector3 MODEL_GRAVITY_SCALE = { 0.05f,0.05f,0.05f, };	//引力弾のモデルの拡大率
+	const float MODEL_GRAVITY_ROTATE_ANGLE = 0.2f;				//引力弾のモデルの回転量
+	const float SOUND_SE_GRAVITY_VOLUME = 1.5f;					//引力の音のボリューム
+	const Vector3 EFFECT_GRAVITY_SCALE = { 25.0f,25.0f,25.0f };	//引力のエフェクトの拡大率
+	const float GRAVITYBULLET_COLLISION_RADIUS = 30.0f;			//引力弾の当たり判定の半径
+	const float GRAVITYBULLET_GRAVITY_RANGE_MIN = 60.0f;		//引力弾の引力の最小範囲
+	const float GRAVITYBULLET_GRAVITY_RANGE_MAX = 400.0f;		//引力弾の引力の最大範囲
+	const float GRAVITYBULLET_FLOAT_DEBRIS_SPEED = 11.0f;		//引力弾がガレキを浮かせる速度
+	const float GRAVITYBULLET_SPEED = 30.0f;					//引力弾の速度
+	const float GRAVITYBULLET_BACUUMSPEED = 6.5f;				//引力弾の引き寄せ速度
+	const int GRAVITYATTACKCOUNT_ATTACK = 180;					//引力弾がガレキを発射するカウント
+	const int GRAVITYATTACKCOUNT_BACUUM = 30;					//引力弾がプレイヤーを引き寄せる吸うんと
+	const int EFFECT_GRAVITY1_INTERVAL = 30;					//引力エフェクト1の再生間隔
+	const int EFFECT_GRAVITY2_INTERVAL = 60;					//引力エフェクト2の再生間隔
+	const int EFFECT_GRAVITY_PLAY = 0;							//引力エフェクトの再生タイマー
 }
 
 GravityBullet::~GravityBullet()
@@ -157,7 +157,7 @@ void GravityBullet::AsExplodeBehave()
 		{
 			Vector3 diff = m_position - debris->GetPosition();
 
-			if (diff.Length() < GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX && debris->GetDebrisState() == Debris::enDrop)
+			if (diff.Length() < GRAVITYBULLET_GRAVITY_RANGE_MAX && debris->GetDebrisState() == Debris::enDrop)
 			{
 				//HACK:浮いてる途中に拾われないかつダメージを直で受けないようにPopにしている。
 				//正直あんまり良いとは思わない DebrisのStateを増やす?
@@ -216,8 +216,8 @@ void GravityBullet::AsGravityBehave()
 		QueryGOs<Player>("Player", [this](Player* player)->bool
 			{
 				Vector3 diff = m_position - player->GetPosition();
-				if (diff.Length() > GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MIN &&	//近すぎてもダメ
-					diff.Length() < GRAVITYBULLET_FLOAT_DEBRIS_RANGE_MAX && player != m_parent)
+				if (diff.Length() > GRAVITYBULLET_GRAVITY_RANGE_MIN &&	//近すぎてもダメ
+					diff.Length() < GRAVITYBULLET_GRAVITY_RANGE_MAX && player != m_parent)
 				{
 					//Y軸も吸い寄せると床抜けすることがあるのでy軸を除く。
 					Vector3 toGravity = diff;

@@ -8,7 +8,7 @@ class GameScene;
 
 class GravityBullet : public IGameObject
 {
-	~GravityBullet();
+	~GravityBullet() override;
 	bool Start() override;
 	void Update() override;
 
