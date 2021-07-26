@@ -4,56 +4,56 @@
 
 namespace
 {
-	const Vector2 FONT_OPTION_POSITION = { -125.0f,240.0f };
-	const Vector2 FONT_BGMVOLUME_POSITION = { -450.0f,170.0f };
-	const Vector2 FONT_SEVOLUME_POSITION = { -450.0f,100.0f };
-	const Vector2 FONT_P1SENSITIVITY_POSITION = { -450.0f,30.0f };
-	const Vector2 FONT_P2SENSITIVITY_POSITION = { -450.0f,-40.0f };
-	const Vector2 FONT_GAMETIMELIMIT_POSITION = { -450.0f,-110.0f };
-	const Vector2 FONT_ROUNDTOWIN_POSITION = { -450.0f,-180.0f };
-	const Vector4 FONT_SHADOWCOLOR_BLACK = { 0,0,0,1 };
-	const float FONT_SHADOWOFFSET = 2.0f;
-	const Vector2 FONT_SCALE_CLOSE = { 0.0f,0.0f };
-	const Vector2 FONT_SCALE_OPEN = { 0.8f,0.8f };
-	const Vector4 FONT_COLOR_WHITE = { 1.0f,1.0f,1.0f,1.0f };
-	const Vector4 FONT_COLOR_BLUE = { 0.1f,0.1f,1.0f,1.0f };
-	const Vector4 FONT_COLOR_RED = { 1.0f,0.25f,0.25f,1.0f };
+	const Vector2 FONT_OPTION_POSITION = { -125.0f,240.0f };			//OPTIONフォントの座標
+	const Vector2 FONT_BGMVOLUME_POSITION = { -450.0f,170.0f };			//BGMフォントの座標
+	const Vector2 FONT_SEVOLUME_POSITION = { -450.0f,100.0f };			//SEフォントの座標
+	const Vector2 FONT_P1SENSITIVITY_POSITION = { -450.0f,30.0f };		//プレイヤー1のカメラ感度のフォントの座標
+	const Vector2 FONT_P2SENSITIVITY_POSITION = { -450.0f,-40.0f };		//プレイヤー2のカメラ感度のフォントの座標
+	const Vector2 FONT_GAMETIMELIMIT_POSITION = { -450.0f,-110.0f };	//制限時間のフォントの座標
+	const Vector2 FONT_MAXROUND_POSITION = { -450.0f,-180.0f };			//最大ラウンド数のフォントの座標
+	const Vector4 FONT_SHADOWCOLOR_BLACK = { 0,0,0,1 };					//フォントの影の色
+	const float FONT_SHADOWOFFSET = 2.0f;								//フォントの影の太さ
+	const Vector2 FONT_SCALE_CLOSE = { 0.0f,0.0f };						//フォントの拡大率　閉じている時
+	const Vector2 FONT_SCALE_OPEN = { 0.8f,0.8f };						//フォントの拡大率　開いている時
+	const Vector4 FONT_COLOR_WHITE = { 1.0f,1.0f,1.0f,1.0f };			//フォントの色　白
+	const Vector4 FONT_COLOR_BLUE = { 0.1f,0.1f,1.0f,1.0f };			//フォントの色　青
+	const Vector4 FONT_COLOR_RED = { 1.0f,0.25f,0.25f,1.0f };			//フォントの色　赤
 
-	const Vector4 SPRITE_COLOR_LIGHTBLUE = { 0.0f,0.75f,0.75f,0.8f };
-	const Vector3 SPRITE_SCALE_CLOSE = { 0.0f,0.0f,0.0f };
-	const Vector3 SPRITE_SCALE_OPEN = { 1.0f,1.0f,1.0f };
-	const int SPRITE_SCALING_TIME = 12;
-	const int SPRITE_SCALING_DELAY = 1;
+	const Vector4 SPRITE_COLOR_LIGHTBLUE = { 0.0f,0.75f,0.75f,0.8f };	//スプライトの乗算カラー　水色
+	const Vector3 SPRITE_SCALE_CLOSE = { 0.0f,0.0f,0.0f };				//スプライトの拡大率　閉じている時
+	const Vector3 SPRITE_SCALE_OPEN = { 1.0f,1.0f,1.0f };				//スプライトの拡大率　開いている時
+	const int SPRITE_SCALING_TIME = 12;									//スプライトが拡大する時間
+	const int SPRITE_SCALING_DELAY = 1;									//スプライトの拡大のディレイ
 
-	const float OPTION_VALUE_CHANGERATE = 0.05f;
-	const float OPTION_GAMETIME_CHANGERATE = 10.0f;
-	const float OPTION_ROUNDTOWIN_CHANGERATE = 2.0f;
-	const int OPTION_ITEM_UNDERRANGE = -1;
-	const int OPTION_ITEM_BGM = 0;
-	const int OPTION_ITEM_SE = 1;
-	const int OPTION_ITEM_P1SENSITIVITY = 2;
-	const int OPTION_ITEM_P2SENSITIVITY = 3;
-	const int OPTION_ITEM_GAMETIMELIMIT = 4;
-	const int OPTION_ITEM_ROUNDTOWIN = 5;
-	const int OPTION_ITEM_OVERRANGE = 6;
+	const float OPTION_VALUE_CHANGERATE = 0.05f;						//選択項目の増減量
+	const float OPTION_GAMETIME_CHANGERATE = 10.0f;						//制限時間の増減量
+	const float OPTION_MAXROUND_CHANGERATE = 2.0f;						//最大ラウンドの増減量
+	const int OPTION_ITEM_UNDERRANGE = -1;								//選択項目外　範囲未満
+	const int OPTION_ITEM_BGM = 0;										//選択項目　　BGMボリューム
+	const int OPTION_ITEM_SE = 1;										//選択項目　　SEボリューム
+	const int OPTION_ITEM_P1SENSITIVITY = 2;							//選択項目　　プレイヤー1のカメラ感度
+	const int OPTION_ITEM_P2SENSITIVITY = 3;							//選択項目　　プレイヤー2のカメラ感度
+	const int OPTION_ITEM_GAMETIMELIMIT = 4;							//選択項目　　制限時間
+	const int OPTION_ITEM_MAXROUND = 5;									//選択項目　　最大ラウンド数
+	const int OPTION_ITEM_OVERRANGE = 6;								//選択項目外　範囲より大きい
 
-	const float SOUND_VOLUME_DEFAULT = 1.0f;
-	const float SOUND_VOLUME_MIN = 0.0f;
-	const float SOUND_VOLUME_MAX = 1.0f;
+	const float SOUND_VOLUME_DEFAULT = 1.0f;							//音量の初期値
+	const float SOUND_VOLUME_MIN = 0.0f;								//音量の最小値
+	const float SOUND_VOLUME_MAX = 1.0f;								//音量の最大値
 
-	const float CONTROL_SENSITIVITY_DEFAULT = 2.0f;
-	const float CONTROL_SENSITIVITY_MIN = 0.1f;
-	const float CONTROL_SENSITIVITY_MAX = 5.0f;
+	const float CONTROL_SENSITIVITY_DEFAULT = 2.0f;						//カメラ感度の初期値
+	const float CONTROL_SENSITIVITY_MIN = 0.1f;							//カメラ感度の最小値
+	const float CONTROL_SENSITIVITY_MAX = 5.0f;							//カメラ感度の最大値
 	
-	const float GAME_TIMELIMIT_DEFAULT = 40.0f;
-	const float GAME_TIMELIMIT_MIN = 30.0f;
-	const float GAME_TIMELIMIT_MAX = 90.0f;
+	const float GAME_TIMELIMIT_DEFAULT = 40.0f;							//制限時間の初期値
+	const float GAME_TIMELIMIT_MIN = 30.0f;								//制限時間の最小値
+	const float GAME_TIMELIMIT_MAX = 90.0f;								//制限時間の最大値
 
-	const float GAME_ROUNDTOWIN_DEFAULT = 3.0f;
-	const float GAME_ROUNDTOWIN_MIN = 1.0f;
-	const float GAME_ROUNDTOWIN_MAX = 3.0f;
+	const float GAME_MAXROUND_DEFAULT = 3.0f;							//最大ラウンド数の初期値
+	const float GAME_MAXROUND_MIN = 1.0f;								//最大ラウンド数の最小値
+	const float GAME_MAXROUND_MAX = 3.0f;								//最大ラウンド数の最大値
 
-	const float SOUND_OPTIONDISPLAY_VOLUME = 0.5f;
+	const float SOUND_OPTIONDISPLAY_VOLUME = 0.5f;						//オプションを開いた時の音のボリューム
 }
 
 bool GameOption::m_isInited = false;							//初期化されたか
@@ -62,7 +62,7 @@ OptionValue GameOption::m_SEVolume;							//効果音のボリューム
 OptionValue GameOption::m_P1Sensitivity;						//プレイヤー1のカメラ感度							
 OptionValue GameOption::m_P2Sensitivity;						//プレイヤー2のカメラ感度							
 OptionValue GameOption::m_gameTimeLimit;						//ゲームの制限時間								
-OptionValue GameOption::m_roundToWin;							//勝利に必要なラウンド数
+OptionValue GameOption::m_maxRound;							//最高ラウンド数
 
 GameOption::~GameOption()
 {
@@ -73,7 +73,7 @@ GameOption::~GameOption()
 	DeleteGO(m_1PSensitivityFont);
 	DeleteGO(m_2PSensitivityFont);
 	DeleteGO(m_gameTimeLimitFont);
-	DeleteGO(m_roundToWinFont);
+	DeleteGO(m_maxRoundFont);
 }
 
 bool GameOption::Start()
@@ -137,13 +137,13 @@ bool GameOption::Start()
 	m_gameTimeLimitFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
 	m_gameTimeLimitFont->SetShadowOffset(FONT_SHADOWOFFSET);
 	
-	//勝利に必要なラウンド数フォント
-	m_roundToWinFont = NewGO<prefab::CFontRender>(0);
-	m_roundToWinFont->SetScale(FONT_SCALE_CLOSE);
-	m_roundToWinFont->SetPosition(FONT_ROUNDTOWIN_POSITION);
-	m_roundToWinFont->SetShadowFlag(true);
-	m_roundToWinFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
-	m_roundToWinFont->SetShadowOffset(FONT_SHADOWOFFSET);
+	//最大ラウンド数フォント
+	m_maxRoundFont = NewGO<prefab::CFontRender>(0);
+	m_maxRoundFont->SetScale(FONT_SCALE_CLOSE);
+	m_maxRoundFont->SetPosition(FONT_MAXROUND_POSITION);
+	m_maxRoundFont->SetShadowFlag(true);
+	m_maxRoundFont->SetShadowColor(FONT_SHADOWCOLOR_BLACK);
+	m_maxRoundFont->SetShadowOffset(FONT_SHADOWOFFSET);
 
 	return true;
 }
@@ -160,7 +160,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetScale(FONT_SCALE_OPEN);
 		m_2PSensitivityFont->SetScale(FONT_SCALE_OPEN);
 		m_gameTimeLimitFont->SetScale(FONT_SCALE_OPEN);
-		m_roundToWinFont->SetScale(FONT_SCALE_OPEN);
+		m_maxRoundFont->SetScale(FONT_SCALE_OPEN);
 
 		//選択したフォント以外を白にするため一旦全部白にしている
 		m_BGMVolumeFont->SetColor(Vector4::White);
@@ -168,7 +168,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetColor(Vector4::White);
 		m_2PSensitivityFont->SetColor(Vector4::White);
 		m_gameTimeLimitFont->SetColor(Vector4::White);
-		m_roundToWinFont->SetColor(Vector4::White);
+		m_maxRoundFont->SetColor(Vector4::White);
 
 		//項目の選択中なら
 		if (m_selectingState == enItem)
@@ -187,7 +187,7 @@ void GameOption::Update()
 			{
 				if (--m_selectingItem == OPTION_ITEM_UNDERRANGE)
 				{
-					m_selectingItem = OPTION_ITEM_ROUNDTOWIN;
+					m_selectingItem = OPTION_ITEM_MAXROUND;
 				}
 				SoundOneShotPlay(L"Assets/sound/OptionValueChange.wav", SOUND_OPTIONDISPLAY_VOLUME);
 
@@ -216,9 +216,9 @@ void GameOption::Update()
 				m_selectingItemValue = &m_gameTimeLimit;
 				m_selectingItemFont = m_gameTimeLimitFont;
 				break;
-			case OPTION_ITEM_ROUNDTOWIN://勝利に必要なラウンド
-				m_selectingItemValue = &m_roundToWin;
-				m_selectingItemFont = m_roundToWinFont;
+			case OPTION_ITEM_MAXROUND://最大ラウンド数
+				m_selectingItemValue = &m_maxRound;
+				m_selectingItemFont = m_maxRoundFont;
 				break;
 			}
 
@@ -323,8 +323,8 @@ void GameOption::Update()
 		m_2PSensitivityFont->SetText(m_buffer);
 		swprintf_s(m_buffer, L"TIMELIMIT      = %.2f", m_gameTimeLimit.GetValue());
 		m_gameTimeLimitFont->SetText(m_buffer);
-		swprintf_s(m_buffer, L"ROUNDTOWIN     = %.0f", m_roundToWin.GetValue());
-		m_roundToWinFont->SetText(m_buffer);
+		swprintf_s(m_buffer, L"MAXROUND       = %.0f", m_maxRound.GetValue());
+		m_maxRoundFont->SetText(m_buffer);
 
 	}
 	else//それ以外
@@ -336,7 +336,7 @@ void GameOption::Update()
 		m_1PSensitivityFont->SetScale(FONT_SCALE_CLOSE);
 		m_2PSensitivityFont->SetScale(FONT_SCALE_CLOSE);
 		m_gameTimeLimitFont->SetScale(FONT_SCALE_CLOSE);
-		m_roundToWinFont->SetScale(FONT_SCALE_CLOSE);
+		m_maxRoundFont->SetScale(FONT_SCALE_CLOSE);
 	}
 }
 
@@ -405,7 +405,7 @@ bool GameOption::ReadOption()
 	m_P1Sensitivity.SetValue(P1Sensitivity);
 	m_P2Sensitivity.SetValue(P2Sensitivity);
 	m_gameTimeLimit.SetValue(gameTimeLimit);
-	m_roundToWin.SetValue(roundToWin);
+	m_maxRound.SetValue(roundToWin);
 
 	//音量は読み込んだ時にセット
 	CSoundEngine::GetInstance()->SetBGMVolume(m_BGMVolume.GetValue());
@@ -431,7 +431,7 @@ bool GameOption::WriteOption()
 	P1Sensitivity = m_P1Sensitivity.GetValue();
 	P2Sensitivity = m_P2Sensitivity.GetValue();
 	gameTimeLimit = m_gameTimeLimit.GetValue();
-	roundToWin = m_roundToWin.GetValue();
+	roundToWin = m_maxRound.GetValue();
 
 	//書き込み
 	fwrite(&BGMVolume, sizeof(float), 1, fp);
@@ -468,9 +468,9 @@ void GameOption::Init()
 	//ゲームの制限時間
 	m_gameTimeLimit.Init(OPTION_GAMETIME_CHANGERATE, GAME_TIMELIMIT_MIN, GAME_TIMELIMIT_MAX, OptionValue::enTrigger);
 	m_gameTimeLimit.SetValue(GAME_TIMELIMIT_DEFAULT);
-	//勝利に必要なラウンド数
-	m_roundToWin.Init(OPTION_ROUNDTOWIN_CHANGERATE, GAME_ROUNDTOWIN_MIN, GAME_ROUNDTOWIN_MAX, OptionValue::enTrigger);
-	m_roundToWin.SetValue(GAME_ROUNDTOWIN_DEFAULT);
+	//最大ラウンド数
+	m_maxRound.Init(OPTION_MAXROUND_CHANGERATE, GAME_MAXROUND_MIN, GAME_MAXROUND_MAX, OptionValue::enTrigger);
+	m_maxRound.SetValue(GAME_MAXROUND_DEFAULT);
 
 	m_isInited = true;
 }

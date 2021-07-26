@@ -3,7 +3,7 @@
 
 class GameOption : public IGameObject
 {
-	~GameOption();
+	~GameOption() override;
 	bool Start() override;
 	void Update() override;
 public:
@@ -59,7 +59,7 @@ public:
 	 * @brief 勝利に必要なラウンド数を取得
 	 * @return 勝利に必要なラウンド数
 	*/
-	int GetRoundToWin() const { return static_cast<int>(m_roundToWin.GetValue()); }
+	int GetRoundToWin() const { return static_cast<int>(m_maxRound.GetValue()); }
 
 	/**
 	 * @brief 現在のオプション画面の選択深度を取得
@@ -101,14 +101,14 @@ private:
 	static OptionValue m_P1Sensitivity;							//プレイヤー1のカメラ感度							
 	static OptionValue m_P2Sensitivity;							//プレイヤー2のカメラ感度							
 	static OptionValue m_gameTimeLimit;							//ゲームの制限時間								
-	static OptionValue m_roundToWin;							//勝利に必要なラウンド数
+	static OptionValue m_maxRound;								//勝利に必要なラウンド数
 	prefab::CFontRender* m_optionFont = nullptr;				//オプションのフォント
 	prefab::CFontRender* m_BGMVolumeFont = nullptr;				//BGMのボリュームのフォント
 	prefab::CFontRender* m_SEVolumeFont = nullptr;				//効果音のボリュームのフォント
 	prefab::CFontRender* m_1PSensitivityFont = nullptr;			//プレイヤー1のカメラ感度のフォント
 	prefab::CFontRender* m_2PSensitivityFont = nullptr;			//プレイヤー2のカメラ感度のフォント
 	prefab::CFontRender* m_gameTimeLimitFont = nullptr;			//ゲームの制限時間のフォント
-	prefab::CFontRender* m_roundToWinFont = nullptr;			//勝利に必要なラウンド数のフォント
+	prefab::CFontRender* m_maxRoundFont = nullptr;				//勝利に必要なラウンド数のフォント
 	SelectingState m_selectingState = enItem;					//選択深度
 	int m_selectingItem = 0;									//選択している項目番号(0:BGM,1:SE,2:1Pカメラ感度,3:2Pカメラ感度,4:ゲーム制限時間,5:勝利に必要なラウンド数)
 	OptionValue* m_selectingItemValue = nullptr;				//選択している項目を格納するポインタ
