@@ -22,7 +22,7 @@ private:
 	Vector3 m_sequenceCameraPos = Vector3::Zero;
 	Vector3 m_targetPos = Vector3::Zero;	
 	float m_openingCameraRotationRad = 0;
-	float m_openingCamerZoomSpeed = 10;//カメラとターゲットとの接近速度	
+	float m_openingCameraZoomSpeed = 10;//カメラとターゲットとの接近速度	
 	GameScene* m_gameScene = nullptr;
 	//プレイヤーから入れる
 	int m_playerNum = 0;
