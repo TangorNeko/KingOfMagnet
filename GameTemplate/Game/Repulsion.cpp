@@ -5,13 +5,13 @@
 
 namespace
 {
-	const float REPULSION_AREA_LENGTH = 160.0f;
-	const float REPULSION_RANGE = 200.0f;
-	const Vector3 REPULSION_SPEED = { 0.0f,5.0f,0.0f };
-	const float SOUND_SE_REPULSION_ENTER_VOLUME = 1.5f;
-	const float SOUND_SE_REPULSION_STAY_VOLUME = 1.5f;
-	const float SOUND_SE_INCREASE_VALUE = 0.1f;
-	const float SOUND_SE_DECAY_VALUE = 0.01f;
+	const float REPULSION_AREA_LENGTH = 160.0f;				//斥力床のxz範囲
+	const float REPULSION_RANGE = 200.0f;					//斥力床のy範囲
+	const Vector3 REPULSION_SPEED = { 0.0f,5.0f,0.0f };		//斥力床の上昇スピード
+	const float SOUND_SE_REPULSION_ENTER_VOLUME = 1.5f;		//斥力床を踏んだ瞬間のSEのボリューム
+	const float SOUND_SE_REPULSION_STAY_VOLUME = 1.0f;		//斥力床にとどまっている時のSEのボリューム
+	const float SOUND_SE_INCREASE_VALUE = 0.1f;				//斥力床のSEのボリュームの増加量
+	const float SOUND_SE_DECAY_VALUE = 0.01f;				//斥力床のSEのボリュームの減衰量
 }
 
 Repulsion::~Repulsion()
@@ -92,7 +92,7 @@ void Repulsion::Update()
 						m_repulsionStaySE[playerNum]->Play(true);
 						m_isPlayStaySE[playerNum] = true;
 					}
-					//StaySEがまだ鳴っているのならば、音量を1.5fになるまで少しずつ増加させる。
+					//StaySEがまだ鳴っているのならば、音量を少しずつ増加させる。
 					m_staySEVolume[playerNum] += SOUND_SE_INCREASE_VALUE;
 					if (m_staySEVolume[playerNum] >= SOUND_SE_REPULSION_STAY_VOLUME) {
 						m_staySEVolume[playerNum] = SOUND_SE_REPULSION_STAY_VOLUME;
