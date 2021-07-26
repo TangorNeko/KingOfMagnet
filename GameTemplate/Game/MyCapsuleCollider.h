@@ -100,8 +100,7 @@ public:
 	}
 
 private:
-	Vector3 m_capsuleStartPoint;	//カプセルの始点
-	Vector3 m_capsuleEndPoint;		//カプセルの終点
-	float m_radius;					//カプセルの半径
+	Vector3 m_capsuleStartPoint = Vector3::Zero;	//カプセルの始点
+	Vector3 m_capsuleEndPoint = Vector3::Zero;		//カプセルの終点
+	float m_radius = 0.0f;							//カプセルの半径
 };
-

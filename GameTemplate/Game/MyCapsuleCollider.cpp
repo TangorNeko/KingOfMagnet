@@ -1,15 +1,6 @@
 #include "stdafx.h"
 #include "MyCapsuleCollider.h"
 
-	/// <summary>
-	/// 点と直線の最短距離
-	/// </summary>
-	/// <param name="point">点の位置</param>
-	/// <param name="linePos">直線の一点</param>
-	/// <param name="lineDir">直線の一点からの向き</param>
-	/// <param name="crossPoint">直線上の最短距離の点(戻り値)</param>
-	/// <param name="t">直線上の1点から最短距離の点への単位ベクトル係数(戻り値)</param>
-	/// <returns></returns>
 float MyCapsuleCollider::CalcPointLineDist(const Vector3& point, const Vector3& linePos, const Vector3& lineDir, Vector3& crossPoint, float& t)
 {
 	float lenSqV = lineDir.Dot(lineDir);
@@ -25,15 +16,6 @@ float MyCapsuleCollider::CalcPointLineDist(const Vector3& point, const Vector3& 
 	return (crossPoint - point).Length();
 }
 
-	/// <summary>
-	/// 点と線分の最短距離
-	/// </summary>
-	/// <param name="point">点の座標</param>
-	/// <param name="segmentStartPoint">線分の始点</param>
-	/// <param name="segmentEndPoint">線分の終点</param>
-	/// <param name="minPoint">最短距離の点(戻り値)</param>
-	/// <param name="t">端点のベクトル係数?</param>
-	/// <returns></returns>
 float MyCapsuleCollider::CalcPointSegmentDist(const Vector3& point, const Vector3& segmentStartPoint, const Vector3& segmentEndPoint, Vector3& minPoint, float& t)
 {
 	//線分の向きを取得
@@ -79,18 +61,6 @@ float MyCapsuleCollider::CalcPointSegmentDist(const Vector3& point, const Vector
 	return len;
 }
 
-	/// <summary>
-	/// 2直線の最短距離を求める
-	/// </summary>
-	/// <param name="line1StartPoint">直線1の始点</param>
-	/// <param name="line1EndPoint">直線1の終点</param>
-	/// <param name="line2StartPoint">直線2の始点</param>
-	/// <param name="line2EndPoint">直線2の終点</param>
-	/// <param name="line1CrossPoint">最短距離の直線1上の点(戻り値)</param>
-	/// <param name="line2CrossPoint">最短距離の直線2上の点(戻り値)</param>
-	/// <param name="t1">L1のベクトル係数(戻り値)</param>
-	/// <param name="t2">L2のベクトル係数(戻り値)</param>
-	/// <returns></returns>
 float MyCapsuleCollider::CalcLineLineDist(const Vector3& line1StartPoint, const Vector3& line1EndPoint, const Vector3& line2StartPoint, const Vector3& line2EndPoint, Vector3& line1CrossPoint, Vector3& line2CrossPoint, float& t1, float& t2)
 {
 	//2直線が平行?
@@ -124,18 +94,6 @@ float MyCapsuleCollider::CalcLineLineDist(const Vector3& line1StartPoint, const 
 	return (line2CrossPoint - line1CrossPoint).Length();
 }
 
-/// <summary>
-/// 2線分の最短距離を求める
-/// </summary>
-/// <param name="segment1StartPoint">線分1の始点</param>
-/// <param name="segment1EndPoint">線分1の終点</param>
-/// <param name="segment2StartPoint">線分2の始点</param>
-/// <param name="segment2EndPoint">線分2の終点</param>
-/// <param name="segment1CrossPoint">最短距離の線分1上の点</param>
-/// <param name="segment2CrossPoint">最短距離の線分2上の点</param>
-/// <param name="t1">線分1のベクトル係数</param>
-/// <param name="t2">線分2のベクトル係数</param>
-/// <returns>最短距離</returns>
 float MyCapsuleCollider::CalcSegmentSegmentDist(const Vector3& segment1StartPoint, const Vector3& segment1EndPoint, const Vector3& segment2StartPoint, const Vector3& segment2EndPoint, Vector3& segment1CrossPoint, Vector3& segment2CrossPoint, float& t1, float& t2)
 {
 	Vector3 segment1 = segment1EndPoint - segment1StartPoint;
