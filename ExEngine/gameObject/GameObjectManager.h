@@ -131,26 +131,20 @@ public:
 		}
 	}
 
-	/// <summary>
-	/// 2画面描画にするかどうか。
-	/// </summary>
-	/// <param name="is2screenMode">bool 2画面にするならtrue,1画面ならfalse</param>
+	/**
+	 * @brief 2画面描画にするかどうか。
+	 * @param is2screenMode 2画面にするならtrue,1画面ならfalse
+	*/
 	void Set2ScreenMode(bool is2screenMode)
 	{
 		m_2screenMode = is2screenMode;
 	}
 
-	/// <summary>
-	/// 2画面描画にするかのフラグを取得
-	/// </summary>
-	/// <returns>bool</returns>
+	/**
+	 * @brief 2画面描画にするかのフラグを取得
+	 * @return フラグ
+	*/
 	bool Get2ScreenMode() { return m_2screenMode; }
-	
-	/// <summary>
-	/// レンダリングコンテキストを返す
-	/// </summary>
-	RenderContext* GetRenderContext() { return m_rc; }
-
 private:
 	enum { GAME_OBJECT_PRIO_MAX = 255 };		//!<ゲームオブジェクトの優先度の最大値。
 	typedef std::list<IGameObject*>	 GameObjectList;

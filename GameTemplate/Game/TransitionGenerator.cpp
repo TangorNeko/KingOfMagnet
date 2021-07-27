@@ -28,7 +28,7 @@ TransitionGenerator::~TransitionGenerator()
 void TransitionGenerator::Update() {
 
 	if (m_rc == nullptr) {
-		m_rc = GameObjectManager::GetInstance()->GetRenderContext();
+		m_rc = &(g_graphicsEngine->GetRenderContext());
 	}
 	if (m_rc == nullptr) {
 		return; //レンダリングコンテキストを設定できていないのでこの先へは進まない
