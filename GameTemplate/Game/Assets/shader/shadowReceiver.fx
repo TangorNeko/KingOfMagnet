@@ -142,45 +142,23 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	//本来の比較用の距離はこっち
 	//psIn.posInLVP.z = length(psIn.worldPos - lightCameraPos) / 1000.0f;
 
-	//ここから平行光源の深度チェックのテスト用。
+	//ここから平行光源での深度チェック。
 
 	//ライトの向きを取得。
 	float3 cameraDir = lightCameraDir;
 	//正規化されてるはずだけど、念の為。
 	cameraDir = normalize(cameraDir);
 
-	float3 axisX = {1.0f,0.0f,0.0f};
+	//ライトカメラから判定ピクセルまでのベクトルを求める
+	float3 toPic = psIn.worldPos - lightCameraPos;
 
-	float3 lightCameraAnotherAxis = cross(axisX,cameraDir);
+	//カメラの向きと内積を取ることでカメラのXY平面上での最短距離が分かる
+	psIn.posInLVP.z = dot(toPic,cameraDir);
 
-	//axisX,lightCameraAnotherAxisで構成される平面にpsIn.worldPosから垂線をおろす。
-
-	float3 start = psIn.worldPos;
-
-	//スタート地点からカメラの向きをプラスして仮想の垂線をつくる。
-	float3 end = psIn.worldPos + -100 * cameraDir;
-
-	//ポリゴンと線分の交差判定を参考に、
-	//仮想の垂線とlightCameraPos,lightCameraPos+axisX,lightCameraPos+lightCameraAnotherAxisの
-	//3点でできる平面との交点を求めていく。
-
-	float3 toStart = start - lightCameraPos;
-
-	float3 toEnd = end - lightCameraPos;
-
-	float a = dot(cameraDir,toStart);
-
-	float3 cameraDirRev = -cameraDir;
-
-	float b = dot(cameraDirRev,toEnd);
-
-	//crosspointは交点 = 3点でできる平面と垂線の交点。depthの開始点になる。
-	float3 crossPoint = toStart - toEnd;
-	crossPoint *= b / (a+b);
-	crossPoint += end;
-
-	psIn.posInLVP.z = length(psIn.worldPos - crossPoint)/2000.0f;
-	//ここまで平行光源の深度チェックのテスト用。
+	//2000までの距離を0~1にまとめる
+	psIn.posInLVP.z /= 2000.0f;
+	
+	//ここまで平行光源での深度チェック。
 	return psIn;
 }
 
