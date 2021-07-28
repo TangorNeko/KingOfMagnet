@@ -182,7 +182,7 @@ void GravityBullet::AsExplodeBehave()
 	DeleteGO(m_skinModelRender);
 
 	//‰¹‚ğ–Â‚ç‚·
-	SoundOneShotPlay(L"Assets/sound/ˆÃ•–‚–@.wav", SOUND_SE_GRAVITY_VOLUME);
+	SoundOneShotPlay(L"Assets/sound/GravityExplosion.wav", SOUND_SE_GRAVITY_VOLUME);
 
 	//”š”­‚µ‚½‚Ì‚Åˆø—Í‚ğ”­¶‚³‚¹‚éó‘Ô‚Ö
 	m_gravityBulletState = enGravity;

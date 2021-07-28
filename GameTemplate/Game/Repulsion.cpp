@@ -30,9 +30,9 @@ bool Repulsion::Start()
 
 	//斥力床に乗り続けている時のSEを作成
 	m_repulsionStaySE[NUMBER_PLAYER1] = NewGO<prefab::CSoundSource>(0);
-	m_repulsionStaySE[NUMBER_PLAYER1]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
+	m_repulsionStaySE[NUMBER_PLAYER1]->Init(L"Assets/sound/RepulsionStay.wav", SoundType::enSE);
 	m_repulsionStaySE[NUMBER_PLAYER2] = NewGO<prefab::CSoundSource>(0);
-	m_repulsionStaySE[NUMBER_PLAYER2]->Init(L"Assets/sound/UFO.wav", SoundType::enSE);
+	m_repulsionStaySE[NUMBER_PLAYER2]->Init(L"Assets/sound/RepulsionStay.wav", SoundType::enSE);
 
 	//ゲームシーンを取得
 	m_gameScene = FindGO<GameScene>("gamescene");
@@ -81,7 +81,7 @@ void Repulsion::Update()
 					//プレイヤーが斥力床に入ってきた時の音を鳴らす。
 					if (m_isPlayEnterSE[playerNum] == false)
 					{
-						SoundOneShotPlay(L"Assets/sound/マジックウェーブ.wav", SOUND_SE_REPULSION_ENTER_VOLUME);
+						SoundOneShotPlay(L"Assets/sound/RepulsionEnter.wav", SOUND_SE_REPULSION_ENTER_VOLUME);
 						m_isPlayEnterSE[playerNum] = true;
 					}
 

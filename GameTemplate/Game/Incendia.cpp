@@ -21,7 +21,7 @@ Incendia::~Incendia()
 bool Incendia::Start()
 {
 	//音を再生
-	SoundOneShotPlay(L"Assets/sound/炎.wav");
+	SoundOneShotPlay(L"Assets/sound/Burn.wav");
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);

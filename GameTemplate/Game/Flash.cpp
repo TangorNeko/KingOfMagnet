@@ -26,8 +26,8 @@ Flash::~Flash()
 bool Flash::Start()
 {
 	//音を再生
-	SoundOneShotPlay(L"Assets/sound/閃光弾.wav", SOUND_SE_FLASH1_VOLUME);
-	SoundOneShotPlay(L"Assets/sound/閃光弾2.wav", SOUND_SE_FLASH2_VOLUME);
+	SoundOneShotPlay(L"Assets/sound/Flash1.wav", SOUND_SE_FLASH1_VOLUME);
+	SoundOneShotPlay(L"Assets/sound/Flash2.wav", SOUND_SE_FLASH2_VOLUME);
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);

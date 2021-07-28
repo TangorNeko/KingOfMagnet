@@ -681,7 +681,7 @@ void Player::Move()
 		if (m_animStatus == enStatus_Walk) {
 			if (m_footstepsTimer >= FOOTSTEPTIMER_WALK)
 			{
-				SoundOneShotPlay(L"Assets/sound/足音.wav", SOUND_SE_FOOTSTEP_VOLUME);
+				SoundOneShotPlay(L"Assets/sound/FootStep.wav", SOUND_SE_FOOTSTEP_VOLUME);
 
 				m_footstepsTimer = FOOTSTEPTIMER_RESET;
 			}
@@ -689,7 +689,7 @@ void Player::Move()
 		if (m_animStatus == enStatus_Run) {
 			if (m_footstepsTimer >= FOOTSTEPTIMER_RUN)
 			{
-				SoundOneShotPlay(L"Assets/sound/足音.wav", SOUND_SE_FOOTSTEP_VOLUME);
+				SoundOneShotPlay(L"Assets/sound/FootStep.wav", SOUND_SE_FOOTSTEP_VOLUME);
 				
 				m_footstepsTimer = FOOTSTEPTIMER_RESET;
 			}
@@ -713,7 +713,7 @@ void Player::Attack()
 		if (m_holdDebrisVector.empty() == false)
 		{
 			//音を鳴らす
-			SoundOneShotPlay(L"Assets/sound/シュート音.wav", SOUND_SE_DEBRISSHOOT_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/BulletShot.wav", SOUND_SE_DEBRISSHOOT_VOLUME);
 
 			//一番最初に保持したガレキを発射
 			auto debris = m_holdDebrisVector.front();
@@ -814,7 +814,7 @@ void Player::SpecialAttack()
 		}
 		if (m_specialShotCount == PLAYER_SPECIALSHOTCOUNT_ZERO)
 		{
-			SoundOneShotPlay(L"Assets/sound/パワーチャージ.wav");
+			SoundOneShotPlay(L"Assets/sound/SPCharge.wav");
 		}
 
 		m_specialShotCount++;
@@ -826,7 +826,7 @@ void Player::SpecialAttack()
 		if (m_magnetState == MAGNETSTATE_GRAVITY)
 		{
 			//音を鳴らす
-			SoundOneShotPlay(L"Assets/sound/引力弾発射.wav", SOUND_SE_SHOOTGRAVITY_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/GravityBulletShot.wav", SOUND_SE_SHOOTGRAVITY_VOLUME);
 
 			//発射エフェクト
 			m_SPFireEffect->Init(u"Assets/effect/引力弾発射.efk");
@@ -884,7 +884,7 @@ void Player::SpecialAttack()
 			if (m_holdDebrisVector.size() != 0)
 			{
 				//音を鳴らす
-				SoundOneShotPlay(L"Assets/sound/気弾1.wav");
+				SoundOneShotPlay(L"Assets/sound/RepulsionBulletShot.wav");
 
 				//発射エフェクト
 				m_SPFireEffect->Init(u"Assets/effect/斥力弾発射.efk");
@@ -969,7 +969,7 @@ void Player::ThrowBomb()
 		if (m_holdBombVector.empty() == false)
 		{
 			//音を鳴らす
-			SoundOneShotPlay(L"Assets/sound/投げる音.wav");
+			SoundOneShotPlay(L"Assets/sound/BombThrow.wav");
 
 			//選択している爆弾を発射
 			auto debris = m_holdBombVector.begin() + m_selectBombNo;
@@ -1163,7 +1163,7 @@ void Player::MagneticBehavior()
 		{
 		case MAGNETSTATE_GRAVITY://引力
 			//バースト音を再生
-			SoundOneShotPlay(L"Assets/sound/引力バースト音.wav", SOUND_SE_BURST_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/GravityBurstSE.wav", SOUND_SE_BURST_VOLUME);
 			//エフェクトを表示
 			m_burstEffect->Init(u"Assets/effect/引力バースト.efk");
 			m_burstEffect->Play();
@@ -1171,7 +1171,7 @@ void Player::MagneticBehavior()
 
 		case MAGNETSTATE_REPULSION://斥力
 			//バースト音を再生
-			SoundOneShotPlay(L"Assets/sound/斥力バースト音.wav", SOUND_SE_BURST_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/RepulsionBurstSE.wav", SOUND_SE_BURST_VOLUME);
 			//エフェクトを表示
 			m_burstEffect->Init(u"Assets/effect/斥力バースト.efk");
 			m_burstEffect->Play();
@@ -1548,7 +1548,7 @@ void Player::ChargeSpecialAttackGauge(int charge)
 			m_SPGaugeMaxEffect->SetPosition(m_magPosition);
 			m_SPGaugeMaxEffect->Play();
 			//SE
-			SoundOneShotPlay(L"Assets/sound/きらーん.wav", SOUND_SE_SPGAUGEMAX_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/SPGaugeMax.wav", SOUND_SE_SPGAUGEMAX_VOLUME);
 
 			m_chargeSPFontRender->SetText(L"MAX");
 			if (m_playerNum == NUMBER_PLAYER1)

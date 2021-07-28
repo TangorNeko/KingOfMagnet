@@ -250,17 +250,17 @@ void ResultScene::Update()
 
 		//SE
 		if (m_moveTimer == SPRITE_MOVETIMER_PLAY_SE1) {
-			SoundOneShotPlay(L"Assets/sound/リザルトSE1.wav", SOUND_SE_RESULT_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/ShutterSE.wav", SOUND_SE_RESULT_VOLUME);
 		}
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_SE2)
 		{
-			SoundOneShotPlay(L"Assets/sound/リザルトSE1.wav", SOUND_SE_RESULT_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/ShutterSE.wav", SOUND_SE_RESULT_VOLUME);
 		}
 		//BGM
 		else if (m_moveTimer == SPRITE_MOVETIMER_PLAY_BGM)
 		{	
 			m_resultBGM = NewGO<prefab::CSoundSource>(0);;
-			m_resultBGM->Init(L"Assets/sound/リザルト曲.wav", SoundType::enBGM);
+			m_resultBGM->Init(L"Assets/sound/ResultBGM.wav", SoundType::enBGM);
 			m_resultBGM->SetVolume(SOUND_BGM_RESULT_VOLUME);
 			m_resultBGM->Play(true);
 		}
@@ -281,7 +281,7 @@ void ResultScene::Update()
 				m_RetryOn = false;
 
 				//SE
-				SoundOneShotPlay(L"Assets/sound/カーソル移動音.wav");
+				SoundOneShotPlay(L"Assets/sound/CursorMove.wav");
 			}
 			else
 			{
@@ -291,7 +291,7 @@ void ResultScene::Update()
 				m_RetryOn = true;
 
 				//SE
-				SoundOneShotPlay(L"Assets/sound/カーソル移動音.wav");
+				SoundOneShotPlay(L"Assets/sound/CursorMove.wav");
 			}
 		}
 
@@ -301,7 +301,7 @@ void ResultScene::Update()
 			if (m_RetryOn == true) {
 				DeleteGO(m_resultBGM);
 				//SE
-				SoundOneShotPlay(L"Assets/sound/リザルト画面決定音.wav");
+				SoundOneShotPlay(L"Assets/sound/ResultSelect.wav");
 
 				//次の試合のラウンドの計測を開始
 				NewGO<RoundCounter>(0, "roundcounter");
@@ -315,7 +315,7 @@ void ResultScene::Update()
 			if (m_RetryOn == false) {
 				DeleteGO(m_resultBGM);
 				//SE
-				SoundOneShotPlay(L"Assets/sound/リザルト画面決定音.wav");
+				SoundOneShotPlay(L"Assets/sound/ResultSelect.wav");
 
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME_TO_TITLE, false);

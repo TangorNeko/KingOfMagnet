@@ -662,7 +662,7 @@ void GameScene::StartCountDown() {
 		}
 		else if (m_startCount == 0)
 		{
-			ssCount->Init(L"Assets/sound/エアーホーン.wav", SoundType::enSE);
+			ssCount->Init(L"Assets/sound/AirHorn.wav", SoundType::enSE);
 			ssCount->SetVolume(SOUND_SE_STARTHORN_VOLUME);
 			SoundOneShotPlay(L"Assets/sound/CountDown0.wav", SOUND_SE_VOICE_VOLUME);
 

@@ -191,7 +191,7 @@ void TitleScene::Update()
 			m_commandTimer = COMMANDTIMER_COMMANDSTART;
 
 			//SE
-			SoundOneShotPlay(L"Assets/sound/タイトル画面SE1.wav", SOUND_SE_SCROLL_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/CommandMove.wav", SOUND_SE_SCROLL_VOLUME);
 		}
 		//コマンド移動 下
 		if ((g_pad[PAD_PLAYER1]->IsPress(enButtonDown) || g_pad[PAD_PLAYER2]->IsTrigger(enButtonDown)) && m_selectMoveFlag == false) {
@@ -200,7 +200,7 @@ void TitleScene::Update()
 			m_commandTimer = COMMANDTIMER_COMMANDSTART;
 
 			//SE
-			SoundOneShotPlay(L"Assets/sound/タイトル画面SE1.wav", SOUND_SE_SCROLL_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/CommandMove.wav", SOUND_SE_SCROLL_VOLUME);
 		}
 
 		if (m_selectMoveFlag == true) {
@@ -414,7 +414,7 @@ void TitleScene::CommandSelectMove() {
 	if (m_commandTimer == COMMANDTIMER_PLAY_SELECT_SE)
 	{
 		//SE
-		SoundOneShotPlay(L"Assets/sound/ガキーン!.wav", SOUND_SE_SELECT_VOLUME);
+		SoundOneShotPlay(L"Assets/sound/TitleSelect.wav", SOUND_SE_SELECT_VOLUME);
 	}
 	
 	if (m_commandTimer == COMMANDTIMER_START_TRANSITION && m_titleCommand == TitleScene::TC_Start)

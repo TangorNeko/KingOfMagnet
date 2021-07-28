@@ -12,7 +12,7 @@ namespace
 	const int LOSECAMERALOOP_FRONT = 100;	  //正面から見たカメラのカウント数
 	const int LOSECAMERALOOP_LOSERBACK = 150; //後ろから見たカメラのカウント数
 	const int LOSECAMERALOOP_TOWINNER = 200;  //勝者に寄るカメラのカウント数
-	const int LOSECAMERALOOP_YATTAZE = 250;		     //ヤッタゼが再生されるカウント数
+	const int LOSECAMERALOOP_WINSE = 250;		  //勝利サウンドが再生されるカウント数
 	const int LOSECAMERALOOP_PLAYERSPRITE_DISP = 300;//○Pが表示されるカウント数
 	const int LOSECAMERALOOP_WINSPRITE_DISP = 350;	 //WINが表示されるカウント数
 
@@ -160,10 +160,10 @@ void FinalHit::Update()
 		//音を再生
 		SoundOneShotPlay(L"Assets/sound/K.O..wav", SE_VOLUME);
 	}
-	else if (m_LoseCameraLoop == LOSECAMERALOOP_YATTAZE)
+	else if (m_LoseCameraLoop == LOSECAMERALOOP_WINSE)
 	{
 		//ジングルを再生
-		SoundOneShotPlay(L"Assets/sound/yattaze!1.wav", SE_VOLUME);
+		SoundOneShotPlay(L"Assets/sound/WinSE.wav", SE_VOLUME);
 	}
 	else if (m_LoseCameraLoop == LOSECAMERALOOP_PLAYERSPRITE_DISP)
 	{

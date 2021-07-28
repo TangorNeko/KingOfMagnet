@@ -400,7 +400,7 @@ void Debris::PlayerHitAsBullet(Player* player)
 	case enScrap:
 		//音を再生
 		if (player->GetHP() > 0) {
-			SoundOneShotPlay(L"Assets/sound/ダメージ音.wav", SOUND_SE_SCRAP_HIT_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/DamageSE.wav", SOUND_SE_SCRAP_HIT_VOLUME);
 		}
 		player->Damage(DAMAGE_SCRAP);
 		break;
@@ -414,7 +414,7 @@ void Debris::PlayerHitAsBullet(Player* player)
 	case enSpecialCharger:
 		//音を再生(仮)
 		if (player->GetHP() > 0) {
-			SoundOneShotPlay(L"Assets/sound/ダメージ音.wav", SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/DamageSE.wav", SOUND_SE_SPECIALCHARGER_HIT_VOLUME);
 		}
 		player->Damage(DAMAGE_SPECIALCHARGER);
 		break;
