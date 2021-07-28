@@ -223,8 +223,8 @@ private:
 	int m_drawFontCount = 300;									//引き分けのフォントを表示する時間
 
 	RoundCounter* m_roundCounter = nullptr;						//プレイヤーの取得ラウンド数の管理クラス	
-	OpeningCamera* openingCameraPlayer1 = nullptr;				// 1P側のオープニングカメラ	
-	OpeningCamera* openingCameraPlayer2 = nullptr;				// 1P側のオープニングカメラ	
+	OpeningCamera* m_openingCameraPlayer1 = nullptr;			// 1P側のオープニングカメラ	
+	OpeningCamera* m_openingCameraPlayer2 = nullptr;			// 1P側のオープニングカメラ	
 	int m_openingCameraCount=0;									//オープニングのループカウント	
 	bool m_isOpeningCameraOn = true;							// オープニングカメラが動いていればtrue	
 	FinalHit* m_finalHit = nullptr;								// ファイナルヒットカメラ

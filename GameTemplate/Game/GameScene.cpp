@@ -366,16 +366,16 @@ void GameScene::Update()
 {
 	if (m_gameState == enBirdseye)
 	{
-		if (openingCameraPlayer1 == nullptr) 
+		if (m_openingCameraPlayer1 == nullptr) 
 		{
-			openingCameraPlayer1 = NewGO<OpeningCamera>(0);
-			openingCameraPlayer2 = NewGO<OpeningCamera>(0);
-			openingCameraPlayer1->SetPlayerNum(0);
-			openingCameraPlayer2->SetPlayerNum(1);
-			openingCameraPlayer1->SetCameraFront(g_camera3D[0]->GetForward());
-			openingCameraPlayer2->SetCameraFront(g_camera3D[1]->GetForward());
-			openingCameraPlayer1->SetPlayerPos(m_player1->GetPosition());
-			openingCameraPlayer2->SetPlayerPos(m_player2->GetPosition());
+			m_openingCameraPlayer1 = NewGO<OpeningCamera>(0);
+			m_openingCameraPlayer2 = NewGO<OpeningCamera>(0);
+			m_openingCameraPlayer1->SetPlayerNum(0);
+			m_openingCameraPlayer2->SetPlayerNum(1);
+			m_openingCameraPlayer1->SetCameraFront(g_camera3D[0]->GetForward());
+			m_openingCameraPlayer2->SetCameraFront(g_camera3D[1]->GetForward());
+			m_openingCameraPlayer1->SetPlayerPos(m_player1->GetPosition());
+			m_openingCameraPlayer2->SetPlayerPos(m_player2->GetPosition());
 		}
 		m_roundCounter->RoundAnnounce();
 	}
@@ -384,8 +384,8 @@ void GameScene::Update()
 	if (m_gameState == enStartCountDown) {
 		if (m_isOpeningCameraOn == true)
 		{
-			DeleteGO(openingCameraPlayer1);
-			DeleteGO(openingCameraPlayer2);
+			DeleteGO(m_openingCameraPlayer1);
+			DeleteGO(m_openingCameraPlayer2);
 			m_isOpeningCameraOn = false;
 		}
 		StartCountDown();
@@ -565,7 +565,7 @@ void GameScene::WinnerJudge()
 		m_drawFontRender->SetText(L"DRAW!");
 
 		//ボイス再生
-		SoundOneShotPlay(L"Assets/sound/Rakutan.wav", 1.0f);
+		SoundOneShotPlay(L"Assets/sound/Rakutan.wav");
 		SoundOneShotPlay(L"Assets/sound/Draw.wav", 3.0f);
 	}
 }
@@ -686,16 +686,16 @@ void GameScene::TimeLimitCount()
 		if (m_timeLimit >= 10)
 		{
 			//一の位
-			int Number = (int)m_timeLimit % 10;
+			int Number = static_cast<int>(m_timeLimit) % 10;
 			TimeLimitChangesSprits(Number, enOnesPlaceOfDoubleDigit);
 			//十の位
-			Number = (int)m_timeLimit / 10;
+			Number = static_cast<int>(m_timeLimit) / 10;
 			TimeLimitChangesSprits(Number, enTenthPlaceOfDoubleDigit);
 		}
 		//タイムリミットが一桁の時
-		else if ((int)m_timeLimit < 10)
+		else if (static_cast<int>(m_timeLimit) < 10)
 		{
-			int Number = (int)m_timeLimit;
+			int Number = static_cast<int>(m_timeLimit);
 			TimeLimitChangesSprits(Number, enOnesPlaceOfSingleDigit);
 		}
 	}
@@ -704,183 +704,52 @@ void GameScene::TimeLimitCount()
 
 void GameScene::TimeLimitChangesSprits(int num, TimeLimitSpriteDigit numPlace)
 {
-	//タイムリミットが前フレームと異なるとき(一秒経ったとき)
-	if ((int)m_timeLimit != m_oldTimeLimit)
+	//前フレームの制限時間の秒数と同じ場合return
+	if (static_cast<int>(m_timeLimit) == m_oldTimeLimit)
 	{
-		switch(numPlace)
-		{
-		case enOnesPlaceOfDoubleDigit:
-			DeleteGO(m_onesPlaceSpriteRender);
-			m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
-			m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
-			m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
-			m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
-			break;
-		case enTenthPlaceOfDoubleDigit:
-			DeleteGO(m_tensPlaceSpriteRender);
-			m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
-			m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
-			m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
-			m_tensPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
-			break;
-		case enOnesPlaceOfSingleDigit:
-			DeleteGO(m_onesPlaceSpriteRender);
-			m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
-			m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT);
-			m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
-			m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
-			break;
-		}
+		return;
+	}
 
-		//numが0～9のどの数字かによって、Initするスプライトを変える。
-		switch (num)
+	//タイムリミットが前フレームと異なるとき(一秒経ったとき)
+	
+	//numが0～9のどの数字かによって、Initするddsファイルのパスを変える。
+	char ddsPath[256];
+	sprintf(ddsPath, "Assets/Image/%d.dds", num);
+
+	//数字の位置によって分岐
+	//Initで直接変更するとディスクリプタヒープを圧迫するので削除してから作成する
+	switch (numPlace)
+	{
+	case enOnesPlaceOfDoubleDigit://二桁時の一の位
+		DeleteGO(m_onesPlaceSpriteRender);
+		m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+		m_onesPlaceSpriteRender->Init(ddsPath, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+		m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_DOUBLEDIGIT);
+		m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+		m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+		break;
+	case enTenthPlaceOfDoubleDigit://二桁時の十の位
+		DeleteGO(m_tensPlaceSpriteRender);
+		m_tensPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+		m_tensPlaceSpriteRender->Init(ddsPath, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+		m_tensPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_TENTHPLACE_OF_DOUBLEDIGIT);
+		m_tensPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+		m_tensPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+		break;
+	case enOnesPlaceOfSingleDigit://一桁時の一の位
+		DeleteGO(m_onesPlaceSpriteRender);
+		m_onesPlaceSpriteRender = NewGO<prefab::CSpriteRender>(5);
+		m_onesPlaceSpriteRender->Init(ddsPath, SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
+		m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT);
+		m_onesPlaceSpriteRender->SetScale(SPRITE_TIMELIMIT_SCALE);
+		m_onesPlaceSpriteRender->SetUseSpriteSupporterFlag(false);
+
+		//残り9秒になった時は十の位のスプライトを削除
+		if (num == NUMBER_TIMELIMIT_SPRITE_9)
 		{
-		case NUMBER_TIMELIMIT_SPRITE_0:
-			if (numPlace == enOnesPlaceOfDoubleDigit)	//numが一の位の時
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)	//numが十の位の時
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/0.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)		//numが一桁の時(タイムリミットが10以下の時)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/0.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_1:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/1.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/1.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/1.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_2:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/2.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/2.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/2.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_3:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{			
-				m_onesPlaceSpriteRender->Init("Assets/Image/3.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/3.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/3.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_4:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/4.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/4.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/4.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_5:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/5.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{			
-				m_tensPlaceSpriteRender->Init("Assets/Image/5.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/5.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_6:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/6.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/6.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/6.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_7:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{			
-				m_onesPlaceSpriteRender->Init("Assets/Image/7.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/7.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/7.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_8:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/8.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{			
-				m_tensPlaceSpriteRender->Init("Assets/Image/8.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/8.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		case NUMBER_TIMELIMIT_SPRITE_9:
-			if (numPlace == enOnesPlaceOfDoubleDigit)
-			{
-				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enTenthPlaceOfDoubleDigit)
-			{
-				m_tensPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			else if (numPlace == enOnesPlaceOfSingleDigit)
-			{
-				//一桁になったら、一の位表示位置を真ん中に。
-				DeleteGO(m_tensPlaceSpriteRender);
-				m_onesPlaceSpriteRender->SetPosition(SPRITE_TIMELIMIT_POSITION_ONESPLACE_OF_SINGLEDIGIT);
-				m_onesPlaceSpriteRender->Init("Assets/Image/9.dds", SPRITE_TIMELIMIT_WIDTH, SPRITE_TIMELIMIT_HEIGHT);
-			}
-			break;
-		default:
-			break;
+			DeleteGO(m_tensPlaceSpriteRender);
 		}
+		break;
 	}
 }
 
