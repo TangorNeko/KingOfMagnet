@@ -9,7 +9,7 @@ private:
 	//空のデータ(シェーダーに渡される)
 	struct SkyData
 	{
-		float textureSize;//テクスチャのサイズ(正方形を想定しているのでfloat。)
+		float textureSize = 0;//テクスチャのサイズ(正方形を想定しているのでfloat。)
 		float scrollingValue = 0;//スクロール量
 	};
 
