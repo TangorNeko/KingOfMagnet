@@ -46,15 +46,15 @@ bool GravityBullet::Start()
 
 	//ÉGÉtÉFÉNÉg
 	m_gravityEffect = NewGO<prefab::CEffect>(0);
-	m_gravityEffect->Init(u"Assets/effect/à¯óÕíe.efk");
+	m_gravityEffect->Init(u"Assets/effect/GravityBullet1.efk");
 	m_gravityEffect->SetScale(EFFECT_GRAVITY_SCALE);
 
 	m_gravityEffect2 = NewGO<prefab::CEffect>(0);
-	m_gravityEffect2->Init(u"Assets/effect/à¯óÕíe.efk");
+	m_gravityEffect2->Init(u"Assets/effect/GravityBullet1.efk");
 	m_gravityEffect2->SetScale(EFFECT_GRAVITY_SCALE);
 
 	m_inflateEffect = NewGO<prefab::CEffect>(0);
-	m_inflateEffect->Init(u"Assets/effect/à¯óÕíe2.efk");
+	m_inflateEffect->Init(u"Assets/effect/GravityBullet2.efk");
 	m_inflateEffect->SetScale(EFFECT_GRAVITY_SCALE);
 
 	m_wearingEffect = NewGO<prefab::CEffect>(0);

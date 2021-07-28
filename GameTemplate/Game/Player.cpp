@@ -368,35 +368,35 @@ bool Player::Start()
 	m_magEffect[0]->SetScale(EFFECT_MAGNET_SCALE);
 	m_magEffect[1]->SetScale(EFFECT_MAGNET_SCALE);
 	if (m_magnetState == MAGNETSTATE_REPULSION) {
-		m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
-		m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
+		m_magEffect[0]->Init(u"Assets/effect/Repulsion.efk");
+		m_magEffect[1]->Init(u"Assets/effect/Repulsion.efk");
 	}
 	else if (m_magnetState == MAGNETSTATE_GRAVITY) {
-		m_magEffect[0]->Init(u"Assets/effect/引力.efk");
-		m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+		m_magEffect[0]->Init(u"Assets/effect/Gravity.efk");
+		m_magEffect[1]->Init(u"Assets/effect/Gravity.efk");
 	}
 
 	m_burstEffect = NewGO<prefab::CEffect>(0);
 	m_burstEffect->SetScale(EFFECT_BURST_SCALE);
 
 	m_hitEffect = NewGO<prefab::CEffect>(0);
-	m_hitEffect->Init(u"Assets/effect/ダメージ.efk");
+	m_hitEffect->Init(u"Assets/effect/Damage.efk");
 	m_hitEffect->SetScale(EFFECT_HIT_SCALE);
 
 	m_SPFireEffect = NewGO<prefab::CEffect>(0);
 	m_SPFireEffect->SetScale(EFFECT_SPFIRE_SCALE);
 
 	m_SPGaugeMaxEffect = NewGO<prefab::CEffect>(0);
-	m_SPGaugeMaxEffect->Init(u"Assets/effect/キュピーン.efk");
+	m_SPGaugeMaxEffect->Init(u"Assets/effect/SPGaugeMax.efk");
 	m_SPGaugeMaxEffect->SetScale(EFFECT_SPGAUGEMAX_SCALE);
 
 	m_SPChargeEffectRed = NewGO<prefab::CEffect>(0);
 	m_SPChargeEffectRed->SetScale(EFFECT_SPCHARGE_SCALE);
-	m_SPChargeEffectRed->Init(u"Assets/effect/斥力チャージ.efk");
+	m_SPChargeEffectRed->Init(u"Assets/effect/ReplusionCharge.efk");
 
 	m_SPChargeEffectBlue = NewGO<prefab::CEffect>(0);
 	m_SPChargeEffectBlue->SetScale(EFFECT_SPCHARGE_SCALE);
-	m_SPChargeEffectBlue->Init(u"Assets/effect/引力チャージ.efk");
+	m_SPChargeEffectBlue->Init(u"Assets/effect/GravityCharge.efk");
 	//ここまでエフェクト
 
 	m_gameScene = FindGO<GameScene>("gamescene");
@@ -700,7 +700,7 @@ void Player::Move()
 
 	if (oldPos.y >= HEIGHT_PLAYER_FALLSOUND_PLAY && m_position.y < HEIGHT_PLAYER_FALLSOUND_PLAY)
 	{
-		SoundOneShotPlay(L"Assets/sound/落下音.wav", SOUND_SE_FALL_VOLUME);
+		SoundOneShotPlay(L"Assets/sound/FallSE.wav", SOUND_SE_FALL_VOLUME);
 	}	
 }
 
@@ -829,7 +829,7 @@ void Player::SpecialAttack()
 			SoundOneShotPlay(L"Assets/sound/GravityBulletShot.wav", SOUND_SE_SHOOTGRAVITY_VOLUME);
 
 			//発射エフェクト
-			m_SPFireEffect->Init(u"Assets/effect/引力弾発射.efk");
+			m_SPFireEffect->Init(u"Assets/effect/GravityShot.efk");
 			m_SPFireEffect->SetPosition({
 				m_position.x + m_cameraFront.x * 50.0f,
 				m_position.y + 50.0f,
@@ -887,7 +887,7 @@ void Player::SpecialAttack()
 				SoundOneShotPlay(L"Assets/sound/RepulsionBulletShot.wav");
 
 				//発射エフェクト
-				m_SPFireEffect->Init(u"Assets/effect/斥力弾発射.efk");
+				m_SPFireEffect->Init(u"Assets/effect/RepulsionShot.efk");
 				m_SPFireEffect->SetPosition({ 
 					m_position.x + m_cameraFront.x * 50.0f,
 					m_position.y + 50.0f,
@@ -1165,7 +1165,7 @@ void Player::MagneticBehavior()
 			//バースト音を再生
 			SoundOneShotPlay(L"Assets/sound/GravityBurstSE.wav", SOUND_SE_BURST_VOLUME);
 			//エフェクトを表示
-			m_burstEffect->Init(u"Assets/effect/引力バースト.efk");
+			m_burstEffect->Init(u"Assets/effect/GravityBurst.efk");
 			m_burstEffect->Play();
 			break;
 
@@ -1173,7 +1173,7 @@ void Player::MagneticBehavior()
 			//バースト音を再生
 			SoundOneShotPlay(L"Assets/sound/RepulsionBurstSE.wav", SOUND_SE_BURST_VOLUME);
 			//エフェクトを表示
-			m_burstEffect->Init(u"Assets/effect/斥力バースト.efk");
+			m_burstEffect->Init(u"Assets/effect/RepulsionBurst.efk");
 			m_burstEffect->Play();
 			break;
 		}
@@ -1348,12 +1348,12 @@ void Player::ChangeMagnetPower()
 	
 		//磁力エフェクト変更
 		if (m_magnetState == MAGNETSTATE_GRAVITY) {
-			m_magEffect[0]->Init(u"Assets/effect/引力.efk");
-			m_magEffect[1]->Init(u"Assets/effect/引力.efk");
+			m_magEffect[0]->Init(u"Assets/effect/Gravity.efk");
+			m_magEffect[1]->Init(u"Assets/effect/Gravity.efk");
 		}
 		else if (m_magnetState == MAGNETSTATE_REPULSION) {
-			m_magEffect[0]->Init(u"Assets/effect/斥力.efk");
-			m_magEffect[1]->Init(u"Assets/effect/斥力.efk");
+			m_magEffect[0]->Init(u"Assets/effect/Repulsion.efk");
+			m_magEffect[1]->Init(u"Assets/effect/Repulsion.efk");
 		}
 	}
 }

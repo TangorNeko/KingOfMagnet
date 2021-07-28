@@ -31,7 +31,7 @@ bool Flash::Start()
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
-	m_effect->Init(u"Assets/effect/閃光.efk");
+	m_effect->Init(u"Assets/effect/Flash.efk");
 	m_effect->SetPosition(m_position);
 	m_effect->SetScale(EFFECT_FLASH_SCALE);
 	m_effect->Play();

@@ -352,7 +352,7 @@ bool GameScene::Start()
 
 	//音を再生
 	m_gameBGM = NewGO<prefab::CSoundSource>(0);
-	m_gameBGM->Init(L"Assets/sound/サイバー風BGM.wav", SoundType::enBGM);
+	m_gameBGM->Init(L"Assets/sound/GameBGM.wav", SoundType::enBGM);
 	m_gameBGM->SetVolume(SOUND_BGM_GAME_VOLUME);
 	m_gameBGM->Play(true);
 	TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_NORMAL, true);
@@ -657,7 +657,7 @@ void GameScene::StartCountDown() {
 		prefab::CSoundSource* ssCount = NewGO<prefab::CSoundSource>(0);;
 		if (1 <= m_startCount && m_startCount < 4)
 		{
-			ssCount->Init(L"Assets/sound/カウント音2.wav", SoundType::enSE);
+			ssCount->Init(L"Assets/sound/CountSE.wav", SoundType::enSE);
 			ssCount->SetVolume(SOUND_SE_STARTCOUNTDOWN_VOLUME);
 		}
 		else if (m_startCount == 0)

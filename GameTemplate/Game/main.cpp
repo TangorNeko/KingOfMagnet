@@ -107,22 +107,22 @@ void PreLoad()
 	prefab::CSkinModelRender::PreLoadModel("Assets/modelData/Gravity2.tkm");
 
 	//エフェクトの事前ロード
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/閃光.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/爆発.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力弾.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力弾2.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Flash.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Explosion.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/GravityBullet1.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/GravityBullet2.efk");
 	prefab::CEffect::PreLoadEffect(u"Assets/effect/Blackhole3.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/焼夷.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/ダメージ.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/キュピーン.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力チャージ.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力チャージ.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力弾発射.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力弾発射.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/引力バースト.efk");
-	prefab::CEffect::PreLoadEffect(u"Assets/effect/斥力バースト.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Burning.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Repulsion.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Gravity.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/Damage.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/SPGaugeMax.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/ReplusionCharge.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/GravityCharge.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/GravityShot.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/RepulsionShot.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/GravityBurst.efk");
+	prefab::CEffect::PreLoadEffect(u"Assets/effect/RepulsionBurst.efk");
 }
 
 void InitManager()

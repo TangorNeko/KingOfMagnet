@@ -25,7 +25,7 @@ bool Incendia::Start()
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
-	m_effect->Init(u"Assets/effect/焼夷.efk");
+	m_effect->Init(u"Assets/effect/Burning.efk");
 	m_effect->SetPosition(m_position);
 	m_effect->SetScale(EFFECT_BURN_SCALE);
 	m_effect->Play();

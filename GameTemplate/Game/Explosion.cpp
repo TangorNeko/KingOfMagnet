@@ -22,7 +22,7 @@ bool Explosion::Start()
 
 	//エフェクトを再生
 	m_effect = NewGO<prefab::CEffect>(0);
-	m_effect->Init(u"Assets/effect/爆発.efk");
+	m_effect->Init(u"Assets/effect/Explosion.efk");
 	m_effect->SetPosition(m_position);
 	m_effect->SetScale(EFFECT_EXPLOSION_SCALE);
 	m_effect->Play();

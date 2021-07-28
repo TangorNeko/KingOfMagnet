@@ -407,7 +407,7 @@ void Debris::PlayerHitAsBullet(Player* player)
 	case enSword:
 		//‰¹‚ðÄ¶
 		if (player->GetHP() > 0) {
-			SoundOneShotPlay(L"Assets/sound/Œ•‚ª“–‚½‚é.wav", SOUND_SE_SWORD_HIT_VOLUME);
+			SoundOneShotPlay(L"Assets/sound/SwordHit.wav", SOUND_SE_SWORD_HIT_VOLUME);
 		}
 		player->Damage(DAMAGE_SWORD);
 		break;

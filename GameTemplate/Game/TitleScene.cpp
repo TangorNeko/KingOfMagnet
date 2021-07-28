@@ -158,7 +158,7 @@ bool TitleScene::Start()
 
 	//BGM‚ğÄ¶
 	m_titleBGM = NewGO<prefab::CSoundSource>(0);
-	m_titleBGM->Init(L"Assets/sound/ƒ^ƒCƒgƒ‹‹È.wav", SoundType::enBGM);
+	m_titleBGM->Init(L"Assets/sound/TitleBGM.wav", SoundType::enBGM);
 	m_titleBGM->SetVolume(SOUND_BGM_TITLE_VOLUME);
 	m_titleBGM->Play(true);	
 
