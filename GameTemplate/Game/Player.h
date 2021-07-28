@@ -456,7 +456,7 @@ private:
 	bool m_HitOn = false;										//被弾したかどうか
 
 	//必殺技関連
-	int m_specialShotFlag = false;								//必殺技を発射中?
+	bool m_specialShotFlag = false;								//必殺技を発射中?
 	int m_specialShotCount = 0;									//必殺技を発射し始めてからの経過フレーム
 	int m_specialAttackGauge = 0;								//必殺技のゲージ量
 	int m_oldSpecialAttackGauge = 0;							//1フレーム前の必殺技ゲージ量

@@ -308,7 +308,7 @@ void ResultScene::Update()
 
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::NanameBox, TRANSITION_TIME_RETRY, false);
-				GameScene* gameScene = NewGO<GameScene>(0, "gamescene");
+				NewGO<GameScene>(0, "gamescene");
 
 				DeleteGO(this);
 			}
@@ -319,7 +319,7 @@ void ResultScene::Update()
 
 				//トランジション
 				TransitionGenerator::GetInstance()->TransitionInit(TransitionGenerator::TransitionName::Circle, TRANSITION_TIME_TO_TITLE, false);
-				TitleScene* titlescene = NewGO<TitleScene>(0, "titlescene");
+				NewGO<TitleScene>(0, "titlescene");
 				DeleteGO(this);
 			}
 		}

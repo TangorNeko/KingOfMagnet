@@ -62,12 +62,12 @@ void DamageDisplay::Update()
 	if (m_isxSpeedPositive)
 	{
 		//右方向に移動
-		m_xMoveSpeed = m_damage / MOVESPEED_ADJUST_VALUE;
+		m_xMoveSpeed = static_cast<float>(m_damage / MOVESPEED_ADJUST_VALUE);
 	}
 	else
 	{
 		//左方向に移動
-		m_xMoveSpeed = -m_damage / MOVESPEED_ADJUST_VALUE;
+		m_xMoveSpeed = static_cast<float>(-m_damage / MOVESPEED_ADJUST_VALUE);
 	}
 	
 	//移動速度を1フレームごとに加算。

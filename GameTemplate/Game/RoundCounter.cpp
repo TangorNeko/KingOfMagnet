@@ -48,12 +48,12 @@ bool RoundCounter::Start()
 	{
 		prefab::CSpriteRender* roundSprite = NewGO<prefab::CSpriteRender>(0);
 		roundSprite->Init("Assets/Image/LightOff.DDS", SPRITE_ROUND_WIDTH, SPRITE_ROUND_HEIGHT);
-		roundSprite->SetPosition(SPRITE_PLAYER1_ROUND1_GAME_POSITION + (SPRITE_PLAYER1_OFFSET * i));
+		roundSprite->SetPosition(SPRITE_PLAYER1_ROUND1_GAME_POSITION + (SPRITE_PLAYER1_OFFSET * static_cast<float>(i)));
 		m_player1Sprites.push_back(roundSprite);
 
 		roundSprite = NewGO<prefab::CSpriteRender>(0);
 		roundSprite->Init("Assets/Image/LightOff.DDS", SPRITE_ROUND_WIDTH, SPRITE_ROUND_HEIGHT);
-		roundSprite->SetPosition(SPRITE_PLAYER2_ROUND1_GAME_POSITION + (SPRITE_PLAYER2_OFFSET * i));
+		roundSprite->SetPosition(SPRITE_PLAYER2_ROUND1_GAME_POSITION + (SPRITE_PLAYER2_OFFSET * static_cast<float>(i)));
 		m_player2Sprites.push_back(roundSprite);
 	}
 	
@@ -162,10 +162,10 @@ void RoundCounter::MoveToGamePosition()
 	for (int i = 0;i < m_roundToWin;i++)
 	{
 		//プレイヤー1のスプライト
-		m_player1Sprites.at(i)->SetPosition(SPRITE_PLAYER1_ROUND1_GAME_POSITION + (SPRITE_PLAYER1_OFFSET * i));
+		m_player1Sprites.at(i)->SetPosition(SPRITE_PLAYER1_ROUND1_GAME_POSITION + (SPRITE_PLAYER1_OFFSET * static_cast<float>(i)));
 
 		//プレイヤー2のスプライト
-		m_player2Sprites.at(i)->SetPosition(SPRITE_PLAYER2_ROUND1_GAME_POSITION + (SPRITE_PLAYER2_OFFSET * i));
+		m_player2Sprites.at(i)->SetPosition(SPRITE_PLAYER2_ROUND1_GAME_POSITION + (SPRITE_PLAYER2_OFFSET * static_cast<float>(i)));
 	}
 }
 
@@ -175,10 +175,10 @@ void RoundCounter::MoveToResultPosition()
 	for (int i = 0;i < m_roundToWin;i++)
 	{
 		//プレイヤー1のスプライト
-		m_player1Sprites.at(i)->SetPosition(SPRITE_PLAYER1_ROUND1_RESULT_POSITION + (SPRITE_PLAYER1_OFFSET * i));
+		m_player1Sprites.at(i)->SetPosition(SPRITE_PLAYER1_ROUND1_RESULT_POSITION + (SPRITE_PLAYER1_OFFSET * static_cast<float>(i)));
 
 		//プレイヤー2のスプライト
-		m_player2Sprites.at(i)->SetPosition(SPRITE_PLAYER2_ROUND1_RESULT_POSITION + (SPRITE_PLAYER2_OFFSET * i));
+		m_player2Sprites.at(i)->SetPosition(SPRITE_PLAYER2_ROUND1_RESULT_POSITION + (SPRITE_PLAYER2_OFFSET * static_cast<float>(i)));
 	}
 }
 

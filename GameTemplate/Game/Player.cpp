@@ -614,7 +614,7 @@ void Player::DisplayStatus()
 	//メビウスゲージに現在の必殺技のチャージ量を渡す
 	m_mobiusGauge->SetMagnetCharge(m_magnetCharge);
 
-	m_mobiusGauge->SetSPCharge(m_specialAttackGauge);
+	m_mobiusGauge->SetSPCharge(static_cast<float>(m_specialAttackGauge));
 }
 
 //移動
@@ -1030,7 +1030,7 @@ void Player::HoldDebris()
 	{
 		//360度をガレキの数-1の数で割って1個あたりの角度を求める
 		//次に発射する1個は身体の前に置くので-1
-		int vectorSize = m_holdDebrisVector.size();
+		int vectorSize = static_cast<int>(m_holdDebrisVector.size());
 		float degPerOneDebris = 360.0f / (vectorSize - 1);
 
 		//autoFor文の中でも回数をカウントするための変数
@@ -1082,7 +1082,7 @@ void Player::HoldBomb()
 		if (--m_selectBombNo < BOMB_FIRST_OBTAIN_INDEX)
 		{
 			//一周回ってコンテナのサイズ-1になる
-			m_selectBombNo = m_holdBombVector.size() - 1;
+			m_selectBombNo = static_cast<int>(m_holdBombVector.size()) - 1;
 		}
 	}
 
@@ -1101,7 +1101,7 @@ void Player::HoldBomb()
 	{
 		//360度をガレキの数-1の数で割って1個あたりの角度を求める
 		//次に発射する1個は身体の前に置くので-1
-		int vectorSize = m_holdBombVector.size();
+		int vectorSize = static_cast<int>(m_holdBombVector.size());
 		float degPerOneDebris = 360.0f / vectorSize;
 
 		//autoFor文の中でも回数をカウントするための変数

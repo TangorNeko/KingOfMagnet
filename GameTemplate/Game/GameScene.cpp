@@ -699,7 +699,7 @@ void GameScene::TimeLimitCount()
 			TimeLimitChangesSprits(Number, enOnesPlaceOfSingleDigit);
 		}
 	}
-	m_oldTimeLimit = m_timeLimit;
+	m_oldTimeLimit = static_cast<int>(m_timeLimit);
 }
 
 void GameScene::TimeLimitChangesSprits(int num, TimeLimitSpriteDigit numPlace)

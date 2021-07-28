@@ -41,7 +41,7 @@ void Explosion::Update()
 				dis = fabsf(dis);
 				if (dis <= EXPLOSION_RANGE)
 				{
-					player->Damage(EXPLOSION_RANGE - dis);
+					player->Damage(static_cast<int>(EXPLOSION_RANGE - dis));
 				}
 				return true;
 			});

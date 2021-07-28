@@ -394,9 +394,6 @@ void Debris::AsBulletBehave()
 
 void Debris::PlayerHitAsBullet(Player* player)
 {
-	//ヒット音
-	prefab::CSoundSource* hitSE = NewGO<prefab::CSoundSource>(0);
-
 	//ガレキの形状でダメージが分岐
 	switch (m_debrisShape)
 	{

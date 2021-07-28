@@ -73,7 +73,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	if (m_2screenMode)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
-		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0);
+		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0f);
 
 		//1P側
 		{
@@ -82,7 +82,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 			viewport.TopLeftX = 0;
 			viewport.TopLeftY = 0;
 			viewport.Width = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
-			viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+			viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 			viewport.MinDepth = 0.0f;
 			viewport.MaxDepth = 1.0f;
 			rc.SetViewport(viewport);
@@ -108,7 +108,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 			viewport.TopLeftX = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
 			viewport.TopLeftY = 0;
 			viewport.Width = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
-			viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+			viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 			viewport.MinDepth = 0.0f;
 			viewport.MaxDepth = 1.0f;
 			rc.SetViewport(viewport);
@@ -130,14 +130,14 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	else //1画面モード
 	{
 		//1画面のスプライトのアスペクト比に合わせる。
-		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
+		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
 
 		rc.SetStep(RenderContext::eStep_RenderViewport1);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
-		viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
-		viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+		viewport.Width = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
+		viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
@@ -160,14 +160,14 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	//レベル2Dは全部スプライトなのでExecuteRenderにはいらないのでは?
 	//だがviewportをセットしないと画面が半分のままなのでセットはしてみる。
 	{
-		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
+		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
 
 		rc.SetStep(RenderContext::eStep_RenderAllScreen);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
-		viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
-		viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+		viewport.Width = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
+		viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
@@ -192,7 +192,7 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 	if (m_2screenMode)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
-		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0);
+		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0f);
 
 		//1P側
 		{
@@ -201,7 +201,7 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 			viewport.TopLeftX = 0;
 			viewport.TopLeftY = 0;
 			viewport.Width = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
-			viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+			viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 			viewport.MinDepth = 0.0f;
 			viewport.MaxDepth = 1.0f;
 			rc.SetViewport(viewport);
@@ -222,7 +222,7 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 			viewport.TopLeftX = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
 			viewport.TopLeftY = 0;
 			viewport.Width = g_graphicsEngine->GetFrameBufferWidth() / 2.0f;
-			viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+			viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 			viewport.MinDepth = 0.0f;
 			viewport.MaxDepth = 1.0f;
 			rc.SetViewport(viewport);
@@ -239,14 +239,14 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 	else //1画面モード
 	{
 		//1画面のスプライトのアスペクト比に合わせる。
-		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
+		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
 
 		rc.SetStep(RenderContext::eStep_RenderViewport1);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
-		viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
-		viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+		viewport.Width = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
+		viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
@@ -262,14 +262,14 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 
 	//Level2D用　
 	{
-		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth());
+		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
 
 		rc.SetStep(RenderContext::eStep_RenderAllScreen);
 		D3D12_VIEWPORT viewport;
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
-		viewport.Width = g_graphicsEngine->GetFrameBufferWidth();
-		viewport.Height = g_graphicsEngine->GetFrameBufferHeight();
+		viewport.Width = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
+		viewport.Height = static_cast<float>(g_graphicsEngine->GetFrameBufferHeight());
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		rc.SetViewport(viewport);
