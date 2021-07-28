@@ -21,17 +21,19 @@
 #include "TransitionGenerator.h"
 
 
-//TODO:定数　いろんな所で使えそうな定数は仮でstdafx.hに置く、場所は検討
-const int PAD_PLAYER1 = 0;
-const int PAD_PLAYER2 = 1;
+//様々な場所で使えそうな定数
+const int PAD_PLAYER1 = 0;						//プレイヤー1のパッド番号
+const int PAD_PLAYER2 = 1;						//プレイヤー2のパッド番号
 
-const int NUMBER_PLAYER1 = 0;
-const int NUMBER_PLAYER2 = 1;
+const int NUMBER_PLAYER1 = 0;					//プレイヤー1の番号
+const int NUMBER_PLAYER2 = 1;					//プレイヤー2の番号
 
-const int TRANSITION_TIME_NORMAL = 50;
+const int TRANSITION_TIME_NORMAL = 50;			//通常のトランジション時間
 
-const int MAGNETSTATE_GRAVITY = -1;
-const int MAGNETSTATE_REPULSION = 1;
+const int MAGNETSTATE_GRAVITY = -1;				//磁力の状態:引力
+const int MAGNETSTATE_REPULSION = 1;			//磁力の状態:斥力
 
-const float BIRST_AFFECT_RANGE_MIN = 50.0f;
-const float BIRST_AFFECT_RANGE_MAX = 500.0f;
+const float BURST_AFFECT_RANGE_MIN = 50.0f;		//バーストの最小距離
+const float BURST_AFFECT_RANGE_MAX = 500.0f;	//バーストの最大距離
+
+const float SOUND_SE_VOICE_VOLUME = 3.0f;		//ボイスSEのボリューム

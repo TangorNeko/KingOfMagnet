@@ -19,9 +19,6 @@ namespace
 	const int ROUNDRESULTCOUNT_START = 0;												//結果画面のラウンドスプライトの移動タイマー　スタート
 	const int ROUNDRESULTCOUNT_SPRITEMOVE = 20;											//結果画面のラウンドスプライトの移動タイマー　移動開始
 	const int ROUNDRESULTCOUNT_UPDATEROUND = 100;										//結果画面のラウンドスプライトの移動タイマー　ラウンド取得表示
-
-	//共通になりそう
-	const float SOUND_SE_VOICE_VOLUME = 3.0f;											//ボイスSEのボリューム
 }
 
 int RoundCounter::m_maxRound = 1;

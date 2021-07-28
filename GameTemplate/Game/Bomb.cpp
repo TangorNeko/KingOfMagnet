@@ -133,7 +133,7 @@ void Bomb::AsDropBehave()
 		if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
 		{
 			//バーストしてたら引っ張ってくる
-			if (player->IsBurst() == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+			if (player->IsBurst() == true && toPlayer.Length() > BURST_AFFECT_RANGE_MIN && toPlayer.Length() < BURST_AFFECT_RANGE_MAX)
 			{
 				m_isOnGround = false;
 
@@ -188,7 +188,7 @@ void Bomb::AsDropBehave()
 		else if (player->GetMagnetState() == MAGNETSTATE_REPULSION)
 		{
 			//バーストしてたら弾き飛ばす
-			if (player->IsBurst() == true && toPlayer.Length() > BIRST_AFFECT_RANGE_MIN && toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+			if (player->IsBurst() == true && toPlayer.Length() > BURST_AFFECT_RANGE_MIN && toPlayer.Length() < BURST_AFFECT_RANGE_MAX)
 			{
 				//弾き飛ばすのでプレイヤーへの向きとは反対側
 				Vector3 moveDir = toPlayer * -1;
@@ -259,7 +259,7 @@ void Bomb::AsBulletBehave()
 					Vector3 toPlayer = player->GetMagPosition() - m_position;
 
 					//敵との距離が500未満なら
-					if (toPlayer.Length() < BIRST_AFFECT_RANGE_MAX)
+					if (toPlayer.Length() < BURST_AFFECT_RANGE_MAX)
 					{						
 						//引力なら
 						if (player->GetMagnetState() == MAGNETSTATE_GRAVITY)
