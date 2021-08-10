@@ -50,7 +50,6 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	//レンダラーを変更するならここを改造していくと良い。
 	
-	//TODO:暫定処理、フラグ含め別の形にしたい
 	//影を先に描いてからモデルに描いた影を描き足すので先にシャドウマップをつくる。
 	PostEffectManager::GetInstance()->ShadowRender(rc);
 
@@ -67,7 +66,16 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	}
 	PostEffectManager::GetInstance()->EndShadowRender(rc);
 
+	//GBufferの作成///
+
+	//ディファードレンダリングの出力スプライトを作成///
+
+	//レンダーターゲットをGBufferに変更///
+
+	//GBufferへの書き込み開始///
+
 	//ポストエフェクト用。Render前の処理
+	//(ディファードに合わせてポストエフェクトはディファードレンダリングのスプライト出力前に移動 ? )///
 	PostEffectManager::GetInstance()->BeforeRender(rc);
 
 	if (m_2screenMode)//2画面モード
@@ -155,10 +163,16 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 		//1画面オンリーのエフェクト描画
 		EffectEngine::GetInstance()->Draw(0);
 	}
+
+	//ここでG-Bufferへの書き込み終了///
+
+	//ポストエフェクトはここからスタート?///
+
+	//GBufferをもとにディファードレンダリングスプライトを出力///
+
+	//出力されたスプライトをもとにポストエフェクト///
 	
-	//Level2D用　
-	//レベル2Dは全部スプライトなのでExecuteRenderにはいらないのでは?
-	//だがviewportをセットしないと画面が半分のままなのでセットはしてみる。
+	//全画面表示のスプライト用
 	{
 		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
 
@@ -179,16 +193,14 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	}
 	
 	//ポストエフェクト用。Render後の処理
+	//(ディファードレンダリングのため上に移動?///)
+	//半透明等のオブジェクトが追加された場合フォワードレンダリングを待って後に実行されることになるかも。///
 	PostEffectManager::GetInstance()->AfterRender(rc);
 
 }
 
 void GameObjectManager::ExecutePostRender(RenderContext& rc)
 {
-	if (m_rc == nullptr) {
-		m_rc = &rc;
-	}
-
 	if (m_2screenMode)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
@@ -260,7 +272,7 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 		}
 	}
 
-	//Level2D用　
+	//全画面表示のスプライト用　
 	{
 		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
 

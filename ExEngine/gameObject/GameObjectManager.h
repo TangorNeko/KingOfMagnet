@@ -151,7 +151,6 @@ private:
 	std::array<GameObjectList, GAME_OBJECT_PRIO_MAX>	m_gameObjectListArray;							//!<ゲームオブジェクトの優先度付きリスト。
 	static GameObjectManager* m_instance;		//唯一のインスタンスのアドレスを記録する変数。
 	bool m_2screenMode = false;
-	RenderContext* m_rc = nullptr;
 };
 
 
