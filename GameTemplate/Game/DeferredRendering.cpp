@@ -57,7 +57,8 @@ void DeferredRendering::Init()
 	deferredSpriteInitData.m_textures[enNormal] = &m_rts[enNormal].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enWorldPos] = &m_rts[enWorldPos].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enShadowColor] = &m_rts[enShadowColor].GetRenderTargetTexture();
-
+	deferredSpriteInitData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigDatas();
+	deferredSpriteInitData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigDataSize();
 	m_deferredSprite.Init(deferredSpriteInitData);
 }
 

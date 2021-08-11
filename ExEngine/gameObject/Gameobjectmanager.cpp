@@ -66,18 +66,8 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	}
 	PostEffectManager::GetInstance()->EndShadowRender(rc);
 
-	//GBufferの作成///
-	DeferredRendering::GetInstance()->StartDeferredRendering(rc);
-
-	//ディファードレンダリングの出力スプライトを作成///
-
-	//レンダーターゲットをGBufferに変更///
-
 	//GBufferへの書き込み開始///
-
-	//ポストエフェクト用。Render前の処理
-	//(ディファードに合わせてポストエフェクトはディファードレンダリングのスプライト出力前に移動 ? )///
-	//PostEffectManager::GetInstance()->BeforeRender(rc);
+	DeferredRendering::GetInstance()->StartDeferredRendering(rc);
 
 	if (m_2screenMode)//2画面モード
 	{
@@ -173,6 +163,9 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	//GBufferをもとにディファードレンダリングスプライトを出力///
 	DeferredRendering::GetInstance()->EndDeferredRendering(rc);
 
+	//TODO:フォワードレンダリングのモデルをここに描画しなければいけない
+	//TODO:エフェクト等もここ?
+	
 	//出力されたスプライトをもとにポストエフェクト///
 	PostEffectManager::GetInstance()->AfterRender(rc);
 
@@ -195,12 +188,6 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 			}
 		}
 	}
-	
-	//ポストエフェクト用。Render後の処理
-	//(ディファードレンダリングのため上に移動?///)
-	//半透明等のオブジェクトが追加された場合フォワードレンダリングを待って後に実行されることになるかも。///
-	//PostEffectManager::GetInstance()->AfterRender(rc);
-
 }
 
 void GameObjectManager::ExecutePostRender(RenderContext& rc)
