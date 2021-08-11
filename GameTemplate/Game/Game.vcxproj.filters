@@ -297,6 +297,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="FinalHit.cpp" />
+    <ClCompile Include="DeferredRendering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -875,6 +876,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="FinalHit.h" />
+    <ClInclude Include="DeferredRendering.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">
