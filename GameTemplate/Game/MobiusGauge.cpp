@@ -80,8 +80,8 @@ bool MobiusGauge::Start()
     //ゲージの進行方向は反時計周り
     m_rightGaugeDatas.isClockwise = false;
 
-    rightGaugeInitData.m_expandConstantBuffer = &m_rightGaugeDatas;
-    rightGaugeInitData.m_expandConstantBufferSize = sizeof(m_rightGaugeDatas);
+    rightGaugeInitData.m_expandConstantBuffer[0] = &m_rightGaugeDatas;
+    rightGaugeInitData.m_expandConstantBufferSize[0] = sizeof(m_rightGaugeDatas);
 
     //右側のゲージの初期化
     m_mobiusGaugeRightSide.Init(rightGaugeInitData);
@@ -103,8 +103,8 @@ bool MobiusGauge::Start()
     //ゲージの進行方向は時計周り
     m_leftGaugeDatas.isClockwise = true;
 
-    leftGaugeInitData.m_expandConstantBuffer = &m_leftGaugeDatas;
-    leftGaugeInitData.m_expandConstantBufferSize = sizeof(m_leftGaugeDatas);
+    leftGaugeInitData.m_expandConstantBuffer[0] = &m_leftGaugeDatas;
+    leftGaugeInitData.m_expandConstantBufferSize[0] = sizeof(m_leftGaugeDatas);
 
     //左側のゲージの初期化
     m_mobiusGaugeLeftSide.Init(leftGaugeInitData);
@@ -122,8 +122,8 @@ bool MobiusGauge::Start()
     //NOTE:ゲージの進行方向は時計周りにしたいが今回は増えていくゲージなのでfalse...表記の食い違いが気になる
     m_spGaugeDatas.isClockwise = false;
 
-    spInitData.m_expandConstantBuffer = &m_spGaugeDatas;
-    spInitData.m_expandConstantBufferSize = sizeof(m_spGaugeDatas);
+    spInitData.m_expandConstantBuffer[0] = &m_spGaugeDatas;
+    spInitData.m_expandConstantBufferSize[0] = sizeof(m_spGaugeDatas);
 
     //必殺技ゲージの初期化
     m_spGaugeSprite.Init(spInitData);

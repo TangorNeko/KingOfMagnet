@@ -75,9 +75,13 @@
 			);
 		}
 		m_descriptorHeap.RegistConstantBuffer(0, m_constantBufferGPU);
-		if (m_userExpandConstantBufferCPU != nullptr) {
-			//ユーザー拡張の定数バッファはb1に関連付けする。
-			m_descriptorHeap.RegistConstantBuffer(1, m_userExpandConstantBufferGPU);
+		
+		for (int i = 0; i < 3; i++)
+		{
+			if (m_userExpandConstantBufferCPU[i] != nullptr) {
+				//ユーザー拡張の定数バッファはb1に関連付けする。
+				m_descriptorHeap.RegistConstantBuffer(i + 1, m_userExpandConstantBufferGPU[i]);
+			}
 		}
 		m_descriptorHeap.Commit();
 	}
@@ -166,12 +170,15 @@
 		m_constantBufferGPU.Init(sizeof(m_constantBufferCPU), nullptr);
 
 		//ユーザー拡張の定数バッファが指定されている。
-		if (initData.m_expandConstantBuffer != nullptr){
-			m_userExpandConstantBufferCPU = initData.m_expandConstantBuffer;
-			m_userExpandConstantBufferGPU.Init(
-				initData.m_expandConstantBufferSize, 
-				initData.m_expandConstantBuffer
-			);
+		for (int i = 0; i < 3; i++)
+		{
+			if (initData.m_expandConstantBuffer[i] != nullptr) {
+				m_userExpandConstantBufferCPU[i] = initData.m_expandConstantBuffer[i];
+				m_userExpandConstantBufferGPU[i].Init(
+					initData.m_expandConstantBufferSize[i],
+					initData.m_expandConstantBuffer[i]
+				);
+			}
 		}
 	}
 	void Sprite::Init(const SpriteInitData& initData)
@@ -263,8 +270,11 @@
 		//定数バッファを更新。
 		m_constantBufferGPU.CopyToVRAM(&m_constantBufferCPU);
 		//ユーザー拡張の定数バッファを更新。
-		if (m_userExpandConstantBufferCPU != nullptr) {
-			m_userExpandConstantBufferGPU.CopyToVRAM(m_userExpandConstantBufferCPU);
+		for (int i = 0; i < 3; i++)
+		{
+			if (m_userExpandConstantBufferCPU[i] != nullptr) {
+				m_userExpandConstantBufferGPU[i].CopyToVRAM(m_userExpandConstantBufferCPU[i]);
+			}
 		}
 		//ルートシグネチャを設定。
 		renderContext.SetRootSignature(m_rootSignature);
