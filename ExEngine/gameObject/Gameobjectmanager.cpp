@@ -67,6 +67,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	PostEffectManager::GetInstance()->EndShadowRender(rc);
 
 	//GBufferの作成///
+	DeferredRendering::GetInstance()->StartDeferredRendering(rc);
 
 	//ディファードレンダリングの出力スプライトを作成///
 
@@ -76,7 +77,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 
 	//ポストエフェクト用。Render前の処理
 	//(ディファードに合わせてポストエフェクトはディファードレンダリングのスプライト出力前に移動 ? )///
-	PostEffectManager::GetInstance()->BeforeRender(rc);
+	//PostEffectManager::GetInstance()->BeforeRender(rc);
 
 	if (m_2screenMode)//2画面モード
 	{
@@ -167,11 +168,14 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	//ここでG-Bufferへの書き込み終了///
 
 	//ポストエフェクトはここからスタート?///
-
+	PostEffectManager::GetInstance()->BeforeRender(rc);
+	
 	//GBufferをもとにディファードレンダリングスプライトを出力///
+	DeferredRendering::GetInstance()->EndDeferredRendering(rc);
 
 	//出力されたスプライトをもとにポストエフェクト///
-	
+	PostEffectManager::GetInstance()->AfterRender(rc);
+
 	//全画面表示のスプライト用
 	{
 		g_camera2D->SetWidth(static_cast<float>(g_graphicsEngine->GetFrameBufferWidth()));
@@ -195,7 +199,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	//ポストエフェクト用。Render後の処理
 	//(ディファードレンダリングのため上に移動?///)
 	//半透明等のオブジェクトが追加された場合フォワードレンダリングを待って後に実行されることになるかも。///
-	PostEffectManager::GetInstance()->AfterRender(rc);
+	//PostEffectManager::GetInstance()->AfterRender(rc);
 
 }
 

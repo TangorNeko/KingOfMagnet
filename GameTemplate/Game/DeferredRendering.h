@@ -10,7 +10,7 @@ public:
 	/**
 	 * @brief ディファードレンダリングクラスのインスタンスを作成
 	*/
-	static void CreateInstence()
+	static void CreateInstance()
 	{
 		if (!m_instance)
 		{

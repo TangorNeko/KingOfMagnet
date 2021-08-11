@@ -151,6 +151,9 @@ void InitManager()
 
 	EffectEngine::CreateInstance();
 
+	DeferredRendering::CreateInstance();
+	DeferredRendering::GetInstance()->Init();
+
 	PostEffectManager::CreateInstance();
 	//ブルームフラグ、シャドウフラグの順番
 	PostEffectManager::GetInstance()->Init(true, true);

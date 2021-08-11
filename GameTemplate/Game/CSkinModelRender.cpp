@@ -16,7 +16,7 @@ namespace prefab
 		shadowModelInitData.m_tkmFilePath = modelPath;
 
 		//シェーダーパスの指定
-		initData.m_fxFilePath = "Assets/shader/shadowReceiver.fx";
+		initData.m_fxFilePath = "Assets/shader/deferredModel.fx";
 		shadowModelInitData.m_fxFilePath = "Assets/shader/shadow.fx";
 
 		//シェーダーの頂点シェーダーのエントリー関数名の指定
