@@ -63,9 +63,12 @@ namespace prefab
 	void CSpriteRender::Render(RenderContext& rc, Camera* camera)
 	{
 		//•`‰æ‰æ–Ê‚ªˆê’v‚µAƒ‚ƒfƒ‹‚Æ“¯ƒ^ƒCƒ~ƒ“ƒO‚Å•`‰æ‚·‚éİ’è‚È‚ç•`‰æ
-		if (rc.GetRenderStep() == m_drawScreen && m_isPostRender == false)
+		if (rc.GetRenderMode() == RenderContext::enRenderMode_Forward)
 		{
-			m_sprite.Draw(rc);
+			if (rc.GetRenderStep() == m_drawScreen && m_isPostRender == false)
+			{
+				m_sprite.Draw(rc);
+			}
 		}
 	}
 

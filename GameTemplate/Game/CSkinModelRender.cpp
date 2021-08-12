@@ -85,22 +85,25 @@ namespace prefab
 	void CSkinModelRender::Render(RenderContext& rc, Camera* camera)
 	{
 		//ƒŒƒ“ƒ_[ƒRƒ“ƒeƒLƒXƒg‚Ì•`‰ææ‚Å•ªŠò
-		switch (rc.GetRenderStep()) {
-		case RenderContext::eStep_RenderViewport1:
-			//‰æ–Ê1‚É•`‰æ
-			m_model[eModel_View1].Draw(rc, camera);
-			break;
-		case RenderContext::eStep_RenderViewport2:
-			//‰æ–Ê2‚É•`‰æ
-			m_model[eModel_View2].Draw(rc, camera);
-			break;
-		case RenderContext::eStep_RenderShadowMap:
-			//‰e‚ğì‚éƒ‚ƒfƒ‹‚Ì‚¾‚¯‰e‚ğ•`‰æ
-			if (m_isShadowCaster)
-			{
-				m_model[eModel_Shadow].Draw(rc, camera);
+		if (rc.GetRenderMode() == RenderContext::enRenderMode_Deferred)
+		{
+			switch (rc.GetRenderStep()) {
+			case RenderContext::eStep_RenderViewport1:
+				//‰æ–Ê1‚É•`‰æ
+				m_model[eModel_View1].Draw(rc, camera);
+				break;
+			case RenderContext::eStep_RenderViewport2:
+				//‰æ–Ê2‚É•`‰æ
+				m_model[eModel_View2].Draw(rc, camera);
+				break;
+			case RenderContext::eStep_RenderShadowMap:
+				//‰e‚ğì‚éƒ‚ƒfƒ‹‚Ì‚¾‚¯‰e‚ğ•`‰æ
+				if (m_isShadowCaster)
+				{
+					m_model[eModel_Shadow].Draw(rc, camera);
+				}
+				break;
 			}
-			break;
 		}
 	}
 

@@ -132,7 +132,15 @@ void PostEffectManager::BeforeRender(RenderContext& rc)
 {
 	//メインレンダーターゲットを描画先にセットする。
 	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
-	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+	D3D12_VIEWPORT viewport;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = static_cast<float>(m_mainRenderTarget.GetWidth());
+	viewport.Height = static_cast<float>(m_mainRenderTarget.GetHeight());
+	viewport.MinDepth = D3D12_MIN_DEPTH;
+	viewport.MaxDepth = D3D12_MAX_DEPTH;
+	rc.SetViewport(viewport);
+	rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), DeferredRendering::GetInstance()->GetDSVCpuDescriptorHandle());
 	rc.ClearRenderTargetView(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_mainRenderTarget.GetRTVClearColor());
 	rc.ClearDepthStencilView(m_mainRenderTarget.GetDSVCpuDescriptorHandle(), m_mainRenderTarget.GetDSVClearValue());
 	//この後、各モデルのドローコールが呼ばれる(はず)。

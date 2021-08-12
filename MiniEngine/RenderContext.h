@@ -19,6 +19,11 @@ public:
 		eStep_RenderAllScreen,	// Render to AllScreen
 		eStep_RenderShadowMap,	// Render to shadowMap,
 	};
+
+	enum EnRenderMode {
+		enRenderMode_Deferred,
+		enRenderMode_Forward
+	};
 	/// <summary>
 	/// 初期化。
 	/// </summary>
@@ -43,6 +48,25 @@ public:
 	{
 		return m_step;
 	}
+
+	/**
+	 * @brief レンダーモードをセット
+	 * @param mode レンダーモード
+	*/
+	void SetMode(EnRenderMode mode)
+	{
+		m_renderMode = mode;
+	}
+
+	/**
+	 * @brief レンダーモードを取得
+	 * @return レンダーモード
+	*/
+	EnRenderMode GetRenderMode() const
+	{
+		return m_renderMode;
+	}
+
 	/// <summary>
 	/// 頂点バッファを設定。
 	/// </summary>
@@ -400,6 +424,7 @@ private:
 	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };	//定数バッファの配列。
 	Texture* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };			//シェーダーリソースの配列。
 	EnStep m_step = eStep_RenderViewport1;									// render step.
+	EnRenderMode m_renderMode = enRenderMode_Deferred;
 	D3D12_VIEWPORT m_currentViewPort;
 };
 

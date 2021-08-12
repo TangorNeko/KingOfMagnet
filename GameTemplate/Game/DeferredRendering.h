@@ -49,6 +49,11 @@ public:
 	*/
 	void EndDeferredRendering(RenderContext& rc);
 
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCpuDescriptorHandle()
+	{
+		return m_rts[0].GetDSVCpuDescriptorHandle();
+	}
+
 private:
 	enum GBuffers						//G-Buffer‚ÌŽí—Þ
 	{

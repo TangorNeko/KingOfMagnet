@@ -49,17 +49,20 @@ void SkyBoard::Update()
 
 void SkyBoard::Render(RenderContext& rc, Camera* camera)
 {
-	switch (rc.GetRenderStep())
+	if (rc.GetRenderMode() == RenderContext::enRenderMode_Forward)
 	{
-	case RenderContext::eStep_RenderViewport1:
-		//1P画面用。
-		m_skyModel[NUMBER_PLAYER1].Draw(rc, camera);
-		break;
-	case RenderContext::eStep_RenderViewport2:
-		//2P画面用。
-		m_skyModel[NUMBER_PLAYER2].Draw(rc, camera);
-		break;
-	default:
-		break;
+		switch (rc.GetRenderStep())
+		{
+		case RenderContext::eStep_RenderViewport1:
+			//1P画面用。
+			m_skyModel[NUMBER_PLAYER1].Draw(rc, camera);
+			break;
+		case RenderContext::eStep_RenderViewport2:
+			//2P画面用。
+			m_skyModel[NUMBER_PLAYER2].Draw(rc, camera);
+			break;
+		default:
+			break;
+		}
 	}
 }
