@@ -298,6 +298,7 @@
     </ClCompile>
     <ClCompile Include="FinalHit.cpp" />
     <ClCompile Include="DeferredRendering.cpp" />
+    <ClCompile Include="CascadeShadow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -877,6 +878,7 @@
     </ClInclude>
     <ClInclude Include="FinalHit.h" />
     <ClInclude Include="DeferredRendering.h" />
+    <ClInclude Include="CascadeShadow.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExEngine">

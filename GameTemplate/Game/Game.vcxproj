@@ -291,6 +291,7 @@
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="CascadeShadow.cpp" />
     <ClCompile Include="CaslFile.cpp" />
     <ClCompile Include="CDirectionLight.cpp" />
     <ClCompile Include="CEffect2D.cpp" />
@@ -411,6 +412,7 @@
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="CascadeShadow.h" />
     <ClInclude Include="CaslFile.h" />
     <ClInclude Include="CDirectionLight.h" />
     <ClInclude Include="CEffect2D.h" />
