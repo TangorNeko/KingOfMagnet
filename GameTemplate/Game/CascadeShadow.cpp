@@ -11,6 +11,32 @@ namespace
 
 void CascadeShadow::Init()
 {
+    m_lightCamera[0].SetPosition({ 760.0f,200.0f,400.0f });
+    m_lightCamera[0].SetTarget({ 760.0f,0.0f,400.0f });
+    m_lightCamera[0].SetUp({ 1.0f,0.0f,0.0f });
+    m_lightCamera[0].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+    m_lightCamera[0].SetWidth(5000.0f);
+    m_lightCamera[0].SetHeight(5000.0f);
+    m_lightCamera[0].SetNear(1.0f);
+    m_lightCamera[0].SetFar(10000.0f);
+    m_lightCamera[0].Update();
+
+    m_lightCamera[1].SetPosition({ -760.0f,200.0f,-400.0f });
+    m_lightCamera[1].SetTarget({ -760.0f,0.0f,-400.0f });
+    m_lightCamera[1].SetUp({ 1.0f,0.0f,0.0f });
+    m_lightCamera[1].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+    m_lightCamera[1].SetWidth(5000.0f);
+    m_lightCamera[1].SetHeight(5000.0f);
+    m_lightCamera[1].SetNear(1.0f);
+    m_lightCamera[1].SetFar(10000.0f);
+    m_lightCamera[1].Update();
+
+    m_areaRangeTable[0] = RANGE_SHORT;
+    m_areaRangeTable[1] = RANGE_MEDIUM;
+    m_areaRangeTable[2] = m_lightCamera[1].GetFar();
+
+
+
     float clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 
     for (int screenNo = 0; screenNo < 2; screenNo++)
@@ -138,8 +164,16 @@ void CascadeShadow::DrawShadowMap()
             rc.WaitUntilToPossibleSetRenderTarget(m_shadowMaps[screenNo][areaNo]);
             rc.SetRenderTargetAndViewport(m_shadowMaps[screenNo][areaNo]);
             rc.ClearRenderTargetView(m_shadowMaps[screenNo][areaNo].GetRTVCpuDescriptorHandle(), m_shadowMaps[screenNo][areaNo].GetRTVClearColor());
+            rc.ClearDepthStencilView(m_shadowMaps[screenNo][areaNo].GetDSVCpuDescriptorHandle(), m_shadowMaps[screenNo][areaNo].GetDSVClearValue());
+            D3D12_RECT shadowRect;
+            shadowRect.left = 0;
+            shadowRect.top = 0;
+            shadowRect.right = 2048;
+            shadowRect.bottom = 2048;
+            rc.SetScissorRect(shadowRect);
 
-            //TODO:ここで影モデルのドロー
+            //影モデルのドロー
+            GameObjectManager::GetInstance()->ExecuteShadowRender(rc, g_matIdentity, m_lvpcMatrix[screenNo][areaNo],(int)screenNo,(int)areaNo);
 
             rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMaps[screenNo][areaNo]);
 

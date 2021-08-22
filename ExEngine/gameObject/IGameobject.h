@@ -44,6 +44,11 @@ public:
 		(void)renderContext;
 	}
 
+	virtual void ShadowRender(RenderContext& renderContext, const Matrix& viewMatrix, const Matrix& projMatrix,int screenNo,int areaNo)
+	{
+		(void)renderContext;
+	}
+
 	virtual void PostRender(RenderContext& renderContext, Camera* camera)
 	{
 		(void)renderContext;
@@ -104,6 +109,13 @@ public:
 	{
 		if (m_isActive && m_isStart && !m_isDead ) {
 			Render(renderContext,camera);
+		}
+	}
+
+	void ShadowRenderWrapper(RenderContext& renderContext, const Matrix& viewMatrix, const Matrix& projMatrix,int screenNo,int areaNo)
+	{
+		if (m_isActive && m_isStart && !m_isDead) {
+			ShadowRender(renderContext, viewMatrix,projMatrix,screenNo,areaNo);
 		}
 	}
 

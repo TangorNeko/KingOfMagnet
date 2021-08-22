@@ -61,6 +61,16 @@ public:
 	/// <param name="rc"></param>
 	void ExecuteRender(RenderContext& rc);
 	
+	/**
+	 * @brief 影の描画処理を実行
+	 * @param rc レンダーコンテキスト
+	 * @param viewMatrix ビュー行列
+	 * @param projMatrix プロジェクション行列
+	 * @param screenNo 画面番号
+	 * @param areaNo 影のエリア番号
+	*/
+	void ExecuteShadowRender(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix,int screenNo,int areaNo);
+
 	/// <summary>
 	/// ポストレンダーの描画処理を実行。
 	/// </summary>

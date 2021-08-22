@@ -151,6 +151,9 @@ void InitManager()
 
 	EffectEngine::CreateInstance();
 
+	CascadeShadow::CreateInstance();
+	CascadeShadow::GetInstance()->Init();
+
 	DeferredRendering::CreateInstance();
 	DeferredRendering::GetInstance()->Init();
 
@@ -214,4 +217,10 @@ void ReleaseManager()
 
 	//ポストエフェクトマネージャーを削除
 	PostEffectManager::DeleteInstance();
+
+	//ディファードレンダリングのインスタンスを削除
+	DeferredRendering::DeleteInstance();
+
+	//カスケードシャドウのインスタンスを削除
+	CascadeShadow::DeleteInstance();
 }

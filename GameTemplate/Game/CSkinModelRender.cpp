@@ -17,7 +17,7 @@ namespace prefab
 
 		//シェーダーパスの指定
 		initData.m_fxFilePath = "Assets/shader/deferredModel.fx";
-		shadowModelInitData.m_fxFilePath = "Assets/shader/shadow.fx";
+		shadowModelInitData.m_fxFilePath = "Assets/shader/cascadeShadow.fx";
 
 		//シェーダーの頂点シェーダーのエントリー関数名の指定
 		initData.m_vsEntryPointFunc = "VSMain";
@@ -37,30 +37,29 @@ namespace prefab
 
 		//カラーバッファのフォーマットを指定
 		initData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		shadowModelInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32_FLOAT;
+		shadowModelInitData.m_colorBufferFormat = DXGI_FORMAT_R32_FLOAT;
 
 		//モデルデータの上方向の軸を指定
 		initData.m_modelUpAxis = enModelUpAxisZ;
 		shadowModelInitData.m_modelUpAxis = enModelUpAxisZ;
 
-		//モデルに影を落とすために影のテクスチャを紐付ける
-		initData.m_expandShaderResoruceView = &PostEffectManager::GetInstance()->GetBlurShadowMap();
 
 		//定数バッファをモデルに紐付ける
-		initData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigDataSize();
 		shadowModelInitData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigCameraDataSize();
-		initData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigDatas();
 		shadowModelInitData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigCameraDatas();
-
-		initData.m_expandConstantBufferSize[1] = CLightManager::GetInstance()->GetLigCameraDataSize();
-		initData.m_expandConstantBuffer[1] = CLightManager::GetInstance()->GetLigCameraDatas();
 
 		//モデルの初期化
 		m_model[eModel_View1].Init(initData);
 		m_model[eModel_View2].Init(initData);
 
 		//影描画モデルの初期化
-		m_model[eModel_Shadow].Init(shadowModelInitData);
+		for (int i = 0; i < eModel_Num; i++)
+		{
+			for (int j = 0; j < enShadowMapAreaNum; j++)
+			{
+				m_shadowModel[i][j].Init(shadowModelInitData);
+			}
+		}
 
 		//アニメーション関連の初期化
 		m_animationClips = animClips;
@@ -96,14 +95,15 @@ namespace prefab
 				//画面2に描画
 				m_model[eModel_View2].Draw(rc, camera);
 				break;
-			case RenderContext::eStep_RenderShadowMap:
-				//影を作るモデルの時だけ影を描画
-				if (m_isShadowCaster)
-				{
-					m_model[eModel_Shadow].Draw(rc, camera);
-				}
-				break;
 			}
+		}
+	}
+
+	void CSkinModelRender::ShadowRender(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix,int screenNo,int areaNo)
+	{
+		if (m_isShadowCaster)
+		{
+			m_shadowModel[screenNo][areaNo].Draw(rc, viewMatrix, projMatrix);
 		}
 	}
 

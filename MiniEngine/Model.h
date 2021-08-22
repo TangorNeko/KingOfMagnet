@@ -60,6 +60,15 @@ public:
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
 	void Draw(RenderContext& renderContext,Camera* camera);
+
+	/**
+	 * @brief 描画(カメラ行列つき)
+	 * @param rc レンダーコンテキスト
+	 * @param viewMatrix ビュー行列
+	 * @param projMatrix プロジェクション行列
+	*/
+	void Draw(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix);
+
 	/// <summary>
 	/// ワールド行列を取得。
 	/// </summary>

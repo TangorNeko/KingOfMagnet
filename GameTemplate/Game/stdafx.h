@@ -14,6 +14,7 @@
 #include "CLightManager.h"
 #include "ResourceBankManager.h"
 #include "DeferredRendering.h"
+#include "CascadeShadow.h"
 #include "PostEffectManager.h"
 
 #include "time/Stopwatch.h"

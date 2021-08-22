@@ -13,6 +13,14 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mProj;
 };
 
+//ライトカメラの情報
+cbuffer LightCameraCb : register(b1)
+{
+	float4x4 mLVP;
+	float3 lightCameraPos;
+	float3 lightCameraDir;
+};
+
 ////////////////////////////////////////////////
 // 構造体
 ////////////////////////////////////////////////
@@ -33,22 +41,12 @@ struct SPSIn {
 	float4 pos 			: SV_POSITION;	//スクリーン空間でのピクセルの座標。
 	float3 normal		: NORMAL;		//法線
 	float2 uv 			: TEXCOORD0;	//uv座標。
-	float4 worldPos		: TEXCOORD1;
-};
-
-struct SPSOut
-{
-	float4 albedo 		: SV_Target0; //アルベド
-	float4 normal 		: SV_Target1; //法線
-	float4 worldPos 	: SV_Target2; //ワールド座標
-	float4 shadowColor 	: SV_Target3; //シャドウカラー?
 };
 
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
-Texture2D<float4> g_shadowMap : register(t10);			//シャドウマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
 sampler g_sampler : register(s0);	//サンプラステート。
 
@@ -89,13 +87,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 		m = mWorld;
 	}
 	psIn.pos = mul(m, vsIn.pos);
-	
-	psIn.worldPos = psIn.pos;
-
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
-	psIn.normal = mul(m, vsIn.normal);
-	psIn.normal = normalize(psIn.normal);
 
 	psIn.uv = vsIn.uv;
 
@@ -120,22 +113,8 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// <summary>
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>
-SPSOut PSMain(SPSIn psIn)
+float4 PSMain(SPSIn psIn) : SV_Target0
 {
-	//G-Buffer
-	SPSOut psOut;
-
-	//アルベドを格納
-	psOut.albedo = g_albedo.Sample(g_sampler, psIn.uv);
-
-	//法線を格納
-	psOut.normal.xyz = (psIn.normal + 1.0f) / 2.0f;
-	
-	//ワールド座標を格納
-	psOut.worldPos = psIn.worldPos;
-
-	//TODO:影用データ　カスケードシャドウに変更
-	psOut.shadowColor = float4(1.0f,0.0f,0.0f,0.0f);
-
-	return psOut;
+	float depth = psIn.pos.z;
+	return float4(depth,depth,depth,1.0f);
 }

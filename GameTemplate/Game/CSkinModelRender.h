@@ -9,7 +9,6 @@ namespace prefab
 		enum EModel {
 			eModel_View1,	//画面1に描画されるモデル
 			eModel_View2,	//画面2に描画されるモデル
-			eModel_Shadow,	//影を描画する用モデル
 			eModel_Num,		//モデルの状態の数
 		};
 	private:
@@ -26,6 +25,16 @@ namespace prefab
 		*/
 		void Render(RenderContext& rc,Camera* camera) override;
 		
+		/**
+		 * @brief 影モデルの描画
+		 * @param rc レンダーコンテキスト
+		 * @param viewMatrix ビュー行列
+		 * @param projMatrix プロジェクション行列
+		 * @param screenNo 画面番号
+		 * @param areaNo 影のエリア番号
+		*/
+		void ShadowRender(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix, int screenNo, int areaNo) override;
+
 		/**
 		 * @brief モデルの初期化関数　アニメーションつき
 		 * @param modelPath モデルファイルのパス(.tkm)
@@ -177,17 +186,25 @@ namespace prefab
 		static void PreLoadModel(const char* tkmFilePath);
 
 	private:
-		Skeleton m_skeleton;						//スケルトン
-		Model m_model[eModel_Num];					//モデル
-		Vector3 m_position = Vector3::Zero;			//座標
-		Quaternion m_qRot = Quaternion::Identity;	//回転
-		Vector3 m_scale = Vector3::One;				//拡大率
-		AnimationClip* m_animationClips = nullptr;	//アニメーションクリップ
-		int m_animationClipNum = 0;					//アニメーションクリップの数
-		Animation m_animation;						//アニメーション。
-		bool m_isShadowCaster = false;				//このモデルは影を作るか?
-		float m_animation_speed = 1.0;				//アニメーション速度
-		float m_animationSpeed = 1.0f;				//アニメーション速度
+		enum shadowMapArea
+		{
+			enShort = 0,					//近距離
+			enMedium = 1,					//中距離
+			enLong = 2,						//遠距離
+			enShadowMapAreaNum = 3			//シャドウマップのエリアの数
+		};
+		Skeleton m_skeleton;																	//スケルトン
+		Model m_model[eModel_Num];																//モデル
+		Model m_shadowModel[eModel_Num][enShadowMapAreaNum];		//影用モデル
+		Vector3 m_position = Vector3::Zero;														//座標
+		Quaternion m_qRot = Quaternion::Identity;												//回転
+		Vector3 m_scale = Vector3::One;															//拡大率
+		AnimationClip* m_animationClips = nullptr;												//アニメーションクリップ
+		int m_animationClipNum = 0;																//アニメーションクリップの数
+		Animation m_animation;																	//アニメーション。
+		bool m_isShadowCaster = false;															//このモデルは影を作るか?
+		float m_animation_speed = 1.0;															//アニメーション速度
+		float m_animationSpeed = 1.0f;															//アニメーション速度
 	};
 }
 

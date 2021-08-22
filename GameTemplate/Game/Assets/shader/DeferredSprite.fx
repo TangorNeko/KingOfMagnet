@@ -42,6 +42,11 @@ cbuffer LightDataCb : register(b1)
 	int spotLigNum;
 };
 
+cbuffer ShadowParamCb : register(b2)
+{
+    float4x4 mLVPC[3];
+};
+
 struct VSInput{
 	float4 pos : POSITION;
 	float2 uv  : TEXCOORD0;
@@ -56,7 +61,7 @@ struct PSInput{
 Texture2D<float4> g_albedo : register(t0);		//アルベドテクスチャ
 Texture2D<float4> g_normal : register(t1);		//法線テクスチャ
 Texture2D<float4> g_worldPos : register(t2);		//ワールド座標テクスチャ
-Texture2D<float4> g_shdowColor : register(t3);	//シャドウカラー(現在未使用)
+Texture2D<float4> g_shadowMap : register(t3);	//シャドウマップ(近距離)
 sampler g_sampler : register(s0);
 
 PSInput VSMain(VSInput In) 
@@ -226,6 +231,29 @@ float4 PSMain(PSInput psIn) : SV_Target0
 	finalColor.xyz += ambientLig;
 
 	finalColor *= albedoColor;
+
+	//影
+	float4 posInLVP = mul(mLVPC[0],worldPos);
+
+	float zInLVP = posInLVP.z / posInLVP.w;
+
+	if(zInLVP >= 0.0f && zInLVP <= 1.0f)
+	{
+		float2 shadowMapUV = posInLVP.xy / posInLVP.w;
+		
+		shadowMapUV *= float2(0.5f,-0.5f);
+    	shadowMapUV += 0.5f;
+
+		 if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+            {
+                float shadowValue = g_shadowMap.Sample(g_sampler,shadowMapUV).x;
+
+                if(zInLVP >= shadowValue.r + 0.001f)
+                {
+                    finalColor.xyz *= 0.3f;
+                }
+            }
+	}
 
 	return finalColor;
 }

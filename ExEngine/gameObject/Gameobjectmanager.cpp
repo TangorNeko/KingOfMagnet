@@ -54,20 +54,21 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	rc.SetMode(RenderContext::enRenderMode_Deferred);
 
 	//影を先に描いてからモデルに描いた影を描き足すので先にシャドウマップをつくる。
-	PostEffectManager::GetInstance()->ShadowRender(rc);
+	//PostEffectManager::GetInstance()->ShadowRender(rc);
 
 	//shadow
 	if (PostEffectManager::GetInstance()->GetShadowFlag())
 	{
-		rc.SetStep(RenderContext::eStep_RenderShadowMap);
+		CascadeShadow::GetInstance()->DrawShadowMap();
+		//rc.SetStep(RenderContext::eStep_RenderShadowMap);
 		//ShadowRenderでビューポートを設定しているのでここでビューポート設定しなくてOK(たぶん)
-		for (auto& goList : m_gameObjectListArray) {
-			for (auto& go : goList) {
-				go->RenderWrapper(rc, CLightManager::GetInstance()->GetLightCamera());
-			}
-		}
+		//for (auto& goList : m_gameObjectListArray) {
+		//	for (auto& go : goList) {
+		//		go->RenderWrapper(rc, CLightManager::GetInstance()->GetLightCamera());
+		//	}
+		//}
 	}
-	PostEffectManager::GetInstance()->EndShadowRender(rc);
+	//PostEffectManager::GetInstance()->EndShadowRender(rc);
 
 	//GBufferへの書き込み開始///
 	DeferredRendering::GetInstance()->StartDeferredRendering(rc);
@@ -364,5 +365,14 @@ void GameObjectManager::ExecutePostRender(RenderContext& rc)
 		EffectEngine::GetInstance()->Update2D(GameTime::GetInstance().GetFrameDeltaTime());
 		//2Dエフェクト描画
 		EffectEngine::GetInstance()->Draw2D();
+	}
+}
+
+void GameObjectManager::ExecuteShadowRender(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix,int screenNo,int areaNo)
+{
+	for (auto& goList : m_gameObjectListArray) {
+		for (auto& go : goList) {
+			go->ShadowRenderWrapper(rc, viewMatrix,projMatrix,screenNo,areaNo);
+		}
 	}
 }

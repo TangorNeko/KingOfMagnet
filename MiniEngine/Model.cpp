@@ -96,6 +96,16 @@ void Model::Draw(RenderContext& rc,Camera* camera)
 	);
 }
 
+void Model::Draw(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix)
+{
+	m_meshParts.Draw(
+		rc,
+		m_world,
+		viewMatrix,
+		projMatrix
+	);
+}
+
 bool Model::isLineHitModel(const Vector3& start, const Vector3& end,Vector3& minCrossPoint)
 {
 	const auto& meshParts = m_tkmFile->GetMeshParts();

@@ -43,17 +43,34 @@ public:
 	 * @brief シャドウマップを描画する
 	*/
 	void DrawShadowMap();
+	
+	/**
+	 * @brief シャドウマップのテクスチャを取得
+	 * @param screenNo スクリーン番号
+	 * @param areaNo 影のエリア番号
+	 * @return シャドウマップのテクスチャ
+	*/
+	Texture& GetShaowMapTexture(int screenNo,int areaNo)
+	{
+		return m_shadowMaps[screenNo][areaNo].GetRenderTargetTexture();
+	}
+
+	Matrix* GetLVPCMatrix(int screenNo)
+	{
+		return m_lvpcMatrix[screenNo];
+	}
 
 private:
 	enum shadowMapArea
 	{
 		enShort = 0,					//近距離
 		enMedium = 1,					//中距離
-		enLong = 2						//遠距離
+		enLong = 2,						//遠距離
+		enShadowMapAreaNum = 3			//シャドウマップのエリアの数
 	};
 	Camera m_lightCamera[2];			//ライトのカメラ
 	RenderTarget m_shadowMaps[2][3];	//シャドウマップのレンダーターゲット
-	Matrix m_lvpcMatrix[2][3];			//ライトビュープロジェクションクロップ行列
+	Matrix m_lvpcMatrix[2][3] = { g_matIdentity };			//ライトビュープロジェクションクロップ行列
 	float m_areaRangeTable[3] = { 0.0f,0.0f,0.0f };
 };
 
