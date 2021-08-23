@@ -1,5 +1,5 @@
 /*!
- * @brief	シンプルなモデルシェーダー。
+ * @brief	カスケードシャドウ用のシャドウマップの描画
  */
 
 
@@ -11,14 +11,6 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mWorld;
 	float4x4 mView;
 	float4x4 mProj;
-};
-
-//ライトカメラの情報
-cbuffer LightCameraCb : register(b1)
-{
-	float4x4 mLVP;
-	float3 lightCameraPos;
-	float3 lightCameraDir;
 };
 
 ////////////////////////////////////////////////
@@ -46,7 +38,6 @@ struct SPSIn {
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
-Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
 sampler g_sampler : register(s0);	//サンプラステート。
 

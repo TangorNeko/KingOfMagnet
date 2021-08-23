@@ -1,5 +1,5 @@
 /*!
- * @brief	シンプルなモデルシェーダー。
+ * @brief	空の板ポリゴン用のシェーダー
  */
 
 
@@ -13,10 +13,11 @@ cbuffer ModelCb : register(b0) {
 	float4x4 mProj;
 };
 
+//空の定数バッファ
 cbuffer SkyScrollValue : register(b1)
 {
-	float textureSize;
-	float scrollingValue;
+	float textureSize;		//空のテクスチャサイズ
+	float scrollingValue;	//空のスクロール量
 };
 
 ////////////////////////////////////////////////
@@ -122,10 +123,11 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-	//スクロール量をテクスチャの
+	//スクロール量をテクスチャのサイズで割って0~1の範囲に収める
 	float offset = scrollingValue/textureSize;
 
 	float2 scrollingUV = psIn.uv;
+	//Y方向にスクロールさせる
 	scrollingUV.y += offset;
 
 	float4 albedoColor = g_albedo.Sample(g_sampler, scrollingUV);

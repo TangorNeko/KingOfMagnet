@@ -1,5 +1,5 @@
 /*!
- * @brief	�X�v���C�g�p�̃V�F�[�_�[�B
+ * @brief	スプライト用のシェーダー
  */
 
 cbuffer cb : register(b0){
@@ -26,6 +26,7 @@ PSInput VSMain(VSInput In)
 	psIn.uv = In.uv;
 	return psIn;
 }
+
 float4 PSMain( PSInput In ) : SV_Target0
 {
 	return colorTexture.Sample(Sampler, In.uv) * mulColor;

@@ -1,5 +1,5 @@
 /*!
- * @brief	�X�v���C�g�p�̃V�F�[�_�[�B
+ * @brief	リングゲージ用のシェーダー
  */
 
 cbuffer cb : register(b0){
@@ -26,8 +26,8 @@ struct PSInput{
 	float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> redTexture : register(t0);	//�J���[�e�N�X�`���B
-Texture2D<float4> blueTexture : register(t1); // カラーテクスチャ
+Texture2D<float4> redTexture : register(t0);	//赤色のゲージテクスチャ
+Texture2D<float4> blueTexture : register(t1);   //青色のゲージテクスチャ
 sampler Sampler : register(s0);
 
 PSInput VSMain(VSInput In) 

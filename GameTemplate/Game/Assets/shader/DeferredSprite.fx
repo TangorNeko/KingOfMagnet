@@ -1,5 +1,5 @@
 /*!
- * @brief	�X�v���C�g�p�̃V�F�[�_�[�B
+ * @brief	ディファードレンダリングのスプライトの描画
  */
 
 cbuffer cb : register(b0){
@@ -30,6 +30,7 @@ struct SpotLigData
 	float ligAngle;
 };
 
+//ライトの定数バッファ
 cbuffer LightDataCb : register(b1)
 {
 	//各配列数はCLightManager.hのMaxLightNumと同じにすること
@@ -42,6 +43,7 @@ cbuffer LightDataCb : register(b1)
 	int spotLigNum;
 };
 
+//カスケードシャドウのクロップされたビュープロジェクション行列の定数バッファ
 cbuffer ShadowParamCb : register(b2)
 {
     float4x4 mLVPC[3];
@@ -60,8 +62,8 @@ struct PSInput{
 //G-Buffers
 Texture2D<float4> g_albedo : register(t0);		//アルベドテクスチャ
 Texture2D<float4> g_normal : register(t1);		//法線テクスチャ
-Texture2D<float4> g_worldPos : register(t2);		//ワールド座標テクスチャ
-Texture2D<float4> g_shadowMap : register(t3);	//シャドウマップ(近距離)
+Texture2D<float4> g_worldPos : register(t2);	//ワールド座標テクスチャ
+Texture2D<float4> g_shadowMap : register(t3);	//シャドウマップ(近距離)テクスチャ
 sampler g_sampler : register(s0);
 
 PSInput VSMain(VSInput In) 
