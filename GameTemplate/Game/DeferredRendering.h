@@ -49,6 +49,19 @@ public:
 	*/
 	void EndDeferredRendering(RenderContext& rc);
 
+	/**
+	 * @brief ディファードレンダリングの結果からライティングしたスプライトを描画
+	 * @param rc レンダーコンテキスト
+	*/
+	void DrawDeferred(RenderContext& rc)
+	{
+		m_deferredSprite.Draw(rc);
+	}
+
+	/**
+	 * @brief ディファードレンダリングに使用したデプスステンシルビューを取得
+	 * @return デプスステンシルビュー
+	*/
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCpuDescriptorHandle()
 	{
 		return m_rts[0].GetDSVCpuDescriptorHandle();

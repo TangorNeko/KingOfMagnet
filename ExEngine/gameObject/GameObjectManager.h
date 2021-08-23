@@ -71,12 +71,25 @@ public:
 	*/
 	void ExecuteShadowRender(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix,int screenNo,int areaNo);
 
-	/// <summary>
-	/// ポストレンダーの描画処理を実行。
-	/// </summary>
-	/// <param name="rc"></param>
+	/**
+	 * @brief ポストレンダーの描画処理を実行
+	 * @param rc レンダーコンテキスト
+	*/
 	void ExecutePostRender(RenderContext& rc);
 	
+	/**
+	 * @brief エフェクトの描画処理を実行
+	 * @param rc レンダーコンテキスト
+	*/
+	void ExecuteEffectRender(RenderContext& rc);
+
+	/**
+	 * @brief 各画面番号に合わせてビューポートをセット
+	 * @param rc レンダーコンテキスト
+	 * @param screenNo 画面番号(0:左半分、1:右半分、2:全画面)
+	*/
+	void ChangeViewPort(RenderContext& rc,int screenNo);
+
 	/*!
 	*@brief	ゲームオブジェクトのnew
 	*@details

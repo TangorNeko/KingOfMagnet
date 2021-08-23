@@ -75,6 +75,4 @@ void DeferredRendering::EndDeferredRendering(RenderContext& rc)
 		&m_rts[enWorldPos],
 	};
 	rc.WaitUntilFinishDrawingToRenderTargets(enGBufferNum, rts);
-
-	m_deferredSprite.Draw(rc);
 }

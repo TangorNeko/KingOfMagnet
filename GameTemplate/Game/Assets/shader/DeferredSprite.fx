@@ -117,6 +117,10 @@ float4 PSMain(PSInput psIn) : SV_Target0
 {
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 	float4 normal = g_normal.Sample(g_sampler,psIn.uv);
+	if(normal.x == 0.0f && normal.y == 0.0f && normal.z == 0.0f)
+	{
+		discard;
+	}
 	normal = (normal - 0.5f) * 2.0f;
 	float4 worldPos = g_worldPos.Sample(g_sampler,psIn.uv);
 
