@@ -55,21 +55,40 @@ public:
 		return m_shadowMaps[screenNo][areaNo].GetRenderTargetTexture();
 	}
 
+	/**
+	 * @brief クロップされたライトビュープロジェクション行列を取得
+	 * @param screenNo スクリーン番号
+	 * @return クロップされたライトビュープロジェクション行列
+	*/
 	Matrix* GetLVPCMatrix(int screenNo)
 	{
 		return m_lvpcMatrix[screenNo];
 	}
 
+	/**
+	 * @brief ライトカメラの注視点を設定
+	 * @param screenNo スクリーン番号
+	 * @param targetPos 注視点
+	*/
+	void SetLightCameraTarget(int screenNo, const Vector3& targetPos);
+
+	void SetLightCameraDirection(const Vector3& direction)
+	{
+		m_lightCameraDirection = direction;
+		m_lightCameraDirection.Normalize();
+	}
+
 private:
 	enum shadowMapArea
 	{
-		enShort = 0,					//近距離
+		enNear = 0,					//近距離
 		enMedium = 1,					//中距離
 		enLong = 2,						//遠距離
 		enShadowMapAreaNum = 3			//シャドウマップのエリアの数
 	};
 	Camera m_lightCamera[2];			//ライトのカメラ
-	RenderTarget m_shadowMaps[2][3];	//シャドウマップのレンダーターゲット
+	Vector3 m_lightCameraDirection = { 0.0f,0.0f,0.0f };	//影に使用する平行光源の向き
+	RenderTarget m_shadowMaps[2][3];						//シャドウマップのレンダーターゲット
 	Matrix m_lvpcMatrix[2][3] = { g_matIdentity };			//ライトビュープロジェクションクロップ行列
 	float m_areaRangeTable[3] = { 0.0f,0.0f,0.0f };
 };

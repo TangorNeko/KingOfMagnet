@@ -5,7 +5,7 @@ CascadeShadow* CascadeShadow::m_instance = nullptr;
 
 namespace
 {
-    const float RANGE_SHORT = 500.0f;
+    const float RANGE_NEAR = 500.0f;
     const float RANGE_MEDIUM = 2000.0f;
     const float RANGE_FAR = 10000.0f;
 }
@@ -36,7 +36,7 @@ void CascadeShadow::Init()
     m_lightCamera[1].SetFar(RANGE_FAR);
     m_lightCamera[1].Update();
 
-    m_areaRangeTable[0] = RANGE_SHORT;
+    m_areaRangeTable[0] = RANGE_NEAR;
     m_areaRangeTable[1] = RANGE_MEDIUM;
     m_areaRangeTable[2] = RANGE_FAR;
 
@@ -46,7 +46,7 @@ void CascadeShadow::Init()
 
     for (int screenNo = 0; screenNo < 2; screenNo++)
     {
-        m_shadowMaps[screenNo][enShort].Create(
+        m_shadowMaps[screenNo][enNear].Create(
             2048,
             2048,
             1,
@@ -187,4 +187,12 @@ void CascadeShadow::DrawShadowMap()
             nearDepth = m_areaRangeTable[areaNo];
         }
     }
+}
+
+void CascadeShadow::SetLightCameraTarget(int screenNo, const Vector3& targetPos)
+{
+    m_lightCamera[screenNo].SetTarget(targetPos);
+    Vector3 Position = targetPos - m_lightCameraDirection * 600.0f;
+    m_lightCamera[screenNo].SetPosition(Position);
+    m_lightCamera[screenNo].Update();
 }

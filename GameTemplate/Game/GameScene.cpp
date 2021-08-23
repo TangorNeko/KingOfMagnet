@@ -186,6 +186,8 @@ bool GameScene::Start()
 	//ステージのライトを作成
 	m_stageLight = NewGO<prefab::CDirectionLight>(0);
 	m_stageLight->SetDirection(STAGELIGHT_DIRECTION);
+	//ライトカメラに平行光源の向きを伝える
+	CascadeShadow::GetInstance()->SetLightCameraDirection(STAGELIGHT_DIRECTION);
 	m_stageLight->SetColor(STAGELIGHT_COLOR);
 
 	m_player1 = NewGO<Player>(0, "Player");

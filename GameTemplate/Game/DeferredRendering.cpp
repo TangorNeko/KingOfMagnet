@@ -37,17 +37,6 @@ void DeferredRendering::Init()
 		DXGI_FORMAT_UNKNOWN
 	);
 
-	//シャドウカラーレンダーターゲット
-	m_rts[enShadowColor].Create(
-		static_cast<int>(FRAME_BUFFER_W),
-		static_cast<int>(FRAME_BUFFER_H),
-		1,
-		1,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT
-	);
-
-
 	//ディファードレンダリングの出力スプライトを初期化
 	SpriteInitData deferredSpriteInitData;
 	deferredSpriteInitData.m_fxFilePath = "Assets/shader/DeferredSprite.fx";
@@ -56,7 +45,9 @@ void DeferredRendering::Init()
 	deferredSpriteInitData.m_textures[enAlbedo] = &m_rts[enAlbedo].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enNormal] = &m_rts[enNormal].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enWorldPos] = &m_rts[enWorldPos].GetRenderTargetTexture();
-	deferredSpriteInitData.m_textures[enShadowColor] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0,0);
+	deferredSpriteInitData.m_textures[enShadowmap_Near] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0,0);
+	deferredSpriteInitData.m_textures[enShadowmap_Middle] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 1);
+	deferredSpriteInitData.m_textures[enShadowmap_Far] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 2);
 	deferredSpriteInitData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigDatas();
 	deferredSpriteInitData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigDataSize();
 	deferredSpriteInitData.m_expandConstantBuffer[1] = CascadeShadow::GetInstance()->GetLVPCMatrix(0);
@@ -70,7 +61,6 @@ void DeferredRendering::StartDeferredRendering(RenderContext& rc)
 		&m_rts[enAlbedo],
 		&m_rts[enNormal],
 		&m_rts[enWorldPos],
-		&m_rts[enShadowColor]
 	};
 	rc.WaitUntilToPossibleSetRenderTargets(enGBufferNum, rts);
 	rc.SetRenderTargets(enGBufferNum, rts);
@@ -83,7 +73,6 @@ void DeferredRendering::EndDeferredRendering(RenderContext& rc)
 		&m_rts[enAlbedo],
 		&m_rts[enNormal],
 		&m_rts[enWorldPos],
-		&m_rts[enShadowColor]
 	};
 	rc.WaitUntilFinishDrawingToRenderTargets(enGBufferNum, rts);
 

@@ -41,7 +41,6 @@ struct SPSOut
 	float4 albedo 		: SV_Target0; //アルベド
 	float4 normal 		: SV_Target1; //法線
 	float4 worldPos 	: SV_Target2; //ワールド座標
-	float4 shadowColor 	: SV_Target3; //シャドウカラー?
 };
 
 ////////////////////////////////////////////////
@@ -132,9 +131,6 @@ SPSOut PSMain(SPSIn psIn)
 	
 	//ワールド座標を格納
 	psOut.worldPos = psIn.worldPos;
-
-	//TODO:影用データ　カスケードシャドウに変更
-	psOut.shadowColor = float4(1.0f,0.0f,0.0f,0.0f);
 
 	return psOut;
 }

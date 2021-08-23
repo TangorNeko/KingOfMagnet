@@ -60,10 +60,13 @@ struct PSInput{
 };
 
 //G-Buffers
-Texture2D<float4> g_albedo : register(t0);		//アルベドテクスチャ
-Texture2D<float4> g_normal : register(t1);		//法線テクスチャ
-Texture2D<float4> g_worldPos : register(t2);	//ワールド座標テクスチャ
-Texture2D<float4> g_shadowMap : register(t3);	//シャドウマップ(近距離)テクスチャ
+Texture2D<float4> g_albedo : register(t0);				//アルベドテクスチャ
+Texture2D<float4> g_normal : register(t1);				//法線テクスチャ
+Texture2D<float4> g_worldPos : register(t2);			//ワールド座標テクスチャ
+Texture2D<float4> g_shadowMap_Near : register(t3);		//シャドウマップテクスチャ(近距離)
+Texture2D<float4> g_shadowMap_Middle : register(t4);	//シャドウマップテクスチャ(中距離)
+Texture2D<float4> g_shadowMap_Far : register(t5);		//シャドウマップテクスチャ(遠距離)
+
 sampler g_sampler : register(s0);
 
 PSInput VSMain(VSInput In) 
@@ -235,26 +238,35 @@ float4 PSMain(PSInput psIn) : SV_Target0
 	finalColor *= albedoColor;
 
 	//影
-	float4 posInLVP = mul(mLVPC[0],worldPos);
+	Texture2D<float4> shadowMaps[3];
+	shadowMaps[0] = g_shadowMap_Near;
+	shadowMaps[1] = g_shadowMap_Middle;
+	shadowMaps[2] = g_shadowMap_Far;
 
-	float zInLVP = posInLVP.z / posInLVP.w;
-
-	if(zInLVP >= 0.0f && zInLVP <= 1.0f)
+	for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
 	{
-		float2 shadowMapUV = posInLVP.xy / posInLVP.w;
+		float4 posInLVP = mul(mLVPC[shadowMapNo],worldPos);
+
+		float zInLVP = posInLVP.z / posInLVP.w;
 		
-		shadowMapUV *= float2(0.5f,-0.5f);
-    	shadowMapUV += 0.5f;
+		if(zInLVP >= 0.0f && zInLVP <= 1.0f)
+		{
+			float2 shadowMapUV = posInLVP.xy / posInLVP.w;
 
-		 if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
-            {
-                float shadowValue = g_shadowMap.Sample(g_sampler,shadowMapUV).x;
+			shadowMapUV *= float2(0.5f,-0.5f);
+    		shadowMapUV += 0.5f;
 
-                if(zInLVP >= shadowValue.r + 0.001f)
-                {
-                    finalColor.xyz *= 0.3f;
-                }
-            }
+			 if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+    	        {
+    	            float shadowValue = shadowMaps[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
+
+    	            if(zInLVP >= shadowValue.r + 0.001f)
+    	            {
+    	                finalColor.xyz *= 0.3f;
+    	            }
+					break;
+    	        }
+		}
 	}
 
 	return finalColor;

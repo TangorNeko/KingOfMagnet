@@ -674,6 +674,9 @@ void Player::Move()
 		m_fallLoop = PLAYER_FALLLOOP_ZERO;
 	}
 
+	//ライトカメラに現在の位置を伝える
+	CascadeShadow::GetInstance()->SetLightCameraTarget(m_playerNum,m_position);
+
 	//足音
 	if (g_pad[m_playerNum]->GetLStickXF() || g_pad[m_playerNum]->GetLStickYF())
 	{

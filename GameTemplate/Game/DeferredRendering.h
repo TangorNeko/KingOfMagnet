@@ -55,13 +55,19 @@ public:
 	}
 
 private:
-	enum GBuffers						//G-Bufferの種類
+	enum GBuffers						//追加されるテクスチャの種類
 	{
 		enAlbedo,						//アルベド
 		enNormal,						//法線
 		enWorldPos,						//ワールド座標
-		enShadowColor,					//シャドウカラー
 		enGBufferNum,					//G-Bufferの数
+	};
+
+	enum ShadowTextures
+	{
+		enShadowmap_Near = 3,			//シャドウマップ(近距離)
+		enShadowmap_Middle = 4,			//シャドウマップ(中距離)
+		enShadowmap_Far = 5,			//シャドウマップ(遠距離)
 	};
 	RenderTarget m_rts[enGBufferNum];	//G-Bufferのレンダーターゲットの配列
 
