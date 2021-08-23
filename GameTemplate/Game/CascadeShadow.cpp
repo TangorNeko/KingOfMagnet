@@ -5,35 +5,40 @@ CascadeShadow* CascadeShadow::m_instance = nullptr;
 
 namespace
 {
-    const int RANGE_SHORT = 500;
-    const int RANGE_MEDIUM = 2000;
+    const float RANGE_SHORT = 500.0f;
+    const float RANGE_MEDIUM = 2000.0f;
+    const float RANGE_FAR = 10000.0f;
 }
 
 void CascadeShadow::Init()
 {
-    m_lightCamera[0].SetPosition({ 760.0f,200.0f,400.0f });
-    m_lightCamera[0].SetTarget({ 760.0f,0.0f,400.0f });
+    Vector3 Dir = { -1.0f,-1.0f,1.0f };
+    Dir.Normalize();
+    Vector3 Pos1 = { 760.0f,600.0f,400.0f };
+    Vector3 Target = Pos1 + Dir * 600.0f;
+    m_lightCamera[0].SetPosition(Pos1);
+    m_lightCamera[0].SetTarget(Target);
     m_lightCamera[0].SetUp({ 1.0f,0.0f,0.0f });
     m_lightCamera[0].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
     m_lightCamera[0].SetWidth(5000.0f);
     m_lightCamera[0].SetHeight(5000.0f);
     m_lightCamera[0].SetNear(1.0f);
-    m_lightCamera[0].SetFar(10000.0f);
+    m_lightCamera[0].SetFar(RANGE_FAR);
     m_lightCamera[0].Update();
 
-    m_lightCamera[1].SetPosition({ -760.0f,200.0f,-400.0f });
+    m_lightCamera[1].SetPosition({ -760.0f,600.0f,-400.0f });
     m_lightCamera[1].SetTarget({ -760.0f,0.0f,-400.0f });
     m_lightCamera[1].SetUp({ 1.0f,0.0f,0.0f });
     m_lightCamera[1].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
     m_lightCamera[1].SetWidth(5000.0f);
     m_lightCamera[1].SetHeight(5000.0f);
     m_lightCamera[1].SetNear(1.0f);
-    m_lightCamera[1].SetFar(10000.0f);
+    m_lightCamera[1].SetFar(RANGE_FAR);
     m_lightCamera[1].Update();
 
     m_areaRangeTable[0] = RANGE_SHORT;
     m_areaRangeTable[1] = RANGE_MEDIUM;
-    m_areaRangeTable[2] = m_lightCamera[1].GetFar();
+    m_areaRangeTable[2] = RANGE_FAR;
 
 
 
