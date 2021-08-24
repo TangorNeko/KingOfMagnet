@@ -53,9 +53,6 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	//ディファードレンダリングを開始
 	rc.SetMode(RenderContext::enRenderMode_Deferred);
 
-	//影を先に描いてからモデルに描いた影を描き足すので先にシャドウマップをつくる。
-	//PostEffectManager::GetInstance()->ShadowRender(rc);
-
 	//shadow
 	if (PostEffectManager::GetInstance()->GetShadowFlag())
 	{

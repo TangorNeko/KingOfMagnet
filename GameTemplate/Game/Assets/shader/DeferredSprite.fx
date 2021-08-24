@@ -219,7 +219,7 @@ float4 PSMain(PSInput psIn) : SV_Target0
 		{
 			angle = acos(angle);
 		}
-		else if(angle > 0.9 )
+		else if(angle > 0.9f)
 		{
 			angle = 0;
 		}
@@ -251,16 +251,15 @@ float4 PSMain(PSInput psIn) : SV_Target0
 	finalColor *= albedoColor;
 
 	//影
-
-	Texture2D<float4> shadowMaps[3];
-	Texture2D<float4> shadowMaps2[3];
+	Texture2D<float4> shadowMaps_Screen1[3];
+	Texture2D<float4> shadowMaps_Screen2[3];
 	int screenNo = 0;
-	shadowMaps[0] = g_shadowMap_Screen1_Near;
-	shadowMaps[1] = g_shadowMap_Screen1_Middle;
-	shadowMaps[2] = g_shadowMap_Screen1_Far;
-	shadowMaps2[0] = g_shadowMap_Screen2_Near;
-	shadowMaps2[1] = g_shadowMap_Screen2_Middle;
-	shadowMaps2[2] = g_shadowMap_Screen2_Far;
+	shadowMaps_Screen1[0] = g_shadowMap_Screen1_Near;
+	shadowMaps_Screen1[1] = g_shadowMap_Screen1_Middle;
+	shadowMaps_Screen1[2] = g_shadowMap_Screen1_Far;
+	shadowMaps_Screen2[0] = g_shadowMap_Screen2_Near;
+	shadowMaps_Screen2[1] = g_shadowMap_Screen2_Middle;
+	shadowMaps_Screen2[2] = g_shadowMap_Screen2_Far;
 
 
 	if(psIn.pos.x < 640){
@@ -280,7 +279,7 @@ float4 PSMain(PSInput psIn) : SV_Target0
 
 				if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
 					{
-						float shadowValue = shadowMaps[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
+						float shadowValue = shadowMaps_Screen1[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
 
 						if(zInLVP >= shadowValue.r + 0.001f)
 						{
@@ -307,7 +306,7 @@ float4 PSMain(PSInput psIn) : SV_Target0
 
 				if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
 					{
-						float shadowValue = shadowMaps2[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
+						float shadowValue = shadowMaps_Screen2[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
 
 						if(zInLVP >= shadowValue.r + 0.001f)
 						{
