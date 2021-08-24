@@ -115,13 +115,14 @@ float3 CalcPhongSpecular(float3 ligDir, float3 ligColor, float3 worldPos, float3
 /// </summary>
 float4 PSMain(PSInput psIn) : SV_Target0
 {
-	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 	float4 normal = g_normal.Sample(g_sampler,psIn.uv);
-	if(normal.x == 0.0f && normal.y == 0.0f && normal.z == 0.0f)
+	//法線テクスチャのwが1.0ならそのピクセルには描き込まれていない。
+	if(normal.w == 1.0f)
 	{
 		discard;
 	}
 	normal = (normal - 0.5f) * 2.0f;
+	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 	float4 worldPos = g_worldPos.Sample(g_sampler,psIn.uv);
 
 	float4 finalColor = 0.0f;

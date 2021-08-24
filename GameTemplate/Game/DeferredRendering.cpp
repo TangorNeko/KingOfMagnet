@@ -13,7 +13,7 @@ void DeferredRendering::Init()
 		static_cast<int>(FRAME_BUFFER_H),
 		1,
 		1,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R32G32B32A32_FLOAT,
 		DXGI_FORMAT_D32_FLOAT
 	);
 
@@ -42,6 +42,7 @@ void DeferredRendering::Init()
 	deferredSpriteInitData.m_fxFilePath = "Assets/shader/DeferredSprite.fx";
 	deferredSpriteInitData.m_height = FRAME_BUFFER_H;
 	deferredSpriteInitData.m_width = FRAME_BUFFER_W;
+	deferredSpriteInitData.m_colorBufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	deferredSpriteInitData.m_textures[enAlbedo] = &m_rts[enAlbedo].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enNormal] = &m_rts[enNormal].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enWorldPos] = &m_rts[enWorldPos].GetRenderTargetTexture();
