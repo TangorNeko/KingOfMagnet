@@ -25,9 +25,10 @@ void CascadeShadow::Init()
     m_lightCamera[0].SetNear(1.0f);
     m_lightCamera[0].SetFar(RANGE_FAR);
     m_lightCamera[0].Update();
-
-    m_lightCamera[1].SetPosition({ -760.0f,600.0f,-400.0f });
-    m_lightCamera[1].SetTarget({ -760.0f,0.0f,-400.0f });
+    Vector3 Pos2 = { -760.0f,600.0f,-400.0f };
+    Target = Pos2 + Dir * 600.0f;
+    m_lightCamera[1].SetPosition(Pos2);
+    m_lightCamera[1].SetTarget(Target);
     m_lightCamera[1].SetUp({ 1.0f,0.0f,0.0f });
     m_lightCamera[1].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
     m_lightCamera[1].SetWidth(5000.0f);

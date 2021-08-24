@@ -46,13 +46,16 @@ void DeferredRendering::Init()
 	deferredSpriteInitData.m_textures[enAlbedo] = &m_rts[enAlbedo].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enNormal] = &m_rts[enNormal].GetRenderTargetTexture();
 	deferredSpriteInitData.m_textures[enWorldPos] = &m_rts[enWorldPos].GetRenderTargetTexture();
-	deferredSpriteInitData.m_textures[enShadowmap_Near] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0,0);
-	deferredSpriteInitData.m_textures[enShadowmap_Middle] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 1);
-	deferredSpriteInitData.m_textures[enShadowmap_Far] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 2);
+	deferredSpriteInitData.m_textures[enShadowmap_Screen1_Near] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 0);
+	deferredSpriteInitData.m_textures[enShadowmap_Screen1_Middle] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 1);
+	deferredSpriteInitData.m_textures[enShadowmap_Screen1_Far] = &CascadeShadow::GetInstance()->GetShaowMapTexture(0, 2);
+	deferredSpriteInitData.m_textures[enShadowmap_Screen2_Near] = &CascadeShadow::GetInstance()->GetShaowMapTexture(1, 0);
+	deferredSpriteInitData.m_textures[enShadowmap_Screen2_Middle] = &CascadeShadow::GetInstance()->GetShaowMapTexture(1, 1);
+	deferredSpriteInitData.m_textures[enShadowmap_Screen2_Far] = &CascadeShadow::GetInstance()->GetShaowMapTexture(1, 2);
 	deferredSpriteInitData.m_expandConstantBuffer[0] = CLightManager::GetInstance()->GetLigDatas();
 	deferredSpriteInitData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigDataSize();
 	deferredSpriteInitData.m_expandConstantBuffer[1] = CascadeShadow::GetInstance()->GetLVPCMatrix(0);
-	deferredSpriteInitData.m_expandConstantBufferSize[1] = sizeof(Matrix) * 3;
+	deferredSpriteInitData.m_expandConstantBufferSize[1] = sizeof(Matrix) * 6;
 	m_deferredSprite.Init(deferredSpriteInitData);
 }
 

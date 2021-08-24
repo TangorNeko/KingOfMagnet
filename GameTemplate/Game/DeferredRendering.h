@@ -78,9 +78,12 @@ private:
 
 	enum ShadowTextures
 	{
-		enShadowmap_Near = 3,			//シャドウマップ(近距離)
-		enShadowmap_Middle = 4,			//シャドウマップ(中距離)
-		enShadowmap_Far = 5,			//シャドウマップ(遠距離)
+		enShadowmap_Screen1_Near = 3,			//シャドウマップ(スクリーン1、近距離)
+		enShadowmap_Screen1_Middle,			//シャドウマップ(スクリーン1、中距離)
+		enShadowmap_Screen1_Far,			//シャドウマップ(スクリーン1、遠距離)
+		enShadowmap_Screen2_Near,			//シャドウマップ(スクリーン2、近距離)
+		enShadowmap_Screen2_Middle,			//シャドウマップ(スクリーン2、中距離)
+		enShadowmap_Screen2_Far,			//シャドウマップ(スクリーン2、遠距離)
 	};
 	RenderTarget m_rts[enGBufferNum];	//G-Bufferのレンダーターゲットの配列
 

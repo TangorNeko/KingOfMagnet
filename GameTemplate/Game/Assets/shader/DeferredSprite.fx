@@ -46,7 +46,7 @@ cbuffer LightDataCb : register(b1)
 //カスケードシャドウのクロップされたビュープロジェクション行列の定数バッファ
 cbuffer ShadowParamCb : register(b2)
 {
-    float4x4 mLVPC[3];
+    float4x4 mLVPC[2][3];
 };
 
 struct VSInput{
@@ -57,15 +57,20 @@ struct VSInput{
 struct PSInput{
 	float4 pos : SV_POSITION;
 	float2 uv  : TEXCOORD0;
+	float4 posInProj : TEXCOORD1;
 };
 
 //G-Buffers
 Texture2D<float4> g_albedo : register(t0);				//アルベドテクスチャ
 Texture2D<float4> g_normal : register(t1);				//法線テクスチャ
 Texture2D<float4> g_worldPos : register(t2);			//ワールド座標テクスチャ
-Texture2D<float4> g_shadowMap_Near : register(t3);		//シャドウマップテクスチャ(近距離)
-Texture2D<float4> g_shadowMap_Middle : register(t4);	//シャドウマップテクスチャ(中距離)
-Texture2D<float4> g_shadowMap_Far : register(t5);		//シャドウマップテクスチャ(遠距離)
+//シャドウマップ
+Texture2D<float4> g_shadowMap_Screen1_Near : register(t3);		//シャドウマップテクスチャ(スクリーン1、近距離)
+Texture2D<float4> g_shadowMap_Screen1_Middle : register(t4);	//シャドウマップテクスチャ(スクリーン1、中距離)
+Texture2D<float4> g_shadowMap_Screen1_Far : register(t5);		//シャドウマップテクスチャ(スクリーン1、遠距離)
+Texture2D<float4> g_shadowMap_Screen2_Near : register(t6);		//シャドウマップテクスチャ(スクリーン2、近距離)
+Texture2D<float4> g_shadowMap_Screen2_Middle : register(t7);	//シャドウマップテクスチャ(スクリーン2、中距離)
+Texture2D<float4> g_shadowMap_Screen2_Far : register(t8);		//シャドウマップテクスチャ(スクリーン2、遠距離)
 
 sampler g_sampler : register(s0);
 
@@ -74,6 +79,9 @@ PSInput VSMain(VSInput In)
 	PSInput psIn;
 	psIn.pos = mul( mvp, In.pos );
 	psIn.uv = In.uv;
+	psIn.posInProj = psIn.pos;
+    psIn.posInProj.xy /= psIn.posInProj.w;
+
 	return psIn;
 }
 
@@ -243,14 +251,24 @@ float4 PSMain(PSInput psIn) : SV_Target0
 	finalColor *= albedoColor;
 
 	//影
-	Texture2D<float4> shadowMaps[3];
-	shadowMaps[0] = g_shadowMap_Near;
-	shadowMaps[1] = g_shadowMap_Middle;
-	shadowMaps[2] = g_shadowMap_Far;
 
+	Texture2D<float4> shadowMaps[3];
+	int screenNo = 0;
+	shadowMaps[0] = g_shadowMap_Screen1_Near;
+	shadowMaps[1] = g_shadowMap_Screen1_Middle;
+	shadowMaps[2] = g_shadowMap_Screen1_Far;
+
+	if(true)
+	{
+		screenNo = 1;
+		shadowMaps[0] = g_shadowMap_Screen2_Near;
+		shadowMaps[1] = g_shadowMap_Screen2_Middle;
+		shadowMaps[2] = g_shadowMap_Screen2_Far;
+	}
+	
 	for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
 	{
-		float4 posInLVP = mul(mLVPC[shadowMapNo],worldPos);
+		float4 posInLVP = mul(mLVPC[screenNo][shadowMapNo],worldPos);
 
 		float zInLVP = posInLVP.z / posInLVP.w;
 		

@@ -62,7 +62,7 @@ public:
 	*/
 	Matrix* GetLVPCMatrix(int screenNo)
 	{
-		return m_lvpcMatrix[screenNo];
+		return m_lvpcMatrix[0];
 	}
 
 	/**
