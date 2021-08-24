@@ -66,8 +66,22 @@ void DeferredRendering::StartDeferredRendering(RenderContext& rc)
 		&m_rts[enNormal],
 		&m_rts[enWorldPos],
 	};
+
+	//シザリング矩形をセット
+	D3D12_RECT shadowRect;
+	shadowRect.left = 0;
+	shadowRect.top = 0;
+	shadowRect.right = m_rts[enAlbedo].GetWidth();
+	shadowRect.bottom = m_rts[enAlbedo].GetHeight();
+	rc.SetScissorRect(shadowRect);
+
+	//レンダーターゲットをセットできるまで待機
 	rc.WaitUntilToPossibleSetRenderTargets(enGBufferNum, rts);
+
+	//レンダーターゲットをセット
 	rc.SetRenderTargets(enGBufferNum, rts);
+	
+	//レンダーターゲットをクリア
 	rc.ClearRenderTargetViews(enGBufferNum, rts);
 }
 
@@ -78,5 +92,7 @@ void DeferredRendering::EndDeferredRendering(RenderContext& rc)
 		&m_rts[enNormal],
 		&m_rts[enWorldPos],
 	};
+
+	//書き込み終了まで待機
 	rc.WaitUntilFinishDrawingToRenderTargets(enGBufferNum, rts);
 }

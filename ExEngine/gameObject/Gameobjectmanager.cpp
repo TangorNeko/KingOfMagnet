@@ -61,7 +61,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	{
 		CascadeShadow::GetInstance()->DrawShadowMap();
 	}
-	//PostEffectManager::GetInstance()->EndShadowRender(rc);
+
 
 	//GBufferへの書き込み開始///
 	DeferredRendering::GetInstance()->StartDeferredRendering(rc);
@@ -123,9 +123,6 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	
 	//GBufferをもとにディファードレンダリングスプライトを出力///
 	DeferredRendering::GetInstance()->EndDeferredRendering(rc);
-
-	//TODO:フォワードレンダリングのモデルをここに描画しなければいけない
-	//TODO:エフェクト等もここ?
 
 	//フォワードレンダリング開始
 

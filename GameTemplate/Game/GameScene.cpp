@@ -193,6 +193,8 @@ bool GameScene::Start()
 	m_player1 = NewGO<Player>(0, "Player");
 	m_player1->SetPosition(PLAYER1_STARTPOSITION);
 	m_player1->SetPlayerNum(NUMBER_PLAYER1);
+	//ライトカメラに位置を伝える
+	CascadeShadow::GetInstance()->SetLightCameraTarget(NUMBER_PLAYER1,PLAYER1_STARTPOSITION);
 
 	std::random_device device;
 	std::mt19937_64 rnd(device());
@@ -214,6 +216,8 @@ bool GameScene::Start()
 	m_player2 = NewGO<Player>(0, "Player");
 	m_player2->SetPosition(PLAYER2_STARTPOSITION);
 	m_player2->SetPlayerNum(NUMBER_PLAYER2);
+	//ライトカメラに位置を伝える
+	CascadeShadow::GetInstance()->SetLightCameraTarget(NUMBER_PLAYER2, PLAYER2_STARTPOSITION);
 
 	//プレイヤー2の磁力の状態をランダムに決定
 	mag = rnd() % NUMBER_MAGNET_STATUS;

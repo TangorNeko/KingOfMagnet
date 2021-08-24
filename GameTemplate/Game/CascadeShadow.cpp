@@ -8,43 +8,37 @@ namespace
     const float RANGE_NEAR = 500.0f;
     const float RANGE_MEDIUM = 2000.0f;
     const float RANGE_FAR = 10000.0f;
+    const float TOCAMERA_LENGTH = 1000.0f;
+    const float CAMERA_SIDELENGTH = 5000.0f;
 }
 
 void CascadeShadow::Init()
 {
-    Vector3 Dir = { -1.0f,-1.0f,1.0f };
-    Dir.Normalize();
-    Vector3 Pos1 = { 760.0f,600.0f,400.0f };
-    Vector3 Target = Pos1 + Dir * 600.0f;
-    m_lightCamera[0].SetPosition(Pos1);
-    m_lightCamera[0].SetTarget(Target);
+    //スクリーン1用のカメラを初期化
     m_lightCamera[0].SetUp({ 1.0f,0.0f,0.0f });
     m_lightCamera[0].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-    m_lightCamera[0].SetWidth(5000.0f);
-    m_lightCamera[0].SetHeight(5000.0f);
-    m_lightCamera[0].SetNear(1.0f);
+    m_lightCamera[0].SetWidth(CAMERA_SIDELENGTH);
+    m_lightCamera[0].SetHeight(CAMERA_SIDELENGTH);
     m_lightCamera[0].SetFar(RANGE_FAR);
     m_lightCamera[0].Update();
-    Vector3 Pos2 = { -760.0f,600.0f,-400.0f };
-    Target = Pos2 + Dir * 600.0f;
-    m_lightCamera[1].SetPosition(Pos2);
-    m_lightCamera[1].SetTarget(Target);
+
+    //スクリーン2用のカメラを初期化
     m_lightCamera[1].SetUp({ 1.0f,0.0f,0.0f });
     m_lightCamera[1].SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-    m_lightCamera[1].SetWidth(5000.0f);
-    m_lightCamera[1].SetHeight(5000.0f);
-    m_lightCamera[1].SetNear(1.0f);
+    m_lightCamera[1].SetWidth(CAMERA_SIDELENGTH);
+    m_lightCamera[1].SetHeight(CAMERA_SIDELENGTH);
     m_lightCamera[1].SetFar(RANGE_FAR);
     m_lightCamera[1].Update();
 
+    //カスケードシャドウの各エリアの範囲を指定
     m_areaRangeTable[0] = RANGE_NEAR;
     m_areaRangeTable[1] = RANGE_MEDIUM;
     m_areaRangeTable[2] = RANGE_FAR;
 
-
+    //各エリア用のレンダーターゲットを初期化
 
     float clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };
-
+    //2画面分ループ
     for (int screenNo = 0; screenNo < 2; screenNo++)
     {
         m_shadowMaps[screenNo][enNear].Create(
@@ -163,19 +157,18 @@ void CascadeShadow::DrawShadowMap()
             //ライトビュープロジェクション行列にクロップ行列を乗算する
             m_lvpcMatrix[screenNo][areaNo] = lvpMatrix * clopMatrix;
 
-
-
             //シャドウマップを描画
             RenderContext& rc = g_graphicsEngine->GetRenderContext();
             rc.WaitUntilToPossibleSetRenderTarget(m_shadowMaps[screenNo][areaNo]);
             rc.SetRenderTargetAndViewport(m_shadowMaps[screenNo][areaNo]);
             rc.ClearRenderTargetView(m_shadowMaps[screenNo][areaNo].GetRTVCpuDescriptorHandle(), m_shadowMaps[screenNo][areaNo].GetRTVClearColor());
             rc.ClearDepthStencilView(m_shadowMaps[screenNo][areaNo].GetDSVCpuDescriptorHandle(), m_shadowMaps[screenNo][areaNo].GetDSVClearValue());
+            
             D3D12_RECT shadowRect;
             shadowRect.left = 0;
             shadowRect.top = 0;
-            shadowRect.right = 2048;
-            shadowRect.bottom = 2048;
+            shadowRect.right = m_shadowMaps[screenNo][areaNo].GetWidth();
+            shadowRect.bottom = m_shadowMaps[screenNo][areaNo].GetHeight();
             rc.SetScissorRect(shadowRect);
 
             //影モデルのドロー
@@ -193,7 +186,7 @@ void CascadeShadow::DrawShadowMap()
 void CascadeShadow::SetLightCameraTarget(int screenNo, const Vector3& targetPos)
 {
     m_lightCamera[screenNo].SetTarget(targetPos);
-    Vector3 Position = targetPos - m_lightCameraDirection * 600.0f;
+    Vector3 Position = targetPos - m_lightCameraDirection * TOCAMERA_LENGTH;
     m_lightCamera[screenNo].SetPosition(Position);
     m_lightCamera[screenNo].Update();
 }

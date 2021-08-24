@@ -72,6 +72,10 @@ public:
 	*/
 	void SetLightCameraTarget(int screenNo, const Vector3& targetPos);
 
+	/**
+	 * @brief ライトカメラの向きを設定
+	 * @param direction 向き
+	*/
 	void SetLightCameraDirection(const Vector3& direction)
 	{
 		m_lightCameraDirection = direction;
@@ -82,12 +86,12 @@ private:
 	enum shadowMapArea
 	{
 		enNear = 0,					//近距離
-		enMedium = 1,					//中距離
-		enLong = 2,						//遠距離
-		enShadowMapAreaNum = 3			//シャドウマップのエリアの数
+		enMedium = 1,				//中距離
+		enLong = 2,					//遠距離
+		enShadowMapAreaNum = 3		//シャドウマップのエリアの数
 	};
-	Camera m_lightCamera[2];			//ライトのカメラ
-	Vector3 m_lightCameraDirection = { 0.0f,0.0f,0.0f };	//影に使用する平行光源の向き
+	Camera m_lightCamera[2];								//ライトのカメラ
+	Vector3 m_lightCameraDirection = { -1.0f,-1.0f,1.0f };	//影に使用する平行光源の向き
 	RenderTarget m_shadowMaps[2][3];						//シャドウマップのレンダーターゲット
 	Matrix m_lvpcMatrix[2][3] = { g_matIdentity };			//ライトビュープロジェクションクロップ行列
 	float m_areaRangeTable[3] = { 0.0f,0.0f,0.0f };

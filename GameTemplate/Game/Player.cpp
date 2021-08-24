@@ -360,6 +360,7 @@ bool Player::Start()
 	m_spotLight->SetColor(LIGHT_PLAYER_SPOTLIGHT_COLOR);
 	m_spotLight->SetRange(LIGHT_PLAYER_SPOTLIGHT_RANGE);
 	m_spotLight->SetAngleDeg(LIGHT_PLAYER_SPOTLIGHT_ANGLE);
+	m_spotLight->SetPosition(m_position);
 	
 	
 	//エフェクト関連

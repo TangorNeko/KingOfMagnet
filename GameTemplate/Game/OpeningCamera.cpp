@@ -64,5 +64,8 @@ void OpeningCamera::CameraMove()
 		m_openingCameraZoomSpeed += SPEED_APPROACH_CAMERA;
 		g_camera3D[m_playerNum]->SetTarget(PlayerPos);
 	}
-	g_camera3D[m_playerNum]->SetPosition(m_sequenceCameraPos);	
+	g_camera3D[m_playerNum]->SetPosition(m_sequenceCameraPos);
+
+	//ライトカメラに現在の位置を伝える
+	CascadeShadow::GetInstance()->SetLightCameraTarget(m_playerNum, m_sequenceCameraPos);
 }

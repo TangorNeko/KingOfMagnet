@@ -253,42 +253,69 @@ float4 PSMain(PSInput psIn) : SV_Target0
 	//影
 
 	Texture2D<float4> shadowMaps[3];
+	Texture2D<float4> shadowMaps2[3];
 	int screenNo = 0;
 	shadowMaps[0] = g_shadowMap_Screen1_Near;
 	shadowMaps[1] = g_shadowMap_Screen1_Middle;
 	shadowMaps[2] = g_shadowMap_Screen1_Far;
+	shadowMaps2[0] = g_shadowMap_Screen2_Near;
+	shadowMaps2[1] = g_shadowMap_Screen2_Middle;
+	shadowMaps2[2] = g_shadowMap_Screen2_Far;
 
-	if(true)
-	{
-		screenNo = 1;
-		shadowMaps[0] = g_shadowMap_Screen2_Near;
-		shadowMaps[1] = g_shadowMap_Screen2_Middle;
-		shadowMaps[2] = g_shadowMap_Screen2_Far;
-	}
-	
-	for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
-	{
-		float4 posInLVP = mul(mLVPC[screenNo][shadowMapNo],worldPos);
 
-		float zInLVP = posInLVP.z / posInLVP.w;
-		
-		if(zInLVP >= 0.0f && zInLVP <= 1.0f)
+	if(psIn.pos.x < 640){
+		screenNo = 0;
+		for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
 		{
-			float2 shadowMapUV = posInLVP.xy / posInLVP.w;
+			float4 posInLVP = mul(mLVPC[screenNo][shadowMapNo],worldPos);
 
-			shadowMapUV *= float2(0.5f,-0.5f);
-    		shadowMapUV += 0.5f;
+			float zInLVP = posInLVP.z / posInLVP.w;
+			
+			if(zInLVP >= 0.0f && zInLVP <= 1.0f)
+			{
+				float2 shadowMapUV = posInLVP.xy / posInLVP.w;
 
-			 if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
-    	        {
-    	            float shadowValue = shadowMaps[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
+				shadowMapUV *= float2(0.5f,-0.5f);
+				shadowMapUV += 0.5f;
 
-    	            if(zInLVP >= shadowValue.r + 0.001f)
-    	            {
-    	                finalColor.xyz *= 0.3f;
-    	            }
-					break;
-    	        }
+				if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+					{
+						float shadowValue = shadowMaps[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
+
+						if(zInLVP >= shadowValue.r + 0.001f)
+						{
+							finalColor.xyz *= 0.3f;
+						}
+						break;
+					}
+			}
+		}
+	}else{
+		screenNo = 1;
+		for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
+		{
+			float4 posInLVP = mul(mLVPC[screenNo][shadowMapNo],worldPos);
+
+			float zInLVP = posInLVP.z / posInLVP.w;
+			
+			if(zInLVP >= 0.0f && zInLVP <= 1.0f)
+			{
+				float2 shadowMapUV = posInLVP.xy / posInLVP.w;
+
+				shadowMapUV *= float2(0.5f,-0.5f);
+				shadowMapUV += 0.5f;
+
+				if(shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+					{
+						float shadowValue = shadowMaps2[shadowMapNo].Sample(g_sampler,shadowMapUV).x;
+
+						if(zInLVP >= shadowValue.r + 0.001f)
+						{
+							finalColor.xyz *= 0.3f;
+						}
+						break;
+					}
+			}
 		}
 	}
 
