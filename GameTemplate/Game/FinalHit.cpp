@@ -67,7 +67,7 @@ bool FinalHit::Start()
 	}
 	
 	//‰æ–Ê•ªŠ„‚ðI—¹
-	GameObjectManager::GetInstance()->Set2ScreenMode(false);
+	g_graphicsEngine->Set2ScreenMode(false);
 	m_gameScene->StopGameBGM();
 
 	return true;

@@ -49,6 +49,11 @@ cbuffer ShadowParamCb : register(b2)
     float4x4 mLVPC[2][3];
 };
 
+cbuffer ScreenBorder : register(b3)
+{
+	float screenBorder;
+};
+
 struct VSInput{
 	float4 pos : POSITION;
 	float2 uv  : TEXCOORD0;
@@ -261,8 +266,8 @@ float4 PSMain(PSInput psIn) : SV_Target0
 	shadowMaps_Screen2[1] = g_shadowMap_Screen2_Middle;
 	shadowMaps_Screen2[2] = g_shadowMap_Screen2_Far;
 
-
-	if(psIn.pos.x < 640){
+	//2画面の境界線より左であればスクリーン1用のシャドウマップを使用する
+	if(psIn.pos.x < screenBorder){
 		screenNo = 0;
 		for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
 		{
@@ -289,7 +294,9 @@ float4 PSMain(PSInput psIn) : SV_Target0
 					}
 			}
 		}
-	}else{
+	}
+	else//そうでないならスクリーン2のシャドウマップを使用
+	{
 		screenNo = 1;
 		for(int shadowMapNo = 0;shadowMapNo < 3;shadowMapNo++)
 		{

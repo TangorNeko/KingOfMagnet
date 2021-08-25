@@ -244,7 +244,7 @@ bool GameScene::Start()
 	m_sky = NewGO<SkyBoard>(0);
 
 	//‚·‚×‚Äì¬‚µI‚í‚Á‚½Š‚Å2‰æ–Ê‚É‚·‚éB
-	GameObjectManager::GetInstance()->Set2ScreenMode(true);
+	g_graphicsEngine->Set2ScreenMode(true);
 	
 	//‰æ–Ê‚ğ‹æØ‚éü
 	m_delimitLineSpriteRender = NewGO<prefab::CSpriteRender>(3);

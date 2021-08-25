@@ -132,7 +132,7 @@ void InitManager()
 	PhysicsWorld::CreateInstance();
 
 	//2画面描画モードはOFFから始める。
-	GameObjectManager::GetInstance()->Set2ScreenMode(false);
+	g_graphicsEngine->Set2ScreenMode(false);
 
 	//ライトマネージャーのインスタンスを作成
 	CLightManager::CreateInstance();

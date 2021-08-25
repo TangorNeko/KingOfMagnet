@@ -63,7 +63,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 	//GBufferへの書き込み開始///
 	DeferredRendering::GetInstance()->StartDeferredRendering(rc);
 
-	if (m_2screenMode)//2画面モード
+	if (g_graphicsEngine->Get2ScreenMode() == true)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
 		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0f);
@@ -125,7 +125,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 
 	rc.SetMode(RenderContext::enRenderMode_Forward);
 
-	if (m_2screenMode)//2画面モード
+	if (g_graphicsEngine->Get2ScreenMode() == true)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
 		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0f);
@@ -201,7 +201,7 @@ void GameObjectManager::ExecuteRender(RenderContext& rc)
 
 void GameObjectManager::ExecutePostRender(RenderContext& rc)
 {
-	if (m_2screenMode)//2画面モード
+	if (g_graphicsEngine->Get2ScreenMode() == true)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
 		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0f);
@@ -281,7 +281,7 @@ void GameObjectManager::ExecuteShadowRender(RenderContext& rc, const Matrix& vie
 
 void GameObjectManager::ExecuteEffectRender(RenderContext& rc)
 {
-	if (m_2screenMode)//2画面モード
+	if (g_graphicsEngine->Get2ScreenMode() == true)//2画面モード
 	{
 		//2画面のスプライトのアスペクト比に合わせる。
 		g_camera2D->SetWidth(g_graphicsEngine->GetFrameBufferWidth() / 2.0f);

@@ -199,6 +199,37 @@ public:
 	{
 		return m_fontEngine;
 	}
+
+	/**
+	 * @brief 2画面描画にするかどうか。
+	 * @param is2screenMode 2画面にするならtrue,1画面ならfalse
+	*/
+	void Set2ScreenMode(bool is2ScreenMode)
+	{
+		m_is2ScreenMode = is2ScreenMode;
+
+		if (m_is2ScreenMode)
+		{
+			m_2ScreenBorder = m_frameBufferWidth / 2;
+		}
+		else
+		{
+			m_2ScreenBorder = m_frameBufferWidth;
+		}
+	}
+
+	/**
+	 * @brief 2画面描画にするかのフラグを取得
+	 * @return フラグ
+	*/
+	bool Get2ScreenMode() { return m_is2ScreenMode; }
+	
+	/**
+	 * @brief 2画面の境界線の参照を取得
+	 * @return 2画面の境界線の参照
+	*/
+	float& Get2ScreenBorder() { return m_2ScreenBorder; }
+
 private:
 	/// <summary>
 	/// D3Dデバイスの作成。
@@ -310,6 +341,8 @@ private:
 	FontEngine m_fontEngine;					//フォントエンジン。
 	std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;	//DirectXTKのグラフィックメモリシステム。
 	int m_frameRate;
+	bool m_is2ScreenMode = false;				//2画面モードか?
+	float m_2ScreenBorder = 1280.0f;		//2画面の境界線
 };
 extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
 extern Camera* g_camera2D;					//2Dカメラ。

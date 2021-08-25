@@ -56,6 +56,8 @@ void DeferredRendering::Init()
 	deferredSpriteInitData.m_expandConstantBufferSize[0] = CLightManager::GetInstance()->GetLigDataSize();
 	deferredSpriteInitData.m_expandConstantBuffer[1] = CascadeShadow::GetInstance()->GetLVPCMatrix(0);
 	deferredSpriteInitData.m_expandConstantBufferSize[1] = sizeof(Matrix) * 6;
+	deferredSpriteInitData.m_expandConstantBuffer[2] = &g_graphicsEngine->Get2ScreenBorder();
+	deferredSpriteInitData.m_expandConstantBufferSize[2] = sizeof(float);
 	m_deferredSprite.Init(deferredSpriteInitData);
 }
 

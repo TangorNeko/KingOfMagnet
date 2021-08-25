@@ -153,27 +153,11 @@ public:
 			}
 		}
 	}
-
-	/**
-	 * @brief 2画面描画にするかどうか。
-	 * @param is2screenMode 2画面にするならtrue,1画面ならfalse
-	*/
-	void Set2ScreenMode(bool is2screenMode)
-	{
-		m_2screenMode = is2screenMode;
-	}
-
-	/**
-	 * @brief 2画面描画にするかのフラグを取得
-	 * @return フラグ
-	*/
-	bool Get2ScreenMode() { return m_2screenMode; }
 private:
 	enum { GAME_OBJECT_PRIO_MAX = 255 };		//!<ゲームオブジェクトの優先度の最大値。
 	typedef std::list<IGameObject*>	 GameObjectList;
 	std::array<GameObjectList, GAME_OBJECT_PRIO_MAX>	m_gameObjectListArray;							//!<ゲームオブジェクトの優先度付きリスト。
 	static GameObjectManager* m_instance;		//唯一のインスタンスのアドレスを記録する変数。
-	bool m_2screenMode = false;
 };
 
 
